@@ -17,29 +17,16 @@ namespace BlackTournament
             var core = new Core(Core.DefaultDevice, true);
             var map = new Map(core, "Maps\\SpaceArena.tmx");
             map.Load();
-            core.Layer_Game.AddChild(map);
+            core.Layer_BG.AddChild(map);
 
-            map.View = new SFML.Graphics.View(new FloatRect(0, 0, core.DefaultView.Size.X / 2, core.DefaultView.Size.Y / 2));
+            var player = new Player(core);
+            core.Layer_Game.AddChild(player);
+
+            map.View = new SFML.Graphics.View(new FloatRect(0, 0, core.DefaultView.Size.X / 3, core.DefaultView.Size.Y / 3));
 
             core.OnUpdate += deltaT =>
             {
-                var speed = 400;
-                if (Input.IsKeyDown(Keyboard.Key.Left))
-                {
-                    map.View.Center += new Vector2f(speed * -deltaT, 0);
-                }
-                if (Input.IsKeyDown(Keyboard.Key.Right))
-                {
-                    map.View.Center += new Vector2f(speed * deltaT, 0);
-                }
-                if (Input.IsKeyDown(Keyboard.Key.Up))
-                {
-                    map.View.Center += new Vector2f(0, speed * -deltaT);
-                }
-                if (Input.IsKeyDown(Keyboard.Key.Down))
-                {
-                    map.View.Center += new Vector2f(0, speed * deltaT);
-                }
+                map.View.Center = player.Position;
             };
 
             core.Run();
