@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,6 +63,10 @@
   <ItemGroup>
     <Compile Include="Game.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Net\Client.cs" />
+    <Compile Include="Net\IGameClient.cs" />
+    <Compile Include="Net\IGameServer.cs" />
+    <Compile Include="Net\Server.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
