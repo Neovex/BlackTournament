@@ -47,12 +47,13 @@ namespace BlackTournament
                     }
                     AddChild(c);
                 }
+                return true;
             }
             //catch (Exception e)
             {
                 //_Core.Log(e);
             }
-            return true;
+            return false;
         }
 
 

@@ -64,13 +64,23 @@ namespace BlackTournament
         {
             if (args.Code == Keyboard.Key.W || args.Code == Keyboard.Key.S)
             {
-                if (_VerticalAccellerator != null) _VerticalAccellerator.Cancel();
+                if (_VerticalAccellerator != null)
+                {
+                    if (args.Code == Keyboard.Key.W && _VerticalAccellerator.TargetValue > 0) return;
+                    if (args.Code == Keyboard.Key.S && _VerticalAccellerator.TargetValue < 0) return;
+                    _VerticalAccellerator.Cancel();
+                }
                 _VerticalAccellerator = _Core.AnimationManager.Run(() => Direction.Y, v => Direction = new Vector2f(Direction.X, v), 0, PLAYER_ACCELERATION);
             }
 
             if (args.Code == Keyboard.Key.A || args.Code == Keyboard.Key.D)
             {
-                if (_HorizontalAccellerator != null) _HorizontalAccellerator.Cancel();
+                if (_HorizontalAccellerator != null)
+                {
+                    if (args.Code == Keyboard.Key.A && _HorizontalAccellerator.TargetValue > 0) return;
+                    if (args.Code == Keyboard.Key.D && _HorizontalAccellerator.TargetValue < 0) return;
+                    _HorizontalAccellerator.Cancel();
+                }
                 _HorizontalAccellerator = _Core.AnimationManager.Run(() => Direction.X, v => Direction = new Vector2f(v, Direction.Y), 0, PLAYER_ACCELERATION);
             }
         }
