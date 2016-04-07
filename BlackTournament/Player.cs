@@ -33,7 +33,7 @@ namespace BlackTournament
             base.Update(deltaT);
 
             Position += Direction * deltaT;
-            Rotation = _Core.DefaultView.Center.AngleTowards(Input.MousePosition);
+            Rotation = new Vector2f(_Core.DeviceSize.X / 2, _Core.DeviceSize.Y / 2).AngleTowards(Input.MousePosition);
         }
 
         private void HandleKeyDown(KeyEventArgs args)

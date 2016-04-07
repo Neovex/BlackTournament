@@ -33,7 +33,11 @@ namespace BlackTournament.Net
         public void Dispose()
         {
             if (_ServiceHost == null) return;
-            ((IDisposable)_ServiceHost).Dispose();
+            try
+            {
+                ((IDisposable)_ServiceHost).Dispose();
+            }
+            catch { }
             _ServiceHost = null;
         }
 
@@ -41,6 +45,7 @@ namespace BlackTournament.Net
         {
             var adress = new Uri(string.Format("net.tcp://{0}:{1}", Dns.GetHostName(), port));
             var binding = new NetTcpBinding();
+            binding.Security.Mode = SecurityMode.None;
             var contract = typeof(IGameServer);
 
             _ServiceHost = new ServiceHost(this, adress);

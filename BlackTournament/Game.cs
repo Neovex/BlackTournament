@@ -9,6 +9,7 @@ using SFML.Graphics;
 using SFML.Window;
 using BlackTournament.Net;
 using BlackCoat.Entities.Shapes;
+using System.IO;
 
 namespace BlackTournament
 {
@@ -23,8 +24,10 @@ namespace BlackTournament
         public static void Main(string[] args)
         {
             _Core = new Core(Core.DefaultDevice, true);
+            _Core.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
+            _Core.Log(Environment.NewLine, "################", "New Session:", DateTime.Now.ToShortTimeString(), "################");
 
-            var zoomView = new SFML.Graphics.View(new FloatRect(0, 0, _Core.DefaultView.Size.X / 3, _Core.DefaultView.Size.Y / 3));
+            var zoomView = new SFML.Graphics.View(new FloatRect(0, 0, _Core.DeviceSize.X / 3, _Core.DeviceSize.Y / 3));
 
             var map = new Map(_Core, "Maps\\SpaceArena.tmx");
             map.View = zoomView;
@@ -32,16 +35,20 @@ namespace BlackTournament
             _Core.Layer_BG.AddChild(map);
 
             _Player = new Player(_Core);
-            // fix me map view punches through to other entities
+            _Player.View = zoomView;
             _Core.Layer_Game.AddChild(_Player);
 
             _Other = new Rectangle(_Core);
+            _Other.View = zoomView;
             _Other.Size = new Vector2f(15, 15);
             _Other.Color = Color.Blue;
             _Core.Layer_Game.AddChild(_Other);
 
-            _Core.OnUpdate += deltaT => zoomView.Center = _Player.Position;
-            // zoomView.Rotation = -_Player.Rotation; cool effect - see later if this can be used
+            _Core.OnUpdate += deltaT =>
+                {
+                    zoomView.Center = _Player.Position;
+                    //zoomView.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
+                };
             _Core.ConsoleCommand += HandleConsoleCommand;
 
             

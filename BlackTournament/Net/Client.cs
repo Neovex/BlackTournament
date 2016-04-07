@@ -27,13 +27,21 @@ namespace BlackTournament.Net
         {
             if (_ServerChannel != null)
             {
-                ((IDisposable)_ServerChannel).Dispose();
+                try
+                {
+                    ((IDisposable)_ServerChannel).Dispose();
+                }
+                catch { }
                 _ServerChannel = null;
             }
 
             if (_ChannelFactory != null)
             {
-                ((IDisposable)_ChannelFactory).Dispose();
+                try
+                {
+                    ((IDisposable)_ChannelFactory).Dispose();
+                }
+                catch { }
                 _ChannelFactory = null;
             }
         }
@@ -42,6 +50,7 @@ namespace BlackTournament.Net
         {
             var address = new EndpointAddress(String.Format("net.tcp://{0}:{1}", hostname, port));
             var binding = new NetTcpBinding();
+            binding.Security.Mode = SecurityMode.None;
             _ChannelFactory = new DuplexChannelFactory<IGameServer>(new InstanceContext(this), binding, address);
             _ServerChannel = _ChannelFactory.CreateChannel();
             _ServerChannel.Subscribe();
