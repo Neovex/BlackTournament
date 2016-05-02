@@ -92,7 +92,7 @@ namespace BlackTournament.Net
 	        {
                 if (client.Key.State == CommunicationState.Opened)
                 {
-                    client.Value.Move(id, x, y); //fixe timing issue
+                    client.Value.Move(id, x, y); //fix timing issue
                 }
             });
         }
