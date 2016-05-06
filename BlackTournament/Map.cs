@@ -13,21 +13,23 @@ namespace BlackTournament
 {
     public class Map : Container
     {
-        private String _Path;
+        private String _TmxPath;
         private TmxMap _MapData;
         private Dictionary<TmxTileset, Texture> _TileTextures;
 
+
+
         public Map(Core core,String path):base(core)
         {
-            if (!File.Exists(path)) throw new FileNotFoundException(path);
-            _Path = path;
+            //if (!File.Exists(path)) throw new FileNotFoundException(path);
+            _TmxPath = path + ".tmx";
         }
 
         public bool Load()
         {
             //try
             {
-                _MapData = new TmxMap(_Path);
+                _MapData = new TmxMap(_TmxPath);
                 _Core.ClearColor = new Color((byte)_MapData.BackgroundColor.R, (byte)_MapData.BackgroundColor.G, (byte)_MapData.BackgroundColor.B);
                 _TileTextures = _MapData.Tilesets.ToDictionary(ts=>ts, ts => new Texture(ts.Image.Source));
                 
@@ -47,6 +49,10 @@ namespace BlackTournament
                     }
                     AddChild(c);
                 }
+
+
+
+
                 return true;
             }
             //catch (Exception e)
@@ -56,6 +62,9 @@ namespace BlackTournament
             return false;
         }
 
-
+        internal void Unload()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

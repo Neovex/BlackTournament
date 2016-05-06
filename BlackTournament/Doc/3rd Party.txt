@@ -1,8 +1,8 @@
 Fonts
 -----
-Abandon Alphabeta.ttf
-by Sakti Ardika
-http://www.behance.net/abandon
+HighlandGothicLightFLF.ttf
+Casady & Greene
+http://moorstation.org/typoasis/designers/casady_greene/index.htm
 
 VTCBelialsBlade.ttf
 by Vigilante Typeface Corporation
@@ -29,6 +29,7 @@ Venting Your Spleen on Low B
 Wall of Anger
 Its Totally and Completely Barbaric
 Teks Abomination
+Industrial Rage
 
 all by
 Matthew Huffaker
