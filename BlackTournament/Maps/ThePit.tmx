@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" backgroundcolor="#000000" nextobjectid="1">
  <tileset firstgid="1" name="AztekTiles" tilewidth="128" tileheight="128" tilecount="380" columns="10">
   <image source="../Assets/AztekTiles.png" width="1280" height="4864"/>
   <terraintypes>
