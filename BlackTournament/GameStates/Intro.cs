@@ -19,14 +19,13 @@ namespace BlackTournament.GameStates
 
         public override bool Load()
         {
-            Log.Debug("Loading intro");
             // todo : load intro
 
             _Text = new GameText(_Core);
-            _Text.Position = new Vector2f(299, 399);
+            _Text.Position = new Vector2f(225, 399);
             _Text.Text = "HOLY SHIT! We got an Intro?";
             Layer_Game.AddChild(_Text);
-            _Core.AnimationManager.Wait(5, t => _Core.StateManager.ChangeState(new MainMenue(_Core)));
+            _Core.AnimationManager.Wait(2, t => _Core.StateManager.ChangeState(new MainMenue(_Core)));
 
             return true;
         }
@@ -38,7 +37,6 @@ namespace BlackTournament.GameStates
 
         public override void Destroy()
         {
-            Log.Debug("Unloading intro");
             // todo : unload intro
 
             Layer_Game.RemoveChild(_Text);

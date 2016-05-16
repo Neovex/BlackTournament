@@ -36,49 +36,49 @@ namespace BlackTournament
             Rotation = new Vector2f(_Core.DeviceSize.X / 2, _Core.DeviceSize.Y / 2).AngleTowards(Input.MousePosition);
         }
 
-        private void HandleKeyDown(KeyEventArgs args)
+        private void HandleKeyDown(Keyboard.Key key)
         {
-            if (args.Code == Keyboard.Key.W)
+            if (key == Keyboard.Key.W)
             {
                 if (_VerticalAccellerator != null) _VerticalAccellerator.Cancel();
                 _VerticalAccellerator = _Core.AnimationManager.Run(() => Direction.Y, v => Direction = new Vector2f(Direction.X, v), -PLAYER_MAX_SPEED, PLAYER_ACCELERATION);
             }
-            else if (args.Code == Keyboard.Key.S)
+            else if (key == Keyboard.Key.S)
             {
                 if (_VerticalAccellerator != null) _VerticalAccellerator.Cancel();
                 _VerticalAccellerator = _Core.AnimationManager.Run(() => Direction.Y, v => Direction = new Vector2f(Direction.X, v), PLAYER_MAX_SPEED, PLAYER_ACCELERATION);
             }
-            if (args.Code == Keyboard.Key.A)
+            if (key == Keyboard.Key.A)
             {
                 if (_HorizontalAccellerator != null) _HorizontalAccellerator.Cancel();
                 _HorizontalAccellerator = _Core.AnimationManager.Run(() => Direction.X, v => Direction = new Vector2f(v, Direction.Y), -PLAYER_MAX_SPEED, PLAYER_ACCELERATION);
             }
-            else if (args.Code == Keyboard.Key.D)
+            else if (key == Keyboard.Key.D)
             {
                 if (_HorizontalAccellerator != null) _HorizontalAccellerator.Cancel();
                 _HorizontalAccellerator = _Core.AnimationManager.Run(() => Direction.X, v => Direction = new Vector2f(v, Direction.Y), PLAYER_MAX_SPEED, PLAYER_ACCELERATION);
             }
         }
 
-        private void HandleKeyUp(KeyEventArgs args)
+        private void HandleKeyUp(Keyboard.Key key)
         {
-            if (args.Code == Keyboard.Key.W || args.Code == Keyboard.Key.S)
+            if (key == Keyboard.Key.W || key == Keyboard.Key.S)
             {
                 if (_VerticalAccellerator != null)
                 {
-                    if (args.Code == Keyboard.Key.W && _VerticalAccellerator.TargetValue > 0) return;
-                    if (args.Code == Keyboard.Key.S && _VerticalAccellerator.TargetValue < 0) return;
+                    if (key == Keyboard.Key.W && _VerticalAccellerator.TargetValue > 0) return;
+                    if (key == Keyboard.Key.S && _VerticalAccellerator.TargetValue < 0) return;
                     _VerticalAccellerator.Cancel();
                 }
                 _VerticalAccellerator = _Core.AnimationManager.Run(() => Direction.Y, v => Direction = new Vector2f(Direction.X, v), 0, PLAYER_ACCELERATION);
             }
 
-            if (args.Code == Keyboard.Key.A || args.Code == Keyboard.Key.D)
+            if (key == Keyboard.Key.A || key == Keyboard.Key.D)
             {
                 if (_HorizontalAccellerator != null)
                 {
-                    if (args.Code == Keyboard.Key.A && _HorizontalAccellerator.TargetValue > 0) return;
-                    if (args.Code == Keyboard.Key.D && _HorizontalAccellerator.TargetValue < 0) return;
+                    if (key == Keyboard.Key.A && _HorizontalAccellerator.TargetValue > 0) return;
+                    if (key == Keyboard.Key.D && _HorizontalAccellerator.TargetValue < 0) return;
                     _HorizontalAccellerator.Cancel();
                 }
                 _HorizontalAccellerator = _Core.AnimationManager.Run(() => Direction.X, v => Direction = new Vector2f(v, Direction.Y), 0, PLAYER_ACCELERATION);
