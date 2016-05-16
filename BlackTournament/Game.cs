@@ -10,7 +10,7 @@ using SFML.Window;
 using BlackTournament.Net;
 using BlackCoat.Entities.Shapes;
 using System.IO;
-using BlackTournament.StateManagement;
+using BlackTournament.GameStates;
 
 namespace BlackTournament
 {
@@ -24,23 +24,22 @@ namespace BlackTournament
         private static Core _Core;
         private static Rectangle _Other;
         private static Map _CurrentMap;
-        private static StateManager _StateManager;
 
         public static void Main(string[] args)
         {
             // Init Black Coat Engine
-            _Core = new Core(Core.DefaultDevice, true);
-            _Core.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
+            _Core = new Core(Core.DefaultDevice);
+            _Core.Debug = true;
+            Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
             _Core.AssetManager.RootFolder = "Assets";
-            _Core.Log(Environment.NewLine, "################", "New Session:", DateTime.Now.ToShortTimeString(), "################");
+            Log.Debug(Environment.NewLine, "################", "New Session:", DateTime.Now.ToShortTimeString(), "################");
 
             // Init Game
             DefaultGameFont = _Core.AssetManager.LoadFont(DefaultGameFontName);
-            _StateManager = new StateManager(_Core);
             _Core.ConsoleCommand += HandleConsoleCommand;
 
             // Start Game
-            _StateManager.ChangeState(State.Intro);
+            _Core.StateManager.ChangeState(new Intro(_Core));
 
 
             /*_Other = new Rectangle(_Core);
@@ -64,11 +63,11 @@ namespace BlackTournament
                     case "loadmap":
                         if (commandData.Length == 2)
                         {
-                            _StateManager.ChangeState(State.Map, commandData[1]);
+                            _Core.StateManager.ChangeState(new MapState(_Core, commandData[1]));
                         }
                         else
                         {
-                            _Core.Log("invalid usage of loadmap filename", cmd);
+                            Log.Debug("invalid usage of loadmap filename", cmd);
                         }
                         return true;
                     case "startserver":
@@ -80,10 +79,10 @@ namespace BlackTournament
                             _Server.Host(port);
                             _Server.Moved += (x, y) => _Other.Position = new Vector2f(x, y);
                             //TransmitMove(_Server);
-                            _Core.Log("Host is listening on", port);
+                            Log.Debug("Host is listening on", port);
                             return true;
                         }
-                        _Core.Log("Invalid host data", cmd);
+                        Log.Debug("Invalid host data", cmd);
                     return true;
 
                     case "connect":
@@ -94,16 +93,16 @@ namespace BlackTournament
                             _Client.Connect(commandData[1], port);
                             _Client.Moved += (x, y) => _Other.Position = new Vector2f(x, y);
                             //TransmitMove(_Client);
-                            _Core.Log("Connection to", commandData[1], ":", port);
+                            Log.Debug("Connection to", commandData[1], ":", port);
                             return true;
                         }
-                        _Core.Log("Invalid client data", cmd);
+                        Log.Debug("Invalid client data", cmd);
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                _Core.Log("Game Command", cmd, "failed. Reason:", ex);
+                Log.Debug("Game Command", cmd, "failed. Reason:", ex);
                 return true;
             }
             return false;

@@ -5,7 +5,7 @@ using System.Text;
 using BlackCoat;
 using SFML.Graphics;
 
-namespace BlackTournament.StateManagement.GameStates
+namespace BlackTournament.GameStates
 {
     class MapState : BaseGameState
     {
@@ -16,7 +16,7 @@ namespace BlackTournament.StateManagement.GameStates
         private Map _Map;
 
 
-        public MapState(Core core, StateManager stateManager, String map) : base(core, stateManager)
+        public MapState(Core core, String map) : base(core)
         {
             _MapName = map;
         }
@@ -28,19 +28,19 @@ namespace BlackTournament.StateManagement.GameStates
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X / 3, _Core.DeviceSize.Y / 3));
 
             _Player = new Player(_Core);
-            //_Player.View = ;
-            _Core.Layer_Game.AddChild(_Player);
+            //_Player.View = ; find a solution for this
+            Layer_Game.AddChild(_Player);
 
             // Load Map
             _Map = new Map(_Core, "Maps\\" + _MapName);
             var result = _Map.Load();
             if (result)
             {
-                _Core.Layer_BG.AddChild(_Map);
+                Layer_BG.AddChild(_Map);
             }
             else
             {
-                _Core.Log("failed to load map", _MapName);
+                Log.Debug("failed to load map", _MapName);
             }
             return result;
         }
@@ -53,7 +53,7 @@ namespace BlackTournament.StateManagement.GameStates
 
         public override void Destroy()
         {
-            _Core.Layer_BG.AddChild(_Map);
+            Layer_BG.RemoveChild(_Map);
         }
     }
 }
