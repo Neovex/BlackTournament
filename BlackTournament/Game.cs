@@ -32,7 +32,8 @@ namespace BlackTournament
             _Core.Debug = true;
             Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
             _Core.AssetManager.RootFolder = "Assets";
-            Log.Debug(Environment.NewLine, "################", "New Session:", DateTime.Now.ToShortTimeString(), "################");
+            Log.Debug(String.Empty);
+            Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
 
             // Init Game
             DefaultGameFont = _Core.AssetManager.LoadFont(DefaultGameFontName);
