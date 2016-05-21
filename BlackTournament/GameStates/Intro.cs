@@ -25,7 +25,7 @@ namespace BlackTournament.GameStates
             _Text.Position = new Vector2f(225, 399);
             _Text.Text = "HOLY SHIT! We got an Intro?";
             Layer_Game.AddChild(_Text);
-            _Core.AnimationManager.Wait(2, t => _Core.StateManager.ChangeState(new MainMenue(_Core)));
+            _Core.AnimationManager.Wait(2, t => _Core.StateManager.ChangeState(new MainMenu(_Core)));
 
             return true;
         }

@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BlackCoat;
-using TiledSharp;
+using System.IO;
+
 using SFML.System;
 using SFML.Graphics;
-using SFML.Window;
-using BlackTournament.Net;
+
+using BlackCoat;
 using BlackCoat.Entities.Shapes;
-using System.IO;
+
 using BlackTournament.GameStates;
+using BlackTournament.Net;
+
 
 namespace BlackTournament
 {
@@ -19,11 +18,12 @@ namespace BlackTournament
         public static Font DefaultGameFont = null;
         private static readonly String DefaultGameFontName = "HighlandGothicLightFLF";
 
+        private static Core _Core;
+        private static FontManager _GlobalFonts;
+
         private static Server _Server;
         private static Client _Client;
-        private static Core _Core;
         private static Rectangle _Other;
-        private static Map _CurrentMap;
 
         public static void Main(string[] args)
         {
@@ -31,12 +31,12 @@ namespace BlackTournament
             _Core = new Core(Core.DefaultDevice);
             _Core.Debug = true;
             Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
-            _Core.AssetManager.RootFolder = "Assets";
             Log.Debug(String.Empty);
             Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
 
             // Init Game
-            DefaultGameFont = _Core.AssetManager.LoadFont(DefaultGameFontName);
+            _GlobalFonts = new FontManager("assets");
+            DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName);
             _Core.ConsoleCommand += HandleConsoleCommand;
 
             // Start Game
@@ -51,7 +51,7 @@ namespace BlackTournament
 
 
             _Core.Run();
-            _Core.AssetManager.FreeFont(DefaultGameFontName);
+            _GlobalFonts.Release(DefaultGameFontName);
         }
 
         static bool HandleConsoleCommand(string cmd)

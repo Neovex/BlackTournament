@@ -64,7 +64,7 @@
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameStates\Intro.cs" />
-    <Compile Include="GameStates\MainMenue.cs" />
+    <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Net\Client.cs" />
     <Compile Include="Net\IGameClient.cs" />
@@ -90,6 +90,9 @@
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Music\Ten_Seconds_to_Rush.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +104,20 @@
     <Content Include="Assets\AztekTiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Doc\3rd Party.txt" />
+    <Content Include="Sfx\explosion1.wav" />
+    <Content Include="Sfx\explosion2.wav" />
+    <Content Include="Sfx\grenatelauncher.wav" />
+    <Content Include="Sfx\Highlight.wav" />
+    <Content Include="Sfx\laser blast.wav" />
+    <Content Include="Sfx\Laser PL013.wav" />
+    <Content Include="Sfx\laser-loop.wav" />
+    <Content Include="Sfx\laser.wav" />
+    <Content Include="Sfx\pickup1.wav" />
+    <Content Include="Sfx\pickup2.wav" />
+    <Content Include="Sfx\pickup3 long.wav" />
+    <Content Include="Sfx\Select.wav" />
+    <Content Include="Sfx\simple shot.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Graphnode.SFML.Net.2.3\build\Graphnode.SFML.Net.targets" Condition="Exists('..\packages\Graphnode.SFML.Net.2.3\build\Graphnode.SFML.Net.targets')" />

@@ -13,16 +13,16 @@ namespace BlackTournament
 {
     class Player : Graphic
     {
-        public const int PLAYER_MAX_SPEED = 125;
-        public const float PLAYER_ACCELERATION = 750f;
+        public const int PLAYER_MAX_SPEED = 400;
+        public const float PLAYER_ACCELERATION = 850f;
 
         private Vector2f Direction;
         private ValueAnimation _VerticalAccellerator;
         private ValueAnimation _HorizontalAccellerator;
 
-        public Player(Core core):base(core)
+        public Player(Core core, TextureManager textures):base(core)
         {
-            Texture = _Core.AssetManager.CreateTexture(10, 10, 0xFFFF0000, "PlayerDummy");
+            Texture = textures.CreateTexture(10, 10, 0xFFFF0000, "PlayerDummy");
             Origin = (Vector2f)(Texture.Size / 2);
             Input.KeyPressed += HandleKeyDown;
             Input.KeyReleased += HandleKeyUp;
