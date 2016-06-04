@@ -2,11 +2,13 @@
 using System.IO;
 
 using SFML.System;
+using SFML.Window;
 using SFML.Graphics;
 
 using BlackCoat;
 using BlackCoat.Entities.Shapes;
 
+using BlackTournament.Properties;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 
@@ -28,15 +30,16 @@ namespace BlackTournament
         public static void Main(string[] args)
         {
             // Init Black Coat Engine
-            _Core = new Core(Core.DefaultDevice);
+            var device = Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8);
+            _Core = new Core(device);
             _Core.Debug = true;
             Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
             Log.Debug(String.Empty);
             Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
 
             // Init Game
-            _GlobalFonts = new FontManager("assets");
-            DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName);
+            _GlobalFonts = new FontManager();
+            DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName, Resources.HighlandGothicLightFLF);
             _Core.ConsoleCommand += HandleConsoleCommand;
 
             // Start Game

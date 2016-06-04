@@ -27,7 +27,7 @@ namespace BlackTournament.GameStates
             MusicManager.RootFolder = "music";
             music = MusicManager.Load("Ten_Seconds_to_Rush");
             music.Volume = 15;
-            music.Play();
+            //music.Play();
 
             return true;
         }

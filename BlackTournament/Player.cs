@@ -26,6 +26,12 @@ namespace BlackTournament
             Origin = (Vector2f)(Texture.Size / 2);
             Input.KeyPressed += HandleKeyDown;
             Input.KeyReleased += HandleKeyUp;
+            Input.MouseWheelScrolled += HandleMouseWheel;
+        }
+
+        private void HandleMouseWheel(float delta)
+        {
+            View.Zoom(1 - delta / 10);
         }
 
         public override void Update(float deltaT)

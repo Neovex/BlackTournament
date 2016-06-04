@@ -27,11 +27,11 @@ namespace BlackTournament
 
         public bool Load()
         {
-            //try
+            try
             {
                 _MapData = new TmxMap(_TmxPath);
                 _Core.ClearColor = new Color((byte)_MapData.BackgroundColor.R, (byte)_MapData.BackgroundColor.G, (byte)_MapData.BackgroundColor.B);
-                _TileTextures = _MapData.Tilesets.ToDictionary(ts=>ts, ts => new Texture(ts.Image.Source));
+                _TileTextures = _MapData.Tilesets.ToDictionary(ts => ts, ts => new Texture(ts.Image.Source));
                 
                 foreach (var layer in _MapData.Layers)
                 {
@@ -49,22 +49,23 @@ namespace BlackTournament
                     }
                     AddChild(c);
                 }
-
-
-
-
                 return true;
             }
-            //catch (Exception e)
+            catch (Exception e)
             {
-                //_Core.Log(e);
+                Log.Error(e);
             }
             return false;
         }
 
-        internal void Unload()
+        public void Destroy()
         {
-            throw new NotImplementedException();
+            foreach (var texture in _TileTextures.Values)
+            {
+                texture.Dispose();
+            }
+            _TileTextures = null;
+            _MapData = null;
         }
     }
 }

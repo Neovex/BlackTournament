@@ -57,6 +57,7 @@ namespace BlackTournament.GameStates
         public override void Destroy()
         {
             Layer_BG.RemoveChild(_Map);
+            _Map.Destroy();
         }
 
         public override string ToString()
