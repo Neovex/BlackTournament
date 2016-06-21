@@ -19,88 +19,83 @@ namespace BlackTournament
     {
         public static Font DefaultGameFont = null;
         private static readonly String DefaultGameFontName = "HighlandGothicLightFLF";
+        private const String DefaultHost = "localhost";
+        private const uint DefaultPort = 123;
 
         private static Core _Core;
         private static FontManager _GlobalFonts;
 
-        private static Server _Server;
-        private static Client _Client;
-        private static Rectangle _Other;
+        private static NetworkManager _NetworkManager;
+
 
         public static void Main(string[] args)
         {
             // Init Black Coat Engine
             var device = Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8);
-            _Core = new Core(device);
-            _Core.Debug = true;
-            Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
-            Log.Debug(String.Empty);
-            Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
+            using (_Core = new Core(device))
+            {
+                _Core.Debug = true;
+                Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
+                Log.Debug(String.Empty);
+                Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
+                // todo: test text blur issue (might need round)
+                // Init Game
+                _GlobalFonts = new FontManager();
+                DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName, Resources.HighlandGothicLightFLF);
+                _Core.ConsoleCommand += Execute;
+                _NetworkManager = new NetworkManager();
 
-            // Init Game
-            _GlobalFonts = new FontManager();
-            DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName, Resources.HighlandGothicLightFLF);
-            _Core.ConsoleCommand += HandleConsoleCommand;
-
-            // Start Game
-            _Core.StateManager.ChangeState(new Intro(_Core));
-
-
-            /*_Other = new Rectangle(_Core);
-            _Other.View = zoomView;
-            _Other.Size = new Vector2f(15, 15);
-            _Other.Color = Color.Blue;
-            _Core.Layer_Game.AddChild(_Other);*/
+                // Start Game
+                _Core.StateManager.ChangeState(new Intro(_Core));
+                //_Core.StateManager.ChangeState(new BlackCoatIntro(_Core, new Intro(_Core)));
 
 
-            _Core.Run();
-            _GlobalFonts.Release(DefaultGameFontName);
+                /*_Other = new Rectangle(_Core);
+                _Other.View = zoomView;
+                _Other.Size = new Vector2f(15, 15);
+                _Other.Color = Color.Blue;
+                _Core.Layer_Game.AddChild(_Other);*/
+
+
+                _Core.Run();
+                _GlobalFonts.Release(DefaultGameFontName);
+            }
         }
 
-        static bool HandleConsoleCommand(string cmd)
+        static bool Execute(string cmd)
         {
             var commandData = cmd.Split(' ');
             try
             {
                 switch (commandData[0].ToLower())
                 {
+                    case "ld":
+                    case "load":
                     case "loadmap":
                         if (commandData.Length == 2)
                         {
-                            _Core.StateManager.ChangeState(new MapState(_Core, commandData[1]));
+                            _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, DefaultHost, DefaultPort));
                         }
                         else
                         {
                             Log.Debug("invalid usage of loadmap filename", cmd);
                         }
                         return true;
-                    case "startserver":
-                    case "start server":
-                        if (commandData.Length == 2)
-                        {
-                            _Server = new Server();
-                            var port = UInt32.Parse(commandData[1]);
-                            _Server.Host(port);
-                            _Server.Moved += (x, y) => _Other.Position = new Vector2f(x, y);
-                            //TransmitMove(_Server);
-                            Log.Debug("Host is listening on", port);
-                            return true;
-                        }
-                        Log.Debug("Invalid host data", cmd);
-                    return true;
 
+                    case "con":
                     case "connect":
                         if (commandData.Length == 3)
                         {
-                            _Client = new Client();
-                            var port = UInt32.Parse(commandData[2]);
-                            _Client.Connect(commandData[1], port);
-                            _Client.Moved += (x, y) => _Other.Position = new Vector2f(x, y);
-                            //TransmitMove(_Client);
-                            Log.Debug("Connection to", commandData[1], ":", port);
+                            _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, commandData[1], UInt32.Parse(commandData[2])));
                             return true;
                         }
-                        Log.Debug("Invalid client data", cmd);
+                        Log.Debug("Could not connect", cmd);
+                    return true;
+
+                    case "startserver":
+                    case "start server":
+                        var port = commandData.Length == 2 ? UInt32.Parse(commandData[1]) : DefaultPort;
+                        _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, DefaultHost, port));
                     return true;
                 }
             }
@@ -111,18 +106,5 @@ namespace BlackTournament
             }
             return false;
         }
-
-        /*
-        private static void TransmitMove(Server server)
-        {
-            server.BroadcastMove(0, _Player.Position.X, _Player.Position.Y);
-            _Core.AnimationManager.Wait(1 / 60f, a => TransmitMove(server));
-        }
-
-        private static void TransmitMove(Client client)
-        {
-            client.DoMove(0, _Player.Position.X, _Player.Position.Y);
-            _Core.AnimationManager.Wait(1 / 60f, a => TransmitMove(client));
-        }*/
     }
 }

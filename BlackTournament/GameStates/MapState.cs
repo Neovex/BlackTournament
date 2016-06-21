@@ -5,6 +5,7 @@ using System.Text;
 using BlackCoat;
 using SFML.Graphics;
 using System.IO;
+using BlackTournament.Net;
 
 namespace BlackTournament.GameStates
 {
@@ -12,20 +13,21 @@ namespace BlackTournament.GameStates
     {
         private const String _MAP_ROOT = "Maps";
         private string _MapName;
+        private NetworkManager _NetworkManager;
 
         private View _View;
         private Player _Player;
         private Map _Map;
 
 
-        public MapState(Core core, String map) : base(core, map, Path.Combine(_MAP_ROOT, map))
+        public MapState(Core core, NetworkManager netMan) : base(core, netMan.MapName, Path.Combine(_MAP_ROOT, netMan.MapName))
         {
-            _MapName = map;
+            _NetworkManager = netMan;
+            _MapName = _NetworkManager.MapName;
         }
 
         public override bool Load()
         {
-
             // Setup View
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
@@ -56,6 +58,7 @@ namespace BlackTournament.GameStates
 
         public override void Destroy()
         {
+            _NetworkManager.Disconnect();
             Layer_BG.RemoveChild(_Map);
             _Map.Destroy();
         }
