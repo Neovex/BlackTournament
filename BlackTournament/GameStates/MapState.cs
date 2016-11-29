@@ -4,29 +4,26 @@ using System.Linq;
 using System.Text;
 using BlackCoat;
 using SFML.Graphics;
-using System.IO;
 using BlackTournament.Net;
 
 namespace BlackTournament.GameStates
 {
-    class MapState : BaseGameState
+    class MapState : BaseGamestate
     {
-        private const String _MAP_ROOT = "Maps";
         private string _MapName;
-        private NetworkManager _NetworkManager;
 
         private View _View;
-        private Player _Player;
+        private Player _Player; // TODO : replace with proper entitiy management
         private Map _Map;
 
 
-        public MapState(Core core, NetworkManager netMan) : base(core, netMan.MapName, Path.Combine(_MAP_ROOT, netMan.MapName))
+        public MapState(Core core, String map) : base(core, map)
         {
-            _NetworkManager = netMan;
-            _MapName = _NetworkManager.MapName;
+            if (String.IsNullOrEmpty(map)) throw new ArgumentNullException(nameof(map));
+            _MapName = map;
         }
 
-        public override bool Load()
+        protected override bool Load()
         {
             // Setup View
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
@@ -36,7 +33,7 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(_Player);
 
             // Load Map
-            _Map = new Map(_Core, Path.Combine(_MAP_ROOT, _MapName));
+            _Map = new Map(_Core, _MapName);
             _Map.View = _View;
             var result = _Map.Load();
             if (result)
@@ -50,15 +47,14 @@ namespace BlackTournament.GameStates
             return result;
         }
 
-        public override void Update(float deltaT)
+        protected override void Update(float deltaT)
         {
             _View.Center = _Player.Position;
             //zoomView.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
         }
 
-        public override void Destroy()
+        protected override void Destroy()
         {
-            _NetworkManager.Disconnect();
             Layer_BG.RemoveChild(_Map);
             _Map.Destroy();
         }

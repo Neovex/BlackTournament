@@ -73,9 +73,6 @@
     <None Include="Assets\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Maps\SpaceArena.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

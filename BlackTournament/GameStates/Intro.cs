@@ -9,7 +9,7 @@ using SFML.Graphics;
 
 namespace BlackTournament.GameStates
 {
-    public class Intro : BaseGameState
+    public class Intro : BaseGamestate
     {
         private GameText _Text;
 
@@ -17,7 +17,7 @@ namespace BlackTournament.GameStates
         {
         }
 
-        public override bool Load()
+        protected override bool Load()
         {
             // todo : load intro
 
@@ -30,12 +30,12 @@ namespace BlackTournament.GameStates
             return true;
         }
 
-        public override void Update(float deltaT)
+        protected override void Update(float deltaT)
         {
             
         }
 
-        public override void Destroy()
+        protected override void Destroy()
         {
             // todo : unload intro
 

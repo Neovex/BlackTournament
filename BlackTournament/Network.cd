@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BlackTournament.Net.NetworkManager" Collapsed="true">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAQAAAACAAAIAAAAAgCAAAABEAAgAAAAQ=</HashCode>
+      <FileName>Net\NetworkManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Client" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Server" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAARKAAgAAAIAAAAAAAAAACCAAABBAAIAAAAAA=</HashCode>
+      <FileName>Net\Server.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.GameServer" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAABCAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\GameServer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.GameClient" Collapsed="true">
+    <Position X="3" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABBCAAAAAIAAAAAAAAIBAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\GameClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.Client" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAAAQCIAAAABACAAAIAAAAAAAAACBAAAIAAAAAA=</HashCode>
+      <FileName>Net\Client.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.GameStates.MapState" Collapsed="true">
+    <Position X="1.5" Y="3.75" Width="1.5" />
+    <AssociationLine Name="_NetworkManager" Type="BlackTournament.Net.NetworkManager">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.06" Y="0.235" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQAjAAAAAAAAAAEACAAAAAAAABAAAAAAAAEAAAEAAA=</HashCode>
+      <FileName>GameStates\MapState.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Player" />
+      <Field Name="_NetworkManager" />
+      <Field Name="_Map" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.GameStates.ConnectState" Collapsed="true">
+    <Position X="4.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAjAAAAAAAQAAAAAAAAEAAAABAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>GameStates\ConnectState.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_NetworkManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Game" Collapsed="true">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCBAAAAAAIAAQAAAAAAAAAAAAAAAAAAAIABAAAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_NetworkManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Map" Collapsed="true">
+    <Position X="1.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAoAAAAAAAAACAAAAAIAAAAABAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Player" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAEEAAAAACBAAEAAAAAAAAQAAEBAAAAAAAA=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="BlackTournament.Net.Contract.IGameClient" Collapsed="true">
+    <Position X="1.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Contract\IGameClient.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="BlackTournament.Net.Contract.IClient" Collapsed="true">
+    <Position X="1.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAIAAAAAA=</HashCode>
+      <FileName>Net\Contract\IClient.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="BlackTournament.Net.Contract.IGameServer" Collapsed="true">
+    <Position X="4.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Contract\IGameServer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="BlackTournament.Net.Contract.IServer" Collapsed="true">
+    <Position X="7.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Net\Contract\IServer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

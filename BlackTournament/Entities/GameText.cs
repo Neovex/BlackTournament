@@ -7,7 +7,7 @@ namespace BlackTournament.Entities
     {
         public GameText(Core core):base(core)
         {
-            Font = Game.DefaultGameFont;
+            Font = Game.DefaultFont;
         }
     }
 }

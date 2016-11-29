@@ -1,54 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using SFML.System;
+
 using BlackCoat;
 using BlackTournament.Entities;
-using SFML.System;
-using BlackTournament.Net;
+
 
 namespace BlackTournament.GameStates
 {
-    class ConnectState:BaseGameState
+    class ConnectState:BaseGamestate
     {
         private GameText _Text;
-        private NetworkManager _NetworkManager;
         private string _Host;
-        private uint _Port;
 
-        public ConnectState(Core core, NetworkManager netMan, string host, uint port) : base(core)
+        public ConnectState(Core core, String host) : base(core)
         {
-            _NetworkManager = netMan;
             _Host = host;
-            _Port = port;
         }
 
-        public override bool Load() // CSH
+        protected override bool Load()
         {
+            // Load Scene
             _Text = new GameText(_Core);
-            _Text.Position = new Vector2f(30, 30);
-            _Text.Text = "Connecting to" + _Host;
-            Layer_Game.AddChild(_Text);
-
-            _NetworkManager.Connected += Connected;
-            _NetworkManager.Connect(_Host, _Port);
-
-            return true;
+            _Text.Position = new Vector2f(60, 60);
+            _Text.Text = $"Connecting to \"{_Host}\"";
+            return Layer_Game.AddChild(_Text);
         }
 
-        private void Connected()
+        protected override void Update(float deltaT)
         {
-            _Core.StateManager.ChangeState(new MapState(_Core, _NetworkManager));
+            // todo: add some fancy waiting animation here
         }
 
-        public override void Update(float deltaT)
+        protected override void Destroy()
         {
-            // add some fancy waiting animation here
-        }
-
-        public override void Destroy()
-        {
-            _NetworkManager.Connected -= Connected;
+            Layer_Game.RemoveChild(_Text);
         }
     }
 }

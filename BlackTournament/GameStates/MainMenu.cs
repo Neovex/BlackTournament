@@ -11,7 +11,7 @@ using System.IO;
 
 namespace BlackTournament.GameStates
 {
-    class MainMenu:BaseGameState
+    class MainMenu:BaseGamestate
     {
         private GameText _Text;
 
@@ -27,20 +27,33 @@ namespace BlackTournament.GameStates
 
         }
 
-        public override bool Load()
+        protected override bool Load()
         {
             _Text = new GameText(_Core);
             _Text.Position = new Vector2f(300, 100);
             _Text.Text = "MAIN MENU";
             Layer_Game.AddChild(_Text);
-            
-            //####
+
+            //Test();
+
+            MusicManager.RootFolder = "music";
+            music = MusicManager.Load("Ten_Seconds_to_Rush");
+            music.Volume = 15;
+            //music.Play();
+
+            return true;
+        }
+
+        private void Test()
+        {
             TextureManager.RootFolder = "Assets";
-            var tex = TextureManager.Load("Space");
+            var tex = TextureManager.Load("AztekTiles");
             var strm = GenerateStreamFromString(SHADER_SRC);
+            Log.Fatal("Shader Available: ", Shader.IsAvailable); // fixme
+
             _Shader = new Shader(null, @"C:\Users\Fox\Desktop\blur.frag"); // Wrap into effect class?
-            //_Shader.SetParameter("texture", tex);
-            //_Shader.SetParameter("blur_radius", _Blurryness);
+            _Shader.SetParameter("texture", tex);
+            _Shader.SetParameter("blur_radius", _Blurryness);
 
             _BlurTest = new Graphic(_Core);
             _BlurTest.Position = new Vector2f(100, 100);
@@ -51,42 +64,33 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(_BlurTest);
 
             Input.KeyPressed += (k) =>
+            {
+                if (k == SFML.Window.Keyboard.Key.Up)
                 {
-                    if (k == SFML.Window.Keyboard.Key.Up)
-                    {
-                        _Blurryness += 0.001f;
-                        Log.Debug(_Blurryness);
-                    }
-                    else if (k == SFML.Window.Keyboard.Key.Down)
-                    {
-                        _Blurryness -= 0.001f;
-                        Log.Debug(_Blurryness);
-                    }
-                    _Shader.SetParameter("blur_radius", _Blurryness);
-                };
-            //####
-
-            MusicManager.RootFolder = "music";
-            music = MusicManager.Load("Ten_Seconds_to_Rush");
-            music.Volume = 15;
-            //music.Play();
-
-            return true;
+                    _Blurryness += 0.001f;
+                    Log.Debug(_Blurryness);
+                }
+                else if (k == SFML.Window.Keyboard.Key.Down)
+                {
+                    _Blurryness -= 0.001f;
+                    Log.Debug(_Blurryness);
+                }
+                _Shader.SetParameter("blur_radius", _Blurryness);
+            };
         }
-        
+
         private MemoryStream GenerateStreamFromString(string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value));
         }
 
-        public override void Update(float deltaT)
+        protected override void Update(float deltaT)
         {
-
         }
 
-        public override void Destroy()
+        protected override void Destroy()
         {
-            music.Dispose();
+            music?.Dispose();
             // todo: find better destroy / music logic
             //_Core.AnimationManager.Run(music.Volume, 0, 1, v => music.Volume = v, BlackCoat.Animation.InterpolationType.Linear, a => music = null);
         }

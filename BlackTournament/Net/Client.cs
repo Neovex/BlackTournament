@@ -4,18 +4,44 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using System.Net;
+using BlackTournament.Net.Contract;
 
 namespace BlackTournament.Net
 {
-    class Client : IGameClient, IDisposable
+    public class Client : IClient, IDisposable
     {
-        private IGameServer _ServerChannel;
-        private DuplexChannelFactory<IGameServer> _ChannelFactory;
+        protected String _UserName;
+        protected IGameServer _ServerChannel;
+        protected DuplexChannelFactory<IGameServer> _ChannelFactory;
 
-        public event Action<float, float> Moved = (x, y) => { };
-
-        public Client()
+        public virtual int Id { get; protected set; }
+        public virtual bool Connected { get; protected set; }
+        public virtual string Host { get; protected set; }
+        public virtual uint Port { get; protected set; }
+        public virtual IEnumerable<User> Users { get; protected set; }
+        public virtual String UserName
         {
+            get { return _UserName; }
+            set { if(Connected) _UserName = _ServerChannel.ChangeUserName(value); }
+        }
+
+
+        public event Action ConnectionEstablished = () => { };
+        public event Action ConnectionFailed = () => { };
+        public event Action ConnectionLost = () => { };
+        public event Action ConnectionClosed = () => { };
+
+        public event Action<int, string> ClientConnectedReceived = (id, name) => { };
+        public event Action<int> ClientDisconnectedReceived = (id) => { };
+        public event Action<int, string> MessageReceived = (id, msg) => { };
+
+
+
+        public Client(String host, UInt32 port, String userName)
+        {
+            Host = host;
+            Port = port;
+            _UserName = userName;
         }
 
         ~Client()
@@ -23,7 +49,7 @@ namespace BlackTournament.Net
             Dispose();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (_ServerChannel != null)
             {
@@ -31,7 +57,10 @@ namespace BlackTournament.Net
                 {
                     ((IDisposable)_ServerChannel).Dispose();
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Log.Warning("Client channel dispose error:", e);
+                }
                 _ServerChannel = null;
             }
 
@@ -41,34 +70,83 @@ namespace BlackTournament.Net
                 {
                     ((IDisposable)_ChannelFactory).Dispose();
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Log.Warning("Client channel factory dispose error:", e);
+                }
                 _ChannelFactory = null;
             }
         }
 
-        public void Connect(String hostname, uint port)
+        public virtual void Connect()// fixme 4 async
         {
-            var address = new EndpointAddress(String.Format("net.tcp://{0}:{1}", hostname, port));
+            var address = new EndpointAddress(String.Format("net.tcp://{0}:{1}", Host, Port));
             var binding = new NetTcpBinding();
             binding.Security.Mode = SecurityMode.None;
             _ChannelFactory = new DuplexChannelFactory<IGameServer>(new InstanceContext(this), binding, address);
             _ServerChannel = _ChannelFactory.CreateChannel();
-            _ServerChannel.Subscribe();
+
+            var result = _ServerChannel.Subscribe(_UserName);
+            Connected = result.Success;
+            if (Connected)
+            {
+                // Update Client Info
+                Id = result.Id;
+                _UserName = result.Alias;
+                Users = result.Users;
+
+                // Register to connection events
+                var channel = _ServerChannel as ICommunicationObject;
+                channel.Closed += HandleServerConnectionClosed;
+                channel.Faulted += HandleServerConnectionLost;
+
+                // Done
+                Log.Debug("Connected to", Host, ":", Port, "as", _UserName);
+                ConnectionEstablished.Invoke();
+            }
+            else
+            {
+                Log.Debug("Failed to connect to", Host, ":", Port, "as", _UserName);
+                ConnectionFailed.Invoke();
+            }
         }
 
-        public void Close()
+        private void HandleServerConnectionClosed(object sender, EventArgs e)
         {
+            if (Connected) HandleServerConnectionLost(sender, e);
+        }
+
+        private void HandleServerConnectionLost(object sender, EventArgs e)
+        {
+            Connected = false;
+            ConnectionLost.Invoke();
+        }
+
+        public virtual void Disconnect()
+        {
+            Connected = false;
             ((IClientChannel)_ServerChannel).Close();
+            ConnectionClosed.Invoke();
         }
 
-        public void DoMove(int id, float x, float y)
+
+        public virtual void ClientConnected(int id, string name)
         {
-            _ServerChannel.Move(id, x, y);
+            ClientConnectedReceived.Invoke(id, name);
         }
 
-        public void Move(int id, float x, float y)
+        public virtual void ClientDisconnected(int id)
         {
-            Moved(x, y);
+            ClientDisconnectedReceived.Invoke(id);
+        }
+
+        public virtual void Message(int id, string msg)
+        {
+            MessageReceived.Invoke(id, msg);
+        }
+        public virtual void SendMessage(string msg)
+        {
+            _ServerChannel.Message(msg);
         }
     }
 }

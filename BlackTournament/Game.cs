@@ -1,107 +1,180 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
-using SFML.System;
 using SFML.Window;
 using SFML.Graphics;
 
 using BlackCoat;
-using BlackCoat.Entities.Shapes;
 
 using BlackTournament.Properties;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
-
+using BlackTournament.Controller;
 
 namespace BlackTournament
 {
     public class Game
     {
-        public static Font DefaultGameFont = null;
-        private static readonly String DefaultGameFontName = "HighlandGothicLightFLF";
-        private const String DefaultHost = "localhost";
-        private const uint DefaultPort = 123;
-
-        private static Core _Core;
-        private static FontManager _GlobalFonts;
-
-        private static NetworkManager _NetworkManager;
+        public const String DEFAULT_FONT = "HighlandGothicLightFLF";
+        public const String DEFAULT_HOST = "localhost";
+        public const UInt32 DEFAULT_PORT = 123;
 
 
-        public static void Main(string[] args)
+        private FontManager _GlobalFonts;
+        private GameServer _Server;
+        private GameClient _Client;
+
+        public Core Core { get; private set; }
+
+        public static Font DefaultFont { get; private set; } // de-static?
+        public ConnectController ConnectController { get; private set; }
+        public MapController MapController { get; private set; }
+
+        public Game()
+        {
+            //?
+        }
+
+
+        public void Run(String arguments)
         {
             // Init Black Coat Engine
             var device = Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8);
-            using (_Core = new Core(device))
+            using (Core = new Core(device))
             {
-                _Core.Debug = true;
+                // Init Core
+                Core.Debug = true;
+                Core.ConsoleCommand += ExecuteCommand;
+
+                // Init Logging
                 Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
-                Log.Debug(String.Empty);
-                Log.Debug("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
-                // todo: test text blur issue (might need round)
-                // Init Game
+                Log.Info(String.Empty);
+                Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
+
+                // Init Game Font
                 _GlobalFonts = new FontManager();
-                DefaultGameFont = _GlobalFonts.Load(DefaultGameFontName, Resources.HighlandGothicLightFLF);
-                _Core.ConsoleCommand += Execute;
-                _NetworkManager = new NetworkManager();
+                DefaultFont = _GlobalFonts.Load(DEFAULT_FONT, Resources.HighlandGothicLightFLF);
+                // todo: test text blur issue (might need round)
+
+                // Init Game
+                ConnectController = new ConnectController(this);
+                MapController = new MapController(this);
+                _Server = new GameServer();
 
                 // Start Game
-                _Core.StateManager.ChangeState(new Intro(_Core));
-                //_Core.StateManager.ChangeState(new BlackCoatIntro(_Core, new Intro(_Core)));
+                if (String.IsNullOrWhiteSpace(arguments))
+                {
+                    Core.StateManager.ChangeState(new MainMenu(Core));
+                    //_Core.StateManager.ChangeState(new BlackCoatIntro(_Core, new Intro(_Core)));
+                }
+                else
+                {
+                    ExecuteCommand(arguments);
+                }
 
-
-                /*_Other = new Rectangle(_Core);
-                _Other.View = zoomView;
-                _Other.Size = new Vector2f(15, 15);
-                _Other.Color = Color.Blue;
-                _Core.Layer_Game.AddChild(_Other);*/
-
-
-                _Core.Run();
-                _GlobalFonts.Release(DefaultGameFontName);
+                Core.Run();
+                _GlobalFonts.Release(DEFAULT_FONT);
             }
         }
 
-        static bool Execute(string cmd)
+        public void StartNewGame(String map = null, String host = null, UInt32 port = 0)
         {
-            var commandData = cmd.Split(' ');
+            if (map == null && host == null) throw new ArgumentException($"Failed to start with {map} - {host}");
+            host = host ?? Game.DEFAULT_HOST;
+            port = port == 0 ? Game.DEFAULT_PORT : port;
+
+            // Setup Server
+            _Server.Shutdown();
+            if(host == Game.DEFAULT_HOST)
+            {
+                _Server.HostGame(map, port);
+            }
+
+            // Setup Client
+            _Client?.Dispose();
+            _Client = new GameClient(host, port, Settings.Default.PlayerName);
+            ConnectController.Activate(_Client);
+        }
+
+        private bool ExecuteCommand(string cmd)
+        {
+            var separator = ' ';
+            var commandData = cmd.Split(separator);
             try
             {
                 switch (commandData[0].ToLower())
                 {
+                    case "state":
+                        Log.Info("Current State:", Core.StateManager.CurrentState);
+                        return true;
+
+                    case "disconnect":
+                        if (_Client != null && _Client.Connected)
+                        {
+                            _Client.Disconnect();
+                            Log.Info("Disconnected");
+                        }
+                        else
+                        {
+                            Log.Info("No connection");
+                        }
+                        return true;
+
+                    case "m":
+                    case "msg":
+                    case "message":
+                        if (commandData.Length > 1)
+                        {
+                            if (_Client != null && _Client.Connected)
+                            {
+                                _Client.SendMessage(String.Join(separator.ToString(), commandData.Skip(1)));
+                            }
+                            else
+                            {
+                                Log.Info("Cannot send any messages, not connected to any server");
+                            }
+                        }
+                        return true;
+
                     case "ld":
                     case "load":
                     case "loadmap":
                         if (commandData.Length == 2)
                         {
-                            _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, DefaultHost, DefaultPort));
+                            StartNewGame(map: commandData[1]);
                         }
                         else
                         {
-                            Log.Debug("invalid usage of loadmap filename", cmd);
+                            Log.Info("invalid usage of loadmap filename", cmd);
                         }
                         return true;
 
                     case "con":
                     case "connect":
-                        if (commandData.Length == 3)
+                        if (commandData.Length > 2)
                         {
-                            _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, commandData[1], UInt32.Parse(commandData[2])));
-                            return true;
+                            var port = commandData.Length == 3 ? UInt32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            StartNewGame(host: commandData[1], port: port);
                         }
-                        Log.Debug("Could not connect", cmd);
-                    return true;
+                        Log.Info("Invalid connect command. Use connect [hostname] optional:[port]", cmd);
+                        return true;
 
+                    case "srv":
                     case "startserver":
                     case "start server":
-                        var port = commandData.Length == 2 ? UInt32.Parse(commandData[1]) : DefaultPort;
-                        _Core.StateManager.ChangeState(new ConnectState(_Core, _NetworkManager, DefaultHost, port));
-                    return true;
+                        if (commandData.Length > 2)
+                        {
+                            var port = commandData.Length == 3 ? UInt32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            StartNewGame(map: commandData[1], port: port);
+                        }
+                        Log.Info("Invalid host command. Use host [mapname] optional:[port]", cmd);
+                        return true;
                 }
             }
             catch (Exception ex)
             {
-                Log.Debug("Game Command", cmd, "failed. Reason:", ex);
+                Log.Debug("Game Command", cmd, "failed. Reason:\n", ex);
                 return true;
             }
             return false;

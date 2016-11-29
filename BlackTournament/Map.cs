@@ -11,25 +11,26 @@ using SFML.System;
 
 namespace BlackTournament
 {
-    public class Map : Container
+    public class Map : Container // TODO: implement full tmx featureset
     {
-        private String _TmxPath;
+        private const String _MAP_ROOT = "Maps";
+
+        private String _Name;
         private TmxMap _MapData;
         private Dictionary<TmxTileset, Texture> _TileTextures;
 
 
 
-        public Map(Core core,String path):base(core)
+        public Map(Core core, String name):base(core)
         {
-            //if (!File.Exists(path)) throw new FileNotFoundException(path);
-            _TmxPath = path + ".tmx";
+            _Name = name;
         }
 
         public bool Load()
         {
             try
             {
-                _MapData = new TmxMap(_TmxPath);
+                _MapData = new TmxMap(Path.Combine(_MAP_ROOT, _Name + ".tmx"));
                 _Core.ClearColor = new Color((byte)_MapData.BackgroundColor.R, (byte)_MapData.BackgroundColor.G, (byte)_MapData.BackgroundColor.B);
                 _TileTextures = _MapData.Tilesets.ToDictionary(ts => ts, ts => new Texture(ts.Image.Source));
                 
