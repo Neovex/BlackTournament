@@ -13,17 +13,3 @@ client game logic
 
 thoughts on input
 key(input) to enum(Action) mapping... CUAH
-
-
-- BSP Tree Planning:
-abstract collision data
-BspNode:
-(parent)
-ChildA&B
-List<CollisionBase||ICollidable>
-Collision Classes:
-Collision Object - implementation of a non visual collision obj
-Collision Ref - ref to gfx or other rectangular col. relevant obj
-
-Real Trails
-https://sourceforge.net/p/mars-game/code/HEAD/tree/src/TrailEffects/FloatingTrail.cpp#l65
