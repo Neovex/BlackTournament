@@ -16,6 +16,7 @@ namespace BlackTournament.GameStates
         private GameText _Text;
 
         private const String SHADER_SRC = "uniform sampler2D texture;uniform float blur_radius;void main(){	vec2 offx = vec2(blur_radius, 0.0);	vec2 offy = vec2(0.0, blur_radius);	vec4 pixel = texture2D(texture, gl_TexCoord[0].xy)               * 4.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy - offy)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy + offy)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx - offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx + offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx - offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx + offy) * 1.0;	gl_FragColor =  gl_Color * (pixel / 16.0);}";
+
         private Shader _Shader;
         private Graphic _BlurTest;
         private float _Blurryness = 0;
@@ -24,7 +25,7 @@ namespace BlackTournament.GameStates
 
         public MainMenu(Core core):base(core)
         {
-
+            // TODO: cleanup shader stuff
         }
 
         protected override bool Load()
@@ -82,6 +83,11 @@ namespace BlackTournament.GameStates
         private MemoryStream GenerateStreamFromString(string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value));
+        }
+
+        internal void DisplayPopupMessage(string message)
+        {
+            Log.Debug(message);
         }
 
         protected override void Update(float deltaT)

@@ -13,3 +13,6 @@ client game logic
 
 thoughts on input
 key(input) to enum(Action) mapping... CUAH
+
+
+idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die schon?

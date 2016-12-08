@@ -37,12 +37,6 @@ namespace BlackTournament.Controller
             
         }
 
-        private void HandleConnectionClosed()
-        {
-            _Game.Core.StateManager.ChangeState(new MainMenu(_Game.Core));
-            Cleanup();
-        }
-
         private void StateReady()
         {
             // TODO : feed state (aka view) with data here and only now
@@ -52,19 +46,23 @@ namespace BlackTournament.Controller
         private void ReleaseState()
         {
             // deregister from state events
+            _State.Ready -= StateReady;
+            _State.OnDestroy -= ReleaseState;
             _State = null;
+
+            _Client.ConnectionLost -= HandleConnectionLost;
+            _Client.ConnectionClosed -= HandleConnectionClosed;
+            _Client = null;
         }
 
         private void HandleConnectionLost()
         {
-            throw new NotImplementedException();
+            _Game.MenuController.Activate("Connection Lost");//$
         }
 
-        private void Cleanup()
+        private void HandleConnectionClosed()
         {
-            _State = null;
-            _Client.ConnectionLost -= HandleConnectionLost;
-            _Client = null;
+            _Game.MenuController.Activate();
         }
     }
 }

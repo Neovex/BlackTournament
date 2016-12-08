@@ -28,6 +28,7 @@ namespace BlackTournament
         public Core Core { get; private set; }
 
         public static Font DefaultFont { get; private set; } // de-static?
+        public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
         public MapController MapController { get; private set; }
 
@@ -58,6 +59,7 @@ namespace BlackTournament
                 // todo: test text blur issue (might need round)
 
                 // Init Game
+                MenuController = new MenuController(this);
                 ConnectController = new ConnectController(this);
                 MapController = new MapController(this);
                 _Server = new GameServer();
@@ -65,7 +67,7 @@ namespace BlackTournament
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
                 {
-                    Core.StateManager.ChangeState(new MainMenu(Core));
+                    MenuController.Activate();
                     //_Core.StateManager.ChangeState(new BlackCoatIntro(_Core, new Intro(_Core)));
                 }
                 else
@@ -74,7 +76,7 @@ namespace BlackTournament
                 }
 
                 Core.Run();
-                _GlobalFonts.Release(DEFAULT_FONT);
+                _GlobalFonts.Dispose();
             }
         }
 

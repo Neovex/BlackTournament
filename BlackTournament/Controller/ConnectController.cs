@@ -43,7 +43,6 @@ namespace BlackTournament.Controller
         private void ConnectStateReady()
         {
             // TODO : feed state (aka view) with data here and only now
-            // register to state events
         }
 
         private void ReleaseState()
@@ -52,28 +51,20 @@ namespace BlackTournament.Controller
             _State.Ready -= ConnectStateReady;
             _State.OnDestroy -= ReleaseState;
             _State = null;
+
+            _Client.ConnectionEstablished -= Connected;
+            _Client.ConnectionFailed -= ConnectionFailed;
+            _Client = null;
         }
 
         private void Connected()
         {
-            _Game.Core.AnimationManager.Wait(2, a =>
-            {
-                _Game.MapController.Activate(_Client);
-                Cleanup();
-            });
+            _Game.Core.AnimationManager.Wait(2, a => { _Game.MapController.Activate(_Client); }); // TODO: move timeout to map controller?
         }
 
         private void ConnectionFailed()
         {
-            throw new NotImplementedException(); // TODO : switch to menue and display message
-            Cleanup();
-        }
-
-        private void Cleanup()
-        {
-            _Client.ConnectionEstablished -= Connected;
-            _Client.ConnectionFailed -= ConnectionFailed;
-            _Client = null;
+            _Game.MenuController.Activate("Connection Failed");//$
         }
     }
 }
