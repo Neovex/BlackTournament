@@ -23,18 +23,21 @@ namespace BlackTournament.Controller
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
-            _Client = client;
 
-            // Build and switch to Map State
+            // Init
+            _Client = client;
             _State = new MapState(_Game.Core, _Client.MapName);
+
+            // Handle State Events
             _State.Ready += StateReady;
             _State.OnDestroy += ReleaseState;
-            _Game.Core.StateManager.ChangeState(_State);
 
-            // Handle connection loss
+            // Handle client events
             _Client.ConnectionLost += HandleConnectionLost;
             _Client.ConnectionClosed += HandleConnectionClosed;
             
+            // Acivate State
+            _Game.Core.StateManager.ChangeState(_State);
         }
 
         private void StateReady()

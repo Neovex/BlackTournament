@@ -1,4 +1,7 @@
-﻿
+﻿- controller abstrahieren
+- 
+
+
 complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
 
 server pure data abstraction layer - poco game data 4 serialization
@@ -15,4 +18,4 @@ thoughts on input
 key(input) to enum(Action) mapping... CUAH
 
 
-idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die schon?
+idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?

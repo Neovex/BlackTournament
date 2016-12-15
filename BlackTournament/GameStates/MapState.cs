@@ -50,7 +50,7 @@ namespace BlackTournament.GameStates
         protected override void Update(float deltaT)
         {
             _View.Center = _Player.Position;
-            //zoomView.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
+            //_View.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
         }
 
         protected override void Destroy()

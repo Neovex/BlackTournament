@@ -15,8 +15,6 @@ namespace BlackTournament.GameStates
     {
         private GameText _Text;
 
-        private const String SHADER_SRC = "uniform sampler2D texture;uniform float blur_radius;void main(){	vec2 offx = vec2(blur_radius, 0.0);	vec2 offy = vec2(0.0, blur_radius);	vec4 pixel = texture2D(texture, gl_TexCoord[0].xy)               * 4.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy - offy)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy + offy)        * 2.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx - offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy - offx + offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx - offy) * 1.0 +				 texture2D(texture, gl_TexCoord[0].xy + offx + offy) * 1.0;	gl_FragColor =  gl_Color * (pixel / 16.0);}";
-
         private Shader _Shader;
         private Graphic _BlurTest;
         private float _Blurryness = 0;
@@ -35,7 +33,7 @@ namespace BlackTournament.GameStates
             _Text.Text = "MAIN MENU";
             Layer_Game.AddChild(_Text);
 
-            //Test();
+            //ShaderTest();
 
             MusicManager.RootFolder = "music";
             music = MusicManager.Load("Ten_Seconds_to_Rush");
@@ -45,11 +43,10 @@ namespace BlackTournament.GameStates
             return true;
         }
 
-        private void Test()
+        private void ShaderTest()
         {
             TextureManager.RootFolder = "Assets";
             var tex = TextureManager.Load("AztekTiles");
-            var strm = GenerateStreamFromString(SHADER_SRC);
             Log.Fatal("Shader Available: ", Shader.IsAvailable); // fixme
 
             _Shader = new Shader(null, @"C:\Users\Fox\Desktop\blur.frag"); // Wrap into effect class?
@@ -80,11 +77,6 @@ namespace BlackTournament.GameStates
             };
         }
 
-        private MemoryStream GenerateStreamFromString(string value)
-        {
-            return new MemoryStream(Encoding.UTF8.GetBytes(value));
-        }
-
         internal void DisplayPopupMessage(string message)
         {
             Log.Debug(message);
@@ -100,6 +92,5 @@ namespace BlackTournament.GameStates
             // todo: find better destroy / music logic
             //_Core.AnimationManager.Run(music.Volume, 0, 1, v => music.Volume = v, BlackCoat.Animation.InterpolationType.Linear, a => music = null);
         }
-
     }
 }

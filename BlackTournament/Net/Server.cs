@@ -17,9 +17,9 @@ namespace BlackTournament.Net
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    public class Server<ClientType> : IServer, IDisposable where ClientType:class,IClient
+    public class Server<TClient> : IServer, IDisposable where TClient:class,IClient
     {
-        protected List<ConnectedClient<ClientType>> _ConnectedClients = new List<ConnectedClient<ClientType>>();
+        protected List<ConnectedClient<TClient>> _ConnectedClients = new List<ConnectedClient<TClient>>();
         protected ServiceHost _ServiceHost = null;
         protected Int32 _ClientIdProvider = 100;
 
@@ -77,13 +77,13 @@ namespace BlackTournament.Net
             Broadcast(client => client.ClientDisconnected(connectant.Id));
         }
 
-        protected virtual void Broadcast(Action<ClientType> operation, Func<ConnectedClient<ClientType>, bool> filter = null)
+        protected virtual void Broadcast(Action<TClient> operation, Func<ConnectedClient<TClient>, bool> filter = null)
         {
             if (Disposed) throw new ObjectDisposedException(nameof(Server));
             if (filter == null) filter = c => true; 
             Parallel.ForEach(_ConnectedClients.Where(filter), client => //passt soweit aber üblicher enumerations bug bei disconnect
             {
-                if (client.IsConnected) operation.Invoke(client.CallbackChannel as ClientType); // todo: secure
+                if (client.IsConnected) operation.Invoke(client.CallbackChannel as TClient); // todo: secure
             });
         }
 
@@ -119,11 +119,11 @@ namespace BlackTournament.Net
             return GetClientFor(channel, true) != null;
         }
 
-        protected virtual ConnectedClient<ClientType> GetClientFor(int id)
+        protected virtual ConnectedClient<TClient> GetClientFor(int id)
         {
             return _ConnectedClients.FirstOrDefault(c => c.Id == id);
         }
-        protected virtual ConnectedClient<ClientType> GetClientFor(IContextChannel channel, Boolean skipValidation = false)
+        protected virtual ConnectedClient<TClient> GetClientFor(IContextChannel channel, Boolean skipValidation = false)
         {
             var client = _ConnectedClients.FirstOrDefault(c => c.Channel == channel);
             if (client == null && !skipValidation) channel.Abort(); // invalid connection detected -> kick
@@ -142,7 +142,7 @@ namespace BlackTournament.Net
                     channel.Faulted += HandleClientDisconnect;
 
                     name = ValidateName(name);
-                    var connectand = new ConnectedClient<ClientType>(GetNextFreeClientID(), channel, OperationContext.Current.GetCallbackChannel<ClientType>(), name);
+                    var connectand = new ConnectedClient<TClient>(GetNextFreeClientID(), channel, OperationContext.Current.GetCallbackChannel<TClient>(), name);
 
                     Broadcast(client => client.ClientConnected(connectand.Id, name));
                     var users = _ConnectedClients.Cast<User>().ToArray();
