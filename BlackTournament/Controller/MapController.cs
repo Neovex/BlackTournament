@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlackCoat.InputMapping;
 using BlackTournament.GameStates;
+using BlackTournament.InputMapping;
 using BlackTournament.Net;
+using SFML.Window;
 
 namespace BlackTournament.Controller
 {
@@ -28,6 +31,12 @@ namespace BlackTournament.Controller
             _Client = client;
             _State = new MapState(_Game.Core, _Client.MapName);
 
+            var m = new InputMap<GameAction>();
+            m.AddKeyboardMapping(Keyboard.Key.A, GameAction.MoveLeft);
+            m.AddKeyboardMapping(Keyboard.Key.Left, GameAction.MoveLeft);
+            m.AddKeyboardMapping(Keyboard.Key.Return, GameAction.Confirm);
+            m.MappedOperationInvoked += M_MappedOperationInvoked;
+
             // Handle State Events
             _State.Ready += StateReady;
             _State.OnDestroy += ReleaseState;
@@ -38,6 +47,11 @@ namespace BlackTournament.Controller
             
             // Acivate State
             _Game.Core.StateManager.ChangeState(_State);
+        }
+
+        private void M_MappedOperationInvoked(GameAction obj)
+        {
+            Log.Debug(obj);
         }
 
         private void StateReady()

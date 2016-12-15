@@ -61,6 +61,7 @@
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
+    <Compile Include="InputMapping\GameAction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Net\Client.cs" />
     <Compile Include="Net\Contract\IClient.cs" />
