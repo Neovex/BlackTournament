@@ -11,15 +11,13 @@ using SFML.Window;
 
 namespace BlackTournament.Controller
 {
-    public class MapController
+    public class MapController : ControllerBase
     {
-        private Game _Game;
         private GameClient _Client;
         private MapState _State;
 
-        public MapController(Game game)
+        public MapController(Game game) : base(game)
         {
-            _Game = game;
         }
 
         public void Activate(GameClient client)
@@ -29,17 +27,14 @@ namespace BlackTournament.Controller
 
             // Init
             _Client = client;
-            _State = new MapState(_Game.Core, _Client.MapName);
+            Activate(_State = new MapState(_Game.Core, _Client.MapName));
 
+            // Input map test - lets find a better place for this - file?
             var m = new InputMap<GameAction>();
             m.AddKeyboardMapping(Keyboard.Key.A, GameAction.MoveLeft);
             m.AddKeyboardMapping(Keyboard.Key.Left, GameAction.MoveLeft);
             m.AddKeyboardMapping(Keyboard.Key.Return, GameAction.Confirm);
-            m.MappedOperationInvoked += M_MappedOperationInvoked;
-
-            // Handle State Events
-            _State.Ready += StateReady;
-            _State.OnDestroy += ReleaseState;
+            m.MappedOperationInvoked += HandleInput; // CH?
 
             // Handle client events
             _Client.ConnectionLost += HandleConnectionLost;
@@ -49,24 +44,19 @@ namespace BlackTournament.Controller
             _Game.Core.StateManager.ChangeState(_State);
         }
 
-        private void M_MappedOperationInvoked(GameAction obj)
+        private void HandleInput(GameAction obj)
         {
             Log.Debug(obj);
         }
 
-        private void StateReady()
+        protected override void StateReady()
         {
             // TODO : feed state (aka view) with data here and only now
-            // register to state events
+            // register additional to state events
         }
 
-        private void ReleaseState()
+        protected override void StateReleased()
         {
-            // deregister from state events
-            _State.Ready -= StateReady;
-            _State.OnDestroy -= ReleaseState;
-            _State = null;
-
             _Client.ConnectionLost -= HandleConnectionLost;
             _Client.ConnectionClosed -= HandleConnectionClosed;
             _Client = null;

@@ -9,18 +9,16 @@ using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {
-    public class ConnectController
+    public class ConnectController : ControllerBase
     {
-        private Game _Game;
         private GameClient _Client;
         private ConnectState _State;
 
-        public event Action ConnectionEstablished = () => { };
+        //public event Action ConnectionEstablished = () => { }; //?
 
-        
-        public ConnectController(Game game)
+
+        public ConnectController(Game game) : base(game)
         {
-            _Game = game;
         }
 
         public void Activate(GameClient client)
@@ -29,9 +27,7 @@ namespace BlackTournament.Controller
             _Client = client;
 
             // Build and switch to Connect State
-            _State = new ConnectState(_Game.Core, _Client.Host);
-            _State.Ready += ConnectStateReady;
-            _State.OnDestroy += ReleaseState;
+            Activate(_State = new ConnectState(_Game.Core, _Client.Host));
             _Game.Core.StateManager.ChangeState(_State);
 
             // Connect to Host
@@ -40,18 +36,13 @@ namespace BlackTournament.Controller
             _Client.Connect(); // check: make async?
         }
 
-        private void ConnectStateReady()
+        protected override void StateReady()
         {
             // TODO : feed state (aka view) with data here and only now
         }
 
-        private void ReleaseState()
+        protected override void StateReleased()
         {
-            // deregister from state events
-            _State.Ready -= ConnectStateReady;
-            _State.OnDestroy -= ReleaseState;
-            _State = null;
-
             _Client.ConnectionEstablished -= Connected;
             _Client.ConnectionFailed -= ConnectionFailed;
             _Client = null;

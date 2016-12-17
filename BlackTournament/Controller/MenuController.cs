@@ -7,38 +7,31 @@ using BlackTournament.GameStates;
 
 namespace BlackTournament.Controller
 {
-    public class MenuController
+    public class MenuController : ControllerBase
     {
-        private Game _Game;
         private String _Message;
         private MainMenu _State;
 
-        public MenuController(Game game)
+        public MenuController(Game game) : base(game)
         {
-            _Game = game;
         }
 
         public void Activate(String message = null)
         {
             _Message = message;
-            _State = new MainMenu(_Game.Core);
-            _State.Ready += StateReady;
-            _State.OnDestroy += ReleaseState;
+            Activate(_State = new MainMenu(_Game.Core));
             _Game.Core.StateManager.ChangeState(_State);
         }
 
-        private void StateReady()
+        protected override void StateReady()
         {
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
             // TODO: restore UI State
         }
 
-        private void ReleaseState()
+        protected override void StateReleased()
         {
-            // deregister from state events
-            _State.Ready -= StateReady;
-            _State.OnDestroy -= ReleaseState;
-            _State = null;
+            _Message = null;
         }
     }
 }
