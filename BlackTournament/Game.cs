@@ -11,6 +11,7 @@ using BlackTournament.Properties;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Controller;
+using BlackTournament.System;
 
 namespace BlackTournament
 {
@@ -26,6 +27,7 @@ namespace BlackTournament
         private GameClient _Client;
 
         public Core Core { get; private set; }
+        public InputManager InputManager { get; private set; }
 
         public static Font DefaultFont { get; private set; } // de-static?
         public MenuController MenuController { get; private set; }
@@ -47,16 +49,19 @@ namespace BlackTournament
                 // Init Core
                 Core.Debug = true;
                 Core.ConsoleCommand += ExecuteCommand;
+                Core.OnUpdate += Update;
 
                 // Init Logging
                 Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
-                Log.Info(String.Empty);
                 Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
 
                 // Init Game Font
                 _GlobalFonts = new FontManager();
                 DefaultFont = _GlobalFonts.Load(DEFAULT_FONT, Resources.HighlandGothicLightFLF);
                 // todo: test text blur issue (might need round)
+
+                // Init Input
+                InputManager = new InputManager();
 
                 // Init Game
                 MenuController = new MenuController(this);
@@ -78,6 +83,11 @@ namespace BlackTournament
                 Core.Run();
                 _GlobalFonts.Dispose();
             }
+        }
+
+        private void Update(float deltaT)
+        {
+            // TODO : server needs update
         }
 
         public void StartNewGame(String map = null, String host = null, UInt32 port = 0)

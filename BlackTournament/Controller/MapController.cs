@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackCoat.InputMapping;
 using BlackTournament.GameStates;
-using BlackTournament.InputMapping;
 using BlackTournament.Net;
 using SFML.Window;
 
@@ -29,24 +28,12 @@ namespace BlackTournament.Controller
             _Client = client;
             Activate(_State = new MapState(_Game.Core, _Client.MapName));
 
-            // Input map test - lets find a better place for this - file?
-            var m = new InputMap<GameAction>();
-            m.AddKeyboardMapping(Keyboard.Key.A, GameAction.MoveLeft);
-            m.AddKeyboardMapping(Keyboard.Key.Left, GameAction.MoveLeft);
-            m.AddKeyboardMapping(Keyboard.Key.Return, GameAction.Confirm);
-            m.MappedOperationInvoked += HandleInput; // CH?
-
             // Handle client events
             _Client.ConnectionLost += HandleConnectionLost;
             _Client.ConnectionClosed += HandleConnectionClosed;
             
             // Acivate State
             _Game.Core.StateManager.ChangeState(_State);
-        }
-
-        private void HandleInput(GameAction obj)
-        {
-            Log.Debug(obj);
         }
 
         protected override void StateReady()

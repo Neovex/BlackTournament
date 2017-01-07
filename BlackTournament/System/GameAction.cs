@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackTournament.InputMapping
+namespace BlackTournament.System
 {
-    enum GameAction
+    public enum GameAction
     {
         Confirm,
         Cancel,

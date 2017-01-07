@@ -5,6 +5,7 @@ using System.Text;
 using BlackCoat;
 using SFML.Graphics;
 using BlackTournament.Net;
+using BlackCoat.Entities;
 
 namespace BlackTournament.GameStates
 {
@@ -13,7 +14,7 @@ namespace BlackTournament.GameStates
         private string _MapName;
 
         private View _View;
-        private Player _Player; // TODO : replace with proper entitiy management
+        private IEntity _Player;
         private Map _Map;
 
 
@@ -28,9 +29,9 @@ namespace BlackTournament.GameStates
             // Setup View
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
-            _Player = new Player(_Core, TextureManager);
-            _Player.View = _View;
-            Layer_Game.AddChild(_Player);
+            //_Player = new Player(_Core, TextureManager);
+            //_Player.View = _View;
+            //Layer_Game.AddChild(_Player);
 
             // Load Map
             _Map = new Map(_Core, _MapName);
@@ -49,7 +50,7 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            _View.Center = _Player.Position;
+            //_View.Center = _Player.Position;
             //_View.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
         }
 
@@ -57,6 +58,11 @@ namespace BlackTournament.GameStates
         {
             Layer_BG.RemoveChild(_Map);
             _Map.Destroy();
+        }
+
+        public void Spawn(IEntity entity)
+        {
+            Layer_Game.AddChild(entity);
         }
 
         public override string ToString()

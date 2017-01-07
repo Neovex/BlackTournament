@@ -1,8 +1,5 @@
-﻿# controller abstrahieren
-- 
-
-
-complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
+﻿
+#complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
 
 server pure data abstraction layer - poco game data 4 serialization
 
