@@ -26,14 +26,23 @@ namespace BlackTournament.Controller
 
             // Init
             _Client = client;
+            AttachEvents();
             Activate(_State = new MapState(_Game.Core, _Client.MapName));
+        }
 
-            // Handle client events
+        private void AttachEvents()
+        {
             _Client.ConnectionLost += HandleConnectionLost;
             _Client.ConnectionClosed += HandleConnectionClosed;
-            
-            // Acivate State
-            _Game.Core.StateManager.ChangeState(_State);
+
+            _Game.InputManager.Action += _Client.ProcessGameAction;
+        }
+        private void DetachEvents()
+        {
+            _Client.ConnectionLost -= HandleConnectionLost;
+            _Client.ConnectionClosed -= HandleConnectionClosed;
+
+            _Game.InputManager.Action -= _Client.ProcessGameAction;
         }
 
         protected override void StateReady()
@@ -44,18 +53,31 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
-            _Client.ConnectionLost -= HandleConnectionLost;
-            _Client.ConnectionClosed -= HandleConnectionClosed;
+            DetachEvents();
             _Client = null;
+        }
+
+        private void ExitToMenue() // TODO attach to proper input - and or view event
+        {
+            if (_Client.IsAdmin)
+            {
+                _Client.StopServer();
+            }
+            else
+            {
+                _Client.Disconnect();
+            }
         }
 
         private void HandleConnectionLost()
         {
+            DetachEvents();
             _Game.MenuController.Activate("Connection Lost");//$
         }
 
         private void HandleConnectionClosed()
         {
+            DetachEvents();
             _Game.MenuController.Activate();
         }
     }

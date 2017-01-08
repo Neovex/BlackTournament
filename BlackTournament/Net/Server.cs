@@ -19,7 +19,7 @@ namespace BlackTournament.Net
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Server<TClient> : IServer, IDisposable where TClient:class,IClient
     {
-        protected List<ConnectedClient<TClient>> _ConnectedClients = new List<ConnectedClient<TClient>>();
+        protected List<ConnectedClient<TClient>> _ConnectedClients;
         protected ServiceHost _ServiceHost = null;
         protected Int32 _ClientIdProvider = 100;
 
@@ -31,8 +31,8 @@ namespace BlackTournament.Net
 
         public Server()
         {
+            _ConnectedClients = new List<ConnectedClient<TClient>>();
         }
-
         ~Server()
         {
             Dispose();
@@ -55,7 +55,7 @@ namespace BlackTournament.Net
 
         public virtual void Host(uint port)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(Server));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TClient>));
             var adress = new Uri(String.Format("net.tcp://{0}:{1}", Dns.GetHostName(), port));
             var binding = new NetTcpBinding();
             binding.Security.Mode = SecurityMode.None;
@@ -79,7 +79,7 @@ namespace BlackTournament.Net
 
         protected virtual void Broadcast(Action<TClient> operation, Func<ConnectedClient<TClient>, bool> filter = null)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(Server));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TClient>));
             if (filter == null) filter = c => true; 
             Parallel.ForEach(_ConnectedClients.Where(filter), client => //passt soweit aber üblicher enumerations bug bei disconnect
             {
@@ -87,9 +87,9 @@ namespace BlackTournament.Net
             });
         }
 
-        public virtual void Shutdown()
+        public virtual void StopServer()
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(Server));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TClient>));
             Broadcast(c => c.Message(Server.ID, "Server is shutting down"));
 
             Parallel.ForEach(_ConnectedClients, client => //passt soweit aber üblicher enumerations bug bei disconnect
@@ -105,7 +105,7 @@ namespace BlackTournament.Net
             return name;
         }
 
-        private int GetNextFreeClientID()
+        protected virtual int GetNextFreeClientID()
         {
             return ++_ClientIdProvider;
         }
@@ -155,6 +155,7 @@ namespace BlackTournament.Net
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                if (_ConnectedClients.Count == 0) throw;
             }
             return new SubscriptionResult();
         }

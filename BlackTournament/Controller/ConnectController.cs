@@ -28,7 +28,6 @@ namespace BlackTournament.Controller
 
             // Build and switch to Connect State
             Activate(_State = new ConnectState(_Game.Core, _Client.Host));
-            _Game.Core.StateManager.ChangeState(_State);
 
             // Connect to Host
             _Client.ConnectionEstablished += Connected;

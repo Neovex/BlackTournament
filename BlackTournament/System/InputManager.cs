@@ -67,7 +67,7 @@ namespace BlackTournament.System
 
         private void HandleInput(GameAction action)
         {
-            Log.Debug(action);
+            //Log.Debug(action);
             Action.Invoke(action);
         }
     }

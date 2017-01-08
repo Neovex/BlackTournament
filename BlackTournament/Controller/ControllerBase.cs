@@ -24,6 +24,7 @@ namespace BlackTournament.Controller
             _State = state;
             _State.Ready += StateReady;
             _State.OnDestroy += ReleaseStateInternal;
+            _Game.Core.StateManager.ChangeState(_State);
         }
 
         private void ReleaseStateInternal()

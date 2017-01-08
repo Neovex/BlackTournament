@@ -67,7 +67,7 @@ namespace BlackTournament
                 MenuController = new MenuController(this);
                 ConnectController = new ConnectController(this);
                 MapController = new MapController(this);
-                _Server = new GameServer();
+                _Server = new GameServer(Core);
 
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
@@ -87,7 +87,7 @@ namespace BlackTournament
 
         private void Update(float deltaT)
         {
-            // TODO : server needs update
+            _Server.Update(deltaT);
         }
 
         public void StartNewGame(String map = null, String host = null, UInt32 port = 0)
@@ -97,7 +97,7 @@ namespace BlackTournament
             port = port == 0 ? Game.DEFAULT_PORT : port;
 
             // Setup Server
-            _Server.Shutdown();
+            _Server.StopServer();
             if(host == Game.DEFAULT_HOST)
             {
                 _Server.HostGame(map, port);

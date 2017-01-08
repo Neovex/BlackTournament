@@ -20,7 +20,6 @@ namespace BlackTournament.Controller
         {
             _Message = message;
             Activate(_State = new MainMenu(_Game.Core));
-            _Game.Core.StateManager.ChangeState(_State);
         }
 
         protected override void StateReady()
