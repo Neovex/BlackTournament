@@ -7,6 +7,7 @@ namespace BlackTournament.Net.Contract
     {
         [OperationContract(IsOneWay = true)]
         void Shoot(int id);
+        //void Spawn(int id, int what, float x, float y, float angle);
 
         [OperationContract(IsOneWay = true)]
         void UpdatePosition(int id, float x, float y, float angle);

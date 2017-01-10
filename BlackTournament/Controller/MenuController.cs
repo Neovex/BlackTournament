@@ -31,6 +31,7 @@ namespace BlackTournament.Controller
         protected override void StateReleased()
         {
             _Message = null;
+            _State = null;
         }
     }
 }

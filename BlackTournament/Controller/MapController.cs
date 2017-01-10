@@ -26,7 +26,6 @@ namespace BlackTournament.Controller
 
             // Init
             _Client = client;
-            AttachEvents();
             Activate(_State = new MapState(_Game.Core, _Client.MapName));
         }
 
@@ -35,8 +34,16 @@ namespace BlackTournament.Controller
             _Client.ConnectionLost += HandleConnectionLost;
             _Client.ConnectionClosed += HandleConnectionClosed;
 
+            _Client.UpdatePositionReceived += UpdatePosition;
+
             _Game.InputManager.Action += _Client.ProcessGameAction;
         }
+
+        private void UpdatePosition(int id, float x, float y, float angle)
+        {
+            _State.UpdatePosition(id, x, y, angle);
+        }
+
         private void DetachEvents()
         {
             _Client.ConnectionLost -= HandleConnectionLost;
@@ -47,6 +54,7 @@ namespace BlackTournament.Controller
 
         protected override void StateReady()
         {
+            AttachEvents();
             // TODO : feed state (aka view) with data here and only now
             // register additional to state events
         }
@@ -55,6 +63,7 @@ namespace BlackTournament.Controller
         {
             DetachEvents();
             _Client = null;
+            _State = null;
         }
 
         private void ExitToMenue() // TODO attach to proper input - and or view event

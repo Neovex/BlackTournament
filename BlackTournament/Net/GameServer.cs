@@ -18,6 +18,9 @@ namespace BlackTournament.Net
         private Core _Core;
         private Dictionary<int, int> _Score;
 
+        private int _TextX;
+        private int _TextY;
+
 
         public string CurrentMap { get; set; }
         public int AdminId { get; set; }
@@ -49,12 +52,25 @@ namespace BlackTournament.Net
             if (Disposed) throw new ObjectDisposedException(nameof(GameServer));
             ChangeLevel(Server.ID, map);
             Host(port);
+
+            // Test
+            H1(null);
+        }
+
+        private void H1(BlackCoat.Animation.Animation a)
+        {
+            _Core.AnimationManager.Run(0, 200, 1, f => Broadcast(c => c.UpdatePosition(0, f, 0, 0)), BlackCoat.Animation.InterpolationType.Linear, H2);
+        }
+        private void H2(BlackCoat.Animation.Animation a)
+        {
+            _Core.AnimationManager.Run(200, 0, 2, f => Broadcast(c => c.UpdatePosition(0, f, 0, 0)), BlackCoat.Animation.InterpolationType.InQuad, H1);
         }
 
         private bool IsAdmin(int id)
         {
             return id == Server.ID || id == AdminId;
         }
+
 
         // Update from core->game
         internal void Update(float deltaT)

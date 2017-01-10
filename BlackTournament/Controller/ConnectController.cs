@@ -45,6 +45,7 @@ namespace BlackTournament.Controller
             _Client.ConnectionEstablished -= Connected;
             _Client.ConnectionFailed -= ConnectionFailed;
             _Client = null;
+            _State = null;
         }
 
         private void Connected()

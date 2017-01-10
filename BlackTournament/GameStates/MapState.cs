@@ -29,9 +29,18 @@ namespace BlackTournament.GameStates
             // Setup View
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
+            // TESTS:
+
             //_Player = new Player(_Core, TextureManager);
             //_Player.View = _View;
-            //Layer_Game.AddChild(_Player);
+
+            _Player = new BlackCoat.Entities.Shapes.Rectangle(_Core)
+            {
+                Size = new SFML.System.Vector2f(20, 40),
+                Color = Color.Magenta
+            };
+            Layer_Game.AddChild(_Player);
+            
 
             // Load Map
             _Map = new Map(_Core, _MapName);
@@ -63,6 +72,11 @@ namespace BlackTournament.GameStates
         public void Spawn(IEntity entity)
         {
             Layer_Game.AddChild(entity);
+        }
+
+        public void UpdatePosition(int id, float x, float y, float angle)
+        {
+            _Player.Position = new SFML.System.Vector2f(x + 100, 100);
         }
 
         public override string ToString()
