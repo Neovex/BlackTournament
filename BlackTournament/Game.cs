@@ -12,19 +12,21 @@ using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.System;
+using BlackTournament.Net.Lid;
 
 namespace BlackTournament
 {
     public class Game
     {
+        public const String NET_ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         public const String DEFAULT_HOST = "localhost";
         public const UInt32 DEFAULT_PORT = 123;
 
 
         private FontManager _GlobalFonts;
-        private GameServer _Server;
-        private GameClient _Client;
+        private LGameServer _Server;
+        private LClient _Client;
 
         public Core Core { get; private set; }
         public InputManager InputManager { get; private set; }
@@ -67,7 +69,7 @@ namespace BlackTournament
                 MenuController = new MenuController(this);
                 ConnectController = new ConnectController(this);
                 MapController = new MapController(this);
-                _Server = new GameServer(Core);
+                _Server = new LGameServer(Core);
 
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
@@ -88,6 +90,7 @@ namespace BlackTournament
         private void Update(float deltaT)
         {
             _Server.Update(deltaT);
+            _Client?.ProcessMessages();
         }
 
         public void StartNewGame(String map = null, String host = null, UInt32 port = 0)
@@ -100,12 +103,12 @@ namespace BlackTournament
             _Server.StopServer();
             if(host == Game.DEFAULT_HOST)
             {
-                _Server.HostGame(map, port);
+                _Server.HostGame(map, (int)port);
             }
 
             // Setup Client
             _Client?.Dispose();
-            _Client = new GameClient(host, port, Settings.Default.PlayerName);
+            _Client = new LClient(host, (int)port, Settings.Default.PlayerName);
             ConnectController.Activate(_Client);
         }
 

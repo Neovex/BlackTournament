@@ -39,6 +39,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lidgren.Network.1.0.2\lib\net451\Lidgren.Network.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -62,6 +66,11 @@
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
+    <Compile Include="Net\Lid\GameMessageType.cs" />
+    <Compile Include="Net\Lid\LClient.cs" />
+    <Compile Include="Net\Lid\LGameServer.cs" />
+    <Compile Include="Net\Lid\LServer.cs" />
+    <Compile Include="Net\Lid\User.cs" />
     <Compile Include="System\GameAction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Net\Client.cs" />

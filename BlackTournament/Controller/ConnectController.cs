@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
+using BlackTournament.Net.Lid;
 using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {
     public class ConnectController : ControllerBase
     {
-        private GameClient _Client;
+        private LClient _Client;
         private ConnectState _State;
 
         //public event Action ConnectionEstablished = () => { }; //?
@@ -21,7 +22,7 @@ namespace BlackTournament.Controller
         {
         }
 
-        public void Activate(GameClient client)
+        public void Activate(LClient client)
         {
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
             _Client = client;
