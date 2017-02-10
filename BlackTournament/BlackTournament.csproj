@@ -70,6 +70,7 @@
     <Compile Include="Net\Lid\LClient.cs" />
     <Compile Include="Net\Lid\LGameServer.cs" />
     <Compile Include="Net\Lid\LServer.cs" />
+    <Compile Include="Net\Lid\LServerBase.cs" />
     <Compile Include="Net\Lid\User.cs" />
     <Compile Include="System\GameAction.cs" />
     <Compile Include="Map.cs" />

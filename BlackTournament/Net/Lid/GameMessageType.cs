@@ -8,8 +8,12 @@ namespace BlackTournament.Net.Lid
 {
     public enum GameMessageType
     {
+        Handshake,
+        UserConnected,
+        UserDisconnected,
+
+        Message,
         LoadMap,
-        UpdatePosition,
-        Message
+        UpdatePosition
     }
 }

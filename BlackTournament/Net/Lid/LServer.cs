@@ -7,177 +7,71 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net.Lid
 {
-    public abstract class LServer
+    public abstract class LServer<TEnum> : LServerBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
-        public const int ID = 2;
-        public const int ERROR = -1;
-    }
+        protected const int _ADMIN_ID = -1;
 
-    public abstract class LServer<TEnum> : IDisposable where TEnum : struct, IComparable, IFormattable, IConvertible
-    {
-        private _IntFormat _FormatProvider;
         protected Int32 _ClientIdProvider = 100;
         protected List<User<NetConnection>> _ConnectedClients;
-        protected NetServer _Server;
+        private TEnum _Handshake;
+        private TEnum _UserConnected;
+        private TEnum _UserDisconnected;
 
-        public Boolean Disposed { get; private set; }
-        public String AppIdentifier { get; private set; }
-        protected Boolean ServerNotOperational
+        public IEnumerable<User<NetConnection>> ConnectedUsers { get { return _ConnectedClients; } }
+
+
+        public LServer(string appIdentifier, TEnum handshake, TEnum userConnected, TEnum userDisconnected) : base(appIdentifier)
         {
-            get
+            _ConnectedClients = new List<User<NetConnection>>();
+
+            _Handshake = handshake;
+            _UserConnected = userConnected;
+            _UserDisconnected = userDisconnected;
+        }
+
+
+
+        protected override void ClientConnected(NetConnection connection)
+        {
+            var user = new User<NetConnection>(GetNextFreeClientID(), connection, ValidateName(connection.RemoteHailMessage.ReadString()));
+            _ConnectedClients.Add(user);
+
+            var message = new Action<NetOutgoingMessage>(m => { m.Write(user.Id); m.Write(user.Alias); });
+            Send(user.Connection, _Handshake, message);
+            Broadcast(_UserConnected, message);
+
+            UserConnected(user);
+        }
+
+        protected abstract void UserConnected(User<NetConnection> user);
+
+
+        protected override void ClientDisconnected(NetConnection connection)
+        {
+            var user = _ConnectedClients.FirstOrDefault(u => u.Connection == connection);
+            if (user == null)
             {
-                if (Disposed) throw new ObjectDisposedException(nameof(LServer<TEnum>));
-                return _Server == null;
+                Log.Warning("Received disconnection message from unknown connection:", connection.RemoteEndPoint);
+            }
+            else
+            {
+                _ConnectedClients.Remove(user);
+                Broadcast(_UserDisconnected, m => { m.Write(user.Id); m.Write(user.Alias); });
+                UserDisconnected(user);
             }
         }
 
-
-        public LServer(string appIdentifier)
-        {
-            if (String.IsNullOrWhiteSpace(appIdentifier)) throw new ArgumentException(nameof(appIdentifier));
-            Disposed = false;
-            AppIdentifier = appIdentifier;
-            _FormatProvider = new _IntFormat();
-        }
-        ~LServer()
-        {
-            Dispose();
-        }
-
-
-        public void Host(int port)
-        {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServer<TEnum>));
-
-            var config = new NetPeerConfiguration(AppIdentifier);
-            config.Port = port;
-
-            _Server = new NetServer(config);
-            _Server.Start();
-        }
-
-        public void ProcessMessages()
-        {
-            if (ServerNotOperational) return;
-
-            NetIncomingMessage msg;
-            while ((msg = _Server.ReadMessage()) != null)
-            {
-                //Log.Debug("Server", msg.MessageType);
-                switch (msg.MessageType)
-                {
-                    case NetIncomingMessageType.Error: // Should never happen
-                        Log.Fatal(msg.MessageType, msg.SenderConnection.Status);
-                    break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        Log.Debug(nameof(LServer<TEnum>), "-", (NetConnectionStatus)msg.ReadByte(), msg.ReadString(), "-", _Server.Status, msg.SenderConnection.Status);
-
-                        switch (msg.SenderConnection.Status) // check for running server?
-                        {
-                            case NetConnectionStatus.Connected:
-                            {
-                                var user = new User<NetConnection>(GetNextFreeClientID(), msg.SenderConnection,
-                                    ValidateName(msg.SenderConnection.RemoteHailMessage.ReadString()));
-                                _ConnectedClients.Add(user);
-                                ClientConnected(user.Channel);
-                            }
-                            break;
-
-                            case NetConnectionStatus.Disconnected:
-                            {
-                                var user = _ConnectedClients.FirstOrDefault(u => u.Channel == msg.SenderConnection);
-                                if(user == null)
-                                {
-                                    Log.Warning("Received disconnection message from unknown channel!", msg.SenderEndPoint);
-                                }
-                                else
-                                {
-                                    _ConnectedClients.Remove(user);
-                                    ClientDisconnected(msg.SenderConnection);
-                                }
-                            }
-                            break;
-                        }
-                    break;
-
-                    case NetIncomingMessageType.Data:
-                        ProcessIncommingData((TEnum)(Object)msg.ReadInt32(), msg);
-                    break;
-
-                    case NetIncomingMessageType.DiscoveryRequest: // TODO
-                    break;
-                    case NetIncomingMessageType.DiscoveryResponse: // TODO
-                    break;
-
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                    case NetIncomingMessageType.DebugMessage:
-                        Log.Debug(msg.ReadString());
-                    break;
-
-                    case NetIncomingMessageType.WarningMessage:
-                        Log.Warning(msg.ReadString());
-                    break;
-
-                    case NetIncomingMessageType.ErrorMessage:
-                        Log.Error(msg.ReadString());
-                    break;
-
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                    case NetIncomingMessageType.ConnectionLatencyUpdated: //?
-                        Log.Info(msg.MessageType);
-                    break;
-                }
-                _Server.Recycle(msg);
-            }
-        }
+        protected abstract void UserDisconnected(User<NetConnection> user);
 
 
         protected virtual int GetNextFreeClientID()
         {
-            return ++_ClientIdProvider;
+            return _ConnectedClients.Count == 0 ? _ADMIN_ID : ++_ClientIdProvider;
         }
 
         protected virtual string ValidateName(string name)
         {
             return name;
-        }
-
-        protected abstract void ProcessIncommingData(TEnum subType, NetIncomingMessage msg);
-
-        protected abstract void ClientConnected(NetConnection senderConnection);
-
-        protected abstract void ClientDisconnected(NetConnection senderConnection);
-
-
-        protected virtual void Broadcast(TEnum subType, Action<NetOutgoingMessage> operation, NetDeliveryMethod netMethod = NetDeliveryMethod.UnreliableSequenced)
-        {
-            if (ServerNotOperational || operation == null) return;
-            var message = _Server.CreateMessage();
-            message.Write(subType.ToInt32(_FormatProvider)); // works?
-            operation(message);
-            _Server.SendToAll(message, netMethod);
-        }
-
-        public void StopServer()
-        {
-            if (ServerNotOperational) return;
-            _Server.Shutdown("Server Stopped"); //$
-        }
-
-        public void Dispose()
-        {
-            if (Disposed) return;
-            Disposed = true;
-            _Server?.Shutdown("Server Error"); //$
-        }
-
-        private sealed class _IntFormat : IFormatProvider
-        {
-            public object GetFormat(Type formatType)
-            {
-                return typeof(int);
-            }
         }
     }
 }

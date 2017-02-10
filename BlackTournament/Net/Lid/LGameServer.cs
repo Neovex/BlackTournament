@@ -16,24 +16,14 @@ namespace BlackTournament.Net.Lid
 
 
         public string CurrentMap { get; set; }
-        public int AdminId { get; set; }
 
 
-        public LGameServer(Core core) : base(Game.NET_ID)
+        public LGameServer(Core core) : base(Game.NET_ID, GameMessageType.Handshake, GameMessageType.UserConnected, GameMessageType.UserDisconnected)
         {
             if (core == null) throw new ArgumentNullException(nameof(core));
             _Core = core;
             _Score = new Dictionary<int, int>();
         }
-
-        //protected override int GetNextFreeClientID()
-        //{
-        //    if (_ConnectedClients.Count == 0)
-        //    {
-        //        return AdminId = _Core.Random.Next(int.MinValue, -1);
-        //    }
-        //    return base.GetNextFreeClientID();
-        //}
 
         public void HostGame(string map, int port)
         {
@@ -55,7 +45,7 @@ namespace BlackTournament.Net.Lid
 
         private bool IsAdmin(int id)
         {
-            return id == Server.ID || id == AdminId;
+            return id == Server.ID || id == _ADMIN_ID;
         }
 
 
@@ -106,14 +96,14 @@ namespace BlackTournament.Net.Lid
             Log.Debug("game server data", type, msg.ReadString());
         }
 
-        protected override void ClientConnected(NetConnection senderConnection)
+        protected override void UserConnected(User<NetConnection> user)
         {
             ChangeLevel(Server.ID, CurrentMap);
         }
 
-        protected override void ClientDisconnected(NetConnection senderConnection)
+        protected override void UserDisconnected(User<NetConnection> user)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
