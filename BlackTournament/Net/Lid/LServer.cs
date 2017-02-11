@@ -11,22 +11,18 @@ namespace BlackTournament.Net.Lid
     {
         protected const int _ADMIN_ID = -1;
 
-        protected Int32 _ClientIdProvider = 100;
+        protected int _ClientIdProvider = 100;
         protected List<User<NetConnection>> _ConnectedClients;
-        private TEnum _Handshake;
-        private TEnum _UserConnected;
-        private TEnum _UserDisconnected;
+        protected Commands _Commands;
 
         public IEnumerable<User<NetConnection>> ConnectedUsers { get { return _ConnectedClients; } }
 
 
-        public LServer(string appIdentifier, TEnum handshake, TEnum userConnected, TEnum userDisconnected) : base(appIdentifier)
+        public LServer(string appIdentifier, Commands commands) : base(appIdentifier)
         {
+            if (commands == null) throw new ArgumentNullException(nameof(commands));
             _ConnectedClients = new List<User<NetConnection>>();
-
-            _Handshake = handshake;
-            _UserConnected = userConnected;
-            _UserDisconnected = userDisconnected;
+            _Commands = commands;
         }
 
 
@@ -37,8 +33,8 @@ namespace BlackTournament.Net.Lid
             _ConnectedClients.Add(user);
 
             var message = new Action<NetOutgoingMessage>(m => { m.Write(user.Id); m.Write(user.Alias); });
-            Send(user.Connection, _Handshake, message);
-            Broadcast(_UserConnected, message);
+            Send(user.Connection, _Commands.Handshake, message);
+            Broadcast(_Commands.UserConnected, message);
 
             UserConnected(user);
         }
@@ -56,7 +52,7 @@ namespace BlackTournament.Net.Lid
             else
             {
                 _ConnectedClients.Remove(user);
-                Broadcast(_UserDisconnected, m => { m.Write(user.Id); m.Write(user.Alias); });
+                Broadcast(_Commands.UserDisconnected, m => { m.Write(user.Id); m.Write(user.Alias); });
                 UserDisconnected(user);
             }
         }
@@ -72,6 +68,20 @@ namespace BlackTournament.Net.Lid
         protected virtual string ValidateName(string name)
         {
             return name;
+        }
+
+        public class Commands
+        {
+            public readonly TEnum Handshake;
+            public readonly TEnum UserConnected;
+            public readonly TEnum UserDisconnected;
+
+            public Commands(TEnum handshake, TEnum userConnected, TEnum userDisconnected)
+            {
+                Handshake = handshake;
+                UserConnected = userConnected;
+                UserDisconnected = userDisconnected;
+            }
         }
     }
 }

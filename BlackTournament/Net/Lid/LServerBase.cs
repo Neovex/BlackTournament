@@ -56,6 +56,7 @@ namespace BlackTournament.Net.Lid
         {
             if (ServerNotOperational) return;
             _Server.Shutdown("Server Stopped"); //$
+            _Server = null;
         }
 
         public void Dispose()
