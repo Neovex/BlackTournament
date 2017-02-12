@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
-using BlackTournament.Net.Lid;
 using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {
     public class ConnectController : ControllerBase
     {
-        private LGameClient _Client;
+        private BlackTournamentClient _Client;
         private ConnectState _State;
 
         //public event Action ConnectionEstablished = () => { }; //?
@@ -22,18 +21,18 @@ namespace BlackTournament.Controller
         {
         }
 
-        public void Activate(LGameClient client)
+        public void Activate(BlackTournamentClient client,String host, Int32 port)
         {
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
             _Client = client;
 
             // Build and switch to Connect State
-            Activate(_State = new ConnectState(_Game.Core, _Client.Host));
+            Activate(_State = new ConnectState(_Game.Core, host));
 
             // Connect to Host
             _Client.ConnectionEstablished += Connected;
-            _Client.ConnectionFailed += ConnectionFailed;
-            _Client.Connect(); // check: make async?
+            _Client.ConnectionHasBeenLost += ConnectionFailed;
+            _Client.Connect(host, port);
         }
 
         protected override void StateReady()
@@ -44,7 +43,7 @@ namespace BlackTournament.Controller
         protected override void StateReleased()
         {
             _Client.ConnectionEstablished -= Connected;
-            _Client.ConnectionFailed -= ConnectionFailed;
+            _Client.ConnectionHasBeenLost -= ConnectionFailed;
             _Client = null;
             _State = null;
         }

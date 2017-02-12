@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlackTournament.Net.Client;
 using BlackTournament.System;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
-    public class LGameClient:LClient<GameMessageType>
+    public class BlackTournamentClient : ManagedClient<GameMessageType>
     {
-        private NetClient _Client;
-        
-
         public override int AdminId { get { return Net.ADMIN_ID; } }
         public string MapName { get; private set; }
+        public Boolean IsConnected { get { throw new NotImplementedException(); } }
 
         public event Action ConnectionEstablished = () => { };
         public event Action ConnectionHasBeenLost = () => { };
@@ -25,7 +24,7 @@ namespace BlackTournament.Net.Lid
 
 
 
-        public LGameClient(String userName):base(userName, Net.COMMANDS)
+        public BlackTournamentClient(String userName):base(userName, Net.COMMANDS)
         {
         }
 
@@ -39,6 +38,11 @@ namespace BlackTournament.Net.Lid
         protected override void Connected(int id, string alias)
         {
             ConnectionEstablished.Invoke();
+        }
+
+        internal void ProcessGameAction(GameAction obj)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void Disconnected()
@@ -60,6 +64,16 @@ namespace BlackTournament.Net.Lid
         public void SendMessage(string txt)
         {
             Send(GameMessageType.Message, m => m.Write(txt));
+        }
+
+        internal void StopServer()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void Disconnect()
+        {
+            throw new NotImplementedException();
         }
     }
 }

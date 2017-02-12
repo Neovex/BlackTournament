@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
     public abstract class NetBase<TEnum> : IDisposable where TEnum : struct, IComparable, IFormattable, IConvertible
     {
@@ -36,7 +36,7 @@ namespace BlackTournament.Net.Lid
 
         public void ProcessMessages()
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(NetBase<TEnum>));
 
             NetIncomingMessage msg;
             while ((msg = _BasePeer.ReadMessage()) != null)
@@ -49,7 +49,7 @@ namespace BlackTournament.Net.Lid
                         break;
 
                     case NetIncomingMessageType.StatusChanged:
-                        Log.Debug(nameof(LServerBase<TEnum>), "-", (NetConnectionStatus)msg.ReadByte(), msg.ReadString(), "-", _BasePeer.Status, msg.SenderConnection.Status);
+                        Log.Debug(nameof(NetBase<TEnum>), "-", (NetConnectionStatus)msg.ReadByte(), msg.ReadString(), "-", _BasePeer.Status, msg.SenderConnection.Status);
 
                         switch (msg.SenderConnection.Status) // TODO check for running server?
                         {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
     public class ClientUser
     {

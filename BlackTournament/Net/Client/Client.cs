@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using BlackTournament.System;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net.Client
 {
-    public abstract class LClientBase<TEnum> : NetBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
+    public abstract class Client<TEnum> : NetBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         private NetClient _Client;
         
 
-        public LClientBase() : base(new NetClient(new NetPeerConfiguration(Game.NET_ID)))
+        public Client() : base(new NetClient(new NetPeerConfiguration(Game.NET_ID)))
         {
             _Client = _BasePeer as NetClient;
         }
@@ -21,7 +21,7 @@ namespace BlackTournament.Net.Lid
 
         public void Connect(String host, Int32 port, String hail)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Client<TEnum>));
             if (String.IsNullOrWhiteSpace(host)) throw new ArgumentException(nameof(host));
 
             _Client.Start();
@@ -58,7 +58,7 @@ namespace BlackTournament.Net.Lid
         }
         protected virtual void Send(NetOutgoingMessage message, NetDeliveryMethod netMethod = _DEFAULT_METHOD)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Client<TEnum>));
             _Client.SendMessage(message, netMethod);
         }
     }

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net.Server
 {
-    public abstract class LServer<TEnum> : LServerBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
+    public abstract class ManagedServer<TEnum> : Server<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         protected int _ClientIdProvider = 100;
         protected List<ServerUser<NetConnection>> _ConnectedClients;
@@ -17,7 +17,7 @@ namespace BlackTournament.Net.Lid
         public virtual IEnumerable<ServerUser<NetConnection>> ConnectedUsers { get { return _ConnectedClients; } }
 
 
-        public LServer(string appIdentifier, Commands<TEnum> commands) : base(appIdentifier)
+        public ManagedServer(string appIdentifier, Commands<TEnum> commands) : base(appIdentifier)
         {
             if (commands == null) throw new ArgumentNullException(nameof(commands));
             _ConnectedClients = new List<ServerUser<NetConnection>>();

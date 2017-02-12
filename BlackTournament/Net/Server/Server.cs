@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net.Server
 {
-    public abstract class LServerBase<TEnum> : NetBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
+    public abstract class Server<TEnum> : NetBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         private NetServer _Server;
 
         public String AppIdentifier { get; private set; }
 
 
-        public LServerBase(string appIdentifier):base(new NetPeer(new NetPeerConfiguration(appIdentifier)))
+        public Server(string appIdentifier):base(new NetPeer(new NetPeerConfiguration(appIdentifier)))
         {
             if (String.IsNullOrWhiteSpace(appIdentifier)) throw new ArgumentException(nameof(appIdentifier));
             AppIdentifier = appIdentifier;
@@ -25,7 +25,7 @@ namespace BlackTournament.Net.Lid
 
         public void Host(int port)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
 
             StopServer(String.Empty);
 
@@ -39,7 +39,7 @@ namespace BlackTournament.Net.Lid
 
         public void StopServer(string stopMessage)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
             _BasePeer.Shutdown(stopMessage);
             Log.Info("Server Stopped");
         }
@@ -53,7 +53,7 @@ namespace BlackTournament.Net.Lid
         }
         protected virtual void Broadcast(NetOutgoingMessage message, NetDeliveryMethod netMethod = _DEFAULT_METHOD)
         {
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
             _Server.SendToAll(message, netMethod);
         }
 
@@ -64,7 +64,7 @@ namespace BlackTournament.Net.Lid
         protected virtual void Send(NetOutgoingMessage message, NetConnection receiver, NetDeliveryMethod netMethod = _DEFAULT_METHOD)
         {
             if (receiver == null) throw new ArgumentNullException(nameof(receiver));
-            if (Disposed) throw new ObjectDisposedException(nameof(LServerBase<TEnum>));
+            if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
             _Server.SendMessage(message, receiver, netMethod);
         }
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
     public enum GameMessageType
     {

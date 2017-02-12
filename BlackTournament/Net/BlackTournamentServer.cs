@@ -4,21 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlackCoat;
+using BlackTournament.Net.Server;
 using BlackTournament.System;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
-    class LGameServer : LServer<GameMessageType>
+    class BlackTournamentServer : ManagedServer<GameMessageType>
     {
         private Core _Core;
         private Dictionary<int, int> _Score;
 
 
         public string CurrentMap { get; set; }
+        public override int AdminId { get { return Net.ADMIN_ID; } }
 
-
-        public LGameServer(Core core) : base(Game.NET_ID, Net.COMMANDS)
+        public BlackTournamentServer(Core core) : base(Game.NET_ID, Net.COMMANDS)
         {
             if (core == null) throw new ArgumentNullException(nameof(core));
             _Core = core;
@@ -29,13 +30,13 @@ namespace BlackTournament.Net.Lid
 
         private bool IsAdmin(int id)
         {
-            return id == Server.ID || id == _ADMIN_ID;
+            return id == AdminId;
         }
 
         public void HostGame(string map, int port)
         {
             StopServer("Restart?"); //$
-            ChangeLevel(Server.ID, map);
+            ChangeLevel(AdminId, map);
             Host(port);
 
             // Test

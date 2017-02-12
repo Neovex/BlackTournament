@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net.Server
 {
     public class ServerUser<TChannel> : ClientUser where TChannel : class
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net
 {
     public sealed class Commands<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {

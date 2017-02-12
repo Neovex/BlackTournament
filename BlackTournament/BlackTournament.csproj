@@ -66,30 +66,25 @@
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
-    <Compile Include="Net\Lid\Commands.cs" />
-    <Compile Include="Net\Lid\GameMessageType.cs" />
-    <Compile Include="Net\Lid\LGameClient.cs" />
-    <Compile Include="Net\Lid\LClientBase.cs" />
-    <Compile Include="Net\Lid\LClient.cs" />
-    <Compile Include="Net\Lid\Net.cs" />
-    <Compile Include="Net\Lid\NetBase.cs" />
-    <Compile Include="Net\Lid\ClientUser.cs" />
-    <Compile Include="Net\Lid\Server\LGameServer.cs" />
-    <Compile Include="Net\Lid\Server\LServer.cs" />
-    <Compile Include="Net\Lid\Server\LServerBase.cs" />
-    <Compile Include="Net\Lid\ServerUser.cs" />
+    <Compile Include="Net\BlackTournamentClient.cs" />
+    <Compile Include="Net\BlackTournamentServer.cs" />
+    <Compile Include="Net\Client\Client.cs" />
+    <Compile Include="Net\Client\ManagedClient.cs" />
+    <Compile Include="Net\Commands.cs" />
+    <Compile Include="Net\Message.cs" />
+    <Compile Include="Net\Net.cs" />
+    <Compile Include="Net\NetBase.cs" />
+    <Compile Include="Net\Server\ManagedServer.cs" />
+    <Compile Include="Net\Server\Server.cs" />
+    <Compile Include="Net\Server\ServerUser.cs" />
+    <Compile Include="Net\User.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="System\GameAction.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="Net\Client.cs" />
-    <Compile Include="Net\Contract\IClient.cs" />
-    <Compile Include="Net\Contract\IGameClient.cs" />
-    <Compile Include="Net\Contract\IGameServer.cs" />
-    <Compile Include="Net\Contract\IServer.cs" />
-    <Compile Include="Net\Contract\SubscriptionResult.cs" />
-    <Compile Include="Net\Contract\User.cs" />
-    <Compile Include="Net\GameClient.cs" />
-    <Compile Include="Net\GameServer.cs" />
-    <Compile Include="Net\Server.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Programm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,7 +94,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs" />
     <Compile Include="System\InputManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +101,6 @@
     <None Include="Assets\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Net\Network.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -116,7 +109,10 @@
     </None>
     <None Include="Network.cd" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Space.png">
@@ -171,6 +167,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

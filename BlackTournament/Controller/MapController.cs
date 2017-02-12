@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 using BlackCoat.InputMapping;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
-using BlackTournament.Net.Lid;
 using SFML.Window;
 
 namespace BlackTournament.Controller
 {
     public class MapController : ControllerBase
     {
-        private LGameClient _Client;
+        private BlackTournamentClient _Client;
         private MapState _State;
 
         public MapController(Game game) : base(game)
         {
         }
 
-        public void Activate(LGameClient client)
+        public void Activate(BlackTournamentClient client)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
@@ -32,8 +31,8 @@ namespace BlackTournament.Controller
 
         private void AttachEvents()
         {
-            _Client.ConnectionLost += HandleConnectionLost;
-            _Client.ConnectionClosed += HandleConnectionClosed;
+            _Client.ConnectionHasBeenLost += HandleConnectionLost;
+            //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
 
             _Client.UpdatePositionReceived += UpdatePosition;
 
@@ -47,8 +46,8 @@ namespace BlackTournament.Controller
 
         private void DetachEvents()
         {
-            _Client.ConnectionLost -= HandleConnectionLost;
-            _Client.ConnectionClosed -= HandleConnectionClosed;
+            _Client.ConnectionHasBeenLost -= HandleConnectionLost;
+            //_Client.ConnectionClosed -= HandleConnectionClosed; // FIXME
 
             _Game.InputManager.Action -= _Client.ProcessGameAction;
         }
@@ -75,7 +74,7 @@ namespace BlackTournament.Controller
             }
             else
             {
-                _Client.Disconnect();
+                _Client.Disconnect("disconnect"); //$ // TODO
             }
         }
 

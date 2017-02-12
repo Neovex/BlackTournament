@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using BlackTournament.System;
 using Lidgren.Network;
 
-namespace BlackTournament.Net.Lid
+namespace BlackTournament.Net.Client
 {
-    public abstract class LClient<TEnum> : LClientBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
+    public abstract class ManagedClient<TEnum> : Client<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         protected Commands<TEnum> _Commands;
         protected List<ClientUser> _ConnectedClients;
@@ -21,7 +21,7 @@ namespace BlackTournament.Net.Lid
         public abstract Int32 AdminId { get; }
 
 
-        public LClient(String alias, Commands<TEnum> commands)
+        public ManagedClient(String alias, Commands<TEnum> commands)
         {
             if (String.IsNullOrWhiteSpace(alias)) throw new ArgumentException(nameof(alias));
             if (commands == null) throw new ArgumentNullException(nameof(commands));

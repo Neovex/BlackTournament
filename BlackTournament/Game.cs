@@ -12,7 +12,6 @@ using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.System;
-using BlackTournament.Net.Lid;
 
 namespace BlackTournament
 {
@@ -21,12 +20,12 @@ namespace BlackTournament
         public const String NET_ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         public const String DEFAULT_HOST = "localhost";
-        public const UInt32 DEFAULT_PORT = 123;
+        public const Int32 DEFAULT_PORT = 123;
 
 
         private FontManager _GlobalFonts;
-        private LGameServer _Server;
-        private LGameClient _Client;
+        private BlackTournamentServer _Server;
+        private BlackTournamentClient _Client;
 
         public Core Core { get; private set; }
         public InputManager InputManager { get; private set; }
@@ -69,7 +68,7 @@ namespace BlackTournament
                 MenuController = new MenuController(this);
                 ConnectController = new ConnectController(this);
                 MapController = new MapController(this);
-                _Server = new LGameServer(Core);
+                _Server = new BlackTournamentServer(Core);
 
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
@@ -93,7 +92,7 @@ namespace BlackTournament
             _Client?.ProcessMessages();
         }
 
-        public void StartNewGame(String map = null, String host = null, UInt32 port = 0)
+        public void StartNewGame(String map = null, String host = null, int port = 0)
         {
             if (map == null && host == null) throw new ArgumentException($"Failed to start with {map} - {host}");
             host = host ?? Game.DEFAULT_HOST;
@@ -103,13 +102,13 @@ namespace BlackTournament
             _Server.StopServer("Restart?"); //$
             if(host == Game.DEFAULT_HOST)
             {
-                _Server.HostGame(map, (int)port);
+                _Server.HostGame(map, port);
             }
 
             // Setup Client
             _Client?.Dispose();
-            _Client = new LGameClient(host, (int)port, Settings.Default.PlayerName);
-            ConnectController.Activate(_Client);
+            _Client = new BlackTournamentClient(Settings.Default.PlayerName);
+            ConnectController.Activate(_Client, host, port);
         }
 
         private bool ExecuteCommand(string cmd)
@@ -125,7 +124,7 @@ namespace BlackTournament
                         return true;
 
                     case "disconnect":
-                        if (_Client != null && _Client.Connected)
+                        if (_Client.IsConnected)
                         {
                             _Client.Disconnect();
                             Log.Info("Disconnected");
@@ -141,7 +140,7 @@ namespace BlackTournament
                     case "message":
                         if (commandData.Length > 1)
                         {
-                            if (_Client != null && _Client.Connected)
+                            if (_Client.IsConnected)
                             {
                                 _Client.SendMessage(String.Join(separator.ToString(), commandData.Skip(1)));
                             }
@@ -169,7 +168,7 @@ namespace BlackTournament
                     case "connect":
                         if (commandData.Length > 2)
                         {
-                            var port = commandData.Length == 3 ? UInt32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Game.DEFAULT_PORT;
                             StartNewGame(host: commandData[1], port: port);
                         }
                         Log.Info("Invalid connect command. Use connect [hostname] optional:[port]", cmd);
@@ -180,7 +179,7 @@ namespace BlackTournament
                     case "start server":
                         if (commandData.Length > 2)
                         {
-                            var port = commandData.Length == 3 ? UInt32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Game.DEFAULT_PORT;
                             StartNewGame(map: commandData[1], port: port);
                         }
                         Log.Info("Invalid host command. Use host [mapname] optional:[port]", cmd);
