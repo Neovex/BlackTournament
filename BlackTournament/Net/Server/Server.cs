@@ -40,6 +40,7 @@ namespace BlackTournament.Net.Server
         public void StopServer(string stopMessage)
         {
             if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
+            if (_BasePeer.Status != NetPeerStatus.Running) return;
             _BasePeer.Shutdown(stopMessage);
             Log.Info("Server Stopped");
         }

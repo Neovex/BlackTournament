@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 
 namespace BlackTournament.Net
 {
-    public enum GameMessageType
+    public enum NetMessage
     {
+        // Server/Client Infrastructure
         Handshake,
         UserConnected,
         UserDisconnected,
 
-        Message,
-        LoadMap,
-        UpdatePosition
+        // 2 Way
+        SendMessage,
+        ChangeLevel,
+
+        // Client Only
+
+        // Server Only
+        ProcessGameAction,
+        StopServer
     }
 }

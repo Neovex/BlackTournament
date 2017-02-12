@@ -2,12 +2,12 @@
 
 namespace BlackTournament.Net
 {
-    public class ClientUser
+    public class User
     {
         public Int32 Id { get; private set; }
         public String Alias { get; set; }
 
-        internal ClientUser(Int32 id, String alias)
+        internal User(Int32 id, String alias)
         {
             Id = id;
             Alias = alias;

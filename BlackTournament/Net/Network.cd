@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BlackTournament.Net.Client.Client&lt;TEnum&gt;" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAAAQAAAAEgAAIAAAAAAAEAAAAAAAgAAAAA=</HashCode>
+      <FileName>Net\Client\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Client.ManagedClient&lt;TEnum&gt;" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAUQIAQAAAIAACAJAACAAIAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Net\Client\ManagedClient.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Commands" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_ConnectedClients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.ManagedServer&lt;TEnum&gt;" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAA0AAAAAAAIAgCABAAAAAAAgAAAAAIQAAACAA=</HashCode>
+      <FileName>Net\Server\ManagedServer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Commands" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_ConnectedClients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.Server&lt;TEnum&gt;" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQAAACAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Server\Server.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.ServerUser&lt;TChannel&gt;" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Server\ServerUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAEB0AAAQABAACACAAAAQBAIAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Net\BlackTournamentClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.BlackTournamentServer" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAUQAAAAAAACACAAAASQAAAgAAAAMAABAAAAA=</HashCode>
+      <FileName>Net\BlackTournamentServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Commands&lt;TEnum&gt;" Collapsed="true">
+    <Position X="4" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Commands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Net" Collapsed="true">
+    <Position X="4" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Net\Net.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="COMMANDS" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.75" />
+    <NestedTypes>
+      <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;.Format" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Net\NetBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgSAAAAAAAAgAAAAAAAAEAAKAAAgAAAACAAA=</HashCode>
+      <FileName>Net\NetBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.User" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BlackTournament.Net.NetMessage">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAABAAACACAAAAQQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\NetMessage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

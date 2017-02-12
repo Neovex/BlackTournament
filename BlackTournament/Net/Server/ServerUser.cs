@@ -2,7 +2,7 @@
 
 namespace BlackTournament.Net.Server
 {
-    public class ServerUser<TChannel> : ClientUser where TChannel : class
+    public class ServerUser<TChannel> : User where TChannel : class
     {
         public TChannel Connection { get; private set; }
 

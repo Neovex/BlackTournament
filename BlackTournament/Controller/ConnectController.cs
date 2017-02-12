@@ -30,7 +30,7 @@ namespace BlackTournament.Controller
             Activate(_State = new ConnectState(_Game.Core, host));
 
             // Connect to Host
-            _Client.ConnectionEstablished += Connected;
+            _Client.ChangeLevelReceived += LevelReady;
             _Client.ConnectionHasBeenLost += ConnectionFailed;
             _Client.Connect(host, port);
         }
@@ -42,14 +42,15 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
-            _Client.ConnectionEstablished -= Connected;
+            _Client.ChangeLevelReceived -= LevelReady;
             _Client.ConnectionHasBeenLost -= ConnectionFailed;
             _Client = null;
             _State = null;
         }
 
-        private void Connected()
+        private void LevelReady()
         {
+            Log.Debug("Client Ready");
             _Game.Core.AnimationManager.Wait(2, a => { _Game.MapController.Activate(_Client); }); // TODO: move timeout to map controller?
         }
 

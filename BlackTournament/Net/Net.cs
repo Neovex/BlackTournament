@@ -4,7 +4,7 @@ namespace BlackTournament.Net
 {
     public class Net
     {
-        public static readonly Int32 ADMIN_ID = new Random().Next(int.MinValue, -1);
-        public static readonly Commands<GameMessageType> COMMANDS = new Commands<GameMessageType>(GameMessageType.Handshake, GameMessageType.UserConnected, GameMessageType.UserDisconnected);
+        public static readonly Int32 ADMIN_ID = new Random().Next(Int32.MinValue, -1);
+        public static readonly Commands<NetMessage> COMMANDS = new Commands<NetMessage>(NetMessage.Handshake, NetMessage.UserConnected, NetMessage.UserDisconnected);
     }
 }

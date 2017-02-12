@@ -71,7 +71,7 @@
     <Compile Include="Net\Client\Client.cs" />
     <Compile Include="Net\Client\ManagedClient.cs" />
     <Compile Include="Net\Commands.cs" />
-    <Compile Include="Net\Message.cs" />
+    <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Net\NetBase.cs" />
     <Compile Include="Net\Server\ManagedServer.cs" />
@@ -101,6 +101,7 @@
     <None Include="Assets\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Net\Network.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

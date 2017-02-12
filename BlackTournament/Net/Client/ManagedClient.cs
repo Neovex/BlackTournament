@@ -10,12 +10,12 @@ namespace BlackTournament.Net.Client
     public abstract class ManagedClient<TEnum> : Client<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         protected Commands<TEnum> _Commands;
-        protected List<ClientUser> _ConnectedClients;
+        protected List<User> _ConnectedClients;
 
 
         public virtual Int32 Id { get; protected set; }
         public virtual String Alias { get; protected set; }
-        public virtual IEnumerable<ClientUser> ConnectedUsers { get { return _ConnectedClients; } }
+        public virtual IEnumerable<User> ConnectedUsers { get { return _ConnectedClients; } }
         public virtual Boolean IsAdmin { get { return Id == AdminId; } }
         public abstract Int32 AdminId { get; }
 
@@ -26,6 +26,7 @@ namespace BlackTournament.Net.Client
             if (commands == null) throw new ArgumentNullException(nameof(commands));
             Alias = alias;
             _Commands = commands;
+            _ConnectedClients = new List<User>();
         }
 
         public void Connect(String host, Int32 port)
@@ -46,9 +47,13 @@ namespace BlackTournament.Net.Client
             }
             else if (subType.Equals(_Commands.UserConnected))
             {
-                var user = new ClientUser(msg.ReadInt32(), msg.ReadString());
-                _ConnectedClients.Add(user);
-                UserConnected(user);
+                var id = msg.ReadInt32();
+                if (id != Id)
+                {
+                    var user = new User(id, msg.ReadString());
+                    _ConnectedClients.Add(user);
+                    UserConnected(user);
+                }
             }
             else if (subType.Equals(_Commands.UserDisconnected))
             {
@@ -70,8 +75,8 @@ namespace BlackTournament.Net.Client
         }
 
         protected abstract void Connected(Int32 id, String alias);
-        protected abstract void UserConnected(ClientUser user);
-        protected abstract void UserDisconnected(ClientUser user);
+        protected abstract void UserConnected(User user);
+        protected abstract void UserDisconnected(User user);
         protected abstract void DataReceived(TEnum subType, NetIncomingMessage msg); // hmm msg UU mit interface ersetzen
     }
 }

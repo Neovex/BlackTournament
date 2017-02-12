@@ -9,18 +9,17 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net
 {
-    public class BlackTournamentClient : ManagedClient<GameMessageType>
+    public class BlackTournamentClient : ManagedClient<NetMessage>
     {
-        public override int AdminId { get { return Net.ADMIN_ID; } }
-        public string MapName { get; private set; }
-        public Boolean IsConnected { get { throw new NotImplementedException(); } }
+        public String MapName { get; private set; }
+        public Boolean IsConnected { get { return _BasePeer.ConnectionsCount != 0; } }
+        public override Int32 AdminId { get { return Net.ADMIN_ID; } }
 
         public event Action ConnectionEstablished = () => { };
         public event Action ConnectionHasBeenLost = () => { };
-        
-        public event Action<int, float, float, float> UpdatePositionReceived = (id, x, y, a) => { };
-        public event Action<int> ShotReceived = id => { };
-        public event Action<string> ChangeLevelReceived = lvl => { };
+
+        public event Action ChangeLevelReceived = () => { };
+        public event Action<User, String> MessageReceived = (u, m) => { };
 
 
 
@@ -28,21 +27,60 @@ namespace BlackTournament.Net
         {
         }
 
-        protected override void DataReceived(GameMessageType subType, NetIncomingMessage msg)
+
+        // OUTGOING
+        public void ProcessGameAction(GameAction action)
         {
-            throw new NotImplementedException();
+            var method = NetDeliveryMethod.UnreliableSequenced;
+            if(action == GameAction.ShootPrimary || action == GameAction.ShootSecundary)
+            {
+                method = NetDeliveryMethod.ReliableSequenced;
+            }
+            Send(NetMessage.ProcessGameAction, m => m.Write((int)action), method);
+        }
+
+        public void SendMessage(String txt)
+        {
+            Send(NetMessage.SendMessage, m => m.Write(txt));
+        }
+
+        public void StopServer()
+        {
+            Send(NetMessage.StopServer, m => m.Write(Id));
+        }
+
+        public void Disconnect()
+        {
+            Disconnect(String.Empty);
         }
 
 
+        // INCOMMING
+        protected override void DataReceived(NetMessage message, NetIncomingMessage msg)
+        {
+            switch (message)
+            {
+                case NetMessage.SendMessage:
+                {
+                    var id = msg.ReadInt32();
+                    var user = _ConnectedClients.FirstOrDefault(u => u.Id == id);
+                    if (user == null) return;
+                    var txt = msg.ReadString();
+                    Log.Info(user.Alias, txt);
+                    MessageReceived(user, txt);
+                }
+                break;
+
+                case NetMessage.ChangeLevel:
+                    MapName = msg.ReadString();
+                    ChangeLevelReceived();
+                break;
+            }
+        }
 
         protected override void Connected(int id, string alias)
         {
             ConnectionEstablished.Invoke();
-        }
-
-        internal void ProcessGameAction(GameAction obj)
-        {
-            throw new NotImplementedException();
         }
 
         protected override void Disconnected()
@@ -50,30 +88,12 @@ namespace BlackTournament.Net
             ConnectionHasBeenLost.Invoke();
         }
 
-
-
-        protected override void UserConnected(ClientUser user)
+        protected override void UserConnected(User user)
         {
         }
 
-        protected override void UserDisconnected(ClientUser user)
+        protected override void UserDisconnected(User user)
         {
-        }
-
-
-        public void SendMessage(string txt)
-        {
-            Send(GameMessageType.Message, m => m.Write(txt));
-        }
-
-        internal void StopServer()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void Disconnect()
-        {
-            throw new NotImplementedException();
         }
     }
 }

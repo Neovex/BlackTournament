@@ -10,7 +10,7 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net
 {
-    class BlackTournamentServer : ManagedServer<GameMessageType>
+    class BlackTournamentServer : ManagedServer<NetMessage>
     {
         private Core _Core;
         private Dictionary<int, int> _Score;
@@ -27,7 +27,6 @@ namespace BlackTournament.Net
         }
 
         // CONTROL
-
         private bool IsAdmin(int id)
         {
             return id == AdminId;
@@ -35,25 +34,9 @@ namespace BlackTournament.Net
 
         public void HostGame(string map, int port)
         {
-            StopServer("Restart?"); //$
-            ChangeLevel(AdminId, map);
             Host(port);
-
-            // Test
-            H1(null);
+            ChangeLevel(AdminId, map);
         }
-
-        // TEST ##########################
-        private void H1(BlackCoat.Animation.Animation a)
-        {
-            _Core.AnimationManager.Run(0, 200, 1, UpdatePosition, BlackCoat.Animation.InterpolationType.Linear, H2);
-        }
-        private void H2(BlackCoat.Animation.Animation a)
-        {
-            _Core.AnimationManager.Run(200, 0, 2, UpdatePosition, BlackCoat.Animation.InterpolationType.InQuad, H1);
-        }
-        // /TEST #########################
-
 
         // Update from core->game
         internal void Update(float deltaT)
@@ -70,53 +53,93 @@ namespace BlackTournament.Net
 
 
         // INCOMMING
-
-        protected override void ProcessIncommingData(GameMessageType type, NetIncomingMessage msg)
+        protected override void ProcessIncommingData(NetMessage type, NetIncomingMessage msg)
         {
-            Log.Debug("game server data", type, msg.ReadString());
+            switch (type)
+            {
+                case NetMessage.SendMessage:
+                    SendMessage(msg.ReadInt32(), msg.ReadString());
+                break;
+
+                case NetMessage.ChangeLevel:
+                    ChangeLevel(msg.ReadInt32(), msg.ReadString());
+                break;
+
+                case NetMessage.ProcessGameAction:
+                    ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32());
+                break;
+
+                case NetMessage.StopServer:
+                    StopServer(msg.ReadInt32());
+                break;
+            }
         }
 
         protected override void UserConnected(ServerUser<NetConnection> user)
         {
-            //ChangeLevel(Server.ID, CurrentMap); whu?
+            Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(CurrentMap));
+            _Score.Add(user.Id, 0);
         }
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)
         {
-            // TODO
+            _Score.Remove(user.Id);
         }
 
         // MAPPED HANDLERS
-
-        public string GetLevel()
+        private void SendMessage(int id, string message)
         {
-            return CurrentMap;
+            Broadcast(NetMessage.SendMessage, m =>
+            {
+                m.Write(id);
+                m.Write(message);
+            });
         }
 
-        public void ChangeLevel(int id, string map)
+        private void StopServer(int id)
+        {
+            if (IsAdmin(id)) StopServer(String.Empty);
+            // TODO : check if dropped players will be removed by other events or needs to be done manually
+        }
+
+        private void ChangeLevel(int id, string map)
         {
             if (IsAdmin(id))
             {
                 // TODO : validate & load level data
                 CurrentMap = map;
                 _Score = _Score.ToDictionary(kvp => kvp.Key, kvp => 0);
-                Broadcast(GameMessageType.LoadMap, msg => msg.Write(map));
+                Broadcast(NetMessage.ChangeLevel, m => m.Write(CurrentMap));
             }
         }
 
-        public void StopServer(int id)
+        private void ProcessGameAction(int id, GameAction action) // CSH
         {
-            //if (IsAdmin(id)) StopServer();
-        }
-
-        public void ProcessGameAction(int id, GameAction action) // CSH
-        {
-
-        }
-
-        public void UpdatePosition(float pos)
-        {
-            Broadcast(GameMessageType.UpdatePosition, msg => msg.Write(pos), NetDeliveryMethod.UnreliableSequenced);
+            switch (action)
+            {
+                case GameAction.Confirm:
+                    break;
+                case GameAction.Cancel:
+                    break;
+                case GameAction.MoveUp:
+                    break;
+                case GameAction.MoveDown:
+                    break;
+                case GameAction.MoveLeft:
+                    break;
+                case GameAction.MoveRight:
+                    break;
+                case GameAction.ShootPrimary:
+                    break;
+                case GameAction.ShootSecundary:
+                    break;
+                case GameAction.NextWeapon:
+                    break;
+                case GameAction.PreviousWeapon:
+                    break;
+                case GameAction.ShowStats:
+                    break;
+            }
         }
     }
 }

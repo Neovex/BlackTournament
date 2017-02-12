@@ -34,14 +34,7 @@ namespace BlackTournament.Controller
             _Client.ConnectionHasBeenLost += HandleConnectionLost;
             //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
 
-            _Client.UpdatePositionReceived += UpdatePosition;
-
             _Game.InputManager.Action += _Client.ProcessGameAction;
-        }
-
-        private void UpdatePosition(int id, float x, float y, float angle)
-        {
-            _State.UpdatePosition(id, x, y, angle);
         }
 
         private void DetachEvents()
@@ -74,7 +67,7 @@ namespace BlackTournament.Controller
             }
             else
             {
-                _Client.Disconnect("disconnect"); //$ // TODO
+                _Client.Disconnect();
             }
         }
 

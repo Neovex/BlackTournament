@@ -8,7 +8,6 @@ using SFML.Graphics;
 using BlackCoat;
 
 using BlackTournament.Properties;
-using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.Systems;
@@ -20,7 +19,7 @@ namespace BlackTournament
         public const String NET_ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         public const String DEFAULT_HOST = "localhost";
-        public const Int32 DEFAULT_PORT = 123;
+        public const Int32 DEFAULT_PORT = 2123;
 
 
         private FontManager _GlobalFonts;
@@ -99,7 +98,6 @@ namespace BlackTournament
             port = port == 0 ? Game.DEFAULT_PORT : port;
 
             // Setup Server
-            _Server.StopServer("Restart?"); //$
             if(host == Game.DEFAULT_HOST)
             {
                 _Server.HostGame(map, port);
