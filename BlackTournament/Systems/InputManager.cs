@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BlackCoat.InputMapping;
 using SFML.Window;
 
-namespace BlackTournament.System
+namespace BlackTournament.Systems
 {
     public class InputManager
     {

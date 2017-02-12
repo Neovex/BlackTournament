@@ -11,7 +11,7 @@ using BlackTournament.Properties;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Controller;
-using BlackTournament.System;
+using BlackTournament.Systems;
 
 namespace BlackTournament
 {

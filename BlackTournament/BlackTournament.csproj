@@ -83,7 +83,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="System\GameAction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Programm.cs" />
@@ -94,7 +93,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="System\InputManager.cs" />
+    <Compile Include="Systems\GameAction.cs" />
+    <Compile Include="Systems\InputManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

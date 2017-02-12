@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackCoat;
 using BlackTournament.Net.Server;
-using BlackTournament.System;
+using BlackTournament.Systems;
 using Lidgren.Network;
 
 namespace BlackTournament.Net
