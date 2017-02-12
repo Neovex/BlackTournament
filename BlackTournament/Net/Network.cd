@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BlackTournament.Net.Lid.Commands&lt;TEnum&gt;" Collapsed="true">
+    <Position X="5.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Lid\Commands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LClient&lt;TEnum&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAUQIAQAAAAAACAJAACAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Lid\LClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LClientBase&lt;TEnum&gt;" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAAAQAAAAEgAAIAAAAAAAEAAAAAAAgAAAAA=</HashCode>
+      <FileName>Net\Lid\LClientBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.NetBase&lt;TEnum&gt;" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgSAAAAAAAAgAAAAAAAAEAAKAAAgAAAACAAA=</HashCode>
+      <FileName>Net\Lid\NetBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LGameServer" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAQQAAACAAAAACAAEBSQAAggAAAAMAABAAAAA=</HashCode>
+      <FileName>Net\Lid\Server\LGameServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LServer&lt;TEnum&gt;" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAA0AAAAAAAIAgCABAAAAAAAgAAAAAIQAAACAA=</HashCode>
+      <FileName>Net\Lid\Server\LServer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Commands" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_ConnectedClients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LServerBase&lt;TEnum&gt;" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQAAACAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Lid\Server\LServerBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.ClientUser" Collapsed="true">
+    <Position X="9" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Lid\ClientUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.ServerUser&lt;TChannel&gt;" Collapsed="true">
+    <Position X="9" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Lid\ServerUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Lid.LGameClient" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEB0AAAQAAAACACAAAAABAIAFAAAAAAAgAABAA=</HashCode>
+      <FileName>Net\Lid\LGameClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BlackTournament.Net.Lid.GameMessageType">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAADAAAAACAAEAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Net\Lid\GameMessageType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

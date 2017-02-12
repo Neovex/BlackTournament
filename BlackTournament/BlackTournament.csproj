@@ -66,12 +66,18 @@
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
+    <Compile Include="Net\Lid\Commands.cs" />
     <Compile Include="Net\Lid\GameMessageType.cs" />
+    <Compile Include="Net\Lid\LGameClient.cs" />
+    <Compile Include="Net\Lid\LClientBase.cs" />
     <Compile Include="Net\Lid\LClient.cs" />
-    <Compile Include="Net\Lid\LGameServer.cs" />
-    <Compile Include="Net\Lid\LServer.cs" />
-    <Compile Include="Net\Lid\LServerBase.cs" />
-    <Compile Include="Net\Lid\User.cs" />
+    <Compile Include="Net\Lid\Net.cs" />
+    <Compile Include="Net\Lid\NetBase.cs" />
+    <Compile Include="Net\Lid\ClientUser.cs" />
+    <Compile Include="Net\Lid\Server\LGameServer.cs" />
+    <Compile Include="Net\Lid\Server\LServer.cs" />
+    <Compile Include="Net\Lid\Server\LServerBase.cs" />
+    <Compile Include="Net\Lid\ServerUser.cs" />
     <Compile Include="System\GameAction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Net\Client.cs" />
@@ -101,6 +107,7 @@
     <None Include="Assets\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Net\Network.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

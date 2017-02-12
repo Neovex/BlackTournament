@@ -8,136 +8,71 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net.Lid
 {
-    public class LClient:IDisposable
+    public abstract class LClient<TEnum> : LClientBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
-        private NetClient _Client;
+        protected Commands<TEnum> _Commands;
+        protected List<ClientUser> _ConnectedClients;
 
 
-        public virtual int Id { get; protected set; }
-        public virtual bool Connected { get; protected set; }
-        public virtual string Host { get; protected set; }
-        public virtual int Port { get; protected set; }
-        public virtual String UserName { get; protected set; }
-
-        public string MapName { get; private set; }
-        public bool IsAdmin { get { return Id < 0; } }
+        public virtual Int32 Id { get; protected set; }
+        public virtual String Alias { get; protected set; }
+        public virtual IEnumerable<ClientUser> ConnectedUsers { get { return _ConnectedClients; } }
+        public virtual Boolean IsAdmin { get { return Id == AdminId; } }
+        public abstract Int32 AdminId { get; }
 
 
-
-        public event Action ConnectionEstablished = () => { };
-        public event Action ConnectionFailed = () => { };
-        public event Action ConnectionLost = () => { };
-        public event Action ConnectionClosed = () => { };
-
-        public event Action<int, float, float, float> UpdatePositionReceived = (id, x, y, a) => { };
-        public event Action<int> ShotReceived = id => { };
-        public event Action<string> ChangeLevelReceived = lvl => { };
-
-
-
-        public LClient(String host, int port, String userName)
+        public LClient(String alias, Commands<TEnum> commands)
         {
-            if (String.IsNullOrWhiteSpace(host)) throw new ArgumentException(nameof(host));
-            if (String.IsNullOrWhiteSpace(userName)) throw new ArgumentException(nameof(userName));
-
-            Host = host;
-            Port = port;
-            UserName = userName;
+            if (String.IsNullOrWhiteSpace(alias)) throw new ArgumentException(nameof(alias));
+            if (commands == null) throw new ArgumentNullException(nameof(commands));
+            Alias = alias;
+            _Commands = commands;
         }
 
-        public void Connect()
+        public void Connect(String host, Int32 port)
         {
-            NetPeerConfiguration config = new NetPeerConfiguration(Game.NET_ID);
-            _Client = new NetClient(config);
-            _Client.Start();
-            _Client.Connect(Host, Port, _Client.CreateMessage(UserName));
+            Connect(host, port, Alias);
         }
 
-
-        public void ProcessMessages()
+        protected override void Connected()
         {
-            NetIncomingMessage msg;
-            while ((msg = _Client.ReadMessage()) != null)
+            // Replaced by Connected(Int32 id, String alias);
+        }
+
+        protected override void ProcessIncommingData(TEnum subType, NetIncomingMessage msg)
+        {
+            if (subType.Equals(_Commands.Handshake))
             {
-                switch (msg.MessageType)
+                Connected(Id = msg.ReadInt32(), Alias = msg.ReadString());
+            }
+            else if (subType.Equals(_Commands.UserConnected))
+            {
+                var user = new ClientUser(msg.ReadInt32(), msg.ReadString());
+                _ConnectedClients.Add(user);
+                UserConnected(user);
+            }
+            else if (subType.Equals(_Commands.UserDisconnected))
+            {
+                var id = msg.ReadInt32();
+                var user = _ConnectedClients.FirstOrDefault(u => u.Id == id);
+                if (user == null)
                 {
-                    case NetIncomingMessageType.Error:
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        Log.Debug(_Client.Status, msg.SenderConnection.Status);
-                        if (msg.SenderConnection.Status == NetConnectionStatus.Connected)
-                        {
-                            ConnectionEstablished.Invoke();
-                            SendMessage("map");
-                        }
-                        break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        break;
-                    case NetIncomingMessageType.Data:
-                        switch ((GameMessageType)msg.ReadInt32())
-                        {
-                            case GameMessageType.LoadMap:
-                                MapName = msg.ReadString();
-                                ChangeLevelReceived.Invoke(MapName);
-                                break;
-                            case GameMessageType.UpdatePosition:
-                                UpdatePositionReceived.Invoke(0, msg.ReadSingle(), 0, 0);
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        break;
-                    default:
-                        break;
+                    Log.Warning("Received disconnect from unknown user id", id);
                 }
-                _Client.Recycle(msg);
+                else
+                {
+                    UserDisconnected(user);
+                }
+            }
+            else
+            {
+                DataReceived(subType, msg);
             }
         }
 
-        public void Dispose()
-        {
-           // TODO:
-        }
-        public void ProcessGameAction(GameAction action)
-        {
-        }
-
-        public void StopServer()
-        {
-            // request server shutdown
-        }
-
-        public void Disconnect()
-        {
-            _Client.Disconnect("Disconnect");
-        }
-
-        public virtual void SendMessage(string txt)
-        {
-            var msg = _Client.CreateMessage();
-            msg.Write((int)GameMessageType.Message);
-            msg.Write(txt);
-            _Client.SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
-        }
+        protected abstract void Connected(Int32 id, String alias);
+        protected abstract void UserConnected(ClientUser user);
+        protected abstract void UserDisconnected(ClientUser user);
+        protected abstract void DataReceived(TEnum subType, NetIncomingMessage msg); // hmm msg UU mit interface ersetzen
     }
 }

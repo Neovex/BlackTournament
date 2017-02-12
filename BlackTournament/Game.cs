@@ -26,7 +26,7 @@ namespace BlackTournament
 
         private FontManager _GlobalFonts;
         private LGameServer _Server;
-        private LClient _Client;
+        private LGameClient _Client;
 
         public Core Core { get; private set; }
         public InputManager InputManager { get; private set; }
@@ -100,7 +100,7 @@ namespace BlackTournament
             port = port == 0 ? Game.DEFAULT_PORT : port;
 
             // Setup Server
-            _Server.StopServer();
+            _Server.StopServer("Restart?"); //$
             if(host == Game.DEFAULT_HOST)
             {
                 _Server.HostGame(map, (int)port);
@@ -108,7 +108,7 @@ namespace BlackTournament
 
             // Setup Client
             _Client?.Dispose();
-            _Client = new LClient(host, (int)port, Settings.Default.PlayerName);
+            _Client = new LGameClient(host, (int)port, Settings.Default.PlayerName);
             ConnectController.Activate(_Client);
         }
 

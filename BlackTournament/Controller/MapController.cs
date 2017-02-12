@@ -13,14 +13,14 @@ namespace BlackTournament.Controller
 {
     public class MapController : ControllerBase
     {
-        private LClient _Client;
+        private LGameClient _Client;
         private MapState _State;
 
         public MapController(Game game) : base(game)
         {
         }
 
-        public void Activate(LClient client)
+        public void Activate(LGameClient client)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");

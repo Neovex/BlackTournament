@@ -11,9 +11,6 @@ namespace BlackTournament.Net.Lid
 {
     class LGameServer : LServer<GameMessageType>
     {
-        private static readonly Commands _SERVER_COMMANDS = new Commands(GameMessageType.Handshake, GameMessageType.UserConnected, GameMessageType.UserDisconnected);
-
-
         private Core _Core;
         private Dictionary<int, int> _Score;
 
@@ -21,13 +18,14 @@ namespace BlackTournament.Net.Lid
         public string CurrentMap { get; set; }
 
 
-        public LGameServer(Core core) : base(Game.NET_ID, _SERVER_COMMANDS)
+        public LGameServer(Core core) : base(Game.NET_ID, Net.COMMANDS)
         {
             if (core == null) throw new ArgumentNullException(nameof(core));
             _Core = core;
             _Score = new Dictionary<int, int>();
         }
 
+        // CONTROL
 
         private bool IsAdmin(int id)
         {
@@ -36,7 +34,7 @@ namespace BlackTournament.Net.Lid
 
         public void HostGame(string map, int port)
         {
-            StopServer();
+            StopServer("Restart?"); //$
             ChangeLevel(Server.ID, map);
             Host(port);
 
@@ -77,12 +75,12 @@ namespace BlackTournament.Net.Lid
             Log.Debug("game server data", type, msg.ReadString());
         }
 
-        protected override void UserConnected(User<NetConnection> user)
+        protected override void UserConnected(ServerUser<NetConnection> user)
         {
             //ChangeLevel(Server.ID, CurrentMap); whu?
         }
 
-        protected override void UserDisconnected(User<NetConnection> user)
+        protected override void UserDisconnected(ServerUser<NetConnection> user)
         {
             // TODO
         }

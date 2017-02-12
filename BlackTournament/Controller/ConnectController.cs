@@ -12,7 +12,7 @@ namespace BlackTournament.Controller
 {
     public class ConnectController : ControllerBase
     {
-        private LClient _Client;
+        private LGameClient _Client;
         private ConnectState _State;
 
         //public event Action ConnectionEstablished = () => { }; //?
@@ -22,7 +22,7 @@ namespace BlackTournament.Controller
         {
         }
 
-        public void Activate(LClient client)
+        public void Activate(LGameClient client)
         {
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
             _Client = client;
