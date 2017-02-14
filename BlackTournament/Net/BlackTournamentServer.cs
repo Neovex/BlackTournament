@@ -57,7 +57,7 @@ namespace BlackTournament.Net
         {
             switch (type)
             {
-                case NetMessage.SendMessage:
+                case NetMessage.TextMessage:
                     SendMessage(msg.ReadInt32(), msg.ReadString());
                 break;
 
@@ -89,7 +89,7 @@ namespace BlackTournament.Net
         // MAPPED HANDLERS
         private void SendMessage(int id, string message)
         {
-            Broadcast(NetMessage.SendMessage, m =>
+            Broadcast(NetMessage.TextMessage, m =>
             {
                 m.Write(id);
                 m.Write(message);

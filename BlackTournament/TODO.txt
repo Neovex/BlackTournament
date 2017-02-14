@@ -11,8 +11,31 @@ client game logic
 - static collisions (dyn to stat where dyn is owned by local)
 
 
-thoughts on input
-key(input) to enum(Action) mapping... CUAH
+#key(input) to enum(Action) mapping... CUAH
 
 
 idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?
+
+
+
+
+Network data brainstorm
+
+Type
+id
+xyr
+active
+health
+shield
+
+ex:
+player
+15
+0;15;74
+true
+100
+0
+
+pickup
+7
+false

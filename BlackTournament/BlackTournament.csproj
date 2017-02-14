@@ -63,14 +63,20 @@
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Net\Data\PickupType.cs" />
+    <Compile Include="Net\Data\GameInfo.cs" />
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
+    <Compile Include="Net\Data\NetEntityBase.cs" />
     <Compile Include="Net\BlackTournamentClient.cs" />
     <Compile Include="Net\BlackTournamentServer.cs" />
     <Compile Include="Net\Client\Client.cs" />
     <Compile Include="Net\Client\ManagedClient.cs" />
     <Compile Include="Net\Commands.cs" />
+    <Compile Include="Net\Data\EntityType.cs" />
+    <Compile Include="Net\Data\Pickup.cs" />
+    <Compile Include="Net\Data\Player.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Net\NetBase.cs" />
@@ -101,6 +107,7 @@
     <None Include="Assets\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Net\Data\Data.cd" />
     <None Include="Net\Network.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

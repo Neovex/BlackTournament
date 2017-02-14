@@ -14,7 +14,7 @@ namespace BlackTournament.Net
         UserDisconnected,
 
         // 2 Way
-        SendMessage,
+        TextMessage,
         ChangeLevel,
 
         // Client Only

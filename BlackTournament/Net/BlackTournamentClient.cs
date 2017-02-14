@@ -20,6 +20,8 @@ namespace BlackTournament.Net
 
         public event Action ChangeLevelReceived = () => { };
         public event Action<User, String> MessageReceived = (u, m) => { };
+        public event Action<User> UserJoined = u => { };
+        public event Action<User> UserLeft = u => { };
 
 
 
@@ -41,7 +43,7 @@ namespace BlackTournament.Net
 
         public void SendMessage(String txt)
         {
-            Send(NetMessage.SendMessage, m => m.Write(txt));
+            Send(NetMessage.TextMessage, m => m.Write(txt));
         }
 
         public void StopServer()
@@ -60,7 +62,7 @@ namespace BlackTournament.Net
         {
             switch (message)
             {
-                case NetMessage.SendMessage:
+                case NetMessage.TextMessage:
                 {
                     var id = msg.ReadInt32();
                     var user = _ConnectedClients.FirstOrDefault(u => u.Id == id);
@@ -78,6 +80,16 @@ namespace BlackTournament.Net
             }
         }
 
+        protected override void UserConnected(User user)
+        {
+            UserJoined.Invoke(user);
+        }
+
+        protected override void UserDisconnected(User user)
+        {
+            UserLeft.Invoke(user);
+        }
+
         protected override void Connected(int id, string alias)
         {
             ConnectionEstablished.Invoke();
@@ -86,14 +98,6 @@ namespace BlackTournament.Net
         protected override void Disconnected()
         {
             ConnectionHasBeenLost.Invoke();
-        }
-
-        protected override void UserConnected(User user)
-        {
-        }
-
-        protected override void UserDisconnected(User user)
-        {
         }
     }
 }
