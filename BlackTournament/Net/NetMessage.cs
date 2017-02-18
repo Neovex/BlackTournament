@@ -18,6 +18,7 @@ namespace BlackTournament.Net
         ChangeLevel,
 
         // Client Only
+        Update,
 
         // Server Only
         ProcessGameAction,

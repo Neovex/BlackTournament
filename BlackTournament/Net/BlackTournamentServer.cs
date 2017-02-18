@@ -12,7 +12,11 @@ namespace BlackTournament.Net
 {
     class BlackTournamentServer : ManagedServer<NetMessage>
     {
+        private const float _IMPULSE = 1f / 60;
+
         private Core _Core;
+        private float _UpdateImpulse;
+
         private Dictionary<int, int> _Score;
 
 
@@ -23,6 +27,7 @@ namespace BlackTournament.Net
         {
             if (core == null) throw new ArgumentNullException(nameof(core));
             _Core = core;
+
             _Score = new Dictionary<int, int>();
         }
 
@@ -41,14 +46,25 @@ namespace BlackTournament.Net
         // Update from core->game
         internal void Update(float deltaT)
         {
+            // Handle Incomming Data
             ProcessMessages();
-            if (true) DoSomething(); // FIXME
+
+            // Update Server Data
+            //TODO : update DAL
+
+            // Update Client Data (~60Hz)
+            _UpdateImpulse += deltaT;
+            if (_UpdateImpulse >= _IMPULSE)
+            {
+                _UpdateImpulse = 0;
+                SendClientUpdate();
+            }
         }
 
         // OUTGOING
-        private void DoSomething()
+        private void SendClientUpdate()
         {
-            // FIXME
+            Broadcast(NetMessage.Update, null, NetDeliveryMethod.UnreliableSequenced); // TODO : replace null
         }
 
 
@@ -99,7 +115,7 @@ namespace BlackTournament.Net
         private void StopServer(int id)
         {
             if (IsAdmin(id)) StopServer(String.Empty);
-            // TODO : check if dropped players will be removed by other events or needs to be done manually
+            // TODO : check if dropped players will be removed by other events or if this needs to be done manually
         }
 
         private void ChangeLevel(int id, string map)

@@ -77,6 +77,10 @@ namespace BlackTournament.Net
                     MapName = msg.ReadString();
                     ChangeLevelReceived();
                 break;
+
+                case NetMessage.Update:
+                    // TODO : implement update
+                break;
             }
         }
 
