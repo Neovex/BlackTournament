@@ -16,7 +16,7 @@ namespace BlackTournament
 {
     public class Game
     {
-        public const String NET_ID = "BlackTournament";
+        public const String ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         public const String DEFAULT_HOST = "localhost";
         public const Int32 DEFAULT_PORT = 2123;
@@ -68,6 +68,7 @@ namespace BlackTournament
                 ConnectController = new ConnectController(this);
                 MapController = new MapController(this);
                 _Server = new BlackTournamentServer(Core);
+                _Client = new BlackTournamentClient(Settings.Default.PlayerName);
 
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
@@ -88,7 +89,7 @@ namespace BlackTournament
         private void Update(float deltaT)
         {
             _Server.Update(deltaT);
-            _Client?.ProcessMessages();
+            _Client.ProcessMessages();
         }
 
         public void StartNewGame(String map = null, String host = null, int port = 0)
@@ -104,7 +105,8 @@ namespace BlackTournament
             }
 
             // Setup Client
-            _Client?.Dispose();
+            _Client.Disconnect();
+            _Client.Dispose();
             _Client = new BlackTournamentClient(Settings.Default.PlayerName);
             ConnectController.Activate(_Client, host, port);
         }

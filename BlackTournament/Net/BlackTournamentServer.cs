@@ -14,22 +14,21 @@ namespace BlackTournament.Net
     {
         private const float _IMPULSE = 1f / 60;
 
+
         private Core _Core;
+        private GameLogic _Logic;
         private float _UpdateImpulse;
 
-        private Dictionary<int, int> _Score;
 
-
-        public string CurrentMap { get; set; }
         public override int AdminId { get { return Net.ADMIN_ID; } }
 
-        public BlackTournamentServer(Core core) : base(Game.NET_ID, Net.COMMANDS)
+
+        public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
             if (core == null) throw new ArgumentNullException(nameof(core));
             _Core = core;
-
-            _Score = new Dictionary<int, int>();
         }
+
 
         // CONTROL
         private bool IsAdmin(int id)
@@ -49,24 +48,19 @@ namespace BlackTournament.Net
             // Handle Incomming Data
             ProcessMessages();
 
+            if (_Logic == null) return;
+
             // Update Server Data
-            //TODO : update DAL
+            _Logic.Update(deltaT);
 
             // Update Client Data (~60Hz)
             _UpdateImpulse += deltaT;
             if (_UpdateImpulse >= _IMPULSE)
             {
                 _UpdateImpulse = 0;
-                SendClientUpdate();
+                Broadcast(NetMessage.Update, _Logic.Serialize, NetDeliveryMethod.UnreliableSequenced);
             }
         }
-
-        // OUTGOING
-        private void SendClientUpdate()
-        {
-            Broadcast(NetMessage.Update, null, NetDeliveryMethod.UnreliableSequenced); // TODO : replace null
-        }
-
 
         // INCOMMING
         protected override void ProcessIncommingData(NetMessage type, NetIncomingMessage msg)
@@ -82,7 +76,7 @@ namespace BlackTournament.Net
                 break;
 
                 case NetMessage.ProcessGameAction:
-                    ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32());
+                    _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32());
                 break;
 
                 case NetMessage.StopServer:
@@ -93,13 +87,13 @@ namespace BlackTournament.Net
 
         protected override void UserConnected(ServerUser<NetConnection> user)
         {
-            Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(CurrentMap));
-            _Score.Add(user.Id, 0);
+            _Logic.AddPlayer(user);
+            Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
         }
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)
         {
-            _Score.Remove(user.Id);
+            _Logic.RemovePlayer(user);
         }
 
         // MAPPED HANDLERS
@@ -114,47 +108,21 @@ namespace BlackTournament.Net
 
         private void StopServer(int id)
         {
-            if (IsAdmin(id)) StopServer(String.Empty);
-            // TODO : check if dropped players will be removed by other events or if this needs to be done manually
+            if (IsAdmin(id))
+            {
+                StopServer(String.Empty);
+                // TODO : check if dropped players will be removed by other events or if this needs to be done here manually
+                _Logic = null;
+            }
         }
 
         private void ChangeLevel(int id, string map)
         {
             if (IsAdmin(id))
             {
-                // TODO : validate & load level data
-                CurrentMap = map;
-                _Score = _Score.ToDictionary(kvp => kvp.Key, kvp => 0);
-                Broadcast(NetMessage.ChangeLevel, m => m.Write(CurrentMap));
-            }
-        }
-
-        private void ProcessGameAction(int id, GameAction action) // CSH
-        {
-            switch (action)
-            {
-                case GameAction.Confirm:
-                    break;
-                case GameAction.Cancel:
-                    break;
-                case GameAction.MoveUp:
-                    break;
-                case GameAction.MoveDown:
-                    break;
-                case GameAction.MoveLeft:
-                    break;
-                case GameAction.MoveRight:
-                    break;
-                case GameAction.ShootPrimary:
-                    break;
-                case GameAction.ShootSecundary:
-                    break;
-                case GameAction.NextWeapon:
-                    break;
-                case GameAction.PreviousWeapon:
-                    break;
-                case GameAction.ShowStats:
-                    break;
+                _Logic = new GameLogic(_Core, map);
+                foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
+                Broadcast(NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
             }
         }
     }

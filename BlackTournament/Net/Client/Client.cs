@@ -12,7 +12,7 @@ namespace BlackTournament.Net.Client
         private NetClient _Client;
         
 
-        public Client() : base(new NetClient(new NetPeerConfiguration(Game.NET_ID)))
+        public Client() : base(new NetClient(new NetPeerConfiguration(Game.ID)))
         {
             _Client = _BasePeer as NetClient;
         }

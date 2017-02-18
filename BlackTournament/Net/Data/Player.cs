@@ -16,13 +16,19 @@ namespace BlackTournament.Net.Data
         public Single R { get; set; }
         public Int32 Health { get; set; }
         public Int32 Shield { get; set; }
+        public PickupType CurrentWeapon { get; set; }
+        public Int32 Score { get; set; }
+
+        public List<PickupType> OwnedWeapons { get; set; }
 
 
-        public Player(int id) : base(id)
+        public Player(int id) : base(id) // Server CTOR
         {
             Health = 100;
+            OwnedWeapons = new List<PickupType>();
+            OwnedWeapons.Add(PickupType.Drake);
         }
-        public Player(NetIncomingMessage m) : base(m)
+        public Player(NetIncomingMessage m) : base(m) // Client CTOR (data will be automatically deserialized)
         {
         }
 
@@ -33,6 +39,8 @@ namespace BlackTournament.Net.Data
             m.Write(R);
             m.Write(Health);
             m.Write(Shield);
+            m.Write((int)CurrentWeapon);
+            m.Write(Score);
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -42,6 +50,8 @@ namespace BlackTournament.Net.Data
             R = m.ReadSingle();
             Health = m.ReadInt32();
             Shield = m.ReadInt32();
+            CurrentWeapon = (PickupType)m.ReadInt32();
+            Score = m.ReadInt32();
         }
     }
 }
