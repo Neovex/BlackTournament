@@ -31,14 +31,14 @@ namespace BlackTournament.Net
 
 
         // OUTGOING
-        public void ProcessGameAction(GameAction action)
+        public void ProcessGameAction(GameAction action, Boolean activate)
         {
             var method = NetDeliveryMethod.UnreliableSequenced;
             if(action == GameAction.ShootPrimary || action == GameAction.ShootSecundary)
             {
                 method = NetDeliveryMethod.ReliableSequenced;
             }
-            Send(NetMessage.ProcessGameAction, m => m.Write((int)action), method);
+            Send(NetMessage.ProcessGameAction, m => { m.Write((int)action); m.Write(activate); }, method);
         }
 
         public void SendMessage(String txt)

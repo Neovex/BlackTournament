@@ -76,7 +76,7 @@ namespace BlackTournament.Net
                 break;
 
                 case NetMessage.ProcessGameAction:
-                    _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32());
+                    _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32(), msg.ReadBoolean());
                 break;
 
                 case NetMessage.StopServer:

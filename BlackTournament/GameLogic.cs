@@ -44,7 +44,7 @@ namespace BlackTournament
             _Players.Remove(player.Id);
         }
 
-        internal void ProcessGameAction(int id, GameAction action)
+        internal void ProcessGameAction(int id, GameAction action, Boolean activate)
         {
             var player = _Players[id];
             switch (action)

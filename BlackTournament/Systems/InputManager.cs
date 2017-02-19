@@ -25,7 +25,7 @@ namespace BlackTournament.Systems
             }
         }
 
-        public event Action<GameAction> Action = a => { };
+        public event Action<GameAction, Boolean> Action = (a, b) => { };
 
 
         public InputManager()
@@ -61,14 +61,14 @@ namespace BlackTournament.Systems
             DefaultMapping.AddMouseMapping(Mouse.Button.XButton2, GameAction.PreviousWeapon);
 
             // Scroll
-            DefaultMapping.AddScrollMapping(1f, GameAction.NextWeapon);
-            DefaultMapping.AddScrollMapping(-1f, GameAction.PreviousWeapon);
+            DefaultMapping.AddScrollMapping(ScrollDirection.Up, GameAction.NextWeapon);
+            DefaultMapping.AddScrollMapping(ScrollDirection.Down, GameAction.PreviousWeapon);
         }
 
-        private void HandleInput(GameAction action)
+        private void HandleInput(GameAction action, Boolean activate)
         {
             //Log.Debug(action);
-            Action.Invoke(action);
+            Action.Invoke(action, activate);
         }
     }
 }
