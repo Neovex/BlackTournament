@@ -14,7 +14,7 @@ namespace BlackTournament.GameStates
         private string _MapName;
 
         private View _View;
-        private IEntity _Player;
+        public  IEntity _Player; // FIXME
         private Map _Map;
 
 

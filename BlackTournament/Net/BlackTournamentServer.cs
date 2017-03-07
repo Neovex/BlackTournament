@@ -51,7 +51,7 @@ namespace BlackTournament.Net
             if (_Logic == null) return;
 
             // Update Server Data
-            _Logic.Update(deltaT);
+            _Logic.Update(deltaT); // consider 60hz as well
 
             // Update Client Data (~60Hz)
             _UpdateImpulse += deltaT;

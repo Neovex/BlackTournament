@@ -16,7 +16,7 @@ namespace BlackTournament
     class GameLogic
     {
         private Core _Core;
-        private Dictionary<int, Player> _Players;
+        private Dictionary<int, ServerPlayer> _Players;
 
 
         public string MapName { get; private set; }
@@ -30,13 +30,13 @@ namespace BlackTournament
             if (String.IsNullOrEmpty(map)) throw new ArgumentException(nameof(map));
             MapName = map;
 
-            _Players = new Dictionary<int, Player>();
+            _Players = new Dictionary<int, ServerPlayer>();
         }
 
 
         internal void AddPlayer(ServerUser<NetConnection> player)
         {
-            _Players.Add(player.Id, new Player(player.Id));
+            _Players.Add(player.Id, new ServerPlayer(player.Id));
         }
 
         internal void RemovePlayer(ServerUser<NetConnection> player)
@@ -50,32 +50,23 @@ namespace BlackTournament
             switch (action)
             {
                 case GameAction.MoveUp:
-                    break;
                 case GameAction.MoveDown:
-                    break;
                 case GameAction.MoveLeft:
-                    break;
                 case GameAction.MoveRight:
+                    if (activate) player.Input.Add(action);
+                    else player.Input.Remove(action);
                     break;
                 case GameAction.ShootPrimary:
                     break;
                 case GameAction.ShootSecundary:
                     break;
                 case GameAction.NextWeapon:
-                    HandleWeaponSwitch(player, 1);
+                    player.SwitchWeapon(1);
                     break;
                 case GameAction.PreviousWeapon:
-                    HandleWeaponSwitch(player, -1);
+                    player.SwitchWeapon(-1);
                     break;
             }
-        }
-
-        private void HandleWeaponSwitch(Player player, int direction)
-        {
-            var index = player.OwnedWeapons.IndexOf(player.CurrentWeapon) + direction;
-            if (index == -1) index = player.OwnedWeapons.Count - 1;
-            else if (index == player.OwnedWeapons.Count) index = 0;
-            player.CurrentWeapon = player.OwnedWeapons[index];
         }
 
         internal void Serialize(NetOutgoingMessage msg)
@@ -85,12 +76,16 @@ namespace BlackTournament
             {
                 player.Serialize(msg);
             }
-            // TODO : hanlde pickups (oh and maps)
+            // TODO : handle pickups (oh and maps)
         }
 
         internal void Update(float deltaT)
         {
-            throw new NotImplementedException();
+            // FIXME
+            foreach (var player in _Players.Values)
+            {
+                player.Update(deltaT);
+            }
         }
     }
 }

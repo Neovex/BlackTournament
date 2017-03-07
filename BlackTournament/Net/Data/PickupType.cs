@@ -1,6 +1,6 @@
 ﻿namespace BlackTournament.Net.Data
 {
-    enum PickupType
+    public enum PickupType
     {
         SmallHealth,
         BigHealth,

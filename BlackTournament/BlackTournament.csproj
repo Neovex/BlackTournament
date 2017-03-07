@@ -64,6 +64,7 @@
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameLogic.cs" />
+    <Compile Include="Net\Data\ClientPlayer.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
     <Compile Include="Net\Data\GameInfo.cs" />
     <Compile Include="GameStates\Intro.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Net\Data\EntityType.cs" />
     <Compile Include="Net\Data\Pickup.cs" />
     <Compile Include="Net\Data\Player.cs" />
+    <Compile Include="Net\Data\ServerPlayer.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Net\NetBase.cs" />

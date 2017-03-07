@@ -31,14 +31,23 @@ namespace BlackTournament.Controller
 
         private void AttachEvents()
         {
+            _Client.UpdateReceived += UpdateReceived;
             _Client.ConnectionHasBeenLost += HandleConnectionLost;
             //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
 
             _Game.InputManager.Action += _Client.ProcessGameAction;
         }
 
+        private void UpdateReceived()
+        {
+            // HACK HACK HACK
+            var player = _Client._Players[_Client.Id];
+            _State._Player.Position = new SFML.System.Vector2f(player.X, player.Y);
+        }
+
         private void DetachEvents()
         {
+            _Client.UpdateReceived -= UpdateReceived;
             _Client.ConnectionHasBeenLost -= HandleConnectionLost;
             //_Client.ConnectionClosed -= HandleConnectionClosed; // FIXME
 
@@ -48,6 +57,7 @@ namespace BlackTournament.Controller
         protected override void StateReady()
         {
             AttachEvents();
+            
             // TODO : feed state (aka view) with data here and only now
             // register additional to state events
         }

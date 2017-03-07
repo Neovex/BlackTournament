@@ -43,30 +43,15 @@ namespace BlackTournament.Net.Client
         {
             if (subType.Equals(_Commands.Handshake))
             {
-                Connected(Id = msg.ReadInt32(), Alias = msg.ReadString());
+                HandleHandshake(msg);
             }
             else if (subType.Equals(_Commands.UserConnected))
             {
-                var id = msg.ReadInt32();
-                if (id != Id)
-                {
-                    var user = new User(id, msg.ReadString());
-                    _ConnectedClients.Add(user);
-                    UserConnected(user);
-                }
+                HandleUserConnected(msg);
             }
             else if (subType.Equals(_Commands.UserDisconnected))
             {
-                var id = msg.ReadInt32();
-                var user = _ConnectedClients.FirstOrDefault(u => u.Id == id);
-                if (user == null)
-                {
-                    Log.Warning("Received disconnect from unknown user id", id);
-                }
-                else
-                {
-                    UserDisconnected(user);
-                }
+                HandleUserDisconnected(msg);
             }
             else
             {
@@ -74,7 +59,44 @@ namespace BlackTournament.Net.Client
             }
         }
 
-        protected abstract void Connected(Int32 id, String alias);
+        private void HandleHandshake(NetIncomingMessage msg)
+        {
+            Id = msg.ReadInt32();
+            Alias = msg.ReadString();
+            var clientCount = msg.ReadInt32();
+            for (int i = 0; i < clientCount; i++)
+            {
+                HandleUserConnected(msg, false);
+            }
+            Connected(Id, Alias);
+        }
+
+        private void HandleUserConnected(NetIncomingMessage msg, bool callUserConnected = true)
+        {
+            var id = msg.ReadInt32();
+            if (id != Id)
+            {
+                var user = new User(id, msg.ReadString());
+                _ConnectedClients.Add(user);
+                if (callUserConnected) UserConnected(user);
+            }
+        }
+
+        private void HandleUserDisconnected(NetIncomingMessage msg)
+        {
+            var id = msg.ReadInt32();
+            var user = _ConnectedClients.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                Log.Warning("Received disconnect from unknown user id", id);
+            }
+            else
+            {
+                UserDisconnected(user);
+            }
+        }
+
+        protected abstract void Connected(int id, string alias);
         protected abstract void UserConnected(User user);
         protected abstract void UserDisconnected(User user);
         protected abstract void DataReceived(TEnum subType, NetIncomingMessage msg); // hmm msg UU mit interface ersetzen
