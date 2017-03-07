@@ -18,8 +18,6 @@ namespace BlackTournament
     {
         public const String ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
-        public const String DEFAULT_HOST = "localhost";
-        public const Int32 DEFAULT_PORT = 2123;
 
 
         private FontManager _GlobalFonts;
@@ -48,8 +46,8 @@ namespace BlackTournament
             {
                 // Init Core
                 Core.Debug = true;
-                Core.ConsoleCommand += ExecuteCommand;
                 Core.OnUpdate += Update;
+                Core.ConsoleCommand += ExecuteCommand;
 
                 // Init Logging
                 Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
@@ -95,11 +93,11 @@ namespace BlackTournament
         public void StartNewGame(String map = null, String host = null, int port = 0)
         {
             if (map == null && host == null) throw new ArgumentException($"Failed to start with {map} - {host}");
-            host = host ?? Game.DEFAULT_HOST;
-            port = port == 0 ? Game.DEFAULT_PORT : port;
+            host = host ?? Net.Net.DEFAULT_HOST;
+            port = port == 0 ? Net.Net.DEFAULT_PORT : port;
 
             // Setup Server
-            if(host == Game.DEFAULT_HOST)
+            if(host == Net.Net.DEFAULT_HOST)
             {
                 _Server.HostGame(map, port);
             }
@@ -168,7 +166,7 @@ namespace BlackTournament
                     case "connect":
                         if (commandData.Length > 2)
                         {
-                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
                             StartNewGame(host: commandData[1], port: port);
                         }
                         Log.Info("Invalid connect command. Use connect [hostname] optional:[port]", cmd);
@@ -179,7 +177,7 @@ namespace BlackTournament
                     case "start server":
                         if (commandData.Length > 2)
                         {
-                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Game.DEFAULT_PORT;
+                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
                             StartNewGame(map: commandData[1], port: port);
                         }
                         Log.Info("Invalid host command. Use host [mapname] optional:[port]", cmd);

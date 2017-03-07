@@ -76,7 +76,7 @@ namespace BlackTournament
             {
                 player.Serialize(msg);
             }
-            // TODO : handle pickups (oh and maps)
+            // TODO : handle player rotation, pickups oh and maps
         }
 
         internal void Update(float deltaT)

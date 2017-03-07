@@ -109,7 +109,7 @@ namespace BlackTournament.Net
                 else
                 {
                     player = new ClientPlayer(msg);
-                    player.Alias = _ConnectedClients.FirstOrDefault(u => u.Id == player.Id)?.Alias ?? "NoName"; // Check alias issue
+                    player.Alias = _ConnectedClients.First(u => u.Id == player.Id).Alias;
                     _Players.Add(player.Id, player);
                     UserJoined.Invoke(player);
                 }
@@ -131,7 +131,7 @@ namespace BlackTournament.Net
         protected override void Connected(int id, string alias)
         {
             _Players = new Dictionary<int, ClientPlayer>();
-            _Players.Add(id, new ClientPlayer(id)); // add self
+            _Players.Add(id, new ClientPlayer(id) { Alias = alias });
             ConnectionEstablished.Invoke();
         }
 
