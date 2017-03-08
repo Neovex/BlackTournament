@@ -76,7 +76,7 @@ namespace BlackTournament.Net
                 break;
 
                 case NetMessage.Update:
-                    Update(msg);
+                    ServerUpdate(msg);
                 break;
             }
         }
@@ -95,22 +95,23 @@ namespace BlackTournament.Net
             ChangeLevelReceived();
         }
 
-        private void Update(NetIncomingMessage msg)
+        private void ServerUpdate(NetIncomingMessage msg)
         {
+            int id;
             ClientPlayer player;
             int entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                if(_Players.TryGetValue(msg.PeekInt32(), out player))
+                id = msg.ReadInt32();
+                if(_Players.TryGetValue(id, out player))
                 {
-                    msg.ReadInt32(); // FIXME
                     player.Deserialize(msg);
                 }
                 else
                 {
-                    player = new ClientPlayer(msg);
-                    player.Alias = _ConnectedClients.First(u => u.Id == player.Id).Alias;
-                    _Players.Add(player.Id, player);
+                    player = new ClientPlayer(id, msg);
+                    player.Alias = _ConnectedClients.First(u => u.Id == id).Alias;
+                    _Players.Add(id, player);
                     UserJoined.Invoke(player);
                 }
             }

@@ -10,21 +10,20 @@ namespace BlackTournament.Net.Data
     {
         public int Id { get; private set; }
 
-        public abstract EntityType EntityType { get; }
+        public abstract EntityType EntityType { get; } // necessary?
 
 
         public NetEntityBase(int id)
         {
             Id = id;
         }
-        public NetEntityBase(NetIncomingMessage m)
+        public NetEntityBase(int id, NetIncomingMessage m) : this(id)
         {
-            Id = m.ReadInt32();
             Deserialize(m);
         }
 
 
-        public void SerializeCreationInfo(NetOutgoingMessage m)
+        public void SerializeCreationInfo(NetOutgoingMessage m) // necessary?
         {
             m.Write((int)EntityType);
             Serialize(m);

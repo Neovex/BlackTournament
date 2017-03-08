@@ -45,18 +45,21 @@ namespace BlackTournament.Net.Server
             Log.Info("Server Stopped");
         }
 
+        /// <summary>
+        /// Blocks the execution until BasePeer shutdown is complete.
+        /// </summary>
         private void BlockUntilShutdownIsComplete()
         {
-            // Hacky as fuck, i know - but its working flawlessly
+            /*
+            Hacky as fuck, i know - but its working flawlessly
+            we wait until the old serving thread has finished - this is practically a thread join
+            Does not last longer than a couple milliseconds
+            */
             var c = 0;
             while (_BasePeer.Status == NetPeerStatus.ShutdownRequested)
             {
-                // we wait until the old serving thread has finished
-                // this is practically a thread join
-                // does not last longer that a couple milliseconds
                 c++;
                 Thread.Sleep(1);
-                //Console.WriteLine("###### Server Shutdown WAIT");
             }
             Log.Debug("Shutdown took ~", c, "milliseconds");
         }

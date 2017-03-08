@@ -50,8 +50,8 @@ namespace BlackTournament.Net.Data
         public void SwitchWeapon(int direction)
         {
             var index = OwnedWeapons.IndexOf(CurrentWeapon) + direction;
-            if (index < 0) index = OwnedWeapons.Count - 1;
-            else if (index >= OwnedWeapons.Count) index = 0;
+            if (index == 0) index = OwnedWeapons.Count - 1;
+            else if (index == OwnedWeapons.Count) index = 0;
             CurrentWeapon = OwnedWeapons[index];
         }
     }

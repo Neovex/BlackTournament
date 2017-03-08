@@ -7,17 +7,17 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net.Data
 {
-    public class ClientPlayer:Player
+    public class ClientPlayer : Player
     {
         public String Alias { get; set; }
 
-        public ClientPlayer(NetIncomingMessage m) : base(m)
+
+        public ClientPlayer(int id) : base(id)
         {
         }
 
-        public ClientPlayer(int id):base(id)
+        public ClientPlayer(int id, NetIncomingMessage m) : base(id, m)
         {
-
         }
     }
 }

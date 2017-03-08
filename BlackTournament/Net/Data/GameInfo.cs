@@ -17,7 +17,7 @@ namespace BlackTournament.Net.Data
         public GameInfo() : base(0)
         {
         }
-        public GameInfo(NetIncomingMessage m) : base(m)
+        public GameInfo(NetIncomingMessage m) : base(0, m)
         {
         }
 

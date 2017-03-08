@@ -11,24 +11,33 @@ namespace BlackTournament.Net.Data
     {
         public override EntityType EntityType { get { return EntityType.Player; } }
 
-        public Single X { get; set; }
-        public Single Y { get; set; }
-        public Single R { get; set; }
-        public Int32 Health { get; set; }
-        public Int32 Shield { get; set; }
-        public PickupType CurrentWeapon { get; set; }
-        public Int32 Score { get; set; }
+        public Single X { get; protected set; }
+        public Single Y { get; protected set; }
+        public Single R { get; protected set; }
+        public Int32 Health { get; protected set; }
+        public Int32 Shield { get; protected set; }
+        public Int32 Score { get; protected set; }
 
-        public List<PickupType> OwnedWeapons { get; set; }
+        public List<PickupType> OwnedWeapons { get; private set; } = new List<PickupType>();
+
+        private PickupType _CurrentWeapon;
+        public PickupType CurrentWeapon
+        {
+            get { return _CurrentWeapon; }
+            protected set
+            {
+                if (!OwnedWeapons.Contains(value)) OwnedWeapons.Add(value);
+                _CurrentWeapon = value;
+            }
+        }
 
 
         public Player(int id) : base(id) // Server CTOR
         {
             Health = 100;
-            OwnedWeapons = new List<PickupType>();
-            OwnedWeapons.Add(PickupType.Drake);
+            CurrentWeapon = PickupType.Drake;
         }
-        public Player(NetIncomingMessage m) : base(m) // Client CTOR (data will be automatically deserialized)
+        public Player(int id, NetIncomingMessage m) : base(id, m) // Client CTOR (data will be automatically deserialized)
         {
         }
 

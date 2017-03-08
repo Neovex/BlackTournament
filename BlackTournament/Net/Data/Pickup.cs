@@ -18,7 +18,7 @@ namespace BlackTournament.Net.Data
         {
             Active = true;
         }
-        public Pickup(NetIncomingMessage m) : base(m)
+        public Pickup(int id, NetIncomingMessage m) : base(id, m)
         {
         }
 
