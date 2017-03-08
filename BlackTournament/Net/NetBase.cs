@@ -49,7 +49,7 @@ namespace BlackTournament.Net
                         break;
 
                     case NetIncomingMessageType.StatusChanged:
-                        Log.Debug(nameof(NetBase<TEnum>), "-", (NetConnectionStatus)msg.ReadByte(), msg.ReadString(), "-", _BasePeer.Status, msg.SenderConnection.Status);
+                        Log.Debug((NetConnectionStatus)msg.ReadByte(), msg.ReadString(), "-", _BasePeer.Status, msg.SenderConnection.Status);
 
                         switch (msg.SenderConnection.Status) // TODO check for running server?
                         {

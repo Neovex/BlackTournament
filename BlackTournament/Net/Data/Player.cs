@@ -7,7 +7,7 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net.Data
 {
-    public class Player : NetEntityBase
+    public abstract class Player : NetEntityBase
     {
         public override EntityType EntityType { get { return EntityType.Player; } }
 

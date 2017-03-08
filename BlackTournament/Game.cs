@@ -104,7 +104,6 @@ namespace BlackTournament
 
             // Setup Client
             _Client.Disconnect();
-            _Client.Dispose();
             _Client = new BlackTournamentClient(Settings.Default.PlayerName);
             ConnectController.Activate(_Client, host, port);
         }

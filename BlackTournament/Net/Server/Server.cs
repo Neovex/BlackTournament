@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Lidgren.Network;
 
 namespace BlackTournament.Net.Server
@@ -31,18 +30,35 @@ namespace BlackTournament.Net.Server
 
             var config = new NetPeerConfiguration(AppIdentifier);
             config.Port = port;
-            
+
             _BasePeer = _Server = new NetServer(config);
             _Server.Start();
             Log.Info("Server started, listening on:", port);
         }
 
-        public void StopServer(string stopMessage)
+        public void StopServer(string stopMessage = "")
         {
             if (Disposed) throw new ObjectDisposedException(nameof(Server<TEnum>));
             if (_BasePeer.Status != NetPeerStatus.Running) return;
             _BasePeer.Shutdown(stopMessage);
+            BlockUntilShutdownIsComplete();
             Log.Info("Server Stopped");
+        }
+
+        private void BlockUntilShutdownIsComplete()
+        {
+            // Hacky as fuck, i know - but its working flawlessly
+            var c = 0;
+            while (_BasePeer.Status == NetPeerStatus.ShutdownRequested)
+            {
+                // we wait until the old serving thread has finished
+                // this is practically a thread join
+                // does not last longer that a couple milliseconds
+                c++;
+                Thread.Sleep(1);
+                //Console.WriteLine("###### Server Shutdown WAIT");
+            }
+            Log.Debug("Shutdown took ~", c, "milliseconds");
         }
 
 
