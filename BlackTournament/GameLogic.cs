@@ -18,6 +18,8 @@ namespace BlackTournament
         private Core _Core;
         private Dictionary<int, ServerPlayer> _Players;
 
+        public event Action<ServerUser<NetConnection>, PickupType> _PlayerGotPickup = (u, p) => { };
+
 
         public string MapName { get; private set; }
 
@@ -34,14 +36,14 @@ namespace BlackTournament
         }
 
 
-        internal void AddPlayer(ServerUser<NetConnection> player)
+        internal void AddPlayer(ServerUser<NetConnection> user)
         {
-            _Players.Add(player.Id, new ServerPlayer(player.Id));
+            _Players.Add(user.Id, new ServerPlayer(user));
         }
 
-        internal void RemovePlayer(ServerUser<NetConnection> player)
+        internal void RemovePlayer(ServerUser<NetConnection> user)
         {
-            _Players.Remove(player.Id);
+            _Players.Remove(user.Id);
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)

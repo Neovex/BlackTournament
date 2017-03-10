@@ -10,7 +10,7 @@ namespace BlackTournament.Net.Data
     {
         public int Id { get; private set; }
 
-        public abstract EntityType EntityType { get; } // necessary?
+        public abstract EntityType EntityType { get; } // fixme: necessary?
 
 
         public NetEntityBase(int id)

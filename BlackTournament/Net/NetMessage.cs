@@ -19,6 +19,7 @@ namespace BlackTournament.Net
 
         // Client Only
         Update,
+        Pickup,
 
         // Server Only
         ProcessGameAction,

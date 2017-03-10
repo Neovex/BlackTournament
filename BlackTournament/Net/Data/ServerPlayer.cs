@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlackTournament.Net.Server;
 using BlackTournament.Systems;
+using Lidgren.Network;
 
 namespace BlackTournament.Net.Data
 {
@@ -11,10 +13,12 @@ namespace BlackTournament.Net.Data
     {
         private const int _SPEED = 200;
 
+        public ServerUser<NetConnection> User { get; private set; }
         public List<GameAction> Input { get; private set; }
 
-        public ServerPlayer(int id) : base(id)
+        public ServerPlayer(ServerUser<NetConnection> user) : base(user.Id)
         {
+            User = user;
             Input = new List<GameAction>();
         }
 

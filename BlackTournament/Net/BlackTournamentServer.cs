@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlackCoat;
+using BlackTournament.Net.Data;
 using BlackTournament.Net.Server;
 using BlackTournament.Systems;
 using Lidgren.Network;
@@ -62,6 +63,17 @@ namespace BlackTournament.Net
             }
         }
 
+        protected override void UserConnected(ServerUser<NetConnection> user)
+        {
+            _Logic.AddPlayer(user);
+            Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
+        }
+
+        protected override void UserDisconnected(ServerUser<NetConnection> user)
+        {
+            _Logic.RemovePlayer(user);
+        }
+
         // INCOMMING
         protected override void ProcessIncommingData(NetMessage type, NetIncomingMessage msg)
         {
@@ -85,16 +97,13 @@ namespace BlackTournament.Net
             }
         }
 
-        protected override void UserConnected(ServerUser<NetConnection> user)
+
+        // OUTGOING
+        private void SendPlayerPickup(ServerUser<NetConnection> user, PickupType pickup)
         {
-            _Logic.AddPlayer(user);
-            Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
+            Send(user.Connection, NetMessage.Pickup, m => m.Write((int)pickup));
         }
 
-        protected override void UserDisconnected(ServerUser<NetConnection> user)
-        {
-            _Logic.RemovePlayer(user);
-        }
 
         // MAPPED HANDLERS
         private void SendMessage(int id, string message)
@@ -112,6 +121,7 @@ namespace BlackTournament.Net
             {
                 StopServer(String.Empty);
                 // TODO : check if dropped players will be removed by other events or if this needs to be done here manually
+                _Logic._PlayerGotPickup -= SendPlayerPickup;
                 _Logic = null;
             }
         }
@@ -121,6 +131,7 @@ namespace BlackTournament.Net
             if (IsAdmin(id))
             {
                 _Logic = new GameLogic(_Core, map);
+                _Logic._PlayerGotPickup += SendPlayerPickup;
                 foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
                 Broadcast(NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
             }
