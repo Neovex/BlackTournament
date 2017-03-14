@@ -23,6 +23,7 @@ namespace BlackTournament.Net
 
         // Server Only
         ProcessGameAction,
-        StopServer
+        StopServer,
+        Rotate
     }
 }

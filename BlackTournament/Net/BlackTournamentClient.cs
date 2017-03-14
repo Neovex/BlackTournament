@@ -13,6 +13,7 @@ namespace BlackTournament.Net
     public class BlackTournamentClient : ManagedClient<NetMessage>
     {
         public  Dictionary<int, ClientPlayer> _Players; // FIXME!!
+        private Single _UpdateImpulse;
 
 
         public String MapName { get; private set; }
@@ -35,15 +36,40 @@ namespace BlackTournament.Net
         }
 
 
+        // CONTROL
+        internal void Update(float deltaT)
+        {
+            if (IsConnected)
+            {
+                // Process Incomming Data
+                ProcessMessages();
+
+                // Update Rotation on Server (~60Hz)
+                _UpdateImpulse += deltaT;
+                if (_UpdateImpulse >= Net.UPDATE_IMPULSE)
+                {
+                    _UpdateImpulse = 0;
+                    UpdatePlayerRotation(NetDeliveryMethod.UnreliableSequenced);
+                }
+            }
+        }
+
+
         // OUTGOING
         public void ProcessGameAction(GameAction action, Boolean activate)
         {
             var method = NetDeliveryMethod.UnreliableSequenced;
             if(action == GameAction.ShootPrimary || action == GameAction.ShootSecundary)
             {
-                method = NetDeliveryMethod.ReliableSequenced;
+                method = NetDeliveryMethod.ReliableOrdered;
+                UpdatePlayerRotation(method);
             }
             Send(NetMessage.ProcessGameAction, m => { m.Write(Id); m.Write((int)action); m.Write(activate); }, method);
+        }
+
+        private void UpdatePlayerRotation(NetDeliveryMethod method)
+        {
+            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(_Players[Id].R); }, method);
         }
 
         public void SendMessage(String txt)

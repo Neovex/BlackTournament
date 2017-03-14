@@ -13,7 +13,7 @@ namespace BlackTournament.Net.Data
 
         public Single X { get; protected set; }
         public Single Y { get; protected set; }
-        public Single R { get; protected set; }
+        public Single R { get; set; }
         public Int32 Health { get; protected set; }
         public Int32 Shield { get; protected set; }
         public Int32 Score { get; protected set; }

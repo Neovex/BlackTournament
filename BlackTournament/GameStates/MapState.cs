@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BlackCoat;
+using SFML.System;
 using SFML.Graphics;
-using BlackTournament.Net;
+using BlackCoat;
 using BlackCoat.Entities;
 
 namespace BlackTournament.GameStates
@@ -14,7 +14,7 @@ namespace BlackTournament.GameStates
         private string _MapName;
 
         private View _View;
-        public  IEntity _Player; // FIXME
+        private IEntity _Player;
         private Map _Map;
 
 
@@ -30,14 +30,12 @@ namespace BlackTournament.GameStates
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
             // TESTS:
-
-            //_Player = new Player(_Core, TextureManager);
-            //_Player.View = _View;
-
             _Player = new BlackCoat.Entities.Shapes.Rectangle(_Core)
             {
                 Size = new SFML.System.Vector2f(20, 40),
-                Color = Color.Magenta
+                Origin = new SFML.System.Vector2f(10, 20),
+                Color = Color.Red,
+                View = _View
             };
             Layer_Game.AddChild(_Player);
             
@@ -76,7 +74,9 @@ namespace BlackTournament.GameStates
 
         public void UpdatePosition(int id, float x, float y, float angle)
         {
-            _Player.Position = new SFML.System.Vector2f(x + 100, 100);
+            _Player.Position = new Vector2f(x, y);
+            _Player.Rotation = angle;
+            _View.Center = _Player.Position;
         }
 
         public override string ToString()

@@ -18,6 +18,7 @@ namespace BlackTournament
     {
         public const String ID = "BlackTournament";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
+        private const String _LOGFILE = "Log.txt";
 
 
         private FontManager _GlobalFonts;
@@ -50,7 +51,8 @@ namespace BlackTournament
                 Core.ConsoleCommand += ExecuteCommand;
 
                 // Init Logging
-                Log.OnLog += m => File.AppendAllText("Log.txt", m + Environment.NewLine);
+                if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
+                Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}");
                 Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
 
                 // Init Game Font
@@ -87,7 +89,7 @@ namespace BlackTournament
         private void Update(float deltaT)
         {
             _Server.Update(deltaT);
-            _Client.ProcessMessages();
+            _Client.Update(deltaT);
         }
 
         public void StartNewGame(String map = null, String host = null, int port = 0)

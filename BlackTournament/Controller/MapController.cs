@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlackCoat;
 using BlackCoat.InputMapping;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
+using SFML.System;
 using SFML.Window;
 
 namespace BlackTournament.Controller
@@ -35,14 +37,8 @@ namespace BlackTournament.Controller
             _Client.ConnectionHasBeenLost += HandleConnectionLost;
             //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
 
+            Input.MouseMoved += Input_MouseMoved;
             _Game.InputManager.Action += _Client.ProcessGameAction;
-        }
-
-        private void UpdateReceived()
-        {
-            // HACK HACK HACK
-            var player = _Client._Players[_Client.Id];
-            _State._Player.Position = new SFML.System.Vector2f(player.X, player.Y);
         }
 
         private void DetachEvents()
@@ -51,7 +47,22 @@ namespace BlackTournament.Controller
             _Client.ConnectionHasBeenLost -= HandleConnectionLost;
             //_Client.ConnectionClosed -= HandleConnectionClosed; // FIXME
 
+            Input.MouseMoved -= Input_MouseMoved;
             _Game.InputManager.Action -= _Client.ProcessGameAction;
+        }
+
+        private void Input_MouseMoved(Vector2f mousePosition)
+        {
+            var player = _Client._Players[_Client.Id]; // TODO : handle player without dictionary
+            player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition);
+            _State.UpdatePosition(0, player.X, player.Y, player.R);
+        }
+
+        private void UpdateReceived()
+        {
+            // HACK HACK HACK
+            var player = _Client._Players[_Client.Id]; // TODO : handle player without dictionary
+            _State.UpdatePosition(0, player.X, player.Y, player.R);
         }
 
         protected override void StateReady()

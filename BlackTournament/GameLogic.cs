@@ -71,6 +71,11 @@ namespace BlackTournament
             }
         }
 
+        internal void RotatePlayer(int id, float rotation)
+        {
+            _Players[id].R = rotation;
+        }
+
         internal void Serialize(NetOutgoingMessage msg)
         {
             msg.Write(_Players.Count);

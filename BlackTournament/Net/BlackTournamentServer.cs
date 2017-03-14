@@ -13,12 +13,9 @@ namespace BlackTournament.Net
 {
     class BlackTournamentServer : ManagedServer<NetMessage>
     {
-        private const float _IMPULSE = 1f / 60;
-
-
         private Core _Core;
         private GameLogic _Logic;
-        private float _UpdateImpulse;
+        private Single _UpdateImpulse;
 
 
         public override int AdminId { get { return Net.ADMIN_ID; } }
@@ -46,17 +43,17 @@ namespace BlackTournament.Net
         // Update from core->game
         internal void Update(float deltaT)
         {
-            // Handle Incomming Data
+            // Process Incomming Data
             ProcessMessages();
 
             if (_Logic == null) return;
 
             // Update Server Data
-            _Logic.Update(deltaT); // consider 60hz as well
+            _Logic.Update(deltaT);
 
             // Update Client Data (~60Hz)
             _UpdateImpulse += deltaT;
-            if (_UpdateImpulse >= _IMPULSE)
+            if (_UpdateImpulse >= Net.UPDATE_IMPULSE)
             {
                 _UpdateImpulse = 0;
                 Broadcast(NetMessage.Update, _Logic.Serialize, NetDeliveryMethod.UnreliableSequenced);
@@ -89,6 +86,10 @@ namespace BlackTournament.Net
 
                 case NetMessage.ProcessGameAction:
                     _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32(), msg.ReadBoolean());
+                break;
+
+                case NetMessage.Rotate:
+                    _Logic.RotatePlayer(msg.ReadInt32(), msg.ReadSingle());
                 break;
 
                 case NetMessage.StopServer:
