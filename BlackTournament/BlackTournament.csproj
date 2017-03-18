@@ -134,6 +134,9 @@
     <Content Include="Assets\AztekTiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\CharacterBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Doc\3rd Party.txt" />
     <Content Include="Sfx\explosion1.wav" />
     <Content Include="Sfx\explosion2.wav" />

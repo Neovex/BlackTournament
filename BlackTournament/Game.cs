@@ -90,6 +90,7 @@ namespace BlackTournament
         {
             _Server.Update(deltaT);
             _Client.Update(deltaT);
+            System.Threading.Thread.Sleep(1);
         }
 
         public void StartNewGame(String map = null, String host = null, int port = 0)

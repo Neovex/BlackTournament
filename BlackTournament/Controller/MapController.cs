@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlackCoat;
-using BlackCoat.InputMapping;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 using SFML.System;
-using SFML.Window;
 
 namespace BlackTournament.Controller
 {
@@ -53,22 +47,25 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            var player = _Client._Players[_Client.Id]; // TODO : handle player without dictionary
+            var player = _Client.Player;
             player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition);
-            _State.UpdatePosition(0, player.X, player.Y, player.R);
+            //HACK?
+            _State.Rotate(player.R);
         }
 
         private void UpdateReceived()
         {
             // HACK HACK HACK
-            var player = _Client._Players[_Client.Id]; // TODO : handle player without dictionary
-            _State.UpdatePosition(0, player.X, player.Y, player.R);
+            var player = _Client.Player;
+            player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(Input.MousePosition);
+            _State.UpdatePosition(0, player.X, player.Y);
+            // rotate only other players
         }
 
         protected override void StateReady()
         {
             AttachEvents();
-            
+
             // TODO : feed state (aka view) with data here and only now
             // register additional to state events
         }

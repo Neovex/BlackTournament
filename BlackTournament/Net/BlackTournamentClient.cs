@@ -17,6 +17,8 @@ namespace BlackTournament.Net
 
 
         public String MapName { get; private set; }
+        public ClientPlayer Player { get; private set; }
+
         public Boolean IsConnected { get { return _BasePeer.ConnectionsCount != 0; } }
         public override Int32 AdminId { get { return Net.ADMIN_ID; } }
 
@@ -46,7 +48,7 @@ namespace BlackTournament.Net
 
                 // Update Rotation on Server (~60Hz)
                 _UpdateImpulse += deltaT;
-                if (_UpdateImpulse >= Net.UPDATE_IMPULSE)
+                if (_UpdateImpulse >= Net.UPDATE_IMPULSE && Player != null)
                 {
                     _UpdateImpulse = 0;
                     UpdatePlayerRotation(NetDeliveryMethod.UnreliableSequenced);
@@ -69,7 +71,7 @@ namespace BlackTournament.Net
 
         private void UpdatePlayerRotation(NetDeliveryMethod method)
         {
-            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(_Players[Id].R); }, method);
+            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(Player.R); }, method);
         }
 
         public void SendMessage(String txt)
@@ -157,8 +159,9 @@ namespace BlackTournament.Net
 
         protected override void Connected(int id, string alias)
         {
+            Player = new ClientPlayer(id) { Alias = alias };
             _Players = new Dictionary<int, ClientPlayer>();
-            _Players.Add(id, new ClientPlayer(id) { Alias = alias });
+            _Players.Add(id, Player);
             ConnectionEstablished.Invoke();
         }
 

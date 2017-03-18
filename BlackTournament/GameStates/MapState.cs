@@ -14,7 +14,7 @@ namespace BlackTournament.GameStates
         private string _MapName;
 
         private View _View;
-        private IEntity _Player;
+        private Graphic _Player;
         private Map _Map;
 
 
@@ -30,13 +30,14 @@ namespace BlackTournament.GameStates
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
             // TESTS:
-            _Player = new BlackCoat.Entities.Shapes.Rectangle(_Core)
+            TextureManager.RootFolder = "Assets";
+            _Player = new Graphic(_Core)
             {
-                Size = new SFML.System.Vector2f(20, 40),
-                Origin = new SFML.System.Vector2f(10, 20),
+                Texture = TextureManager.Load("CharacterBase"),
                 Color = Color.Red,
                 View = _View
             };
+            _Player.Origin = _Player.Texture.Size.ToVector2f() / 2;
             Layer_Game.AddChild(_Player);
             
 
@@ -57,8 +58,6 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            //_View.Center = _Player.Position;
-            //_View.Rotation = -_Player.Rotation;// cool effect - see later if this can be used
         }
 
         protected override void Destroy()
@@ -72,16 +71,21 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(entity);
         }
 
-        public void UpdatePosition(int id, float x, float y, float angle)
+        public void UpdatePosition(int id, float x, float y)
         {
             _Player.Position = new Vector2f(x, y);
-            _Player.Rotation = angle;
             _View.Center = _Player.Position;
+        }
+
+        public void Rotate(float angle)
+        {
+            _Player.Rotation = angle;
+            //_View.Rotation = -_Player.Rotation; // cool effect - see later if this can be used (with gamepads maybe)
         }
 
         public override string ToString()
         {
-            return String.Concat("Map: \"", Name, "\"");
+            return $"Map: \"{Name}\"";
         }
     }
 }
