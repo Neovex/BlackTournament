@@ -103,7 +103,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Systems\GameAction.cs" />
-    <Compile Include="Systems\InputManager.cs" />
+    <Compile Include="Systems\InputMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

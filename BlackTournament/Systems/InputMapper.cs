@@ -8,7 +8,7 @@ using SFML.Window;
 
 namespace BlackTournament.Systems
 {
-    public class InputManager
+    public class InputMapper
     {
         public SimpleInputMap<GameAction> DefaultMapping { get; private set; }
         private SimpleInputMap<GameAction> _CurrentMapping;
@@ -28,9 +28,9 @@ namespace BlackTournament.Systems
         public event Action<GameAction, Boolean> Action = (a, b) => { };
 
 
-        public InputManager()
+        public InputMapper()
         {
-            Log.Debug(nameof(InputManager), "created");
+            Log.Debug(nameof(InputMapper), "created");
             CreateDefaultMap(); // Fixme: load from file at some point
             CurrentMapping = DefaultMapping;
             // TODO: add option to modify a mapping (not urgent)

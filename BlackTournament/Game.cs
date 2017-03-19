@@ -26,7 +26,7 @@ namespace BlackTournament
         private BlackTournamentClient _Client;
 
         public Core Core { get; private set; }
-        public InputManager InputManager { get; private set; }
+        public InputMapper InputManager { get; private set; }
 
         public static Font DefaultFont { get; private set; } // de-static?
         public MenuController MenuController { get; private set; }
@@ -35,7 +35,10 @@ namespace BlackTournament
 
         public Game()
         {
-            //?
+            // Init Logging
+            if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
+            Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}");
+            Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
         }
 
 
@@ -50,18 +53,13 @@ namespace BlackTournament
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 
-                // Init Logging
-                if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
-                Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}");
-                Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
-
                 // Init Game Font
                 _GlobalFonts = new FontManager();
                 DefaultFont = _GlobalFonts.Load(DEFAULT_FONT, Resources.HighlandGothicLightFLF);
                 // todo: test text blur issue (might need round)
 
                 // Init Input
-                InputManager = new InputManager();
+                InputManager = new InputMapper();
 
                 // Init Game
                 MenuController = new MenuController(this);
@@ -82,7 +80,16 @@ namespace BlackTournament
                 }
 
                 Core.Run();
+
+                // Cleanup
+                _Client.Disconnect();
+                _Client.Dispose();
+                _Client = null;
+                _Server.StopServer();
+                _Server.Dispose();
+                _Server = null;
                 _GlobalFonts.Dispose();
+                _GlobalFonts = null;
             }
         }
 
