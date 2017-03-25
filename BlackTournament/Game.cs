@@ -26,7 +26,7 @@ namespace BlackTournament
         private BlackTournamentClient _Client;
 
         public Core Core { get; private set; }
-        public InputMapper InputManager { get; private set; }
+        public InputMapper InputMapper { get; private set; }
 
         public static Font DefaultFont { get; private set; } // de-static?
         public MenuController MenuController { get; private set; }
@@ -59,7 +59,7 @@ namespace BlackTournament
                 // todo: test text blur issue (might need round)
 
                 // Init Input
-                InputManager = new InputMapper();
+                InputMapper = new InputMapper();
 
                 // Init Game
                 MenuController = new MenuController(this);

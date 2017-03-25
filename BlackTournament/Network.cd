@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BlackTournament.GameStates.MapState" Collapsed="true">
-    <Position X="0.5" Y="8.25" Width="1.5" />
+    <Position X="0.5" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAiAAAAAAAACAEACEAAAAAAABAAAAAAAAEAAAEAAA=</HashCode>
+      <HashCode>AAQAiAAAAAAAACAEACEAAAAAEABAAAAAAAAEAAAEAAA=</HashCode>
       <FileName>GameStates\MapState.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -20,19 +20,19 @@
   <Class Name="BlackTournament.Game">
     <Position X="3.5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QIQCAAAAAAQoAAgAAAAgAAAAAgAAAEABAgQAIAAAQAI=</HashCode>
+      <HashCode>QIQGAAAAAAQogAAAAAAgAAAAAgAAAEAAAAQAIAAAQAI=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_Server" />
       <Field Name="_Client" />
-      <Property Name="MapController" />
       <Property Name="MenuController" />
       <Property Name="ConnectController" />
+      <Property Name="MapController" />
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Map" Collapsed="true">
-    <Position X="0.5" Y="9.5" Width="1.5" />
+    <Position X="0.5" Y="10" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAoAAAAAAAAACAAAAAIAAAAABAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -41,26 +41,26 @@
   <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
     <Position X="4.75" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEB0AAAQABAACACAAAAQBAIAAAAAACAAgAAAAA=</HashCode>
+      <HashCode>AAQAAAEB0AAAQABAACACAAAAQRAICAEAAACAAwAAABA=</HashCode>
       <FileName>Net\BlackTournamentClient.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.BlackTournamentServer" Collapsed="true">
     <Position X="7.75" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEAUQAAAQAAACACAAAASQAAAgAAAAMAABAAAAg=</HashCode>
+      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQAAEAAAAAIAABAAAAA=</HashCode>
       <FileName>Net\BlackTournamentServer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Controller.MapController">
     <Position X="0.5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAQIAAAAAAAABAAAAAAAAAABKAAFAAAAAAACAAAQA=</HashCode>
+      <HashCode>AAAAQIAAAAAgAABAAAAAAAAAABKAAFEAAAAAACAAAQA=</HashCode>
       <FileName>Controller\MapController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="_State" />
       <Field Name="_Client" />
+      <Field Name="_State" />
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Controller.MenuController">
@@ -74,7 +74,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.GameStates.MainMenu" Collapsed="true">
-    <Position X="6.5" Y="7.75" Width="1.5" />
+    <Position X="6.5" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQIiAABAAABAQAAAAAAAAAgAABIAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GameStates\MainMenu.cs</FileName>
@@ -87,8 +87,8 @@
       <FileName>Controller\ConnectController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="_State" />
       <Field Name="_Client" />
+      <Field Name="_State" />
     </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />

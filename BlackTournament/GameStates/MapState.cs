@@ -35,7 +35,8 @@ namespace BlackTournament.GameStates
             {
                 Texture = TextureManager.Load("CharacterBase"),
                 Color = Color.Red,
-                View = _View
+                View = _View,
+                Scale = new Vector2f(0.5f, 0.5f) // FIXME
             };
             _Player.Origin = _Player.Texture.Size.ToVector2f() / 2;
             Layer_Game.AddChild(_Player);

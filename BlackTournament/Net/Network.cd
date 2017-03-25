@@ -10,7 +10,7 @@
   <Class Name="BlackTournament.Net.Client.ManagedClient&lt;TEnum&gt;" Collapsed="true">
     <Position X="0.5" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAUQIAQAAAIAACAJAACAAIAAAAAAAIAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAUQIAQAAAIAACAJAACAAIAAAAAAAIAIAABAA=</HashCode>
       <FileName>Net\Client\ManagedClient.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -36,7 +36,7 @@
   <Class Name="BlackTournament.Net.Server.Server&lt;TEnum&gt;" Collapsed="true">
     <Position X="7.25" Y="1.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQAAACAgAAAAAAAAAAAA=</HashCode>
+      <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQBAACAgAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Server\Server.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -50,14 +50,14 @@
   <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
     <Position X="0.5" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEB0AAAQABAACACAAAAQBAIAAAAAAAAAgAAAAA=</HashCode>
+      <HashCode>AAQAAAEB0AAAQABAACACAAAAQRAICAEAAACAAwAAABA=</HashCode>
       <FileName>Net\BlackTournamentClient.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.BlackTournamentServer" Collapsed="true">
     <Position X="7.25" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>EAQAAAAAUQAAAAAAACACAAAASQAAAgAAAAMAABAAAAA=</HashCode>
+      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQAAEAAAAAIAABAAAAA=</HashCode>
       <FileName>Net\BlackTournamentServer.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -71,7 +71,7 @@
   <Class Name="BlackTournament.Net.Net" Collapsed="true">
     <Position X="4" Y="6" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAggAAgAAAAAAAAAAAAAAAABAAAAAAAAAAI=</HashCode>
       <FileName>Net\Net.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -80,14 +80,6 @@
   </Class>
   <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;" Collapsed="true">
     <Position X="4" Y="0.5" Width="1.75" />
-    <NestedTypes>
-      <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;.Format" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Net\NetBase.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAgSAAAAAAAAgAAAAAAAAEAAKAAAgAAAACAAA=</HashCode>
       <FileName>Net\NetBase.cs</FileName>
@@ -104,7 +96,7 @@
   <Enum Name="BlackTournament.Net.NetMessage">
     <Position X="9.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAABAAACACAAAAQQAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAAAQAAAABAAAAACACAAUQAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Net\NetMessage.cs</FileName>
     </TypeIdentifier>
   </Enum>

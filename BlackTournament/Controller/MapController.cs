@@ -32,7 +32,7 @@ namespace BlackTournament.Controller
             //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
 
             Input.MouseMoved += Input_MouseMoved;
-            _Game.InputManager.Action += _Client.ProcessGameAction;
+            _Game.InputMapper.Action += _Client.ProcessGameAction;
         }
 
         private void DetachEvents()
@@ -42,7 +42,7 @@ namespace BlackTournament.Controller
             //_Client.ConnectionClosed -= HandleConnectionClosed; // FIXME
 
             Input.MouseMoved -= Input_MouseMoved;
-            _Game.InputManager.Action -= _Client.ProcessGameAction;
+            _Game.InputMapper.Action -= _Client.ProcessGameAction;
         }
 
         private void Input_MouseMoved(Vector2f mousePosition)
