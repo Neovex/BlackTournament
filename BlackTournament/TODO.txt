@@ -17,7 +17,7 @@ client game logic
 idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?
 
 
-
+idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
 

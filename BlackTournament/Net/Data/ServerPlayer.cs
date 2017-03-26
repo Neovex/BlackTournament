@@ -11,7 +11,7 @@ namespace BlackTournament.Net.Data
 {
     class ServerPlayer : Player
     {
-        private const int _SPEED = 200;
+        private const int _SPEED = 400;
 
         public ServerUser<NetConnection> User { get; private set; }
         public List<GameAction> Input { get; private set; }

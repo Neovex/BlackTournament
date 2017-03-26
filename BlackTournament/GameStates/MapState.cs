@@ -40,21 +40,27 @@ namespace BlackTournament.GameStates
             };
             _Player.Origin = _Player.Texture.Size.ToVector2f() / 2;
             Layer_Game.AddChild(_Player);
-            
 
             // Load Map
             _Map = new Map(_Core, _MapName);
             _Map.View = _View;
-            var result = _Map.Load();
-            if (result)
+            var mapLoaded = _Map.Load();
+            if (mapLoaded)
             {
                 Layer_BG.AddChild(_Map);
+                Log.Debug(_Map.Polys.Count);
+                foreach (var entity in _Map.Polys)
+                {
+                    entity.View = _View;
+                    entity.Alpha = 0.5f;
+                    Layer_BG.AddChild(entity);
+                }
             }
             else
             {
                 Log.Debug("failed to load map", _MapName);
             }
-            return result;
+            return mapLoaded;
         }
 
         protected override void Update(float deltaT)

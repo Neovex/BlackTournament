@@ -8,6 +8,7 @@ using BlackCoat;
 using System.IO;
 using SFML.Graphics;
 using SFML.System;
+using BlackCoat.Entities.Shapes;
 
 namespace BlackTournament
 {
@@ -18,6 +19,9 @@ namespace BlackTournament
         private String _Name;
         private TmxMap _MapData;
         private Dictionary<TmxTileset, Texture> _TileTextures;
+
+        // HACK
+        public List<IEntity> Polys = new List<IEntity>();
 
 
 
@@ -46,9 +50,48 @@ namespace BlackTournament
                         g.Texture = set.Value;
                         g.Position = new Vector2f(tile.X * _MapData.TileWidth, tile.Y * _MapData.TileHeight);
                         g.TextureRect = new IntRect(((tile.Gid - 1) % set.Key.Columns.Value) * _MapData.TileWidth, ((tile.Gid-1) / set.Key.Columns.Value) * _MapData.TileHeight, _MapData.TileWidth, _MapData.TileHeight);
-                        c.AddChild(g);
+                        c.AddChild(g); // FIXME: reduce render calls
                     }
                     AddChild(c);
+                }
+                foreach (var group in _MapData.ObjectGroups) // TOOD : UNHACK THIS!
+                {
+                    Log.Debug(group.Name);
+                    foreach (var obj in group.Objects)
+                    {
+                        switch (obj.ObjectType)
+                        {
+                            case TmxObjectType.Basic:
+                                var r = new Rectangle(_Core)
+                                {
+                                    Position = new Vector2f((float)obj.X, (float)obj.Y),
+                                    Size = new Vector2f((float)obj.Width, (float)obj.Height),
+                                    Color = Color.Cyan
+                                };
+                                Polys.Add(r);
+                                break;
+                            case TmxObjectType.Tile:
+                                break;
+                            case TmxObjectType.Ellipse:
+                                break;
+                            case TmxObjectType.Polygon:
+                                var poly = new Polygon(_Core)
+                                {
+                                    Position = new Vector2f((float)obj.X, (float)obj.Y),
+                                    Color = Color.Blue
+                                };
+                                foreach (var point in obj.Points)
+                                {
+                                    poly[(int)poly.GetPointCount()] = new Vector2f((float)point.X, (float)point.Y);
+                                }
+                                Polys.Add(poly);
+                                break;
+                            case TmxObjectType.Polyline:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
                 return true;
             }
