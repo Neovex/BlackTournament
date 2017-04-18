@@ -75,15 +75,11 @@ namespace BlackTournament
                             case TmxObjectType.Ellipse:
                                 break;
                             case TmxObjectType.Polygon:
-                                var poly = new Polygon(_Core)
+                                var poly = new Polygon(_Core, obj.Points.Select(point=> new Vector2f((float)point.X, (float)point.Y)))
                                 {
                                     Position = new Vector2f((float)obj.X, (float)obj.Y),
                                     Color = Color.Blue
                                 };
-                                foreach (var point in obj.Points)
-                                {
-                                    poly[(int)poly.GetPointCount()] = new Vector2f((float)point.X, (float)point.Y);
-                                }
                                 Polys.Add(poly);
                                 break;
                             case TmxObjectType.Polyline:

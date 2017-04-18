@@ -114,6 +114,7 @@
     <None Include="Net\Network.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Music\Ten_Seconds_to_Rush.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

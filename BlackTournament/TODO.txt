@@ -60,3 +60,49 @@ true
 pickup
 7
 false
+
+
+
+
+
+
+
+
+
+
+
+
+
+Collision Notes:
+
+        Primitives: Point, Line, Circle, AARectangle, Poligon
+            
+        Point - Point => ==
+        Point - Line => *1+lenght
+        Point - Circle => dist >= rad
+        Point - AAR => classic minmax
+        Point - Poly => *n
+
+        Line - Line => *2
+        Line - Circle => special *2
+        Line - AAR => *3 (ggf berücksichtigen: sonderfall: AAR projectionsaxen = coordinatenachsen)
+        Line - Poly -> *1+n
+
+        Circle - Circle => dist & rad compare
+        Circle - AAR => minmax + radial dist (http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection#402010)
+        Circle - Poly => special * 1+n
+
+        AAR -> AAR -> classic minmax
+        AAR -> Poly -> *2+n
+
+        Poly - Poly -> *n+n
+
+
+        Collision Prefilter based on type(ie: wall cant collide with wall)
+        sort collideables into typegroups for that
+
+        check typegroups against eachother
+
+        either use step ahead collision to prevent collisions
+        or
+        calculate all intersection distances based on * and move either one along the projection axis with the lowest distance
