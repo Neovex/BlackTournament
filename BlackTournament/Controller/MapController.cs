@@ -70,6 +70,11 @@ namespace BlackTournament.Controller
             // register additional to state events
         }
 
+        protected override void StateLoadingFailed()
+        {
+            StateReleased();
+        }
+
         protected override void StateReleased()
         {
             DetachEvents();

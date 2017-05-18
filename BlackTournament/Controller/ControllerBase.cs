@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlackCoat;
-using BlackTournament.GameStates;
 
 namespace BlackTournament.Controller
 {
@@ -20,22 +15,43 @@ namespace BlackTournament.Controller
 
         protected virtual void Activate(BaseGamestate state)
         {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-            _State = state;
-            _State.Ready += StateReady;
-            _State.OnDestroy += ReleaseStateInternal;
+            _State = state ?? throw new ArgumentNullException(nameof(state));
+            AttachEvents();
             _Game.Core.StateManager.ChangeState(_State);
+        }
+
+        private void StateLoadingFailedInternal()
+        {
+            DetachEvents();
+            StateLoadingFailed();
+            _State = null;
         }
 
         private void ReleaseStateInternal()
         {
-            _State.Ready -= StateReady;
-            _State.OnDestroy -= ReleaseStateInternal;
+            DetachEvents();
             StateReleased();
             _State = null;
         }
 
+
         protected abstract void StateReady();
+        protected abstract void StateLoadingFailed();
         protected abstract void StateReleased();
+
+
+        private void AttachEvents()
+        {
+            _State.Loaded += StateReady;
+            _State.LoadingFailed += StateLoadingFailedInternal;
+            _State.OnDestroy += ReleaseStateInternal;
+        }
+
+        private void DetachEvents()
+        {
+            _State.Loaded -= StateReady;
+            _State.LoadingFailed -= StateLoadingFailedInternal;
+            _State.OnDestroy -= ReleaseStateInternal;
+        }
     }
 }

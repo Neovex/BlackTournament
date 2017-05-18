@@ -1,8 +1,10 @@
 ﻿
-#complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
 
-#server pure data abstraction layer - poco game data 4 serialization
+# complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
 
+# server pure data abstraction layer - poco game data 4 serialization
+
+# create collision backend
 
 server game logic
 - dynamic collision (dyn to dyn)
@@ -11,7 +13,7 @@ client game logic
 - static collisions (dyn to stat where dyn is owned by local)
 
 
-#key(input) to enum(Action) mapping... CUAH
+# key(input) to enum(Action) mapping
 
 
 idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?
@@ -23,18 +25,8 @@ idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+# fix reconnect bug when mapstate load fails
+fix missing keyup event on focus loss?!
 
 
 
@@ -106,3 +98,8 @@ Collision Notes:
         either use step ahead collision to prevent collisions
         or
         calculate all intersection distances based on * and move either one along the projection axis with the lowest distance
+
+
+blending:
+- static sprite internal rendermasks can be achieved with a pixel shader
+- dynamic blending can only be achieved with an aditional render to texture step and a custom blendmode using dstalpha

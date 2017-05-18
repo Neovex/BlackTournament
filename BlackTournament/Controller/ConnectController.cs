@@ -39,7 +39,10 @@ namespace BlackTournament.Controller
         {
             // TODO : feed state (aka view) with data here and only now
         }
-
+        protected override void StateLoadingFailed()
+        {
+            StateReleased();
+        }
         protected override void StateReleased()
         {
             _Client.ChangeLevelReceived -= LevelReady;

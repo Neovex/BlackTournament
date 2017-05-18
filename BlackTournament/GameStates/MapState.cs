@@ -6,6 +6,7 @@ using SFML.System;
 using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.Entities;
+using BlackCoat.Entities.Shapes;
 
 namespace BlackTournament.GameStates
 {
@@ -14,9 +15,8 @@ namespace BlackTournament.GameStates
         private string _MapName;
 
         private View _View;
-        private Graphic _Player;
         private Map _Map;
-
+        private Graphic _Player;
 
         public MapState(Core core, String map) : base(core, map)
         {
@@ -29,7 +29,7 @@ namespace BlackTournament.GameStates
             // Setup View
             _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
 
-            // TESTS:
+            // TESTS ############################################
             TextureManager.RootFolder = "Assets";
             _Player = new Graphic(_Core)
             {
@@ -40,6 +40,11 @@ namespace BlackTournament.GameStates
             };
             _Player.Origin = _Player.Texture.Size.ToVector2f() / 2;
             Layer_Game.AddChild(_Player);
+            
+
+            Input.MouseButtonPressed += Input_MouseButtonPressed;
+            // END TESTS ###############################################
+
 
             // Load Map
             _Map = new Map(_Core, _MapName);
@@ -63,8 +68,23 @@ namespace BlackTournament.GameStates
             return mapLoaded;
         }
 
+        // TEST - DELME
+        private void Input_MouseButtonPressed(SFML.Window.Mouse.Button button)
+        {
+            switch (button)
+            {
+                case SFML.Window.Mouse.Button.Left:
+                    break;
+                case SFML.Window.Mouse.Button.Right:
+                    break;
+                case SFML.Window.Mouse.Button.Middle:
+                    break;
+            }
+        }
+
         protected override void Update(float deltaT)
         {
+            // atm nix
         }
 
         protected override void Destroy()
@@ -87,7 +107,7 @@ namespace BlackTournament.GameStates
         public void Rotate(float angle)
         {
             _Player.Rotation = angle;
-            //_View.Rotation = -_Player.Rotation; // cool effect - see later if this can be used (with gamepads maybe)
+            //_View.Rotation = -_Player.Rotation; // cool effect - see later if this can be used (with game-pads maybe)
         }
 
         public override string ToString()
