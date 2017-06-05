@@ -1,39 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" backgroundcolor="#000000" nextobjectid="60">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" backgroundcolor="#000000" nextobjectid="61">
  <tileset firstgid="1" name="AztekTiles" tilewidth="128" tileheight="128" tilecount="380" columns="10">
   <image source="../Assets/AztekTiles.png" width="1280" height="4864"/>
-  <terraintypes>
-   <terrain name="GreyToWall" tile="12"/>
-   <terrain name="WallToGrey" tile="15"/>
-  </terraintypes>
-  <tile id="1" terrain=",,,0"/>
-  <tile id="2" terrain=",,0,0"/>
-  <tile id="3" terrain=",,0,"/>
-  <tile id="4" terrain=",,,1"/>
-  <tile id="5" terrain=",,1,1"/>
-  <tile id="6" terrain=",,1,"/>
-  <tile id="8" terrain="0,0,0,"/>
-  <tile id="9" terrain="0,0,,0"/>
-  <tile id="11" terrain=",0,,0"/>
-  <tile id="12" terrain="0,0,0,0"/>
-  <tile id="13" terrain="0,,0,"/>
-  <tile id="14" terrain=",1,,1"/>
-  <tile id="15" terrain="1,1,1,1"/>
-  <tile id="16" terrain="1,,1,"/>
-  <tile id="18" terrain="0,,0,0"/>
-  <tile id="19" terrain=",0,0,0"/>
-  <tile id="21" terrain=",0,,"/>
-  <tile id="22" terrain="0,0,,"/>
-  <tile id="23" terrain="0,,,"/>
-  <tile id="24" terrain=",1,,"/>
-  <tile id="25" terrain="1,1,,"/>
-  <tile id="26" terrain="1,,,"/>
-  <tile id="28" terrain="1,1,1,"/>
-  <tile id="29" terrain="1,1,,1"/>
-  <tile id="38" terrain="1,,1,1"/>
-  <tile id="39" terrain=",1,1,1"/>
  </tileset>
  <layer name="Tiles" width="30" height="28">
+  <properties>
+   <property name="TilesetName" value="AztekTiles"/>
+  </properties>
   <data encoding="csv">
 16,16,32,16,16,16,16,16,16,16,16,16,32,16,16,16,28,16,16,16,0,0,0,0,0,0,0,0,0,0,
 16,2,3,3,3,3,3,3,3,3,3,3,3,4,8,16,28,16,16,16,0,0,0,0,0,0,0,0,0,0,
@@ -96,7 +69,6 @@
   <object id="12" x="1534" y="2079.33" width="226" height="1364"/>
   <object id="13" x="1472" y="1950.67" width="164" height="163"/>
   <object id="14" x="66" y="1825.33" width="1442.67" height="174"/>
-  <object id="15" x="334" y="2162"/>
   <object id="20" x="1205" y="799" width="207" height="568"/>
   <object id="23" x="1890" y="1441">
    <polygon points="3,-1.5 4,84 -113.5,190.5 -197.5,191.5 -200.5,110.5 -77.5,-1.5"/>

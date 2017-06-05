@@ -1,4 +1,5 @@
 ﻿
+# implement map renderer see layername lookup in layerproperty 4 ease
 
 # complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
 
@@ -65,7 +66,7 @@ false
 
 
 
-Collision Notes:
+#Collision Notes:
 
         Primitives: Point, Line, Circle, AARectangle, Poligon
             
