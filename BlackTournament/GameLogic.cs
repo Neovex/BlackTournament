@@ -8,30 +8,27 @@ using BlackCoat;
 using BlackTournament.Systems;
 using BlackTournament.Net.Data;
 using BlackTournament.Net.Server;
+using BlackTournament.Tmx;
 using Lidgren.Network;
-
 
 namespace BlackTournament
 {
     class GameLogic
     {
         private Core _Core;
+        private TmxMapper _Map;
         private Dictionary<int, ServerPlayer> _Players;
 
-        public event Action<ServerUser<NetConnection>, PickupType> _PlayerGotPickup = (u, p) => { };
+        public event Action<ServerUser<NetConnection>, PickupType> PlayerGotPickup = (u, p) => { };
 
 
-        public string MapName { get; private set; }
+        public string MapName { get { return _Map.Name; } }
 
 
-        public GameLogic(Core core, String map)
+        public GameLogic(Core core, TmxMapper map)
         {
-            if (core == null) throw new ArgumentNullException(nameof(core));
-            _Core = core;
-
-            if (String.IsNullOrEmpty(map)) throw new ArgumentException(nameof(map));
-            MapName = map;
-
+            _Core = core ?? throw new ArgumentNullException(nameof(core));
+            _Map = map ?? throw new ArgumentNullException(nameof(map));
             _Players = new Dictionary<int, ServerPlayer>();
         }
 
@@ -83,7 +80,7 @@ namespace BlackTournament
             {
                 player.Serialize(msg);
             }
-            // TODO : handle player rotation, pickups oh and maps
+            // TODO : handle pickups oh and maps
         }
 
         internal void Update(float deltaT)

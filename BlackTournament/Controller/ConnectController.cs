@@ -54,7 +54,23 @@ namespace BlackTournament.Controller
         private void LevelReady()
         {
             Log.Debug("Client Ready");
-            _Game.Core.AnimationManager.Wait(2, a => { _Game.MapController.Activate(_Client); }); // TODO: move timeout to map controller?
+            if (MapIsAvailable(_Client.MapName))
+            {
+                _Game.MapController.Activate(_Client);
+            }
+            else
+            {
+                var mapName = _Client.MapName;
+                Log.Debug("Map", mapName, "not available on client side - aborting connection");
+                _Client.Disconnect(); // TODO : test this block! might have a race between disconnect event activation below
+                _Game.MenuController.Activate($"Error: you do not have the map {mapName}. Connection aborted.");//$
+            }
+        }
+
+        private bool MapIsAvailable(string mapName)
+        {
+            Log.Fatal("Skipped map validity check for", mapName); // TODO : implement and maybe move to game or another map collection handler that checks all map at game load
+            return true;
         }
 
         private void ConnectionFailed()

@@ -1,8 +1,12 @@
 ﻿using System;
+
+using SFML.System;
+
 using BlackCoat;
+
 using BlackTournament.GameStates;
 using BlackTournament.Net;
-using SFML.System;
+using BlackTournament.Tmx;
 
 namespace BlackTournament.Controller
 {
@@ -11,9 +15,14 @@ namespace BlackTournament.Controller
         private BlackTournamentClient _Client;
         private MapState _State;
 
+        private TmxMapper _MapData;
+
+
         public MapController(Game game) : base(game)
         {
+            _MapData = new TmxMapper();
         }
+
 
         public void Activate(BlackTournamentClient client)
         {
@@ -22,7 +31,15 @@ namespace BlackTournament.Controller
 
             // Init
             _Client = client;
-            Activate(_State = new MapState(_Game.Core, _Client.MapName));
+            if (_MapData.Load(_Client.MapName, _Game.Core.CollisionSystem))
+            {
+                Activate(_State = new MapState(_Game.Core, _MapData));
+            }
+            else
+            {
+                _Client.Disconnect();
+                _Game.MenuController.Activate($"Failed to load map {_Client.MapName}");//$
+            }
         }
 
         private void AttachEvents()
@@ -47,10 +64,7 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            var player = _Client.Player;
-            player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition);
-            //HACK?
-            _State.Rotate(player.R);
+            _State.Rotate(_Client.Player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition));
         }
 
         private void UpdateReceived()

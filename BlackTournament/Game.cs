@@ -28,7 +28,7 @@ namespace BlackTournament
         public Core Core { get; private set; }
         public InputMapper InputMapper { get; private set; }
 
-        public static Font DefaultFont { get; private set; } // de-static?
+        public static Font DefaultFont { get; private set; }
         public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
         public MapController MapController { get; private set; }
@@ -36,6 +36,7 @@ namespace BlackTournament
         public Game()
         {
             // Init Logging
+            Log.Level = LogLevel.Debug;
             if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
             Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}");
             Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
@@ -56,7 +57,7 @@ namespace BlackTournament
                 // Init Game Font
                 _GlobalFonts = new FontManager();
                 DefaultFont = _GlobalFonts.Load(DEFAULT_FONT, Resources.HighlandGothicLightFLF);
-                // todo: test text blur issue (might need round)
+                // Todo: test text blur issue (might need round)
 
                 // Init Input
                 InputMapper = new InputMapper();
@@ -109,7 +110,7 @@ namespace BlackTournament
             // Setup Server
             if(host == Net.Net.DEFAULT_HOST)
             {
-                _Server.HostGame(map, port);
+                if(!_Server.HostGame(map, port)) return;
             }
 
             // Setup Client
@@ -178,7 +179,7 @@ namespace BlackTournament
                             var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
                             StartNewGame(host: commandData[1], port: port);
                         }
-                        Log.Info("Invalid connect command. Use connect [hostname] optional:[port]", cmd);
+                        Log.Info("Invalid connect command. Use connect [host name] optional:[port]", cmd);
                         return true;
 
                     case "srv":
@@ -189,7 +190,7 @@ namespace BlackTournament
                             var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
                             StartNewGame(map: commandData[1], port: port);
                         }
-                        Log.Info("Invalid host command. Use host [mapname] optional:[port]", cmd);
+                        Log.Info("Invalid host command. Use host [map name] optional:[port]", cmd);
                         return true;
                 }
             }

@@ -24,13 +24,12 @@ idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
 
-
-
-# fix reconnect bug when mapstate load fails
 fix missing keyup event on focus loss?!
 
 
+add id-d shots & pickups to serialization chain
 
+create game data from parsed mapdata
 
 
 #Network data brainstorm

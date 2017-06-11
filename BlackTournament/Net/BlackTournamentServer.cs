@@ -8,6 +8,7 @@ using BlackTournament.Net.Data;
 using BlackTournament.Net.Server;
 using BlackTournament.Systems;
 using Lidgren.Network;
+using BlackTournament.Tmx;
 
 namespace BlackTournament.Net
 {
@@ -34,16 +35,49 @@ namespace BlackTournament.Net
             return id == AdminId;
         }
 
-        public void HostGame(string map, int port)
+        public bool HostGame(string mapName, int port)
         {
+            Log.Debug("Trying to host", mapName, "on", port);
+            var map = LoadMapFromMapname(mapName);
+            if (map == null)
+            {
+                Log.Error("Failed to host", mapName, "on", port, "reason: unknown map");
+                return false;
+            }
+
             Host(port);
-            ChangeLevel(AdminId, map);
+            Log.Debug("Host active");
+            ChangeLevel(map);
+            return true;
         }
 
-        // Update from core->game
+        private TmxMapper LoadMapFromMapname(string mapName)
+        {
+            var mapper = new TmxMapper();
+            if (mapper.Load(mapName, _Core.CollisionSystem))
+            {
+                return mapper;
+            }
+            Log.Warning("Failed to load level", mapName);
+            return null;
+        }
+
+        private void ChangeLevel(TmxMapper map)
+        {
+            if (_Logic != null) _Logic.PlayerGotPickup -= SendPlayerPickup;
+
+            _Logic = new GameLogic(_Core, map);
+            _Logic.PlayerGotPickup += SendPlayerPickup;
+
+            // Add users
+            foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
+            Broadcast(NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
+        }
+
+        // Update from core->game->server.Update()
         internal void Update(float deltaT)
         {
-            // Process Incomming Data
+            // Process Incoming Net Traffic
             ProcessMessages();
 
             if (_Logic == null) return;
@@ -78,23 +112,23 @@ namespace BlackTournament.Net
             {
                 case NetMessage.TextMessage:
                     SendMessage(msg.ReadInt32(), msg.ReadString());
-                break;
+                    break;
 
                 case NetMessage.ChangeLevel:
                     ChangeLevel(msg.ReadInt32(), msg.ReadString());
-                break;
+                    break;
 
                 case NetMessage.ProcessGameAction:
                     _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32(), msg.ReadBoolean());
-                break;
+                    break;
 
                 case NetMessage.Rotate:
                     _Logic.RotatePlayer(msg.ReadInt32(), msg.ReadSingle());
-                break;
+                    break;
 
                 case NetMessage.StopServer:
                     StopServer(msg.ReadInt32());
-                break;
+                    break;
             }
         }
 
@@ -122,19 +156,21 @@ namespace BlackTournament.Net
             {
                 StopServer(String.Empty);
                 // TODO : check if dropped players will be removed by other events or if this needs to be done here manually
-                _Logic._PlayerGotPickup -= SendPlayerPickup;
+                _Logic.PlayerGotPickup -= SendPlayerPickup;
                 _Logic = null;
             }
         }
 
-        private void ChangeLevel(int id, string map)
+        private void ChangeLevel(int id, string mapName)
         {
             if (IsAdmin(id))
             {
-                _Logic = new GameLogic(_Core, map);
-                _Logic._PlayerGotPickup += SendPlayerPickup;
-                foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
-                Broadcast(NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
+                var map = LoadMapFromMapname(mapName);
+                if (map != null) ChangeLevel(map);
+            }
+            else
+            {
+                Log.Info("Ignored change level request from", id, _ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias, "to level", mapName);
             }
         }
     }
