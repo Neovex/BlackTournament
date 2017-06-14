@@ -71,7 +71,7 @@ namespace BlackTournament.Net
 
         private void UpdatePlayerRotation(NetDeliveryMethod method)
         {
-            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(Player.R); }, method);
+            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(Player.Rotation); }, method);
         }
 
         public void SendMessage(String txt)

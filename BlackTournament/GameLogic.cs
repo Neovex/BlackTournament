@@ -17,7 +17,8 @@ namespace BlackTournament
     {
         private Core _Core;
         private TmxMapper _Map;
-        private Dictionary<int, ServerPlayer> _Players;
+        private Dictionary<int, ServerPlayer> _PlayerLookup;
+        private List<ServerPlayer> _Players;
 
         public event Action<ServerUser<NetConnection>, PickupType> PlayerGotPickup = (u, p) => { };
 
@@ -29,23 +30,45 @@ namespace BlackTournament
         {
             _Core = core ?? throw new ArgumentNullException(nameof(core));
             _Map = map ?? throw new ArgumentNullException(nameof(map));
-            _Players = new Dictionary<int, ServerPlayer>();
+            _PlayerLookup = new Dictionary<int, ServerPlayer>();
+            _Players = new List<ServerPlayer>();
         }
 
 
-        internal void AddPlayer(ServerUser<NetConnection> user)
+        public void AddPlayer(ServerUser<NetConnection> user)
         {
-            _Players.Add(user.Id, new ServerPlayer(user));
+            var player = new ServerPlayer(user);
+            player.Spawn += HandlePlayerSpawn;
+            player.ShotFired += HandlePlayerShoot;
+            _PlayerLookup.Add(user.Id, player);
+            _Players.Add(player);
         }
 
-        internal void RemovePlayer(ServerUser<NetConnection> user)
+        public void RemovePlayer(ServerUser<NetConnection> user)
         {
-            _Players.Remove(user.Id);
+            var player = _PlayerLookup[user.Id];
+            player.Spawn -= HandlePlayerSpawn;
+            player.ShotFired -= HandlePlayerShoot;
+            _PlayerLookup.Remove(user.Id);
+            _Players.Remove(player);
+        }
+
+        private void HandlePlayerSpawn(ServerPlayer player)
+        {
+            var spawnPoint = _Players.All(p=>p.Dead) ? _Map.SpawnPoints.First()
+                : _Map.SpawnPoints.OrderByDescending(sp => _Players.Where(p => !p.Dead).Min(p => p.Position.DistanceBetweenSquared(sp))).First();
+
+            player.Respawn(spawnPoint);
+        }
+
+        private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
+        {
+            
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)
         {
-            var player = _Players[id];
+            var player = _PlayerLookup[id];
             switch (action)
             {
                 case GameAction.MoveUp:
@@ -56,8 +79,10 @@ namespace BlackTournament
                     else player.Input.Remove(action);
                     break;
                 case GameAction.ShootPrimary:
+                    player.ShootPrimary();
                     break;
                 case GameAction.ShootSecundary:
+                    player.ShootSecundary();
                     break;
                 case GameAction.NextWeapon:
                     player.SwitchWeapon(1);
@@ -70,13 +95,13 @@ namespace BlackTournament
 
         internal void RotatePlayer(int id, float rotation)
         {
-            _Players[id].R = rotation;
+            _PlayerLookup[id].Rotation = rotation;
         }
 
         internal void Serialize(NetOutgoingMessage msg)
         {
-            msg.Write(_Players.Count);
-            foreach (var player in _Players.Values)
+            msg.Write(_PlayerLookup.Count);
+            foreach (var player in _PlayerLookup.Values)
             {
                 player.Serialize(msg);
             }
@@ -86,7 +111,7 @@ namespace BlackTournament
         internal void Update(float deltaT)
         {
             // FIXME
-            foreach (var player in _Players.Values)
+            foreach (var player in _PlayerLookup.Values)
             {
                 player.Update(deltaT);
             }

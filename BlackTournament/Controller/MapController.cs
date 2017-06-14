@@ -64,15 +64,15 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            _State.Rotate(_Client.Player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition));
+            _State.Rotate(_Client.Player.Rotation = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition));
         }
 
         private void UpdateReceived()
         {
             // HACK HACK HACK
             var player = _Client.Player;
-            player.R = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(Input.MousePosition);
-            _State.UpdatePosition(0, player.X, player.Y);
+            player.Rotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(Input.MousePosition);
+            _State.UpdatePosition(0, player.Position.X, player.Position.Y);
             // rotate only other players
         }
 
