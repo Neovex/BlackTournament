@@ -95,7 +95,7 @@ namespace BlackTournament
 
         internal void RotatePlayer(int id, float rotation)
         {
-            _PlayerLookup[id].Rotation = rotation;
+            _PlayerLookup[id].Rotate(rotation);
         }
 
         internal void Serialize(NetOutgoingMessage msg)

@@ -7,6 +7,9 @@ using BlackCoat;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Tmx;
+using BlackTournament.Net.Data;
+using System.Collections.Generic;
+using BlackTournament.Systems;
 
 namespace BlackTournament.Controller
 {
@@ -16,11 +19,34 @@ namespace BlackTournament.Controller
         private MapState _State;
 
         private TmxMapper _MapData;
+        private List<ClientPlayer> _Players;
+
+
+        internal ClientPlayer Player { get { return _Client.Player; } }
 
 
         public MapController(Game game) : base(game)
         {
             _MapData = new TmxMapper();
+            _Players = new List<ClientPlayer>();
+        }
+
+        protected override void StateReady()
+        {
+            _State.CreatePlayer(Player.Id, true);
+            AttachEvents();
+        }
+
+        protected override void StateLoadingFailed()
+        {
+            StateReleased(); // add better error handling?
+        }
+
+        protected override void StateReleased()
+        {
+            DetachEvents();
+            _Client = null;
+            _State = null;
         }
 
 
@@ -44,56 +70,119 @@ namespace BlackTournament.Controller
 
         private void AttachEvents()
         {
+            // Connection Events
+            _Client.ConnectionHasBeenLost += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
+            // Game Events
+            _Client.Player.Fragged += HandlePlayerFragged;
+            _Client.ChangeLevelReceived += HandleServerMapChange;
+            _Client.MessageReceived += HandleTextMessage;
             _Client.UpdateReceived += UpdateReceived;
-            _Client.ConnectionHasBeenLost += HandleConnectionLost;
-            //_Client.ConnectionClosed += HandleConnectionClosed; // TODO
-
+            _Client.UserJoined += HandleUserJoined;
+            _Client.UserLeft += HandleUserLeft;
+            // System Events
             Input.MouseMoved += Input_MouseMoved;
-            _Game.InputMapper.Action += _Client.ProcessGameAction;
+            _Game.InputMapper.Action += HandleInput;
         }
 
         private void DetachEvents()
         {
-            _Client.UpdateReceived -= UpdateReceived;
+            // Connection Events
             _Client.ConnectionHasBeenLost -= HandleConnectionLost;
-            //_Client.ConnectionClosed -= HandleConnectionClosed; // FIXME
-
+            // Game Events
+            _Client.Player.Fragged -= HandlePlayerFragged;
+            _Client.ChangeLevelReceived -= HandleServerMapChange;
+            _Client.MessageReceived -= HandleTextMessage;
+            _Client.UpdateReceived -= UpdateReceived;
+            _Client.UserJoined -= HandleUserJoined;
+            _Client.UserLeft -= HandleUserLeft;
+            // System Events
             Input.MouseMoved -= Input_MouseMoved;
-            _Game.InputMapper.Action -= _Client.ProcessGameAction;
+            _Game.InputMapper.Action -= HandleInput;
         }
 
-        private void Input_MouseMoved(Vector2f mousePosition)
+        private void HandleInput(GameAction action, bool activate)
         {
-            _State.Rotate(_Client.Player.Rotation = new Vector2f(_Game.Core.DeviceSize.X / 2, _Game.Core.DeviceSize.Y / 2).AngleTowards(mousePosition));
+            var move = _State.ViewMovement;
+            switch (action)
+            {
+                case GameAction.Confirm:
+                    // needed?
+                    break;
+                case GameAction.Cancel:
+                    // open menu
+                    break;
+                case GameAction.ShowStats:
+                    // TODO
+                    break;
+                case GameAction.MoveUp: // auslagern?
+                    move.Y = activate ? -1 : 0;
+                    break;
+                case GameAction.MoveDown:
+                    move.Y = activate ?  1 : 0; COMMIT !!!
+                    break;
+                case GameAction.MoveLeft:
+                    move.X = activate ? -1 : 0;
+                    break;
+                case GameAction.MoveRight:
+                    move.X = activate ?  1 : 0;
+                    break;
+            }
+            // Move view only when player is dead
+            _State.ViewMovement = Player.IsAlive ? new Vector2f() : move;
+
+            // Hand input to the server 4 processing game-logic
+            _Client.ProcessGameAction(action, activate);
+        }
+
+        private void HandlePlayerFragged(ClientPlayer player)
+        {
+            if(player == Player)
+            {
+                // dang! we fragged
+            }
+            else
+            {
+                // another one bites the dust
+            }
+        }
+
+        private void HandleServerMapChange()
+        {
+            Log.Debug("TODO: HandleServerMapChange");
+        }
+
+        private void HandleTextMessage(ClientPlayer player, string msg)
+        {
+            Log.Debug("TODO: HandleTextMessage", msg);
         }
 
         private void UpdateReceived()
         {
-            // HACK HACK HACK
-            var player = _Client.Player;
-            player.Rotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(Input.MousePosition);
-            _State.UpdatePosition(0, player.Position.X, player.Position.Y);
-            // rotate only other players
+            _State.UpdateEntity(Player.Id, Player.Position, Player.Rotation, Player.Health > 0);
+            _State.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
+            if (Player.IsAlive) _State.FocusPlayer(); // move camera to player
+
+            // TODO : update other entities
         }
 
-        protected override void StateReady()
+        private void HandleUserJoined(ClientPlayer player)
         {
-            AttachEvents();
-
-            // TODO : feed state (aka view) with data here and only now
-            // register additional to state events
+            _Players.Add(player);
+            player.Fragged += HandlePlayerFragged;
+            _State.CreatePlayer(player.Id);
         }
 
-        protected override void StateLoadingFailed()
+        private void HandleUserLeft(ClientPlayer player)
         {
-            StateReleased();
+            _Players.Remove(player);
+            player.Fragged -= HandlePlayerFragged;
+            _State.Destroy(player.Id);
         }
 
-        protected override void StateReleased()
+        private void Input_MouseMoved(Vector2f mousePosition)
         {
-            DetachEvents();
-            _Client = null;
-            _State = null;
+            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition);
+            _State.RotatePlayer(_Client.PlayerRotation); // update state
         }
 
         private void ExitToMenue() // TODO attach to proper input - and or view event

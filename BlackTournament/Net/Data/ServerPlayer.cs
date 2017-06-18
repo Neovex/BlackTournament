@@ -27,7 +27,12 @@ namespace BlackTournament.Net.Data
         {
             User = user;
             Input = new HashSet<GameAction>();
-            Fragg();
+            Dead = true;
+        }
+
+        public void Rotate(float rotation) // server may rotate players as it pleases
+        {
+            Rotation = rotation;
         }
 
         public void Fragg()

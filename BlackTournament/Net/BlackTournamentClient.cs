@@ -12,28 +12,32 @@ namespace BlackTournament.Net
 {
     public class BlackTournamentClient : ManagedClient<NetMessage>
     {
-        public  Dictionary<int, ClientPlayer> _Players; // FIXME!!
+        private Dictionary<int, ClientPlayer> _PlayerLookup;
         private Single _UpdateImpulse;
 
 
         public String MapName { get; private set; }
         public ClientPlayer Player { get; private set; }
+        public float PlayerRotation { get; set; }
 
         public Boolean IsConnected { get { return _BasePeer.ConnectionsCount != 0; } }
         public override Int32 AdminId { get { return Net.ADMIN_ID; } }
 
+        // Connection Events
         public event Action ConnectionEstablished = () => { };
         public event Action ConnectionHasBeenLost = () => { };
 
-        public event Action ChangeLevelReceived = () => { };
-        public event Action<ClientPlayer, String> MessageReceived = (u, m) => { };
+        // Game Events
         public event Action<ClientPlayer> UserJoined = u => { };
         public event Action<ClientPlayer> UserLeft = u => { };
+
+        public event Action<ClientPlayer, String> MessageReceived = (u, m) => { };
+        public event Action ChangeLevelReceived = () => { };
         public event Action UpdateReceived = () => { };
 
 
 
-        public BlackTournamentClient(String userName):base(userName, Net.COMMANDS)
+        public BlackTournamentClient(String userName):base(Game.ID, userName, Net.COMMANDS)
         {
         }
 
@@ -43,7 +47,7 @@ namespace BlackTournament.Net
         {
             if (IsConnected)
             {
-                // Process Incomming Data
+                // Process incoming data
                 ProcessMessages();
 
                 // Update Rotation on Server (~60Hz)
@@ -54,6 +58,11 @@ namespace BlackTournament.Net
                     UpdatePlayerRotation(NetDeliveryMethod.UnreliableSequenced);
                 }
             }
+        }
+
+        internal String GetAlias(int id)
+        {
+            return _ConnectedClients.First(u => u.Id == id).Alias;
         }
 
 
@@ -71,7 +80,7 @@ namespace BlackTournament.Net
 
         private void UpdatePlayerRotation(NetDeliveryMethod method)
         {
-            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(Player.Rotation); }, method);
+            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(PlayerRotation); }, method);
         }
 
         public void SendMessage(String txt)
@@ -111,7 +120,7 @@ namespace BlackTournament.Net
 
         private void TextMessage(NetIncomingMessage msg)
         {
-            var player = _Players[msg.ReadInt32()];
+            var player = _PlayerLookup[msg.ReadInt32()];
             var txt = msg.ReadString();
             Log.Info(player.Alias, txt);
             MessageReceived(player, txt);
@@ -125,22 +134,20 @@ namespace BlackTournament.Net
 
         private void ServerUpdate(NetIncomingMessage msg)
         {
-            int id;
-            ClientPlayer player;
-            int entityCount = msg.ReadInt32();
+            var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                id = msg.ReadInt32();
-                if(_Players.TryGetValue(id, out player))
+                var id = msg.ReadInt32();
+                if(_PlayerLookup.TryGetValue(id, out ClientPlayer otherPlayer))
                 {
-                    player.Deserialize(msg);
+                    otherPlayer.Deserialize(msg);
                 }
                 else
                 {
-                    player = new ClientPlayer(id, msg);
-                    player.Alias = _ConnectedClients.First(u => u.Id == id).Alias;
-                    _Players.Add(id, player);
-                    UserJoined.Invoke(player);
+                    otherPlayer = new ClientPlayer(id, msg);
+                    otherPlayer.Alias = GetAlias(id);
+                    _PlayerLookup.Add(id, otherPlayer);
+                    UserJoined.Invoke(otherPlayer);
                 }
             }
             UpdateReceived.Invoke();
@@ -148,20 +155,21 @@ namespace BlackTournament.Net
 
         protected override void UserConnected(User user)
         {
-            // Handled in Update
+            // Called from server when another user has connected to the current server
+            // override is intentionally empty - user adding is handled in ServerUpdate(msg);
         }
 
         protected override void UserDisconnected(User user)
         {
-            UserLeft.Invoke(_Players[user.Id]);
-            _Players.Remove(user.Id);
+            UserLeft.Invoke(_PlayerLookup[user.Id]);
+            _PlayerLookup.Remove(user.Id);
         }
 
         protected override void Connected(int id, string alias)
         {
             Player = new ClientPlayer(id) { Alias = alias };
-            _Players = new Dictionary<int, ClientPlayer>();
-            _Players.Add(id, Player);
+            _PlayerLookup = new Dictionary<int, ClientPlayer>();
+            _PlayerLookup.Add(id, Player);
             ConnectionEstablished.Invoke();
         }
 

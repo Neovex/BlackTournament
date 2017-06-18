@@ -13,6 +13,7 @@ using BlackCoat.Collision.Shapes;
 using BlackTournament.Entities;
 using BlackTournament.Tmx;
 using BlackCoat.Entities.Shapes;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.GameStates
 {
@@ -21,11 +22,17 @@ namespace BlackTournament.GameStates
         private TmxMapper _MapData;
 
         private View _View;
-        private Graphic _Player;
+        private Dictionary<int, IEntity> _EnitityLookup;
+        private IEntity _LocalPlayer;
+
+
+        public Vector2f ViewMovement { get; set; }
+
 
         public MapState(Core core, TmxMapper map) : base(core, map.Name)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
+            _EnitityLookup = new Dictionary<int, IEntity>();
         }
 
         protected override bool Load()
@@ -33,7 +40,7 @@ namespace BlackTournament.GameStates
             TextureManager.RootFolder = "Assets";
 
             // Setup View
-            _View = new View(new FloatRect(0, 0, _Core.DeviceSize.X, _Core.DeviceSize.Y));
+            _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize.ToVector2f()));
             Layer_BG.View = _View;
 
             // Setup Map
@@ -42,6 +49,8 @@ namespace BlackTournament.GameStates
             {
                 var mapLayer = new MapRenderer(_Core, _MapData.Size, TextureManager.Load(layer.TextureName), _MapData.TileSize);
                 mapLayer.Position = layer.Offset;
+
+                //_View.Center = 
 
                 int i = 0;
                 foreach (var tile in layer.Tiles)
@@ -58,7 +67,7 @@ namespace BlackTournament.GameStates
             var wallColor = new Color(155, 155, 155, 155); // TODO : maybe add remaining debug views
             foreach (var shape in _MapData.WallCollider)
             {
-                if(shape is RectangleCollisionShape)
+                if (shape is RectangleCollisionShape)
                 {
                     var s = (RectangleCollisionShape)shape;
                     Layer_BG.AddChild(new Rectangle(_Core)
@@ -70,7 +79,7 @@ namespace BlackTournament.GameStates
                         OutlineThickness = 1
                     });
                 }
-                else if(shape is PolygonCollisionShape)
+                else if (shape is PolygonCollisionShape)
                 {
                     var s = (PolygonCollisionShape)shape;
                     Layer_BG.AddChild(new Polygon(_Core, s.Points)
@@ -82,45 +91,67 @@ namespace BlackTournament.GameStates
                     });
                 }
             }
-
-            // Player
-            _Player = new Graphic(_Core)
-            {
-                Texture = TextureManager.Load("CharacterBase"),
-                Color = Color.Red,
-                View = _View,
-                Scale = new Vector2f(0.5f, 0.5f) // FIXME
-            };
-            _Player.Origin = _Player.Texture.Size.ToVector2f() / 2;
-            Layer_Game.AddChild(_Player);
-
             return true;
         }
 
         protected override void Update(float deltaT)
         {
-            // atm nix
+            _View.Center += ViewMovement * 2000 * deltaT; // ghost view
         }
 
         protected override void Destroy()
         {
-            // atm nix
         }
 
-        public void Spawn(IEntity entity)
+        public void CreatePlayer(int id, bool isLocalPlayer = false)
         {
-            Layer_Game.AddChild(entity);
+            var player = new Graphic(_Core)
+            {
+                Texture = TextureManager.Load("CharacterBase"),
+                Color = Color.Red,
+                View = _View,
+                Scale = new Vector2f(0.5f, 0.5f) // FIXME?
+            };
+            player.Origin = player.Texture.Size.ToVector2f() / 2;
+            Layer_Game.AddChild(player);
+            _EnitityLookup.Add(id, player);
+
+            if (isLocalPlayer) _LocalPlayer = player;
         }
 
-        public void UpdatePosition(int id, float x, float y)
+        public void CreateEntity(int id, PickupType type, Vector2f pos, float rotation)
         {
-            _Player.Position = new Vector2f(x, y);
-            _View.Center = _Player.Position;
+            // TODO
         }
 
-        public void Rotate(float angle)
+        public void CreateVFX(object type, Vector2f pos, float rotation)
         {
-            _Player.Rotation = angle;
+            // TODO
+        }
+
+        public void Destroy(int id)
+        {
+            var entity = _EnitityLookup[id];
+            entity.Parent.RemoveChild(entity);
+            _EnitityLookup.Remove(id);
+        }
+
+        public void UpdateEntity(int id, Vector2f pos, float rotation, bool visible) // add pickup type?
+        {
+            var entity = _EnitityLookup[id];
+            entity.Position = pos;
+            entity.Rotation = rotation;
+            entity.Visible = visible;
+        }
+
+        public void FocusPlayer()
+        {
+            _View.Center = _LocalPlayer.Position;
+        }
+
+        public void RotatePlayer(float angle)
+        {
+            _LocalPlayer.Rotation = angle;
             //_View.Rotation = -_Player.Rotation; // cool effect - see later if this can be used (with game-pads maybe)
         }
 

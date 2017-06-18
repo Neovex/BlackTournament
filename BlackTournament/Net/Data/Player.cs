@@ -12,16 +12,16 @@ namespace BlackTournament.Net.Data
     {
         public override EntityType EntityType { get { return EntityType.Player; } }
 
-        public Vector2f Position { get; protected set; }
-        public Single Rotation { get; set; }
-        public Int32 Health { get; protected set; }
-        public Int32 Shield { get; protected set; }
-        public Int32 Score { get; protected set; }
+        public virtual Vector2f Position { get; protected set; }
+        public virtual Single Rotation { get; protected set; }
+        public virtual Int32 Health { get; protected set; }
+        public virtual Int32 Shield { get; protected set; }
+        public virtual Int32 Score { get; protected set; }
 
         public List<PickupType> OwnedWeapons { get; private set; }  = new List<PickupType>();
 
         private PickupType _CurrentWeapon;
-        public PickupType CurrentWeapon
+        public virtual PickupType CurrentWeapon
         {
             get { return _CurrentWeapon; }
             protected set

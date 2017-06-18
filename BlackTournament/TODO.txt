@@ -29,7 +29,9 @@ fix missing keyup event on focus loss?!
 
 add id-d shots & pickups to serialization chain
 
-create game data from parsed mapdata
+create game data from parsed mapdata?
+
+network -> shots are only sent once - movement is then interpolated? - problem: wall collisions
 
 
 #Network data brainstorm

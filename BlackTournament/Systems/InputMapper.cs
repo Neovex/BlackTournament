@@ -1,18 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlackCoat.InputMapping;
 using SFML.Window;
 
 namespace BlackTournament.Systems
 {
+    // TODO : consider adding to engine as core system
     public class InputMapper
     {
-        public SimpleInputMap<GameAction> DefaultMapping { get; private set; }
         private SimpleInputMap<GameAction> _CurrentMapping;
 
+
+        /// <summary>
+        /// Gets the a default mapping that fits most use cases
+        /// </summary>
+        public SimpleInputMap<GameAction> DefaultMapping { get; private set; }
+
+        /// <summary>
+        /// Gets and sets the exclusive listener.
+        /// WARNING: As long as the ExclusiveListener is not null the Action Event will not be raised!
+        /// </summary>
+        public Action<GameAction, Boolean> ExclusiveListener { get; private set; }
+
+
+        /// <summary>
+        /// Gets or sets the current input mapping.
+        /// </summary>
         public SimpleInputMap<GameAction> CurrentMapping
         {
             get { return _CurrentMapping; }
@@ -25,18 +37,26 @@ namespace BlackTournament.Systems
             }
         }
 
+
+        /// <summary>
+        /// Occurs when a user input was mapped to a game-action based on the current input mapping.
+        /// WARNING: As long as the ExclusiveListener is not null the Action Event will not be raised!
+        /// </summary>
         public event Action<GameAction, Boolean> Action = (a, b) => { };
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputMapper"/> class.
+        /// </summary>
         public InputMapper()
         {
             Log.Debug(nameof(InputMapper), "created");
-            CreateDefaultMap(); // Fixme: load from file at some point
+            CreateDefaultInputMap(); // Fixme: load from file at some point
             CurrentMapping = DefaultMapping;
             // TODO: add option to modify a mapping (not urgent)
         }
 
-        private void CreateDefaultMap()
+        private void CreateDefaultInputMap()
         {
             DefaultMapping = new SimpleInputMap<GameAction>("Default");
 
@@ -67,8 +87,7 @@ namespace BlackTournament.Systems
 
         private void HandleInput(GameAction action, Boolean activate)
         {
-            //Log.Debug(action);
-            Action.Invoke(action, activate);
+            (ExclusiveListener ?? Action).Invoke(action, activate);
         }
     }
 }

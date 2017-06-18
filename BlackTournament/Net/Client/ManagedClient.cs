@@ -20,7 +20,7 @@ namespace BlackTournament.Net.Client
         public abstract Int32 AdminId { get; }
 
 
-        public ManagedClient(String alias, Commands<TEnum> commands)
+        public ManagedClient(String appId, String alias, Commands<TEnum> commands) : base(appId)
         {
             if (String.IsNullOrWhiteSpace(alias)) throw new ArgumentException(nameof(alias));
             if (commands == null) throw new ArgumentNullException(nameof(commands));
@@ -36,7 +36,7 @@ namespace BlackTournament.Net.Client
 
         protected override void Connected()
         {
-            // Replaced by Connected(Int32 id, String alias);
+            // This method is replaced by Connected(Int32 id, String alias); after successful handshake
         }
 
         protected override void ProcessIncommingData(TEnum subType, NetIncomingMessage msg)
