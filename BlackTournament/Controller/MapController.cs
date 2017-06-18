@@ -118,7 +118,7 @@ namespace BlackTournament.Controller
                     move.Y = activate ? -1 : 0;
                     break;
                 case GameAction.MoveDown:
-                    move.Y = activate ?  1 : 0; COMMIT !!!
+                    move.Y = activate ?  1 : 0;
                     break;
                 case GameAction.MoveLeft:
                     move.X = activate ? -1 : 0;

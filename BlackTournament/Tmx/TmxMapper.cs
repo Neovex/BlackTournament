@@ -92,7 +92,7 @@ namespace BlackTournament.Tmx
                                 break;
 
                             case "Spawn":
-                                _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) - new Vector2f((float)obj.Width, (float)obj.Height) / 2);
+                                _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2);
                                 break;
 
                             case "Collision":

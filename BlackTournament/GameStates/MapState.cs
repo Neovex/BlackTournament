@@ -91,12 +91,23 @@ namespace BlackTournament.GameStates
                     });
                 }
             }
+            foreach (var pos in _MapData.SpawnPoints)
+            {
+                Layer_BG.AddChild(new Rectangle(_Core)
+                {
+                    Position = pos,
+                    Size = new Vector2f(10, 10),
+                    OutlineThickness = 1,
+                    OutlineColor = Color.Blue,
+                    FillColor = Color.Transparent
+                });
+            }
             return true;
         }
 
         protected override void Update(float deltaT)
         {
-            _View.Center += ViewMovement * 2000 * deltaT; // ghost view
+            _View.Center += ViewMovement * 2000 * deltaT; // spectator view movement
         }
 
         protected override void Destroy()
@@ -110,6 +121,7 @@ namespace BlackTournament.GameStates
                 Texture = TextureManager.Load("CharacterBase"),
                 Color = Color.Red,
                 View = _View,
+                Alpha = 0.5f,
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME?
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
