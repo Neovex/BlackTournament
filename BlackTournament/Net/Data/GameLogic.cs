@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 using BlackCoat;
 using BlackTournament.Systems;
-using BlackTournament.Net.Data;
 using BlackTournament.Net.Server;
 using BlackTournament.Tmx;
 using Lidgren.Network;
 
-namespace BlackTournament
+namespace BlackTournament.Net.Data
 {
     class GameLogic
     {
@@ -55,7 +54,7 @@ namespace BlackTournament
 
         private void HandlePlayerSpawn(ServerPlayer player)
         {
-            var spawnPoint = _Players.All(p=>p.Dead) ? _Map.SpawnPoints.First()
+            var spawnPoint = _Players.All(p => p.Dead) ? _Map.SpawnPoints.First()
                 : _Map.SpawnPoints.OrderByDescending(sp => _Players.Where(p => !p.Dead).Min(p => p.Position.DistanceBetweenSquared(sp))).First();
 
             player.Respawn(spawnPoint);
@@ -63,7 +62,7 @@ namespace BlackTournament
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            
+            // TODO
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)
@@ -93,25 +92,26 @@ namespace BlackTournament
             }
         }
 
-        internal void RotatePlayer(int id, float rotation)
+        public void RotatePlayer(int id, float rotation)
         {
             _PlayerLookup[id].Rotate(rotation);
         }
 
-        internal void Serialize(NetOutgoingMessage msg)
+        public void Serialize(NetOutgoingMessage msg)
         {
-            msg.Write(_PlayerLookup.Count);
-            foreach (var player in _PlayerLookup.Values)
+            var dirtyPlayers = _Players.Where(p => p.IsDirty).ToArray();
+
+            msg.Write(dirtyPlayers.Length);
+            foreach (var player in dirtyPlayers)
             {
                 player.Serialize(msg);
             }
-            // TODO : handle pickups oh and maps
+            // TODO : handle pickups and shots
         }
 
-        internal void Update(float deltaT)
+        public void Update(float deltaT)
         {
-            // FIXME
-            foreach (var player in _PlayerLookup.Values)
+            foreach (var player in _Players)
             {
                 player.Update(deltaT);
             }

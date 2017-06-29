@@ -64,9 +64,9 @@
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameLogic.cs" />
     <Compile Include="Entities\MapRenderer.cs" />
     <Compile Include="Net\Data\ClientPlayer.cs" />
+    <Compile Include="Net\Data\GameLogic.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
     <Compile Include="Net\Data\GameInfo.cs" />
     <Compile Include="GameStates\Intro.cs" />

@@ -97,9 +97,11 @@ namespace BlackTournament.GameStates
                 {
                     Position = pos,
                     Size = new Vector2f(10, 10),
+                    Origin = new Vector2f(5, 5),
                     OutlineThickness = 1,
                     OutlineColor = Color.Blue,
-                    FillColor = Color.Transparent
+                    FillColor = Color.White,
+                    Alpha = 0.3f
                 });
             }
             return true;
@@ -121,7 +123,6 @@ namespace BlackTournament.GameStates
                 Texture = TextureManager.Load("CharacterBase"),
                 Color = Color.Red,
                 View = _View,
-                Alpha = 0.5f,
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME?
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;

@@ -9,6 +9,7 @@ namespace BlackTournament.Net.Data
     public abstract class NetEntityBase
     {
         public int Id { get; private set; }
+        public Boolean IsDirty { get; protected set; }
 
         public abstract EntityType EntityType { get; } // fixme: necessary?
 
@@ -33,6 +34,7 @@ namespace BlackTournament.Net.Data
         {
             m.Write(Id);
             SerializeInternal(m);
+            IsDirty = false;
         }
 
         protected abstract void SerializeInternal(NetOutgoingMessage m);
