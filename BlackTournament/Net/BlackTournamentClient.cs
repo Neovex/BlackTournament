@@ -13,6 +13,7 @@ namespace BlackTournament.Net
     public class BlackTournamentClient : ManagedClient<NetMessage>
     {
         private Dictionary<int, ClientPlayer> _PlayerLookup;
+        private Dictionary<int, Pickup> _PickupLookup;
         private Single _UpdateImpulse;
 
 
@@ -20,8 +21,11 @@ namespace BlackTournament.Net
         public ClientPlayer Player { get; private set; }
         public float PlayerRotation { get; set; }
 
-        public Boolean IsConnected { get { return _BasePeer.ConnectionsCount != 0; } }
-        public override Int32 AdminId { get { return Net.ADMIN_ID; } }
+        public Boolean IsConnected => _BasePeer.ConnectionsCount != 0;
+        public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
+        public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
+        public override Int32 AdminId => Net.ADMIN_ID;
+
 
         // Connection Events
         public event Action ConnectionEstablished = () => { };
@@ -112,6 +116,10 @@ namespace BlackTournament.Net
                     ChangeLevel(msg);
                 break;
 
+                case NetMessage.Init:
+                    ServerInit(msg);
+                break;
+
                 case NetMessage.Update:
                     ServerUpdate(msg);
                 break;
@@ -132,24 +140,61 @@ namespace BlackTournament.Net
             ChangeLevelReceived();
         }
 
+        private void ServerInit(NetIncomingMessage msg)
+        {
+            // Add Players
+            var entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                var newPlayer = new ClientPlayer(msg.ReadInt32(), msg);
+                if (newPlayer.Id != Id)
+                { 
+                    newPlayer.Alias = GetAlias(newPlayer.Id);
+                    _PlayerLookup.Add(newPlayer.Id, newPlayer);
+                }
+            }
+            // Pickups
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                var pickup = new Pickup(msg.ReadInt32(), msg);
+                _PickupLookup.Add(pickup.Id, pickup);
+            }
+
+            // TODO: Shots
+        }
+
         private void ServerUpdate(NetIncomingMessage msg)
         {
+            // Players
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
                 var id = msg.ReadInt32();
-                if(_PlayerLookup.TryGetValue(id, out ClientPlayer otherPlayer))
+                if(_PlayerLookup.TryGetValue(id, out ClientPlayer player))
                 {
-                    otherPlayer.Deserialize(msg);
+                    player.Deserialize(msg);
                 }
                 else
                 {
-                    otherPlayer = new ClientPlayer(id, msg);
-                    otherPlayer.Alias = GetAlias(id);
-                    _PlayerLookup.Add(id, otherPlayer);
-                    UserJoined.Invoke(otherPlayer);
+                    var newPlayer = new ClientPlayer(id, msg)
+                    {
+                        Alias = GetAlias(id)
+                    };
+                    _PlayerLookup.Add(id, newPlayer);
+                    UserJoined.Invoke(newPlayer);
                 }
             }
+            // Pickups
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                _PickupLookup[msg.ReadInt32()].Deserialize(msg);
+            }
+
+            // TODO: Shots
+            //...
+
             UpdateReceived.Invoke();
         }
 
@@ -170,6 +215,9 @@ namespace BlackTournament.Net
             Player = new ClientPlayer(id) { Alias = alias };
             _PlayerLookup = new Dictionary<int, ClientPlayer>();
             _PlayerLookup.Add(id, Player);
+
+            _PickupLookup = new Dictionary<int, Pickup>();
+
             ConnectionEstablished.Invoke();
         }
 

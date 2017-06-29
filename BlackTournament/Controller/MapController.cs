@@ -22,7 +22,7 @@ namespace BlackTournament.Controller
         private List<ClientPlayer> _Players;
 
 
-        internal ClientPlayer Player { get { return _Client.Player; } }
+        internal ClientPlayer LocalPlayer { get { return _Client.Player; } }
 
 
         public MapController(Game game) : base(game)
@@ -33,7 +33,15 @@ namespace BlackTournament.Controller
 
         protected override void StateReady()
         {
-            _State.CreatePlayer(Player.Id, true);
+            foreach (var player in _Client.Players)
+            {
+                HandleUserJoined(player);
+            }
+
+            foreach(var pickup in _Client.Pickups)
+            {
+                _State.CreateEntity(pickup.Id, pickup.Type, pickup.Position, pickup.Active);
+            }
             AttachEvents();
         }
 
@@ -79,6 +87,10 @@ namespace BlackTournament.Controller
             _Client.UpdateReceived += UpdateReceived;
             _Client.UserJoined += HandleUserJoined;
             _Client.UserLeft += HandleUserLeft;
+            foreach (var pickup in _Client.Pickups)
+            {
+                pickup.ActiveStateChanged += HandlePickupStateChanged;
+            }
             // System Events
             Input.MouseMoved += Input_MouseMoved;
             _Game.InputMapper.Action += HandleInput;
@@ -95,6 +107,10 @@ namespace BlackTournament.Controller
             _Client.UpdateReceived -= UpdateReceived;
             _Client.UserJoined -= HandleUserJoined;
             _Client.UserLeft -= HandleUserLeft;
+            foreach (var pickup in _Client.Pickups)
+            {
+                pickup.ActiveStateChanged -= HandlePickupStateChanged;
+            }
             // System Events
             Input.MouseMoved -= Input_MouseMoved;
             _Game.InputMapper.Action -= HandleInput;
@@ -128,7 +144,7 @@ namespace BlackTournament.Controller
                     break;
             }
             // Move view only when player is dead
-            _State.ViewMovement = Player.IsAlive ? new Vector2f() : move;
+            _State.ViewMovement = LocalPlayer.IsAlive ? new Vector2f() : move;
 
             // Hand input to the server 4 processing game-logic
             _Client.ProcessGameAction(action, activate);
@@ -136,14 +152,19 @@ namespace BlackTournament.Controller
 
         private void HandlePlayerFragged(ClientPlayer player)
         {
-            if(player == Player)
+            if(player == LocalPlayer)
             {
-                // dang! we fragged
+                // dang! we got fragged
             }
             else
             {
-                // another one bites the dust
+                // another one bites the dust uh yea
             }
+        }
+
+        private void HandlePickupStateChanged(Pickup pickup)
+        {
+            _State.UpdateEntity(pickup.Id, pickup.Position, 0, pickup.Active);
         }
 
         private void HandleServerMapChange()
@@ -158,9 +179,9 @@ namespace BlackTournament.Controller
 
         private void UpdateReceived()
         {
-            _State.UpdateEntity(Player.Id, Player.Position, Player.Rotation, Player.Health > 0);
+            _State.UpdateEntity(LocalPlayer.Id, LocalPlayer.Position, LocalPlayer.Rotation, LocalPlayer.Health > 0);
             _State.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
-            if (Player.IsAlive) _State.FocusPlayer(); // move camera to player
+            if (LocalPlayer.IsAlive) _State.FocusPlayer(); // move camera to player
 
             // TODO : update other entities
         }
@@ -169,7 +190,7 @@ namespace BlackTournament.Controller
         {
             _Players.Add(player);
             player.Fragged += HandlePlayerFragged;
-            _State.CreatePlayer(player.Id);
+            _State.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
         }
 
         private void HandleUserLeft(ClientPlayer player)

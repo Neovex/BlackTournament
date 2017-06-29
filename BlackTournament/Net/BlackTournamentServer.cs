@@ -98,7 +98,7 @@ namespace BlackTournament.Net
         {
             _Logic.AddPlayer(user);
             Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
-            Send(user.Connection, NetMessage.Update, m => _Logic.Serialize(m, true));
+            Send(user.Connection, NetMessage.Init, m => _Logic.Serialize(m, true));
         }
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)

@@ -17,6 +17,7 @@ namespace BlackTournament
     public class Game
     {
         public const String ID = "BlackTournament";
+        public const String ASSET_ROOT = "Assets";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         private const String _LOGFILE = "Log.txt";
 

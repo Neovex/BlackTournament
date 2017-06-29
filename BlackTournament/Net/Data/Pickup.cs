@@ -8,12 +8,11 @@ using SFML.System;
 
 namespace BlackTournament.Net.Data
 {
-    class Pickup : NetEntityBase
+    public class Pickup : NetEntityBase
     {
-        public event Action ActiveStateChanged = () => { };
-
         private Boolean _Active;
         private float _RespawnTime;
+
 
         public Boolean Active
         {
@@ -22,7 +21,7 @@ namespace BlackTournament.Net.Data
             {
                 _Active = value;
                 IsDirty = true;
-                ActiveStateChanged.Invoke();
+                ActiveStateChanged.Invoke(this);
             }
         }
 
@@ -32,6 +31,10 @@ namespace BlackTournament.Net.Data
         public PickupType Type { get; private set; }
         public int Amount { get; private set; }
         public float RespawnTime { get; private set; }
+
+
+        public event Action<Pickup> ActiveStateChanged = p => { };
+
 
         public Pickup(int id, Vector2f position, PickupType type, int amount, float respawnTime) : base(id)
         {

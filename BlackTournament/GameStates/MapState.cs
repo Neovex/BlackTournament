@@ -29,7 +29,7 @@ namespace BlackTournament.GameStates
         public Vector2f ViewMovement { get; set; }
 
 
-        public MapState(Core core, TmxMapper map) : base(core, map.Name)
+        public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.ASSET_ROOT)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
             _EnitityLookup = new Dictionary<int, IEntity>();
@@ -37,8 +37,6 @@ namespace BlackTournament.GameStates
 
         protected override bool Load()
         {
-            TextureManager.RootFolder = "Assets";
-
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize.ToVector2f()));
             Layer_BG.View = _View;
@@ -47,10 +45,9 @@ namespace BlackTournament.GameStates
             _Core.ClearColor = _MapData.ClearColor;
             foreach (var layer in _MapData.TileLayers)
             {
-                var mapLayer = new MapRenderer(_Core, _MapData.Size, TextureManager.Load(layer.TextureName), _MapData.TileSize);
+                var mapTex = TextureManager.Load(layer.TextureName);
+                var mapLayer = new MapRenderer(_Core, _MapData.Size, mapTex, _MapData.TileSize);
                 mapLayer.Position = layer.Offset;
-
-                //_View.Center = 
 
                 int i = 0;
                 foreach (var tile in layer.Tiles)
@@ -60,12 +57,15 @@ namespace BlackTournament.GameStates
                 }
                 Layer_BG.AddChild(mapLayer);
             }
+            
+            // TODO: add center pos to mapdata
+            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center;
 
             // TESTING ############################################
 
             // Debug Views
-            var wallColor = new Color(155, 155, 155, 155); // TODO : maybe add remaining debug views
-            foreach (var shape in _MapData.WallCollider)
+            var wallColor = new Color(155, 155, 155, 155);
+            foreach (var shape in _MapData.WallCollider) // Collision
             {
                 if (shape is RectangleCollisionShape)
                 {
@@ -91,7 +91,7 @@ namespace BlackTournament.GameStates
                     });
                 }
             }
-            foreach (var pos in _MapData.SpawnPoints)
+            foreach (var pos in _MapData.SpawnPoints) // Spawns
             {
                 Layer_BG.AddChild(new Rectangle(_Core)
                 {
@@ -123,7 +123,7 @@ namespace BlackTournament.GameStates
                 Texture = TextureManager.Load("CharacterBase"),
                 Color = Color.Red,
                 View = _View,
-                Scale = new Vector2f(0.5f, 0.5f) // FIXME?
+                Scale = new Vector2f(0.5f, 0.5f) // FIXME!
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
             Layer_Game.AddChild(player);
@@ -132,9 +132,20 @@ namespace BlackTournament.GameStates
             if (isLocalPlayer) _LocalPlayer = player;
         }
 
-        public void CreateEntity(int id, PickupType type, Vector2f pos, float rotation)
+        public void CreateEntity(int id, PickupType type, Vector2f position, bool visible)
         {
-            // TODO
+            var tex = TextureManager.Load(type.ToString());
+            var entity = new Graphic(_Core)
+            {
+                Texture = tex,
+                Scale = new Vector2f(0.4f, 0.4f), // FIXME!
+                View = _View,
+                Position = position,
+                Origin = tex.Size.ToVector2f() / 2,
+                Visible = visible
+            };
+            _EnitityLookup.Add(id, entity);
+            Layer_Game.AddChild(entity);
         }
 
         public void CreateVFX(object type, Vector2f pos, float rotation)
