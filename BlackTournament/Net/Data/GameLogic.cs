@@ -97,16 +97,25 @@ namespace BlackTournament.Net.Data
             _PlayerLookup[id].Rotate(rotation);
         }
 
-        public void Serialize(NetOutgoingMessage msg)
+        public void Serialize(NetOutgoingMessage msg, bool forceFullUpdate)
         {
-            var dirtyPlayers = _Players.Where(p => p.IsDirty).ToArray();
-
+            // Players
+            var dirtyPlayers = _Players.Where(p => p.IsDirty || forceFullUpdate).ToArray();
             msg.Write(dirtyPlayers.Length);
             foreach (var player in dirtyPlayers)
             {
                 player.Serialize(msg);
             }
-            // TODO : handle pickups and shots
+
+            // Pickups
+            var dirtyPickups = _Map.Pickups.Where(p => p.IsDirty || forceFullUpdate).ToArray();
+            msg.Write(dirtyPickups.Length);
+            foreach (var pickup in dirtyPickups)
+            {
+                pickup.Serialize(msg);
+            }
+
+            // TODO : shots
         }
 
         public void Update(float deltaT)

@@ -27,9 +27,12 @@ idee: controller durch rollen ersetzen die am jeweiligen state hängen
 fix missing keyup event on focus loss?!
 
 
-add id-d shots & pickups to serialization chain
+add id-d shots & 
+pickups to serialization chain
 
-create game data from parsed mapdata?
+UC create game data from parsed mapdata?
+
+create basic UI elements
 
 network -> shots are only sent once - movement is then interpolated? - problem: wall collisions
 

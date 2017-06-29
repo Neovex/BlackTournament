@@ -9,9 +9,9 @@ namespace BlackTournament.Net.Server
 {
     public abstract class ManagedServer<TEnum> : Server<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
-        protected int _ClientIdProvider = 100;
-        protected List<ServerUser<NetConnection>> _ConnectedClients;
         protected Commands<TEnum> _Commands;
+        protected int _ClientIdProvider;
+        protected List<ServerUser<NetConnection>> _ConnectedClients;
 
         public abstract int AdminId { get; }
         public virtual IEnumerable<ServerUser<NetConnection>> ConnectedUsers { get { return _ConnectedClients; } }
@@ -19,9 +19,9 @@ namespace BlackTournament.Net.Server
 
         public ManagedServer(string appIdentifier, Commands<TEnum> commands) : base(appIdentifier)
         {
-            if (commands == null) throw new ArgumentNullException(nameof(commands));
+            _Commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            _ClientIdProvider = new Random().Next(100, int.MaxValue - 10000);
             _ConnectedClients = new List<ServerUser<NetConnection>>();
-            _Commands = commands;
         }
 
         // CONTROL

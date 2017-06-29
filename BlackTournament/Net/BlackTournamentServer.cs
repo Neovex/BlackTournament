@@ -90,7 +90,7 @@ namespace BlackTournament.Net
             if (_UpdateImpulse >= Net.UPDATE_IMPULSE)
             {
                 _UpdateImpulse = 0;
-                Broadcast(NetMessage.Update, _Logic.Serialize, NetDeliveryMethod.UnreliableSequenced);
+                Broadcast(NetMessage.Update, m => _Logic.Serialize(m, false), NetDeliveryMethod.UnreliableSequenced);
             }
         }
 
@@ -98,6 +98,7 @@ namespace BlackTournament.Net
         {
             _Logic.AddPlayer(user);
             Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
+            Send(user.Connection, NetMessage.Update, m => _Logic.Serialize(m, true));
         }
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)

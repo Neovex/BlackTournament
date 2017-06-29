@@ -105,7 +105,6 @@
     <Compile Include="Systems\GameAction.cs" />
     <Compile Include="Systems\InputMapper.cs" />
     <Compile Include="Tmx\Layer.cs" />
-    <Compile Include="Tmx\Pickup.cs" />
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
   </ItemGroup>
