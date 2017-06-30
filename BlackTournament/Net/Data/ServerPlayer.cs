@@ -7,6 +7,8 @@ using BlackTournament.Net.Server;
 using BlackTournament.Systems;
 using Lidgren.Network;
 using SFML.System;
+using BlackCoat.Collision;
+using BlackCoat.Collision.Shapes;
 
 namespace BlackTournament.Net.Data
 {
@@ -14,23 +16,33 @@ namespace BlackTournament.Net.Data
     {
         private const int _SPEED = 400;
         private const float _DEFAULT_RESPAWN_TIME = 5.0f;
+        private const float _COLLISION_RADIUS = 30f;
 
-        public event Action<ServerPlayer> Spawn = p => { };
-        public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
 
         public ServerUser<NetConnection> User { get; private set; }
         public HashSet<GameAction> Input { get; private set; }
         public Boolean Dead { get; set; }
-        public float RespawnTimeout { get; private set; }
+        public Single RespawnTimeout { get; private set; }
+        public CircleCollisionShape Collision { get; private set; }
 
-        public ServerPlayer(ServerUser<NetConnection> user) : base(user.Id)
+
+        public event Action<ServerPlayer> Spawn = p => { };
+        public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
+
+
+        public ServerPlayer(ServerUser<NetConnection> user, CollisionSystem collisionSystem) : base(user.Id)
         {
             User = user;
             Input = new HashSet<GameAction>();
             Dead = true;
+            Collision = new CircleCollisionShape(collisionSystem, Position, _COLLISION_RADIUS);
         }
 
-        public void Rotate(float rotation) // server may rotate players as it pleases
+        public void Move (Vector2f position)
+        {
+            Position = position;
+        }
+        public void Rotate(float rotation)
         {
             Rotation = rotation;
         }
@@ -66,7 +78,7 @@ namespace BlackTournament.Net.Data
                         break;
                 }
             }
-            Position += new Vector2f(x, y);
+            Collision.Position += new Vector2f(x, y);
         }
 
         public void ShootPrimary()
@@ -90,7 +102,7 @@ namespace BlackTournament.Net.Data
         public void Respawn(Vector2f spawnPosition)
         {
             // Reset Player
-            Position = spawnPosition;
+            Collision.Position = Position = spawnPosition;
             Dead = false;
             Health = 100;
             Shield = 0;
@@ -105,6 +117,31 @@ namespace BlackTournament.Net.Data
             if (index == -1) index = OwnedWeapons.Count - 1;
             else if (index == OwnedWeapons.Count) index = 0;
             CurrentWeapon = OwnedWeapons[index];
+        }
+
+        public void GivePickup(PickupType pickup, int amount)
+        {
+            switch (pickup)
+            {
+                case PickupType.SmallHealth:
+                    Health += 15;
+                    break;
+                case PickupType.BigHealth:
+                    Health += 40;
+                    break;
+                case PickupType.SmallShield:
+                    Shield += 15;
+                    break;
+                case PickupType.BigShield:
+                    Shield += 40;
+                    break;
+                case PickupType.Drake:
+                case PickupType.Hedgeshock:
+                case PickupType.Thumper:
+                case PickupType.Titandrill:
+                    CurrentWeapon = pickup;
+                    break;
+            }
         }
     }
 }

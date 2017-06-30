@@ -8,10 +8,10 @@
 # create collision backend
 
 server game logic
-- dynamic collision (dyn to dyn)
+UC - dynamic collision (dyn to dyn)
 
 client game logic
-- static collisions (dyn to stat where dyn is owned by local)
+X - static collisions (dyn to stat where dyn is owned by local)
 
 
 # key(input) to enum(Action) mapping
@@ -28,7 +28,7 @@ fix missing keyup event on focus loss?!
 
 
 add id-d shots & 
-pickups to serialization chain
+#pickups to serialization chain
 
 UC create game data from parsed mapdata?
 

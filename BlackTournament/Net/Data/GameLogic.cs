@@ -36,7 +36,7 @@ namespace BlackTournament.Net.Data
 
         public void AddPlayer(ServerUser<NetConnection> user)
         {
-            var player = new ServerPlayer(user);
+            var player = new ServerPlayer(user, _Core.CollisionSystem);
             player.Spawn += HandlePlayerSpawn;
             player.ShotFired += HandlePlayerShoot;
             _PlayerLookup.Add(user.Id, player);
@@ -120,10 +120,51 @@ namespace BlackTournament.Net.Data
 
         public void Update(float deltaT)
         {
+            // Update Entities
+            foreach (var pickup in _Map.Pickups)
+            {
+                pickup.Update(deltaT);
+            }
+
             foreach (var player in _Players)
             {
                 player.Update(deltaT);
+
+                // Handle Collisions
+                if (!player.Dead)
+                {
+                    foreach (var wall in _Map.WallCollider)
+                    {
+                        if (player.Collision.Collide(wall))
+                        {
+                            player.Collision.Position = player.Position;
+                        }
+                    }
+                    foreach (var otherPlayer in _Players)
+                    {
+                        if (!otherPlayer.Dead
+                            && otherPlayer != player
+                            && player.Collision.Collide(otherPlayer.Collision))
+                        {
+                            player.Collision.Position = player.Position;
+                        }
+                    }
+                    foreach (var pickup in _Map.Pickups)
+                    {
+                        if(pickup.Active && player.Collision.Collide(pickup.Collision))
+                        {
+                            pickup.Active = false;
+                            player.GivePickup(pickup.Type, pickup.Amount);
+                            //PlayerGotPickup.Invoke(player.User, pickup.Type); // nötig?!
+                        }
+                    }
+                }
+
+                // no collision found
+                player.Move(player.Collision.Position);
             }
+
+
         }
     }
 }

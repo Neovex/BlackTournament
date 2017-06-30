@@ -90,7 +90,7 @@ namespace BlackTournament.Tmx
                         switch (obj.Type)
                         {
                             case "Pickup":
-                                _Pickups.Add(ParsePickup(obj));
+                                _Pickups.Add(ParsePickup(cSys, obj));
                                 break;
 
                             case "Spawn":
@@ -120,7 +120,7 @@ namespace BlackTournament.Tmx
             return false;
         }
 
-        private Pickup ParsePickup(TmxObject obj)
+        private Pickup ParsePickup(CollisionSystem cSys, TmxObject obj)
         {
             if (!Enum.TryParse<PickupType>(ReadProperty(obj.Properties, "Item"), out PickupType type))
             {
@@ -131,7 +131,7 @@ namespace BlackTournament.Tmx
             if (!Single.TryParse(ReadProperty(obj.Properties, "RespawnTime"), out float respawnTime)) respawnTime = 1;
             var position = new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2;
 
-            return new Pickup(_EntityIdProvider--, position, type, amount, respawnTime);
+            return new Pickup(_EntityIdProvider--, position, type, amount, respawnTime, cSys);
         }
 
         private CollisionShape ParseCollisionShape(CollisionSystem cSys, TmxObject obj)

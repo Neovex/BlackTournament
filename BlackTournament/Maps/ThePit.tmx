@@ -127,13 +127,13 @@
    <polygon points="0,0 132.5,-128.5 224,-127 221,352.5 1,569"/>
   </object>
   <object id="30" type="Collision" x="2462" y="3039">
-   <polygon points="2,-1 736,-5 829,-90 829.5,-126 -7.5,-128.5"/>
+   <polygon points="2,-1 -7.5,-128.5 829.5,-126 829,-90 736,-5"/>
   </object>
   <object id="31" type="Collision" x="2305" y="2910">
-   <polygon points="0,0 985.5,3.5 994,-954 126,-958 36,-862"/>
+   <polygon points="0,0 36,-862 126,-958 994,-954 985.5,3.5"/>
   </object>
   <object id="32" type="Collision" x="2073" y="3038">
-   <polygon points="0,0 105,-3 231,-129 261,-833 107,-830 5,-732"/>
+   <polygon points="0,0 5,-732 107,-830 261,-833 231,-129 105,-3"/>
   </object>
  </objectgroup>
  <objectgroup name="Killzones" visible="0">
