@@ -119,7 +119,7 @@ namespace BlackTournament.Net.Data
             CurrentWeapon = OwnedWeapons[index];
         }
 
-        public void GivePickup(PickupType pickup, int amount)
+        public void GivePickup(PickupType pickup, int amount) // move this into pickup
         {
             switch (pickup)
             {
@@ -142,6 +142,12 @@ namespace BlackTournament.Net.Data
                     CurrentWeapon = pickup;
                     break;
             }
+        }
+
+        internal void GotShot(Shot shot)
+        {
+            // gefällt mir nicht
+            throw new NotImplementedException();
         }
     }
 }

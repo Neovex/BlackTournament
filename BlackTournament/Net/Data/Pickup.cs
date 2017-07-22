@@ -27,8 +27,6 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        public override EntityType EntityType { get { return EntityType.Pickup; } }
-
         public Vector2f Position { get; private set; }
         public PickupType Type { get; private set; }
         public int Amount { get; private set; }

@@ -19,13 +19,12 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
-        public override int AdminId { get { return Net.ADMIN_ID; } }
-
+        public override int AdminId => Net.ADMIN_ID;
+        public override int NextClientId => Net.GetNextId();
 
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
-            if (core == null) throw new ArgumentNullException(nameof(core));
-            _Core = core;
+            _Core = core ?? throw new ArgumentNullException(nameof(core));
         }
 
 
@@ -53,7 +52,7 @@ namespace BlackTournament.Net
 
         private TmxMapper LoadMapFromMapname(string mapName)
         {
-            var mapper = new TmxMapper();
+            var mapper = new TmxMapper(Net.GetNextId);
             if (mapper.Load(mapName, _Core.CollisionSystem))
             {
                 return mapper;
@@ -107,9 +106,9 @@ namespace BlackTournament.Net
         }
 
         // INCOMMING
-        protected override void ProcessIncommingData(NetMessage type, NetIncomingMessage msg)
+        protected override void ProcessIncommingData(NetMessage subType, NetIncomingMessage msg)
         {
-            switch (type)
+            switch (subType)
             {
                 case NetMessage.TextMessage:
                     SendMessage(msg.ReadInt32(), msg.ReadString());

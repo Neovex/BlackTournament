@@ -8,8 +8,6 @@ namespace BlackTournament.Net.Data
 {
     public abstract class Player : NetEntityBase
     {
-        public override EntityType EntityType { get { return EntityType.Player; } }
-
         private Vector2f _Position;
         public virtual Vector2f Position
         {

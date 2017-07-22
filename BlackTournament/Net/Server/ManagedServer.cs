@@ -10,17 +10,16 @@ namespace BlackTournament.Net.Server
     public abstract class ManagedServer<TEnum> : Server<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         protected Commands<TEnum> _Commands;
-        protected int _ClientIdProvider;
         protected List<ServerUser<NetConnection>> _ConnectedClients;
 
         public abstract int AdminId { get; }
+        public abstract int NextClientId { get; }
         public virtual IEnumerable<ServerUser<NetConnection>> ConnectedUsers { get { return _ConnectedClients; } }
 
 
         public ManagedServer(string appIdentifier, Commands<TEnum> commands) : base(appIdentifier)
         {
             _Commands = commands ?? throw new ArgumentNullException(nameof(commands));
-            _ClientIdProvider = new Random().Next(100, int.MaxValue - 10000);
             _ConnectedClients = new List<ServerUser<NetConnection>>();
         }
 
@@ -28,7 +27,7 @@ namespace BlackTournament.Net.Server
 
         protected virtual int GetNextFreeClientID()
         {
-            return _ConnectedClients.Count == 0 ? AdminId : ++_ClientIdProvider;
+            return _ConnectedClients.Count == 0 ? AdminId : NextClientId;
         }
 
         protected virtual string ValidateName(string name)

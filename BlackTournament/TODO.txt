@@ -8,6 +8,7 @@
 # create collision backend
 
 server game logic
+# - static collisions
 UC - dynamic collision (dyn to dyn)
 
 client game logic
@@ -33,6 +34,8 @@ add id-d shots &
 UC create game data from parsed mapdata?
 
 create basic UI elements
+
+add MD5 comparison against map tampering / versioning
 
 network -> shots are only sent once - movement is then interpolated? - problem: wall collisions
 

@@ -21,8 +21,6 @@ namespace BlackTournament.Tmx
     {
         private const String _MAP_ROOT = "Maps";
 
-        private int _EntityIdProvider = -100;
-
         private TmxMap _MapData;
         private Dictionary<String, int> _TextureColumnLookup;
         private List<Layer> _Layers;
@@ -41,9 +39,12 @@ namespace BlackTournament.Tmx
         public IEnumerable<CollisionShape> WallCollider { get { return _WallCollider; } }
         public IEnumerable<CollisionShape> Killzones { get { return _Killzones; } }
 
+        private Func<int> IdProvider { get; }
 
-        public TmxMapper()
+
+        public TmxMapper(Func<int> idProvider)
         {
+            IdProvider = idProvider ?? throw new ArgumentNullException(nameof(idProvider));
         }
 
 
@@ -131,7 +132,7 @@ namespace BlackTournament.Tmx
             if (!Single.TryParse(ReadProperty(obj.Properties, "RespawnTime"), out float respawnTime)) respawnTime = 1;
             var position = new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2;
 
-            return new Pickup(_EntityIdProvider--, position, type, amount, respawnTime, cSys);
+            return new Pickup(IdProvider(), position, type, amount, respawnTime, cSys);
         }
 
         private CollisionShape ParseCollisionShape(CollisionSystem cSys, TmxObject obj)

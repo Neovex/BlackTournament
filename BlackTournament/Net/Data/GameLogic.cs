@@ -16,8 +16,9 @@ namespace BlackTournament.Net.Data
     {
         private Core _Core;
         private TmxMapper _Map;
-        private Dictionary<int, ServerPlayer> _PlayerLookup;
+        private Dictionary<Int32, ServerPlayer> _PlayerLookup;
         private List<ServerPlayer> _Players;
+        private List<Shot> _Shots;
 
         public event Action<ServerUser<NetConnection>, PickupType> PlayerGotPickup = (u, p) => { };
 
@@ -31,6 +32,7 @@ namespace BlackTournament.Net.Data
             _Map = map ?? throw new ArgumentNullException(nameof(map));
             _PlayerLookup = new Dictionary<int, ServerPlayer>();
             _Players = new List<ServerPlayer>();
+            _Shots = new List<Shot>();
         }
 
 
@@ -62,7 +64,7 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            // TODO
+            _Shots.Add(new Shot(Net.GetNextId(), player.CurrentWeapon, primaryFire));
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)
@@ -115,7 +117,12 @@ namespace BlackTournament.Net.Data
                 pickup.Serialize(msg);
             }
 
-            // TODO : shots
+            // Shots
+            msg.Write(_Shots.Count);
+            foreach (var shot in _Shots)
+            {
+                shot.Serialize(msg);
+            }
         }
 
         public void Update(float deltaT)
@@ -126,6 +133,29 @@ namespace BlackTournament.Net.Data
                 pickup.Update(deltaT);
             }
 
+            // Handle Gunfire
+            foreach (var shot in _Shots)
+            {
+                foreach (var wall in _Map.WallCollider)
+                {
+                    if (shot.Collision.Collide(wall))
+                    {
+                        //??
+                        // shots remove shot
+                        // find impact
+                        // send impact
+                    }
+                }
+                foreach (var player in _Players)
+                {
+                    if (!player.Dead && shot.Collision.Collide(player.Collision))
+                    {
+                        player.GotShot(shot);
+                    }
+                }
+            }
+
+            // Handle Player movement
             foreach (var player in _Players)
             {
                 player.Update(deltaT);
@@ -155,16 +185,12 @@ namespace BlackTournament.Net.Data
                         {
                             pickup.Active = false;
                             player.GivePickup(pickup.Type, pickup.Amount);
-                            //PlayerGotPickup.Invoke(player.User, pickup.Type); // nötig?!
+
                         }
                     }
                 }
-
-                // no collision found
                 player.Move(player.Collision.Position);
             }
-
-
         }
     }
 }

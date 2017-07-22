@@ -27,7 +27,7 @@ namespace BlackTournament.Controller
 
         public MapController(Game game) : base(game)
         {
-            _MapData = new TmxMapper();
+            _MapData = new TmxMapper(Net.Net.GetNextId);
             _Players = new List<ClientPlayer>();
         }
 

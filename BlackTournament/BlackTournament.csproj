@@ -68,7 +68,6 @@
     <Compile Include="Net\Data\ClientPlayer.cs" />
     <Compile Include="Net\Data\GameLogic.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
-    <Compile Include="Net\Data\GameInfo.cs" />
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
@@ -82,6 +81,7 @@
     <Compile Include="Net\Data\Pickup.cs" />
     <Compile Include="Net\Data\Player.cs" />
     <Compile Include="Net\Data\ServerPlayer.cs" />
+    <Compile Include="Net\Data\Shot.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Net\NetBase.cs" />

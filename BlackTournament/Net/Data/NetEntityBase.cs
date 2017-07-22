@@ -11,8 +11,6 @@ namespace BlackTournament.Net.Data
         public int Id { get; private set; }
         public Boolean IsDirty { get; protected set; }
 
-        public abstract EntityType EntityType { get; } // fixme: necessary?
-
 
         public NetEntityBase(int id)
         {
@@ -23,12 +21,6 @@ namespace BlackTournament.Net.Data
             Deserialize(m);
         }
 
-
-        public void SerializeCreationInfo(NetOutgoingMessage m) // necessary?
-        {
-            m.Write((int)EntityType);
-            Serialize(m);
-        }
 
         public void Serialize(NetOutgoingMessage m)
         {
