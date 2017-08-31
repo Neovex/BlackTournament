@@ -138,7 +138,7 @@ namespace BlackTournament.Net.Data
             {
                 foreach (var wall in _Map.WallCollider)
                 {
-                    if (shot.Collision.Collide(wall))
+                    //if (shot.Collision.Collide(wall))
                     {
                         //??
                         // shots remove shot
@@ -148,9 +148,9 @@ namespace BlackTournament.Net.Data
                 }
                 foreach (var player in _Players)
                 {
-                    if (!player.Dead && shot.Collision.Collide(player.Collision))
+                    //if (!player.Dead && shot.Collision.Collide(player.Collision))
                     {
-                        player.GotShot(shot);
+                        //player.GotShot(shot);
                     }
                 }
             }

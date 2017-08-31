@@ -39,7 +39,7 @@ namespace BlackTournament
             // Init Logging
             Log.Level = LogLevel.Debug;
             if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
-            Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}");
+            Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}"); // no good
             Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
         }
 
@@ -47,8 +47,7 @@ namespace BlackTournament
         public void Run(String arguments)
         {
             // Init Black Coat Engine
-            var device = Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8);
-            using (Core = new Core(device))
+            using (Core = new Core(Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8)))
             {
                 // Init Core
                 Core.Debug = true;

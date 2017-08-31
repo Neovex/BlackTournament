@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BlackCoat;
-using BlackTournament.Entities;
 using SFML.System;
-using BlackCoat.Entities;
 using SFML.Graphics;
-using System.IO;
+using BlackCoat;
+using BlackCoat.Entities;
+using BlackCoat.Collision;
+using BlackCoat.Collision.Shapes;
+using BlackCoat.Entities.Shapes;
+using BlackTournament.Entities;
 
 namespace BlackTournament.GameStates
 {
@@ -20,10 +22,12 @@ namespace BlackTournament.GameStates
         private float _Blurryness = 0;
         
         private SFML.Audio.Music music;
+        private Line _Ray;
+        private Circle _Circle;
 
         public MainMenu(Core core):base(core)
         {
-            // TODO: cleanup shader stuff
+            // TODO: cleanup testing stuff
         }
 
         protected override bool Load()
@@ -33,6 +37,7 @@ namespace BlackTournament.GameStates
             _Text.Text = "MAIN MENU";
             Layer_Game.AddChild(_Text);
 
+            //IntersectionTest();
             //ShaderTest();
 
             MusicManager.RootFolder = "music";
@@ -41,6 +46,50 @@ namespace BlackTournament.GameStates
             //music.Play();
 
             return true;
+        }
+
+        private void IntersectionTest()
+        {
+            _Ray = new Line(_Core, new Vector2f(300, 300), new Vector2f(), Color.Green);
+            Layer_Game.AddChild(_Ray);
+
+            _Circle = new Circle(_Core)
+            {
+                Position = _Ray.Start.Position + new Vector2f(150, 80),
+                Radius = 50,
+                Color = Color.Transparent,
+                OutlineColor = Color.Cyan,
+                OutlineThickness = 0.5f
+            };
+            Layer_Game.AddChild(_Circle);
+
+            Input.MouseButtonPressed += Input_MouseButtonPressed;
+        }
+
+        private void Input_MouseButtonPressed(SFML.Window.Mouse.Button obj)
+        {
+            if (obj == SFML.Window.Mouse.Button.Left)
+            {
+                var intersections = _Core.CollisionSystem.Intersections(_Ray.Start.Position, _Ray.Start.Position.AngleTowards(_Ray.End.Position), _Circle);
+                foreach (var intersect in intersections)
+                {
+                    var r = new Rectangle(_Core)
+                    {
+                        Size = new Vector2f(10, 10),
+                        Origin = new Vector2f(5, 5),
+                        Position = intersect,
+                        Color = Color.Transparent,
+                        OutlineColor = Color.Red,
+                        OutlineThickness = 0.5f
+                    };
+                    Layer_Game.AddChild(r);
+                    _Core.AnimationManager.Run(0, 90, 0.5f, v => r.Rotation = v, onComplete: a => Layer_Game.RemoveChild(r));
+                }
+            }
+            else
+            {
+                _Ray.Start.Position = Input.MousePosition;
+            }
         }
 
         private void ShaderTest()
@@ -84,6 +133,7 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
+            //_Ray.End.Position = VectorExtensions.VectorFromAngle(_Ray.Start.Position.AngleTowards(Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
         }
 
         protected override void Destroy()
