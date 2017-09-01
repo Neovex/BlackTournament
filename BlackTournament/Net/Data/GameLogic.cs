@@ -64,7 +64,7 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            _Shots.Add(new Shot(Net.GetNextId(), player.CurrentWeapon, primaryFire));
+            _Shots.Add(new Shot(_Core.CollisionSystem, player, Net.GetNextId(), player.CurrentWeapon, primaryFire));
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)
@@ -134,23 +134,38 @@ namespace BlackTournament.Net.Data
             }
 
             // Handle Gunfire
-            foreach (var shot in _Shots)
+            for (int i = _Shots.Count - 1; i >= 0; i--)
             {
+                var shot = _Shots[i];
+                shot.Update(deltaT);
+
                 foreach (var wall in _Map.WallCollider)
                 {
-                    //if (shot.Collision.Collide(wall))
+                    var impacts = shot.GetIntersections(wall);
+                    if (impacts.Length != 0)
                     {
-                        //??
-                        // shots remove shot
+                        // remove shot
+                        _Shots.Remove(shot);
                         // find impact
-                        // send impact
+                        var impact = impacts[0];
+                        // TODO send impact
+
                     }
                 }
+
                 foreach (var player in _Players)
                 {
-                    //if (!player.Dead && shot.Collision.Collide(player.Collision))
+                    if (player.Dead || player == shot.Owner) continue;
+
+                    var impacts = shot.GetIntersections(player.Collision);
+                    if (impacts.Length != 0)
                     {
-                        //player.GotShot(shot);
+                        // find impact
+                        var impact = impacts[0];
+                        // damage player
+                        player.GotShot(shot);
+                        // TODO send impact
+
                     }
                 }
             }

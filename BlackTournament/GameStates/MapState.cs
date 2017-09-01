@@ -57,7 +57,7 @@ namespace BlackTournament.GameStates
                 }
                 Layer_BG.AddChild(mapLayer);
             }
-            
+
             // TODO: add center pos to mapdata
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center;
 
