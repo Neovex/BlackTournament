@@ -40,7 +40,7 @@ namespace BlackTournament.Controller
 
             foreach(var pickup in _Client.Pickups)
             {
-                _State.CreateEntity(pickup.Id, pickup.Type, pickup.Position, pickup.Active);
+                _State.CreatePickup(pickup.Id, pickup.Type, pickup.Position, pickup.Active);
             }
             AttachEvents();
         }
@@ -87,6 +87,8 @@ namespace BlackTournament.Controller
             _Client.UpdateReceived += UpdateReceived;
             _Client.UserJoined += HandleUserJoined;
             _Client.UserLeft += HandleUserLeft;
+            _Client.ShotFired += HandleShotFired;
+            _Client.ShotRemoved += HandleShotRemoved;
             foreach (var pickup in _Client.Pickups)
             {
                 pickup.ActiveStateChanged += HandlePickupStateChanged;
@@ -107,6 +109,8 @@ namespace BlackTournament.Controller
             _Client.UpdateReceived -= UpdateReceived;
             _Client.UserJoined -= HandleUserJoined;
             _Client.UserLeft -= HandleUserLeft;
+            _Client.ShotFired -= HandleShotFired;
+            _Client.ShotRemoved -= HandleShotRemoved;
             foreach (var pickup in _Client.Pickups)
             {
                 pickup.ActiveStateChanged -= HandlePickupStateChanged;
@@ -179,10 +183,18 @@ namespace BlackTournament.Controller
 
         private void UpdateReceived()
         {
-            _State.UpdateEntity(LocalPlayer.Id, LocalPlayer.Position, LocalPlayer.Rotation, LocalPlayer.Health > 0);
+            foreach (var player in _Client.Players)
+            {
+                _State.UpdateEntity(player.Id, player.Position, player.Rotation, player.IsAlive);
+            }
+
             _State.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
             if (LocalPlayer.IsAlive) _State.FocusPlayer(); // move camera to player
 
+            foreach (var shot in _Client.Shots)
+            {
+                _State.UpdateEntity(shot.Id, shot.Position, shot.Direction, true);
+            }
             // TODO : update other entities
         }
 
@@ -197,7 +209,17 @@ namespace BlackTournament.Controller
         {
             _Players.Remove(player);
             player.Fragged -= HandlePlayerFragged;
-            _State.Destroy(player.Id);
+            _State.DestroyEntity(player.Id);
+        }
+
+        private void HandleShotFired(Shot shot)
+        {
+            _State.CreateShot(shot.Id, shot.SourceWeapon, shot.Position, shot.Direction);
+        }
+
+        private void HandleShotRemoved(Shot shot)
+        {
+            _State.DestroyEntity(shot.Id);
         }
 
         private void Input_MouseMoved(Vector2f mousePosition)

@@ -132,7 +132,7 @@ namespace BlackTournament.GameStates
             if (isLocalPlayer) _LocalPlayer = player;
         }
 
-        public void CreateEntity(int id, PickupType type, Vector2f position, bool visible)
+        public void CreatePickup(int id, PickupType type, Vector2f position, bool visible)
         {
             var tex = TextureManager.Load(type.ToString());
             var entity = new Graphic(_Core)
@@ -148,19 +148,31 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(entity);
         }
 
-        public void CreateVFX(object type, Vector2f pos, float rotation)
+        public void CreateShot(int id, PickupType type, Vector2f position, float rotation)
+        {
+            var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx
+            {
+                Position = position,
+                Size = new Vector2f(50, 20),
+                Color = Color.Blue
+            };
+            _EnitityLookup.Add(id, entity);
+            Layer_Game.AddChild(entity);
+        }
+
+        public void CreateVFX(PickupType type, Vector2f pos, float rotation)
         {
             // TODO
         }
 
-        public void Destroy(int id)
+        public void DestroyEntity(int id)
         {
             var entity = _EnitityLookup[id];
             entity.Parent.RemoveChild(entity);
             _EnitityLookup.Remove(id);
         }
 
-        public void UpdateEntity(int id, Vector2f pos, float rotation, bool visible) // add pickup type?
+        public void UpdateEntity(int id, Vector2f pos, float rotation, bool visible) // add pickup type? currently not necessary
         {
             var entity = _EnitityLookup[id];
             entity.Position = pos;

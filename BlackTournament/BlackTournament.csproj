@@ -67,6 +67,7 @@
     <Compile Include="Entities\MapRenderer.cs" />
     <Compile Include="Net\Data\ClientPlayer.cs" />
     <Compile Include="Net\Data\GameLogic.cs" />
+    <Compile Include="Net\Data\Impact.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />

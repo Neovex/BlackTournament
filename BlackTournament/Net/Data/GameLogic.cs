@@ -19,6 +19,7 @@ namespace BlackTournament.Net.Data
         private Dictionary<Int32, ServerPlayer> _PlayerLookup;
         private List<ServerPlayer> _Players;
         private List<Shot> _Shots;
+        private List<Impact> _Impacts;
 
         public event Action<ServerUser<NetConnection>, PickupType> PlayerGotPickup = (u, p) => { };
 
@@ -33,6 +34,7 @@ namespace BlackTournament.Net.Data
             _PlayerLookup = new Dictionary<int, ServerPlayer>();
             _Players = new List<ServerPlayer>();
             _Shots = new List<Shot>();
+            _Impacts = new List<Impact>();
         }
 
 
@@ -79,7 +81,7 @@ namespace BlackTournament.Net.Data
                     if (activate) player.Input.Add(action);
                     else player.Input.Remove(action);
                     break;
-                case GameAction.ShootPrimary:
+                case GameAction.ShootPrimary: // todo improve weapon simulation (fix doubletab issue)
                     player.ShootPrimary();
                     break;
                 case GameAction.ShootSecundary:
@@ -123,11 +125,20 @@ namespace BlackTournament.Net.Data
             {
                 shot.Serialize(msg);
             }
+            _Shots.RemoveAll(s => !s.Alive);
+
+            // Impacts
+            msg.Write(_Impacts.Count);
+            foreach (var impact in _Impacts)
+            {
+                impact.Serialize(msg);
+            }
+            _Impacts.Clear();
         }
 
         public void Update(float deltaT)
         {
-            // Update Entities
+            // Update Pickups
             foreach (var pickup in _Map.Pickups)
             {
                 pickup.Update(deltaT);
@@ -138,34 +149,41 @@ namespace BlackTournament.Net.Data
             {
                 var shot = _Shots[i];
                 shot.Update(deltaT);
+                if (!shot.Alive) continue;
 
                 foreach (var wall in _Map.WallCollider)
                 {
+                    // find impacts
                     var impacts = shot.GetIntersections(wall);
                     if (impacts.Length != 0)
                     {
                         // remove shot
-                        _Shots.Remove(shot);
-                        // find impact
-                        var impact = impacts[0];
-                        // TODO send impact
+                        shot.Kill();
+                        // add first impact
+                        _Impacts.Add(new Impact(Net.GetNextId(), impacts[0], shot.SourceWeapon));
 
+                        shot = null;
+                        break;
                     }
                 }
 
-                foreach (var player in _Players)
+                if (shot != null)
                 {
-                    if (player.Dead || player == shot.Owner) continue;
-
-                    var impacts = shot.GetIntersections(player.Collision);
-                    if (impacts.Length != 0)
+                    foreach (var player in _Players.Where(p => !p.Dead && p != shot.Owner))
                     {
-                        // find impact
-                        var impact = impacts[0];
-                        // damage player
-                        player.GotShot(shot);
-                        // TODO send impact
+                        // find impacts
+                        var impacts = shot.GetIntersections(player.Collision);
+                        if (impacts.Length != 0)
+                        {
+                            // remove shot
+                            shot.Kill();
+                            // add first impact
+                            _Impacts.Add(new Impact(Net.GetNextId(), impacts[0], shot.SourceWeapon));
+                            // damage player
+                            player.GotShot(shot);
 
+                            break;
+                        }
                     }
                 }
             }

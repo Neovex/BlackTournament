@@ -14,6 +14,8 @@ namespace BlackTournament.Net
     {
         private Dictionary<int, ClientPlayer> _PlayerLookup;
         private Dictionary<int, Pickup> _PickupLookup;
+        private Dictionary<int, Shot> _ShotLookup;
+        private List<Impact> _Impacts;
         private Single _UpdateImpulse;
 
 
@@ -24,6 +26,8 @@ namespace BlackTournament.Net
         public Boolean IsConnected => _BasePeer.ConnectionsCount != 0;
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
+        public IEnumerable<Shot> Shots => _ShotLookup.Values;
+        public IEnumerable<Impact> Impacts => _Impacts;
         public override Int32 AdminId => Net.ADMIN_ID;
 
 
@@ -34,6 +38,9 @@ namespace BlackTournament.Net
         // Game Events
         public event Action<ClientPlayer> UserJoined = u => { };
         public event Action<ClientPlayer> UserLeft = u => { };
+
+        public event Action<Shot> ShotFired = u => { };
+        public event Action<Shot> ShotRemoved = u => { };
 
         public event Action<ClientPlayer, String> MessageReceived = (u, m) => { };
         public event Action ChangeLevelReceived = () => { };
@@ -148,11 +155,12 @@ namespace BlackTournament.Net
             {
                 var newPlayer = new ClientPlayer(msg.ReadInt32(), msg);
                 if (newPlayer.Id != Id)
-                { 
+                {
                     newPlayer.Alias = GetAlias(newPlayer.Id);
                     _PlayerLookup.Add(newPlayer.Id, newPlayer);
                 }
             }
+
             // Pickups
             entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
@@ -161,7 +169,20 @@ namespace BlackTournament.Net
                 _PickupLookup.Add(pickup.Id, pickup);
             }
 
-            // TODO: Shots
+            // Shots
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                var shot = new Shot(msg.ReadInt32(), msg);
+                _ShotLookup.Add(shot.Id, shot);
+            }
+
+            // Impacts
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                _Impacts.Add(new Impact(msg.ReadInt32(), msg));
+            }
         }
 
         private void ServerUpdate(NetIncomingMessage msg)
@@ -177,6 +198,7 @@ namespace BlackTournament.Net
                 }
                 else
                 {
+                    // A new player has joined
                     var newPlayer = new ClientPlayer(id, msg)
                     {
                         Alias = GetAlias(id)
@@ -185,6 +207,7 @@ namespace BlackTournament.Net
                     UserJoined.Invoke(newPlayer);
                 }
             }
+
             // Pickups
             entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
@@ -192,10 +215,42 @@ namespace BlackTournament.Net
                 _PickupLookup[msg.ReadInt32()].Deserialize(msg);
             }
 
-            // TODO: Shots
-            //...
+            // Shots
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                var id = msg.ReadInt32();
+                if (_ShotLookup.TryGetValue(id, out Shot shot))
+                {
+                    shot.Deserialize(msg);
+                    if (!shot.Alive)
+                    {
+                        _ShotLookup.Remove(shot.Id);
+                        ShotRemoved.Invoke(shot);
+                    }
+                }
+                else
+                {
+                    shot = new Shot(id, msg);
+                    _ShotLookup.Add(shot.Id, shot);
+                    ShotFired.Invoke(shot);
+                }
+            }
 
+            // Impacts
+            entityCount = msg.ReadInt32();
+            for (int i = 0; i < entityCount; i++)
+            {
+                var pp = new Impact(msg.ReadInt32(), msg);
+                _Impacts.Add(pp);
+                Log.Debug(pp.Position, "BUMM");
+            }
+
+            // Inform client game logic that an update has been received
             UpdateReceived.Invoke();
+
+            // Impacts only exist for a single frame hence can be cleared after use
+            _Impacts.Clear();
         }
 
         protected override void UserConnected(User user)
@@ -217,6 +272,8 @@ namespace BlackTournament.Net
             _PlayerLookup.Add(id, Player);
 
             _PickupLookup = new Dictionary<int, Pickup>();
+            _ShotLookup = new Dictionary<int, Shot>();
+            _Impacts = new List<Impact>();
 
             ConnectionEstablished.Invoke();
         }
