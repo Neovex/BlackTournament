@@ -30,8 +30,8 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        private int _Health;
-        public virtual int Health
+        private float _Health;
+        public virtual float Health
         {
             get { return _Health; }
             protected set
@@ -41,8 +41,8 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        private int _Shield;
-        public virtual int Shield
+        private float _Shield;
+        public virtual float Shield
         {
             get { return _Shield; }
             protected set
@@ -91,8 +91,8 @@ namespace BlackTournament.Net.Data
             m.Write(Position.X);
             m.Write(Position.Y);
             m.Write(Rotation);
-            m.Write(Health);
-            m.Write(Shield);
+            m.Write((int)Health); // send Health & shield as int - the float values are only important for the server anyway
+            m.Write((int)Shield);
             m.Write(Score);
             m.Write((int)CurrentWeapon);
         }

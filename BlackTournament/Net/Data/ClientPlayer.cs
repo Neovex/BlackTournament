@@ -27,7 +27,7 @@ namespace BlackTournament.Net.Data
             protected set { base.Rotation = value; }
         }
 
-        public override int Health
+        public override float Health
         {
             get { return base.Health; }
             protected set
@@ -37,7 +37,7 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        public override int Shield
+        public override float Shield
         {
             get { return base.Shield; }
             protected set { base.Shield = value; }

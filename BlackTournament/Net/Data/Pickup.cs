@@ -65,7 +65,6 @@ namespace BlackTournament.Net.Data
             m.Write(Active);
             m.Write(Position.X);
             m.Write(Position.Y);
-            m.Write(Amount);
             m.Write((int)Type);
         }
 
@@ -73,7 +72,6 @@ namespace BlackTournament.Net.Data
         {
             Active = m.ReadBoolean();
             Position = new Vector2f(m.ReadSingle(), m.ReadSingle());
-            Amount = m.ReadInt32();
             Type = (PickupType)m.ReadInt32();
         }
 

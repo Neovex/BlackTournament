@@ -3,72 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlackCoat;
-using BlackCoat.Collision;
-using BlackCoat.Collision.Shapes;
 using Lidgren.Network;
 using SFML.System;
+using BlackCoat;
+using BlackCoat.Collision;
 
 namespace BlackTournament.Net.Data
 {
     public class Shot : NetEntityBase
     {
-        private CollisionSystem _CollisionSystem;
-        private ICollisionShape _Collision;
         private Vector2f _MovementVector;
+        private Action<Vector2f> _UpdatePosition;
 
 
-        public Player Owner { get; private set; }
-        public Vector2f Position { get; private set; }
-        public float Direction { get; private set; }
+        public float Damage { get; private set; }
+        public float Speed { get; private set; }
+        public float TTL { get; private set; }
+        public bool Alive => TTL > 0;
+
         public PickupType SourceWeapon { get; private set; }
         public bool Primary { get; private set; }
 
-        public float Length { get; private set; }
-        public float Speed { get; private set; }
-        public float TTL { get; private set; }
-        public Boolean Alive => TTL > 0;
+        public Vector2f Position { get; private set; }
+        public float Direction { get; private set; }
+        public ICollisionShape Collision { get; }
 
-
-        public Shot(CollisionSystem collisionSystem, Player owner, int id, PickupType sourceWeapon, bool primary):base(id)
+        public Shot(int id, float direction, float speed, float damage, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
         {
-            _CollisionSystem = collisionSystem;
-            Owner = owner;
-            Position = owner.Position;
-            Direction = owner.Rotation;
+            _MovementVector = VectorExtensions.VectorFromAngle(direction);
+            _UpdatePosition = updatePosition;
+
+            Speed = speed;
+            Damage = damage;
+            TTL = ttl;
+
             SourceWeapon = sourceWeapon;
             Primary = primary;
 
-            _MovementVector = VectorExtensions.VectorFromAngle(Direction);
-
-            switch (sourceWeapon)
-            {
-                case PickupType.Drake:
-                    Speed = primary ? 800 : 400;
-                    TTL = 2;
-                break;
-
-                case PickupType.Hedgeshock:
-                    Length = 280;
-                    Speed = 300;
-                    _Collision = new LineCollisionShape(_CollisionSystem, Position, VectorExtensions.VectorFromAngle(Direction, Length));
-                    TTL = 0.8f;
-                break;
-
-                case PickupType.Thumper:
-                    Speed = 500;
-                    if (!primary) _Collision = new CircleCollisionShape(_CollisionSystem, Position, 70);
-                    TTL = 5;
-                break;
-
-                case PickupType.Titandrill:
-                    Length = primary ? 100 : 100000;
-                    _Collision = new LineCollisionShape(_CollisionSystem, Position, VectorExtensions.VectorFromAngle(Direction, Length));
-                    TTL = 0.5f;
-                break;
-
-                default: throw new Exception("Invalid projectile initialization");
-            }
+            Position = position;
+            Direction = direction;
+            Collision = collision;
         }
 
         public Shot(int id, NetIncomingMessage m) : base(id, m)
@@ -77,60 +51,22 @@ namespace BlackTournament.Net.Data
 
         public void Update(float deltaT)
         {
-            Position += _MovementVector * Speed * deltaT;
             TTL -= deltaT;
+            Position += _MovementVector * Speed * deltaT;
+            _UpdatePosition?.Invoke(Position);
         }
 
-        public void Kill()
+        public void Destroy()
         {
             TTL = 0;
-        }
-
-        public Vector2f[] GetIntersections(ICollisionShape other)
-        {
-            switch (SourceWeapon)
-            {
-                case PickupType.Drake:
-                    if (other.Collide(Position)) return new[] { Position };
-                break;
-
-                case PickupType.Hedgeshock:
-                    if (Primary)
-                    {
-                        if (other.Collide(_Collision)) return _CollisionSystem.Intersections(Position, Direction, other);
-                    }
-                    else
-                    {
-                        if (other.Collide(Position)) return new[] { Position };
-                    }
-                break;
-
-                case PickupType.Thumper:
-                    if (Primary)
-                    {
-                        if (other.Collide(Position)) return new[] { Position };
-                    }
-                    else
-                    {
-                        if (other.Collide(_Collision)) return _CollisionSystem.Intersections(Position, Direction, other);
-                    }
-                    break;
-
-
-                case PickupType.Titandrill:
-                    return _CollisionSystem.Intersections(Position, Direction, other);
-            }
-            return new Vector2f[0];
         }
 
         public override void Deserialize(NetIncomingMessage m)
         {
             Position = new Vector2f(m.ReadFloat(), m.ReadFloat());
             Direction = m.ReadFloat();
-            Length = m.ReadFloat();
             SourceWeapon = (PickupType)m.ReadInt32();
             Primary = m.ReadBoolean();
-            Speed = m.ReadFloat();
             TTL = m.ReadFloat();
         }
 
@@ -139,10 +75,8 @@ namespace BlackTournament.Net.Data
             m.Write(Position.X);
             m.Write(Position.Y);
             m.Write(Direction);
-            m.Write(Length);
             m.Write((int)SourceWeapon);
             m.Write(Primary);
-            m.Write(Speed);
             m.Write(TTL);
         }
     }

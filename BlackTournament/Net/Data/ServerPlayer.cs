@@ -18,24 +18,26 @@ namespace BlackTournament.Net.Data
         private const float _DEFAULT_RESPAWN_TIME = 5.0f;
         private const float _COLLISION_RADIUS = 30f;
 
-
         public ServerUser<NetConnection> User { get; private set; }
         public HashSet<GameAction> Input { get; private set; }
         public Boolean Dead { get; set; }
         public Single RespawnTimeout { get; private set; }
         public CircleCollisionShape Collision { get; private set; }
+        public Dictionary<PickupType,Weapon> Weapons { get; private set; }
+        public Weapon Weapon => Weapons[CurrentWeapon];
 
 
-        public event Action<ServerPlayer> Spawn = p => { };
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
 
 
-        public ServerPlayer(ServerUser<NetConnection> user, CollisionSystem collisionSystem) : base(user.Id)
+        public ServerPlayer(ServerUser<NetConnection> user, CollisionSystem collisionSystem) : base(user.Id) // TODO : replace collision system with actual collision shape
         {
             User = user;
             Input = new HashSet<GameAction>();
             Dead = true;
             Collision = new CircleCollisionShape(collisionSystem, Position, _COLLISION_RADIUS);
+            Weapons = new Dictionary<PickupType, Weapon>();
+            GivePickup(PickupType.Drake); // Initial Weapon
         }
 
         public void Move (Vector2f position)
@@ -47,11 +49,25 @@ namespace BlackTournament.Net.Data
             Rotation = rotation;
         }
 
+
+        public void DamagePlayer(float damage)
+        {
+            if (Dead) return;
+            Shield -= damage;
+            if (Shield < 0)
+            {
+                Health += Shield;
+                Shield = 0;
+            }
+            if (Health <= 0) Fragg();
+        }
         public void Fragg()
         {
+            Weapon.Release();
             Dead = true;
             Health = Shield = 0;
             RespawnTimeout = _DEFAULT_RESPAWN_TIME;
+
             // mayhaps add K/D stuff here
         }
 
@@ -81,22 +97,19 @@ namespace BlackTournament.Net.Data
             Collision.Position += new Vector2f(x, y);
         }
 
-        public void ShootPrimary()
+        public void ShootPrimary(bool activate)
         {
-            if (Dead)
-            {
-                if (RespawnTimeout <= 0) Spawn.Invoke(this);
-            }
-            else
-            {
-                // TODO : add ammo handling
-                ShotFired.Invoke(this, true);
-            }
+            Shoot(activate, true);
         }
-        public void ShootSecundary()
+        public void ShootSecundary(bool activate)
         {
-            // TODO : add ammo handling
-            ShotFired.Invoke(this, false);
+            Shoot(activate, false);
+        }
+        private void Shoot(bool activate, bool primary)
+        {
+            if (Dead) return;
+            if (activate) Weapon.Fire(primary);
+            else Weapon.Release();
         }
 
         public void Respawn(Vector2f spawnPosition)
@@ -107,19 +120,27 @@ namespace BlackTournament.Net.Data
             Health = 100;
             Shield = 0;
 
+            foreach (var weapon in Weapons.Values)
+            {
+                weapon.ShotFired -= HandleWeaponFired;
+            }
+            Weapons.Clear();
             OwnedWeapons.Clear();
-            CurrentWeapon = PickupType.Drake;
+            GivePickup(PickupType.Drake); // Initial Weapon
         }
 
         public void SwitchWeapon(int direction)
         {
+            if (Dead) return;
+            Weapon.Release();
+
             var index = OwnedWeapons.IndexOf(CurrentWeapon) + direction;
             if (index == -1) index = OwnedWeapons.Count - 1;
             else if (index == OwnedWeapons.Count) index = 0;
             CurrentWeapon = OwnedWeapons[index];
         }
 
-        public void GivePickup(PickupType pickup, int amount) // move this into pickup
+        public void GivePickup(PickupType pickup, int amount = 1) // TODO : move this into pickup, grant write access via method or prop & fix amount stuff
         {
             switch (pickup)
             {
@@ -140,14 +161,19 @@ namespace BlackTournament.Net.Data
                 case PickupType.Thumper:
                 case PickupType.Titandrill:
                     CurrentWeapon = pickup;
+                    if(Weapons.ContainsKey(pickup)) Weapons[pickup].ShotFired -= HandleWeaponFired;
+                    Weapons[pickup] = WeaponData.CreateWeaponFrom(pickup);
+                    Weapon.ShotFired += HandleWeaponFired;
                     break;
             }
+
+            if (Health > 100) Health = 100;
+            if (Shield > 100) Shield = 100;
         }
 
-        internal void GotShot(Shot shot)
+        private void HandleWeaponFired(bool primary)
         {
-            // gefällt mir nicht
-            throw new NotImplementedException();
+            ShotFired.Invoke(this, primary);
         }
     }
 }

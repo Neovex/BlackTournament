@@ -153,8 +153,8 @@ namespace BlackTournament.GameStates
             var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx
             {
                 Position = position,
-                Size = new Vector2f(50, 20),
-                Color = Color.Blue
+                Size = new Vector2f(250, 2),
+                Color = Color.Red
             };
             _EnitityLookup.Add(id, entity);
             Layer_Game.AddChild(entity);

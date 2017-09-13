@@ -83,6 +83,7 @@
     <Compile Include="Net\Data\Player.cs" />
     <Compile Include="Net\Data\ServerPlayer.cs" />
     <Compile Include="Net\Data\Shot.cs" />
+    <Compile Include="Net\Data\Weapon.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Net\NetBase.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Tmx\Layer.cs" />
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
+    <Compile Include="WeaponData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
