@@ -170,7 +170,7 @@ namespace BlackTournament.Net
             }
             else
             {
-                Log.Info("Ignored change level request from", id, _ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias, "to level", mapName);
+                Log.Warning("Blocked change level request from", id, _ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias, "to level", mapName);
             }
         }
     }

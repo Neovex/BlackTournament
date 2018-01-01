@@ -24,7 +24,7 @@ namespace BlackTournament.Net.Data
         public Single RespawnTimeout { get; private set; }
         public CircleCollisionShape Collision { get; private set; }
         public Dictionary<PickupType,Weapon> Weapons { get; private set; }
-        public Weapon Weapon => Weapons[CurrentWeapon];
+        public Weapon Weapon => Weapons[CurrentWeaponType];
 
 
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
@@ -95,6 +95,8 @@ namespace BlackTournament.Net.Data
                 }
             }
             Collision.Position += new Vector2f(x, y);
+
+            Weapon.Update(deltaT);
         }
 
         public void ShootPrimary(bool activate)
@@ -134,10 +136,8 @@ namespace BlackTournament.Net.Data
             if (Dead) return;
             Weapon.Release();
 
-            var index = OwnedWeapons.IndexOf(CurrentWeapon) + direction;
-            if (index == -1) index = OwnedWeapons.Count - 1;
-            else if (index == OwnedWeapons.Count) index = 0;
-            CurrentWeapon = OwnedWeapons[index];
+            var index = OwnedWeapons.IndexOf(CurrentWeaponType) + direction;
+            CurrentWeaponType = OwnedWeapons[index % OwnedWeapons.Count];
         }
 
         public void GivePickup(PickupType pickup, int amount = 1) // TODO : move this into pickup, grant write access via method or prop & fix amount stuff
@@ -160,7 +160,7 @@ namespace BlackTournament.Net.Data
                 case PickupType.Hedgeshock:
                 case PickupType.Thumper:
                 case PickupType.Titandrill:
-                    CurrentWeapon = pickup;
+                    CurrentWeaponType = pickup;
                     if(Weapons.ContainsKey(pickup)) Weapons[pickup].ShotFired -= HandleWeaponFired;
                     Weapons[pickup] = WeaponData.CreateWeaponFrom(pickup);
                     Weapon.ShotFired += HandleWeaponFired;

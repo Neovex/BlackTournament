@@ -14,6 +14,7 @@ using BlackTournament.Entities;
 using BlackTournament.Tmx;
 using BlackCoat.Entities.Shapes;
 using BlackTournament.Net.Data;
+using SFML.Audio;
 
 namespace BlackTournament.GameStates
 {
@@ -25,8 +26,11 @@ namespace BlackTournament.GameStates
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
 
-
         public Vector2f ViewMovement { get; set; }
+
+
+        //tmp
+        private Sound _PickupSfxTMP;
 
 
         public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.ASSET_ROOT)
@@ -62,6 +66,9 @@ namespace BlackTournament.GameStates
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center;
 
             // TESTING ############################################
+
+            SfxManager.RootFolder = "Sfx";
+            _PickupSfxTMP = new Sound(SfxManager.Load("pickup1"));
 
             // Debug Views
             var wallColor = new Color(155, 155, 155, 155);
@@ -160,9 +167,31 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(entity);
         }
 
-        public void CreateVFX(PickupType type, Vector2f pos, float rotation)
+        public void CreateEffect(EffectType effectType, Vector2f position, PickupType pickup, bool primaryFire)
         {
-            // TODO
+            switch (effectType)
+            {
+                case EffectType.Environment:
+                    //NA
+                    break;
+
+                case EffectType.Impact:
+                    var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx
+                    {
+                        Position = position,
+                        Size = new Vector2f(10, 10),
+                        Color = Color.Yellow
+                    };
+                    Layer_Game.AddChild(entity);
+                    _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: entity);
+
+                    _PickupSfxTMP.Play();
+                    break;
+
+                case EffectType.Gunfire:
+                    //Audio.PlayGunfire(position, pickup, primaryFire);
+                    break;
+            }
         }
 
         public void DestroyEntity(int id)

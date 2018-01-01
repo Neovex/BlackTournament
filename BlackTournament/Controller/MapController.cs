@@ -195,7 +195,11 @@ namespace BlackTournament.Controller
             {
                 _State.UpdateEntity(shot.Id, shot.Position, shot.Direction, true);
             }
-            // TODO : update other entities
+
+            foreach (var efx in _Client.Effects)
+            {
+                _State.CreateEffect(efx.EffectType, efx.Position, efx.Source, efx.Primary);
+            }
         }
 
         private void HandleUserJoined(ClientPlayer player)

@@ -15,7 +15,7 @@ namespace BlackTournament.Net
         private Dictionary<int, ClientPlayer> _PlayerLookup;
         private Dictionary<int, Pickup> _PickupLookup;
         private Dictionary<int, Shot> _ShotLookup;
-        private List<Impact> _Impacts;
+        private List<Effect> _Effects;
         private Single _UpdateImpulse;
 
 
@@ -27,7 +27,7 @@ namespace BlackTournament.Net
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
-        public IEnumerable<Impact> Impacts => _Impacts;
+        public IEnumerable<Effect> Effects => _Effects;
         public override Int32 AdminId => Net.ADMIN_ID;
 
 
@@ -177,16 +177,19 @@ namespace BlackTournament.Net
                 _ShotLookup.Add(shot.Id, shot);
             }
 
-            // Impacts
+            // Effects
             entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                _Impacts.Add(new Impact(msg.ReadInt32(), msg));
+                _Effects.Add(new Effect(msg.ReadInt32(), msg));
             }
         }
 
         private void ServerUpdate(NetIncomingMessage msg)
         {
+            // Effects are pure spawn info packets and exist only for a single frame hence need to be removed 
+            _Effects.Clear();
+
             // Players
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
@@ -237,20 +240,15 @@ namespace BlackTournament.Net
                 }
             }
 
-            // Impacts
+            // Effects
             entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                var pp = new Impact(msg.ReadInt32(), msg);
-                _Impacts.Add(pp);
-                Log.Debug(pp.Position, "BUMM");
+                _Effects.Add(new Effect(msg.ReadInt32(), msg));
             }
 
             // Inform client game logic that an update has been received
             UpdateReceived.Invoke();
-
-            // Impacts only exist for a single frame hence can be cleared after use
-            _Impacts.Clear();
         }
 
         protected override void UserConnected(User user)
@@ -273,7 +271,7 @@ namespace BlackTournament.Net
 
             _PickupLookup = new Dictionary<int, Pickup>();
             _ShotLookup = new Dictionary<int, Shot>();
-            _Impacts = new List<Impact>();
+            _Effects = new List<Effect>();
 
             ConnectionEstablished.Invoke();
         }

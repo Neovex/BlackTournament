@@ -64,7 +64,7 @@ namespace BlackTournament.Net.Data
         }
 
         private PickupType _CurrentWeapon;
-        public virtual PickupType CurrentWeapon
+        public virtual PickupType CurrentWeaponType
         {
             get { return _CurrentWeapon; }
             protected set
@@ -80,7 +80,7 @@ namespace BlackTournament.Net.Data
 
         public Player(int id) : base(id) // Server CTOR
         {
-            CurrentWeapon = PickupType.Drake;
+            CurrentWeaponType = PickupType.Drake;
         }
         public Player(int id, NetIncomingMessage m) : base(id, m) // Client CTOR (data will be automatically deserialized)
         {
@@ -94,7 +94,7 @@ namespace BlackTournament.Net.Data
             m.Write((int)Health); // send Health & shield as int - the float values are only important for the server anyway
             m.Write((int)Shield);
             m.Write(Score);
-            m.Write((int)CurrentWeapon);
+            m.Write((int)CurrentWeaponType);
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -104,7 +104,7 @@ namespace BlackTournament.Net.Data
             Health = m.ReadInt32();
             Shield = m.ReadInt32();
             Score = m.ReadInt32();
-            CurrentWeapon = (PickupType)m.ReadInt32();
+            CurrentWeaponType = (PickupType)m.ReadInt32();
         }
     }
 }

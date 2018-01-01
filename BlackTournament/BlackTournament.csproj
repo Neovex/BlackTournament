@@ -67,7 +67,7 @@
     <Compile Include="Entities\MapRenderer.cs" />
     <Compile Include="Net\Data\ClientPlayer.cs" />
     <Compile Include="Net\Data\GameLogic.cs" />
-    <Compile Include="Net\Data\Impact.cs" />
+    <Compile Include="Net\Data\Effect.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
     <Compile Include="GameStates\Intro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
@@ -173,19 +173,45 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Doc\3rd Party.txt" />
-    <Content Include="Sfx\explosion1.wav" />
-    <Content Include="Sfx\explosion2.wav" />
-    <Content Include="Sfx\grenatelauncher.wav" />
-    <Content Include="Sfx\Highlight.wav" />
-    <Content Include="Sfx\laser blast.wav" />
-    <Content Include="Sfx\Laser PL013.wav" />
-    <Content Include="Sfx\laser-loop.wav" />
-    <Content Include="Sfx\laser.wav" />
-    <Content Include="Sfx\pickup1.wav" />
-    <Content Include="Sfx\pickup2.wav" />
-    <Content Include="Sfx\pickup3 long.wav" />
-    <Content Include="Sfx\Select.wav" />
-    <Content Include="Sfx\simple shot.wav" />
+    <Content Include="Sfx\explosion1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\explosion2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\grenatelauncher.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\Highlight.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\laser blast.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\Laser PL013.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\laser-loop.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\laser.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\pickup1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\pickup2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\pickup3 long.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\Select.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sfx\simple shot.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

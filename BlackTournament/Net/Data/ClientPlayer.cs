@@ -49,13 +49,13 @@ namespace BlackTournament.Net.Data
             protected set { base.Score = value; }
         }
 
-        public override PickupType CurrentWeapon
+        public override PickupType CurrentWeaponType
         {
-            get { return base.CurrentWeapon; }
+            get { return base.CurrentWeaponType; }
             protected set
             {
-                if(CurrentWeapon != value) Log.Debug(CurrentWeapon);
-                base.CurrentWeapon = value;
+                if(CurrentWeaponType != value) Log.Debug(CurrentWeaponType);
+                base.CurrentWeaponType = value;
             }
         }
 
