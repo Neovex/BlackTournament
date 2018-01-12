@@ -15,6 +15,7 @@ namespace BlackTournament.Net.Client
 
         public virtual Int32 Id { get; protected set; }
         public virtual String Alias { get; protected set; }
+        public virtual Boolean Validated { get; protected set; }
         public virtual IEnumerable<User> ConnectedUsers { get { return _ConnectedClients; } }
         public virtual Boolean IsAdmin { get { return Id == AdminId; } }
         public abstract Int32 AdminId { get; }
@@ -34,28 +35,26 @@ namespace BlackTournament.Net.Client
             Connect(host, port, Alias);
         }
 
-        protected override void Connected()
-        {
-            // This method is replaced by Connected(Int32 id, String alias); after successful handshake
-        }
-
         protected override void ProcessIncommingData(TEnum subType, NetIncomingMessage msg)
         {
-            if (subType.Equals(_Commands.Handshake))
+            if (Validated) // process messages normally
+            {
+                if (subType.Equals(_Commands.UserConnected))
+                {
+                    HandleUserConnected(msg);
+                }
+                else if (subType.Equals(_Commands.UserDisconnected))
+                {
+                    HandleUserDisconnected(msg);
+                }
+                else
+                {
+                    DataReceived(subType, msg);
+                }
+            }
+            else if (subType.Equals(_Commands.Handshake)) // only listen to handshakes
             {
                 HandleHandshake(msg);
-            }
-            else if (subType.Equals(_Commands.UserConnected))
-            {
-                HandleUserConnected(msg);
-            }
-            else if (subType.Equals(_Commands.UserDisconnected))
-            {
-                HandleUserDisconnected(msg);
-            }
-            else
-            {
-                DataReceived(subType, msg);
             }
         }
 
@@ -68,7 +67,8 @@ namespace BlackTournament.Net.Client
             {
                 HandleUserConnected(msg, false);
             }
-            Connected(Id, Alias);
+            ConnectionValidated(Id, Alias);
+            Validated = true;
         }
 
         private void HandleUserConnected(NetIncomingMessage msg, bool callUserConnected = true)
@@ -96,9 +96,14 @@ namespace BlackTournament.Net.Client
             }
         }
 
-        protected abstract void Connected(int id, string alias);
+        protected abstract void ConnectionValidated(int id, string alias);
         protected abstract void UserConnected(User user);
         protected abstract void UserDisconnected(User user);
         protected abstract void DataReceived(TEnum subType, NetIncomingMessage msg); // hmm msg UU mit interface ersetzen
+
+        protected override void Disconnected()
+        {
+            Validated = false;
+        }
     }
 }

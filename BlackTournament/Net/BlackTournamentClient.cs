@@ -33,7 +33,7 @@ namespace BlackTournament.Net
 
         // Connection Events
         public event Action ConnectionEstablished = () => { };
-        public event Action ConnectionHasBeenLost = () => { };
+        public event Action ConnectionLost = () => { };
 
         // Game Events
         public event Action<ClientPlayer> UserJoined = u => { };
@@ -263,7 +263,7 @@ namespace BlackTournament.Net
             _PlayerLookup.Remove(user.Id);
         }
 
-        protected override void Connected(int id, string alias)
+        protected override void ConnectionValidated(int id, string alias)
         {
             Player = new ClientPlayer(id) { Alias = alias };
             _PlayerLookup = new Dictionary<int, ClientPlayer>();
@@ -276,9 +276,15 @@ namespace BlackTournament.Net
             ConnectionEstablished.Invoke();
         }
 
+        protected override void Connected()
+        {
+            base.Disconnected();
+            // Not used. A connection is communicated only after validation. See ConnectionValidated(int id, string alias)
+        }
         protected override void Disconnected()
         {
-            ConnectionHasBeenLost.Invoke();
+            base.Disconnected();
+            ConnectionLost.Invoke();
         }
     }
 }

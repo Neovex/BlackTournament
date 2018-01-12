@@ -31,7 +31,7 @@ namespace BlackTournament.Controller
 
             // Connect to Host
             _Client.ChangeLevelReceived += LevelReady;
-            _Client.ConnectionHasBeenLost += ConnectionFailed;
+            _Client.ConnectionLost += ConnectionFailed;
             _Client.Connect(host, port);
         }
 
@@ -46,7 +46,7 @@ namespace BlackTournament.Controller
         protected override void StateReleased()
         {
             _Client.ChangeLevelReceived -= LevelReady;
-            _Client.ConnectionHasBeenLost -= ConnectionFailed;
+            _Client.ConnectionLost -= ConnectionFailed;
             _Client = null;
             _State = null;
         }

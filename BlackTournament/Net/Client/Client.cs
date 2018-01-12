@@ -10,7 +10,8 @@ namespace BlackTournament.Net.Client
     public abstract class Client<TEnum> : NetBase<TEnum> where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         private NetClient _Client;
-        
+        public Boolean IsConnected { get; protected set; }
+
 
         public Client(String appId) : base(new NetClient(new NetPeerConfiguration(appId)))
         {
@@ -38,10 +39,12 @@ namespace BlackTournament.Net.Client
 
         protected override void NewConnection(NetConnection senderConnection)
         {
+            IsConnected = true;
             Connected();
         }
         protected override void ConnectionLost(NetConnection senderConnection)
         {
+            IsConnected = false;
             Disconnected();
         }
 

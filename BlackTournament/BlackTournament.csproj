@@ -62,9 +62,11 @@
     <Compile Include="Controller\MapController.cs" />
     <Compile Include="Controller\ControllerBase.cs" />
     <Compile Include="Controller\MenuController.cs" />
+    <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Entities\MapRenderer.cs" />
+    <Compile Include="GameStates\TestState.cs" />
     <Compile Include="Net\Data\ClientPlayer.cs" />
     <Compile Include="Net\Data\GameLogic.cs" />
     <Compile Include="Net\Data\Effect.cs" />

@@ -67,7 +67,7 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            _Effects.Add(new Effect(Net.GetNextId(), EffectType.Gunfire, player.Position, player.CurrentWeaponType, primaryFire));
+            _Effects.Add(new Effect(Net.GetNextId(), EffectType.Gunfire, player.Position, player.Rotation, player.CurrentWeaponType, primaryFire));
 
             var data = primaryFire ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
             switch (data.ProjectileGeometry)
@@ -228,8 +228,8 @@ namespace BlackTournament.Net.Data
         private float CheckRayWeaponIntersections(ServerPlayer player, float length, float damage, bool primary)
         {
             // find first wall intersection
-            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Intersections(player.Position, player.Rotation, wall)).OrderBy(p => p.ToLocal(player.Position).LengthSquared()).ToArray();
-
+            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.Position, player.Rotation, wall)).OrderBy(p => p.ToLocal(player.Position).LengthSquared()).ToArray();
+            
             if (wallIintersectionPoints.Length != 0)
             {
                 var impactlength = (float)wallIintersectionPoints[0].ToLocal(player.Position).Length();
@@ -238,7 +238,7 @@ namespace BlackTournament.Net.Data
                     // walls occlude ray weapons hence update the length for player intersections
                     length = impactlength;
                     // add impact
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, wallIintersectionPoints[0], player.CurrentWeaponType, primary));
+                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, wallIintersectionPoints[0], player.Rotation, player.CurrentWeaponType, primary));
                 }
             }
 
@@ -247,7 +247,7 @@ namespace BlackTournament.Net.Data
                                           .Select(p => new
                                           {
                                               Player = p,
-                                              Intersections = _Core.CollisionSystem.Intersections(player.Position, player.Rotation, p.Collision)
+                                              Intersections = _Core.CollisionSystem.Raycast(player.Position, player.Rotation, p.Collision)
                                                               .OrderBy(i => i.ToLocal(player.Position).LengthSquared()).ToArray()
                                           })
                                           .Where(pi => pi.Intersections.Length != 0 && pi.Intersections[0].ToLocal(player.Position).Length() <= length);
@@ -256,7 +256,7 @@ namespace BlackTournament.Net.Data
             foreach (var pi in affectedPlayers)
             {
                 // add impacts
-                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, pi.Intersections[0], player.CurrentWeaponType, primary));
+                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, pi.Intersections[0], player.Rotation, player.CurrentWeaponType, primary));
                 // damage player
                 pi.Player.DamagePlayer(damage);
             }
@@ -271,16 +271,16 @@ namespace BlackTournament.Net.Data
                 // remove shot
                 shot.Destroy();
                 // add impact
-                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, shot.Position, shot.SourceWeapon, shot.Primary));
+                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                 return;
             }
 
-            foreach (var player in _Players.Where(p => !p.Dead && (shot.Collision == null ? p.Collision.Collide(shot.Position) : p.Collision.Collide(shot.Collision)) /*&& p != shot.sourcePlayer*/)) // Fixme !!! -> spawn offset
+            foreach (var player in _Players.Where(p => !p.Dead && (shot.Collision == null ? p.Collision.Collide(shot.Position) : p.Collision.Collide(shot.Collision)) /*&& p != shot.sourcePlayer*/)) // Fix me !!! -> spawn offset
             {
                 // remove shot
                 shot.Destroy();
                 // add first impact
-                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, shot.Position, shot.SourceWeapon, shot.Primary));
+                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                 // damage player
                 player.DamagePlayer(shot.Damage);
                 return;

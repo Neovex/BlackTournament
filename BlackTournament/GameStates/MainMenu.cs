@@ -70,7 +70,7 @@ namespace BlackTournament.GameStates
         {
             if (obj == SFML.Window.Mouse.Button.Left)
             {
-                var intersections = _Core.CollisionSystem.Intersections(_Ray.Start.Position, _Ray.Start.Position.AngleTowards(_Ray.End.Position), _Circle);
+                var intersections = _Core.CollisionSystem.Raycast(_Ray.Start.Position, _Ray.Start.Position.AngleTowards(_Ray.End.Position), _Circle);
                 foreach (var intersect in intersections)
                 {
                     var r = new Rectangle(_Core)

@@ -79,7 +79,7 @@ namespace BlackTournament.Controller
         private void AttachEvents()
         {
             // Connection Events
-            _Client.ConnectionHasBeenLost += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
+            _Client.ConnectionLost += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
             // Game Events
             _Client.Player.Fragged += HandlePlayerFragged;
             _Client.ChangeLevelReceived += HandleServerMapChange;
@@ -101,7 +101,7 @@ namespace BlackTournament.Controller
         private void DetachEvents()
         {
             // Connection Events
-            _Client.ConnectionHasBeenLost -= HandleConnectionLost;
+            _Client.ConnectionLost -= HandleConnectionLost;
             // Game Events
             _Client.Player.Fragged -= HandlePlayerFragged;
             _Client.ChangeLevelReceived -= HandleServerMapChange;

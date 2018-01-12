@@ -19,15 +19,16 @@ namespace BlackTournament.Net.Data
     {
         public EffectType EffectType { get; private set; }
         public Vector2f Position { get; private set; }
-
+        public float Rotation { get; private set; }
         public PickupType Source { get; private set; }
         public bool Primary { get; private set; }
 
 
-        public Effect(int id, EffectType type, Vector2f position, PickupType source = PickupType.BigHealth, bool primary = false) : base(id)
+        public Effect(int id, EffectType type, Vector2f position, float rotation, PickupType source = PickupType.BigHealth, bool primary = false) : base(id)
         {
             EffectType = type;
             Position = position;
+            Rotation = rotation;
             Source = source;
             Primary = primary;
         }
@@ -40,6 +41,7 @@ namespace BlackTournament.Net.Data
         {
             EffectType = (EffectType)m.ReadInt32();
             Position = new Vector2f(m.ReadFloat(), m.ReadFloat());
+            Rotation = m.ReadSingle();
 
             Source = (PickupType)m.ReadInt32();
             Primary = m.ReadBoolean();
@@ -50,6 +52,7 @@ namespace BlackTournament.Net.Data
             m.Write((int)EffectType);
             m.Write(Position.X);
             m.Write(Position.Y);
+            m.Write(Rotation);
 
             m.Write((int)Source);
             m.Write(Primary);
