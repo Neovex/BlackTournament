@@ -28,7 +28,7 @@ idee: controller durch rollen ersetzen die am jeweiligen state hängen
 fix missing keyup event on focus loss?!
 
 
-add id-d shots & 
+#add id-d shots & 
 #pickups to serialization chain
 
 UC create game data from parsed mapdata?
@@ -36,8 +36,6 @@ UC create game data from parsed mapdata?
 create basic UI elements
 
 add MD5 comparison against map tampering / versioning
-
-network -> shots are only sent once - movement is then interpolated? - problem: wall collisions
 
 
 #Network data brainstorm

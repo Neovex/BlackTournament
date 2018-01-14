@@ -33,7 +33,7 @@ namespace BlackTournament.GameStates
         private Sound _PickupSfxTMP;
 
 
-        public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.ASSET_ROOT)
+        public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
             _EnitityLookup = new Dictionary<int, IEntity>();
@@ -62,12 +62,11 @@ namespace BlackTournament.GameStates
                 Layer_BG.AddChild(mapLayer);
             }
 
-            // TODO: add center pos to mapdata
-            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center;
+            // Set camera to the center of the map
+            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
 
             // TESTING ############################################
-
-            SfxManager.RootFolder = "Sfx";
+            
             _PickupSfxTMP = new Sound(SfxManager.Load("pickup1"));
 
             // Debug Views
@@ -185,6 +184,8 @@ namespace BlackTournament.GameStates
                     Layer_Game.AddChild(entity);
                     _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: entity);
 
+                    Listener.Position = new Vector3f(_LocalPlayer.Position.X, _LocalPlayer.Position.Y, 0);
+                    _PickupSfxTMP.Position = new Vector3f(position.X, position.Y, 0);
                     _PickupSfxTMP.Play();
                     break;
 

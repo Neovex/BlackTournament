@@ -25,7 +25,7 @@ namespace BlackTournament.GameStates
         private Line _Ray;
         private Circle _Circle;
 
-        public MainMenu(Core core):base(core)
+        public MainMenu(Core core):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             // TODO: cleanup testing stuff
         }
@@ -39,8 +39,7 @@ namespace BlackTournament.GameStates
 
             //IntersectionTest();
             //ShaderTest();
-
-            MusicManager.RootFolder = "music";
+            
             music = MusicManager.Load("Ten_Seconds_to_Rush");
             music.Volume = 15;
             //music.Play();

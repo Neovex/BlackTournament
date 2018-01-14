@@ -11,13 +11,19 @@ using BlackTournament.Properties;
 using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.Systems;
+using BlackTournament.GameStates;
 
 namespace BlackTournament
 {
     public class Game
     {
+        public static Font DefaultFont { get; private set; }
+
         public const String ID = "BlackTournament";
-        public const String ASSET_ROOT = "Assets";
+        public const String TEXTURE_ROOT = "Assets\\Textures";
+        public const String MUSIC_ROOT = "Assets\\Music";
+        public const String FONT_ROOT = "Assets\\Fonts";
+        public const String SFX_ROOT = "Assets\\Sfx";
         public const String DEFAULT_FONT = "HighlandGothicLightFLF";
         private const String _LOGFILE = "Log.txt";
 
@@ -26,14 +32,14 @@ namespace BlackTournament
         private BlackTournamentServer _Server;
         private BlackTournamentClient _Client;
 
+
         public Core Core { get; private set; }
         public InputMapper InputMapper { get; private set; }
-
-        public static Font DefaultFont { get; private set; }
         public TestController TestController { get; private set; }
         public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
         public MapController MapController { get; private set; }
+
 
         public Game()
         {
@@ -51,13 +57,12 @@ namespace BlackTournament
             using (Core = new Core(Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8)))
             {
                 // Init Core
-                Core.Debug = true;
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 
                 // Init Game Font
-                _GlobalFonts = new FontManager();
-                DefaultFont = _GlobalFonts.Load(DEFAULT_FONT, Resources.HighlandGothicLightFLF);
+                _GlobalFonts = new FontManager(FONT_ROOT);
+                DefaultFont = _GlobalFonts.Load(DEFAULT_FONT);
                 // Todo: test text blur issue (might need round)
 
                 // Init Input
@@ -74,8 +79,9 @@ namespace BlackTournament
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
                 {
-                    MenuController.Activate();
-                    //_Core.StateManager.ChangeState(new BlackCoatIntro(_Core, new Intro(_Core)));
+                    ExecuteCommand("ld thepit"); // FIXME
+                    //MenuController.Activate();
+                    //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core)));
                 }
                 else
                 {

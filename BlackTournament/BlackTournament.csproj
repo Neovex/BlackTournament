@@ -71,7 +71,7 @@
     <Compile Include="Net\Data\GameLogic.cs" />
     <Compile Include="Net\Data\Effect.cs" />
     <Compile Include="Net\Data\PickupType.cs" />
-    <Compile Include="GameStates\Intro.cs" />
+    <Compile Include="GameStates\TournamentIntro.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\ConnectState.cs" />
     <Compile Include="Net\Data\NetEntityBase.cs" />
@@ -115,8 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Assets\HighlandGothicLightFLF.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Assets\Fonts\HighlandGothicLightFLF.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Tmx\Tmx.cd" />
     <None Include="Maps\ld.tmx">
@@ -128,8 +128,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Music\Ten_Seconds_to_Rush.ogg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Assets\Music\Ten_Seconds_to_Rush.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Network.cd" />
     <None Include="packages.config" />
@@ -139,79 +139,79 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Space.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Assets\Textures\Space.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\AztekTiles.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\AztekTiles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\BigHealth.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\BigHealth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\BigShield.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\BigShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\CharacterBase.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\CharacterBase.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Drake.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\Drake.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Hedgeshock.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\Hedgeshock.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SmallHealth.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\SmallHealth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SmallShield.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\SmallShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Thumper.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\Thumper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Titandrill.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Assets\Textures\Titandrill.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Doc\3rd Party.txt" />
-    <Content Include="Sfx\explosion1.wav">
+    <Content Include="Assets\Sfx\explosion1.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\explosion2.wav">
+    <Content Include="Assets\Sfx\explosion2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\grenatelauncher.wav">
+    <Content Include="Assets\Sfx\grenatelauncher.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\Highlight.wav">
+    <Content Include="Assets\Sfx\Highlight.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\laser blast.wav">
+    <Content Include="Assets\Sfx\laser blast.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\Laser PL013.wav">
+    <Content Include="Assets\Sfx\Laser PL013.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\laser-loop.wav">
+    <Content Include="Assets\Sfx\laser-loop.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\laser.wav">
+    <Content Include="Assets\Sfx\laser.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\pickup1.wav">
+    <Content Include="Assets\Sfx\pickup1.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\pickup2.wav">
+    <Content Include="Assets\Sfx\pickup2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\pickup3 long.wav">
+    <Content Include="Assets\Sfx\pickup3 long.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\Select.wav">
+    <Content Include="Assets\Sfx\Select.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sfx\simple shot.wav">
+    <Content Include="Assets\Sfx\simple shot.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TODO.txt" />
@@ -242,6 +242,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

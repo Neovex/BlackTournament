@@ -9,11 +9,11 @@ using SFML.Graphics;
 
 namespace BlackTournament.GameStates
 {
-    public class Intro : BaseGamestate
+    public class TournamentIntro : BaseGamestate
     {
         private GameText _Text;
 
-        public Intro(Core core) : base(core)
+        public TournamentIntro(Core core) : base(core)
         {
         }
 

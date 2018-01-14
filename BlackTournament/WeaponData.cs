@@ -12,17 +12,17 @@ namespace BlackTournament
     {
         private const int _INF = 100000;
 
-        public static readonly WeaponData DrakePrimary = new WeaponData(14.3f, 200, 0.075f, _INF, 0, 0, Geometry.Line); // Fix ttl for raycaster
+        public static readonly WeaponData DrakePrimary = new WeaponData(14.3f, 200, 0.075f, _INF, 0, 0, Geometry.Line);
         public static readonly WeaponData DrakeSecundary = new WeaponData(35, 2, 0.7f, 0, 500, 2, Geometry.Point);
 
-        public static readonly WeaponData HedgeshockPrimary = new WeaponData(10, 180, 0.0666f, 280, 0, 0, Geometry.Line); // Fix ttl for raycaster
-        public static readonly WeaponData HedgeshockSecundary = new WeaponData(1, 6, 0.3f, 0, 300, 3, Geometry.Circle); // fix penetration damage
+        public static readonly WeaponData HedgeshockPrimary = new WeaponData(10, 180, 0.0666f, 280, 0, 0, Geometry.Line);
+        public static readonly WeaponData HedgeshockSecundary = new WeaponData(1, 6, 0.3f, 0, 300, 3, Geometry.Circle); // check penetration damage
 
         public static readonly WeaponData ThumperPrimary = new WeaponData(DrakeSecundary.Damage, 10, 0.5f, 0, DrakeSecundary.Speed, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
         public static readonly WeaponData ThumperSecundary = new WeaponData(0, 100, 0.5f, 70, 0, 0, Geometry.Circle); // Fix ttl for thumper
 
-        public static readonly WeaponData TitandrillPrimary = new WeaponData(8, 30, 0.2f, 500, 0, 0, Geometry.Line); // Fix ttl for raycaster
-        public static readonly WeaponData TitandrillSecundary = new WeaponData(99, 1, 1, _INF, 0, 0, Geometry.Line); // Fix ttl for raycaster
+        public static readonly WeaponData TitandrillPrimary = new WeaponData(8, 30, 0.2f, 500, 0, 0, Geometry.Line);
+        public static readonly WeaponData TitandrillSecundary = new WeaponData(99, 1, 1, _INF, 0, 0, Geometry.Line);
 
 
         public static Weapon CreateWeaponFrom(PickupType pickup)
