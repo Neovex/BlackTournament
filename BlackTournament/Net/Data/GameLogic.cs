@@ -196,7 +196,7 @@ namespace BlackTournament.Net.Data
                 // Handle Collisions
                 if (!player.Dead)
                 {
-                    foreach (var wall in _Map.WallCollider) // Fix player stuck in wall issue
+                    foreach (var wall in _Map.WallCollider) // Fix player glued to wall issue
                     {
                         if (player.Collision.Collide(wall))
                         {
@@ -205,8 +205,7 @@ namespace BlackTournament.Net.Data
                     }
                     foreach (var otherPlayer in _Players)
                     {
-                        if (!otherPlayer.Dead
-                            && otherPlayer != player
+                        if (!otherPlayer.Dead && otherPlayer != player
                             && player.Collision.Collide(otherPlayer.Collision))
                         {
                             player.Collision.Position = player.Position;

@@ -40,7 +40,7 @@ namespace BlackTournament.GameStates
             //IntersectionTest();
             //ShaderTest();
             
-            music = MusicManager.Load("Ten_Seconds_to_Rush");
+            music = MusicLoader.Load("Ten_Seconds_to_Rush");
             music.Volume = 15;
             //music.Play();
 
@@ -62,7 +62,7 @@ namespace BlackTournament.GameStates
             };
             Layer_Game.AddChild(_Circle);
 
-            Input.MouseButtonPressed += Input_MouseButtonPressed;
+            _Core.Input.MouseButtonPressed += Input_MouseButtonPressed;
         }
 
         private void Input_MouseButtonPressed(SFML.Window.Mouse.Button obj)
@@ -82,19 +82,19 @@ namespace BlackTournament.GameStates
                         OutlineThickness = 0.5f
                     };
                     Layer_Game.AddChild(r);
-                    _Core.AnimationManager.Run(0, 90, 0.5f, v => r.Rotation = v, onComplete: a => Layer_Game.RemoveChild(r));
+                    _Core.AnimationManager.Run(0, 90, 0.5f, v => r.Rotation = v, () => Layer_Game.RemoveChild(r));
                 }
             }
             else
             {
-                _Ray.Start.Position = Input.MousePosition;
+                _Ray.Start.Position = _Core.Input.MousePosition;
             }
         }
 
         private void ShaderTest()
         {
-            TextureManager.RootFolder = "Assets";
-            var tex = TextureManager.Load("AztekTiles");
+            TextureLoader.RootFolder = "Assets";
+            var tex = TextureLoader.Load("AztekTiles");
             Log.Fatal("Shader Available: ", Shader.IsAvailable); // fixme
 
             _Shader = new Shader(null, @"C:\Users\Fox\Desktop\blur.frag"); // Wrap into effect class?
@@ -109,7 +109,7 @@ namespace BlackTournament.GameStates
             _BlurTest.RenderState = state;
             Layer_Game.AddChild(_BlurTest);
 
-            Input.KeyPressed += (k) =>
+            _Core.Input.KeyPressed += (k) =>
             {
                 if (k == SFML.Window.Keyboard.Key.Up)
                 {
@@ -132,7 +132,7 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            //_Ray.End.Position = VectorExtensions.VectorFromAngle(_Ray.Start.Position.AngleTowards(Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
+            //_Ray.End.Position = VectorExtensions.VectorFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
         }
 
         protected override void Destroy()

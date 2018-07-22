@@ -1,10 +1,11 @@
 ﻿using System;
+using BlackCoat;
 using BlackCoat.InputMapping;
 using SFML.Window;
 
 namespace BlackTournament.Systems
 {
-    // TODO : consider adding to engine as core system
+    // TODO : consider adding to engine as a core system
     public class InputMapper
     {
         private SimpleInputMap<GameAction> _CurrentMapping;
@@ -14,12 +15,6 @@ namespace BlackTournament.Systems
         /// Gets the a default mapping that fits most use cases
         /// </summary>
         public SimpleInputMap<GameAction> DefaultMapping { get; private set; }
-
-        /// <summary>
-        /// Gets and sets the exclusive listener.
-        /// WARNING: As long as the ExclusiveListener is not null the Action Event will not be raised!
-        /// </summary>
-        public Action<GameAction, Boolean> ExclusiveListener { get; private set; }
 
 
         /// <summary>
@@ -37,10 +32,11 @@ namespace BlackTournament.Systems
             }
         }
 
+        public Input Input { get; private set; }
+
 
         /// <summary>
         /// Occurs when a user input was mapped to a game-action based on the current input mapping.
-        /// WARNING: As long as the ExclusiveListener is not null the Action Event will not be raised!
         /// </summary>
         public event Action<GameAction, Boolean> Action = (a, b) => { };
 
@@ -48,8 +44,9 @@ namespace BlackTournament.Systems
         /// <summary>
         /// Initializes a new instance of the <see cref="InputMapper"/> class.
         /// </summary>
-        public InputMapper()
+        public InputMapper(Input input)
         {
+            Input = input;
             Log.Debug(nameof(InputMapper), "created");
             CreateDefaultInputMap(); // Fixme: load from file at some point
             CurrentMapping = DefaultMapping;
@@ -58,7 +55,7 @@ namespace BlackTournament.Systems
 
         private void CreateDefaultInputMap()
         {
-            DefaultMapping = new SimpleInputMap<GameAction>("Default");
+            DefaultMapping = new SimpleInputMap<GameAction>(Input, "Default");
 
             // Movement
             DefaultMapping.AddKeyboardMapping(Keyboard.Key.W, GameAction.MoveUp);
@@ -87,7 +84,7 @@ namespace BlackTournament.Systems
 
         private void HandleInput(GameAction action, Boolean activate)
         {
-            (ExclusiveListener ?? Action).Invoke(action, activate);
+            Action.Invoke(action, activate);
         }
     }
 }

@@ -3,48 +3,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SFML.System;
 using SFML.Graphics;
 using BlackCoat;
-using BlackCoat.Entities.Shapes;
-using SFML.System;
+using BlackCoat.ParticleSystem;
 
 namespace BlackTournament.GameStates
 {
     class TestState : BaseGamestate
     {
-        private Line _Line;
-        private Line[] _Lines;
-        private Circle _Circle;
+        private ParticleEmitterHost _Host;
+        private BasicPixelEmitter _Emitter;
 
-        public TestState(Core core) : base(core)
+        private SfxManager _Sfx;
+        private int _SfxIndex;
+
+        public TestState(Core core) : base(core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
-            _Lines = new Line[1];
         }
 
         protected override bool Load()
         {
-            Layer_Overlay.AddChild(_Line = new Line(_Core, new Vector2f(), new Vector2f(), Color.Red));
-            _Line.Start.Color = Color.Yellow;
+            _Host = new ParticleEmitterHost(_Core);
+            //Layer_Game.AddChild(_Host);
 
-            for (int i = 0; i < _Lines.Length; i++)
+            _Host.AddEmitter(_Emitter = new BasicPixelEmitter(_Core)
             {
-                _Lines[i] = new Line(_Core, _Core.Random.NextVector(0, _Core.DeviceSize.X), _Core.Random.NextVector(0, _Core.DeviceSize.X), Color.Cyan);
-                Layer_Game.AddChild(_Lines[i]);
-            }
+                DefaultTTL = 4,
+                ParticlesPerSpawn = 1,
+                Position = _Core.DeviceSize.ToVector2f() / 2,
+                SpawnRate = 0.0001f,
+                Loop = true,
+                Velocity = new Vector2f(100, 150),
+                Acceleration = new Vector2f(0, 100),
+                Color = Color.White
+            });
+            _Core.Input.MouseButtonPressed += Input_MouseButtonPressed;
+            ChangeColor();
 
-            _Circle = new Circle(_Core)
-            {
-                OutlineThickness = 1,
-                OutlineColor = Color.White,
-                FillColor = Color.Transparent,
-                Radius = 200,
-                Position = _Core.DeviceSize.ToVector2f() / 2
-            };
-            Layer_Game.AddChild(_Circle);
 
-            Input.MouseButtonPressed += Input_MouseButtonPressed;
-
+            // Snd
+            _Sfx = new SfxManager(SfxLoader);
+            _Sfx.LoadFromDirectory();
+            foreach (var sfx in Files.GAME_SFX) _Sfx.AddToLibrary(sfx, 100, true);
             return true;
+        }
+
+        private void ChangeColor()
+        {
+            _Emitter.Color = new Color((byte)(255*_Core.Random.NextFloat(0, 3)/3), (byte)(255 * _Core.Random.NextFloat(0, 3) / 3), (byte)(255 * _Core.Random.NextFloat(0, 3) / 3));
+            //_Core.AnimationManager.Wait(1.5f, ChangeColor);
         }
 
         private void Input_MouseButtonPressed(SFML.Window.Mouse.Button btn)
@@ -52,55 +60,33 @@ namespace BlackTournament.GameStates
             switch (btn)
             {
                 case SFML.Window.Mouse.Button.Left:
-                    SetPoint(Input.MousePosition);
+                    //_Emitter.Position = _Core.Input.MousePosition;
+                    //SFML.Audio.Listener.Direction = new Vector3f(0, 1, 0);
+                    SFML.Audio.Listener.Position = _Core.DeviceSize.ToVector2f().ToVector3f()/2;
+                    //SFML.Audio.Listener.Position += new Vector3f(0, 10, 0);
+                    var position = _Core.Input.MousePosition;
+                    _Sfx.Play(Files.GAME_SFX.ElementAt(_SfxIndex % Files.GAME_SFX.Count), position);
+                    Log.Debug(SFML.Audio.Listener.Position, position);
                     break;
+
                 case SFML.Window.Mouse.Button.Right:
-                    RandomizeLines();
+                    //_Emitter.Trigger();
+                    _SfxIndex++;
+                    SFML.Audio.Listener.Position = _Core.Input.MousePosition.ToVector3f();
+                    Log.Debug(SFML.Audio.Listener.Position);
                     break;
-                case SFML.Window.Mouse.Button.Middle:
-                    break;
-                case SFML.Window.Mouse.Button.XButton1:
-                    break;
-                case SFML.Window.Mouse.Button.XButton2:
-                    break;
-                case SFML.Window.Mouse.Button.ButtonCount:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void SetPoint(Vector2f mousePosition)
-        {
-            Layer_Particles.Clear();
-
-            if (Input.IsKeyDown(SFML.Window.Keyboard.Key.LControl))
-                 _Line.Start.Position = mousePosition;
-            else _Line.End.Position = mousePosition;
-
-            foreach (var intersect in _Lines.SelectMany(ln => _Core.CollisionSystem.Raycast(_Line.Start.Position, _Line.Start.Position.AngleTowards(_Line.End.Position), ln)))
-            {
-                Layer_Particles.AddChild(new Rectangle(_Core) { Size = new Vector2f(3, 8), Color = Color.Magenta, Position = intersect });
-            }
-
-            foreach (var intersect in _Core.CollisionSystem.Raycast(_Line.Start.Position, _Line.Start.Position.AngleTowards(_Line.End.Position), _Circle))
-            {
-                Layer_Particles.AddChild(new Rectangle(_Core) { Size = new Vector2f(3, 8), Color = Color.Yellow, Position = intersect });
-            }
-
-        }
-
-        private void RandomizeLines()
-        {
-            foreach (var line in _Lines)
-            {
-                line.Start.Position = _Core.Random.NextVector(0, _Core.DeviceSize.X);
-                line.End.Position = _Core.Random.NextVector(0, _Core.DeviceSize.X);
             }
         }
 
         protected override void Update(float deltaT)
         {
+            //_Emitter.Rotation += deltaT * 1000;
+            //_Emitter.Velocity = VectorExtensions.VectorFromAngle(_Emitter.Rotation, 100);
+
+            _Emitter.Velocity = VectorExtensions.VectorFromAngle(_Core.Random.NextFloat(0,360), 100);
+            ChangeColor();
+
+            if (_Core.Input.IsLMButtonDown()) _Emitter.Position = _Core.Input.MousePosition;
         }
 
         protected override void Destroy()

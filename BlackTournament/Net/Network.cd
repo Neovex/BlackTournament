@@ -1,16 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Lidgren -&gt;">
+    <Position X="0.5" Y="0.677" Height="0.291" Width="0.794" />
+  </Comment>
+  <Comment CommentText="Black Coat Network Generics">
+    <Position X="4.917" Y="1.417" Height="0.291" Width="1.919" />
+  </Comment>
+  <Comment CommentText="Black Tournament Network Implementation">
+    <Position X="4.542" Y="5.781" Height="0.291" Width="2.648" />
+  </Comment>
   <Class Name="BlackTournament.Net.Client.Client&lt;TEnum&gt;" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="2" />
+    <Position X="1.5" Y="3" Width="2" />
+    <AssociationLine Name="_Client" Type="Lidgren.Network.NetClient">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.773" Y="0.131" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAgAAAQAAAAEgAAIAAAAAAAEAAAAAAAgAAAAA=</HashCode>
+      <HashCode>AAQAAAAAgAAAQABAAEgAAIAAAAAAAEAAAAAAAgAAAAA=</HashCode>
       <FileName>Net\Client\Client.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Net.Client.ManagedClient&lt;TEnum&gt;" Collapsed="true">
-    <Position X="0.5" Y="3.25" Width="2" />
+    <Position X="1.5" Y="4.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAUQIAQAAAIAACAJAACAAIAAAAAAAIAIAABAA=</HashCode>
+      <HashCode>AAACAAAAUQKAAAAAIAACEJAACAAIAAAAAAAIAoAABAA=</HashCode>
       <FileName>Net\Client\ManagedClient.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -21,9 +38,14 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackTournament.Net.Server.ManagedServer&lt;TEnum&gt;" Collapsed="true">
-    <Position X="7.25" Y="3.25" Width="2" />
+    <Position X="8.25" Y="4.5" Width="2" />
+    <AssociationLine Name="_ConnectedClients" Type="BlackTournament.Net.Server.ServerUser&lt;TChannel&gt;">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.025" Y="0.175" Height="0.182" Width="1.36" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAA0AAAAAAAIAgCABAAAAAAAgAAAAAIQAAACAA=</HashCode>
+      <HashCode>AAAAAAAA0AAAAAAAIAgCABAAAAAAAgAAAAAIQAAAAAA=</HashCode>
       <FileName>Net\Server\ManagedServer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -34,44 +56,57 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackTournament.Net.Server.Server&lt;TEnum&gt;" Collapsed="true">
-    <Position X="7.25" Y="1.75" Width="2" />
+    <Position X="8.25" Y="3" Width="2" />
+    <AssociationLine Name="_Server" Type="Lidgren.Network.NetServer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.131" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQBAACAgAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Server\Server.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Server" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Net.Server.ServerUser&lt;TChannel&gt;" Collapsed="true">
-    <Position X="4" Y="3.25" Width="1.75" />
+    <Position X="4.75" Y="4.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Server\ServerUser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
-    <Position X="0.5" Y="4.75" Width="2" />
+    <Position X="1.5" Y="6" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEB0AAAQABAACACAAAAQRAICAEAAACAAwAAABA=</HashCode>
+      <HashCode>AQQAAAEQ0AAAYAAAACUCEAAASRAsDEEAACCAAwgABAA=</HashCode>
       <FileName>Net\BlackTournamentClient.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.BlackTournamentServer" Collapsed="true">
-    <Position X="7.25" Y="4.75" Width="2" />
+    <Position X="8.25" Y="6" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQAAEAAAAAIAABAAAAA=</HashCode>
+      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQIAEAAAAAIIABAAAAA=</HashCode>
       <FileName>Net\BlackTournamentServer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.Commands&lt;TEnum&gt;" Collapsed="true">
-    <Position X="4" Y="5" Width="1.75" />
+    <Position X="5" Y="6.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Commands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.Net" Collapsed="true">
-    <Position X="4" Y="6" Width="1.75" />
+    <Position X="3.75" Y="7.25" Width="1.75" />
+    <AssociationLine Name="COMMANDS" Type="BlackTournament.Net.Commands&lt;TEnum&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.057" Y="0.102" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAggAAgAAAAAAAAAAAAAAAABAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAggABgAgAAAAAAAAAAAAAABAAAAAAAAAAI=</HashCode>
       <FileName>Net\Net.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -79,24 +114,59 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;" Collapsed="true">
-    <Position X="4" Y="0.5" Width="1.75" />
+    <Position X="5" Y="2" Width="1.75" />
+    <NestedTypes>
+      <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;.Format" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Net\NetBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAgSAAAAAAAAgAAAAAAAAEAAKAAAgAAAACAAA=</HashCode>
       <FileName>Net\NetBase.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <ShowAsAssociation>
+      <Field Name="_BasePeer" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.106" />
   </Class>
   <Class Name="BlackTournament.Net.User" Collapsed="true">
-    <Position X="4" Y="1.75" Width="1.75" />
+    <Position X="5" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\User.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="BlackTournament.Net.NetMessage">
-    <Position X="9.75" Y="0.5" Width="1.5" />
+  <Class Name="Lidgren.Network.NetClient" Collapsed="true">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="Lidgren.Network.NetPeer" FixedFromPoint="true">
+      <Path>
+        <Point X="5" Y="0.812" />
+        <Point X="3" Y="0.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Lidgren.Network.NetServer" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="Lidgren.Network.NetPeer" FixedFromPoint="true">
+      <Path>
+        <Point X="6.75" Y="0.812" />
+        <Point X="8.75" Y="0.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Lidgren.Network.NetPeer" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Enum Name="BlackTournament.Net.NetMessage" Collapsed="true">
+    <Position X="6.25" Y="7.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAQAAAABAAAAACACAAUQAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAQAAAAAQAAAABAAAAACACAAUQAAAAAAAAACAQAAAAA=</HashCode>
       <FileName>Net\NetMessage.cs</FileName>
     </TypeIdentifier>
   </Enum>

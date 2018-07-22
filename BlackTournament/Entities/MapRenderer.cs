@@ -68,6 +68,11 @@ namespace BlackTournament.Entities
             _Vertices[index + 3] = v;
         }
 
+        public override void Update(float deltaT)
+        {
+            // nothing to do here
+        }
+
         public override void Draw()
         {
             _Core.Draw(this);

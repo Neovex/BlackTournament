@@ -23,7 +23,6 @@ namespace BlackTournament.Net
         public ClientPlayer Player { get; private set; }
         public float PlayerRotation { get; set; }
 
-        public Boolean IsConnected => _BasePeer.ConnectionsCount != 0;
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
@@ -32,8 +31,8 @@ namespace BlackTournament.Net
 
 
         // Connection Events
-        public event Action ConnectionEstablished = () => { };
-        public event Action ConnectionLost = () => { };
+        public event Action OnConnect = () => { };
+        public event Action OnDisconnect = () => { };
 
         // Game Events
         public event Action<ClientPlayer> UserJoined = u => { };
@@ -56,11 +55,11 @@ namespace BlackTournament.Net
         // CONTROL
         internal void Update(float deltaT)
         {
+            // Process incoming data
+            ProcessMessages();
+
             if (IsConnected)
             {
-                // Process incoming data
-                ProcessMessages();
-
                 // Update Rotation on Server (~60Hz)
                 _UpdateImpulse += deltaT;
                 if (_UpdateImpulse >= Net.UPDATE_IMPULSE && Player != null)
@@ -273,18 +272,17 @@ namespace BlackTournament.Net
             _ShotLookup = new Dictionary<int, Shot>();
             _Effects = new List<Effect>();
 
-            ConnectionEstablished.Invoke();
+            OnConnect.Invoke();
         }
 
         protected override void Connected()
         {
-            base.Disconnected();
             // Not used. A connection is communicated only after validation. See ConnectionValidated(int id, string alias)
         }
         protected override void Disconnected()
         {
             base.Disconnected();
-            ConnectionLost.Invoke();
+            OnDisconnect.Invoke();
         }
     }
 }

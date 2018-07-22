@@ -7,6 +7,11 @@ using Lidgren.Network;
 
 namespace BlackTournament.Net
 {
+    /// <summary>
+    /// Base class of the entire network system - handles message procession via <see cref="Lidgren"/> Network which is identical for server and client.
+    /// </summary>
+    /// <typeparam name="TEnum">The type of the command enumeration for communication.</typeparam>
+    /// <seealso cref="System.IDisposable" />
     public abstract class NetBase<TEnum> : IDisposable where TEnum : struct, IComparable, IFormattable, IConvertible
     {
         protected const NetDeliveryMethod _DEFAULT_METHOD = NetDeliveryMethod.ReliableOrdered;

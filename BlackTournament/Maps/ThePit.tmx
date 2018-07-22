@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" backgroundcolor="#000000" nextobjectid="61">
  <tileset firstgid="1" name="AztekTiles" tilewidth="128" tileheight="128" tilecount="380" columns="10">
-  <image source="../Assets/AztekTiles.png" width="1280" height="4864"/>
+  <image source="../Assets/Textures/AztekTiles.png" width="1280" height="4864"/>
  </tileset>
  <layer name="Tiles" width="30" height="28">
   <properties>

@@ -64,6 +64,7 @@
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\GameText.cs" />
+    <Compile Include="Files.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Entities\MapRenderer.cs" />
     <Compile Include="GameStates\TestState.cs" />
@@ -118,6 +119,27 @@
     <None Include="Assets\Fonts\HighlandGothicLightFLF.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Assets\Music\Industrial_Rage.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Invading_a_Submarine.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Its_Totally_and_Completely_Barbaric.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Teks_Abomination.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Third_Level_Encryption.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Venting_Your_Spleen_on_Low_B.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Music\Wall_of_Anger.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Tmx\Tmx.cd" />
     <None Include="Maps\ld.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -144,6 +166,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Sfx\laserblastshort.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\AztekTiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -187,13 +212,7 @@
     <Content Include="Assets\Sfx\Highlight.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sfx\laser blast.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\Sfx\Laser PL013.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\laser-loop.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sfx\laser.wav">

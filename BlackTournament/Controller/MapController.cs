@@ -61,7 +61,7 @@ namespace BlackTournament.Controller
         public void Activate(BlackTournamentClient client)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
-            if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
+            if (_Client != null || _State != null) throw new InvalidStateException();
 
             // Init
             _Client = client;
@@ -79,7 +79,7 @@ namespace BlackTournament.Controller
         private void AttachEvents()
         {
             // Connection Events
-            _Client.ConnectionLost += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
+            _Client.OnDisconnect += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
             // Game Events
             _Client.Player.Fragged += HandlePlayerFragged;
             _Client.ChangeLevelReceived += HandleServerMapChange;
@@ -94,14 +94,14 @@ namespace BlackTournament.Controller
                 pickup.ActiveStateChanged += HandlePickupStateChanged;
             }
             // System Events
-            Input.MouseMoved += Input_MouseMoved;
+            _Game.InputMapper.Input.MouseMoved += Input_MouseMoved;
             _Game.InputMapper.Action += HandleInput;
         }
 
         private void DetachEvents()
         {
             // Connection Events
-            _Client.ConnectionLost -= HandleConnectionLost;
+            _Client.OnDisconnect -= HandleConnectionLost;
             // Game Events
             _Client.Player.Fragged -= HandlePlayerFragged;
             _Client.ChangeLevelReceived -= HandleServerMapChange;
@@ -116,7 +116,7 @@ namespace BlackTournament.Controller
                 pickup.ActiveStateChanged -= HandlePickupStateChanged;
             }
             // System Events
-            Input.MouseMoved -= Input_MouseMoved;
+            _Game.InputMapper.Input.MouseMoved -= Input_MouseMoved;
             _Game.InputMapper.Action -= HandleInput;
         }
 

@@ -21,21 +21,19 @@ namespace BlackTournament.GameStates
     class MapState : BaseGamestate
     {
         private TmxMapper _MapData;
+        private SfxManager _Sfx;
 
-        private View _View;
         private Dictionary<int, IEntity> _EnitityLookup;
+        private View _View;
         private IEntity _LocalPlayer;
 
         public Vector2f ViewMovement { get; set; }
-
-
-        //tmp
-        private Sound _PickupSfxTMP;
-
+        
 
         public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
+            _Sfx = new SfxManager(SfxLoader);
             _EnitityLookup = new Dictionary<int, IEntity>();
         }
 
@@ -49,7 +47,7 @@ namespace BlackTournament.GameStates
             _Core.ClearColor = _MapData.ClearColor;
             foreach (var layer in _MapData.TileLayers)
             {
-                var mapTex = TextureManager.Load(layer.TextureName);
+                var mapTex = TextureLoader.Load(layer.TextureName);
                 var mapLayer = new MapRenderer(_Core, _MapData.Size, mapTex, _MapData.TileSize);
                 mapLayer.Position = layer.Offset;
 
@@ -65,9 +63,13 @@ namespace BlackTournament.GameStates
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
 
+
+            // Load Sounds
+            _Sfx.LoadFromDirectory();
+            // Setup Sounds
+            foreach (var sfx in Files.GAME_SFX) _Sfx.AddToLibrary(sfx, 100, true); // doublecheck
+
             // TESTING ############################################
-            
-            _PickupSfxTMP = new Sound(SfxManager.Load("pickup1"));
 
             // Debug Views
             var wallColor = new Color(155, 155, 155, 155);
@@ -115,7 +117,10 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            _View.Center += ViewMovement * 2000 * deltaT; // spectator view movement
+            // spectator movement
+            _View.Center += ViewMovement * 2000 * deltaT;
+            // Update listener position for spatial sounds
+            Listener.Position = _View.Center.ToVector3f();
         }
 
         protected override void Destroy()
@@ -126,7 +131,7 @@ namespace BlackTournament.GameStates
         {
             var player = new Graphic(_Core)
             {
-                Texture = TextureManager.Load("CharacterBase"),
+                Texture = TextureLoader.Load("CharacterBase"),
                 Color = Color.Red,
                 View = _View,
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME!
@@ -140,7 +145,7 @@ namespace BlackTournament.GameStates
 
         public void CreatePickup(int id, PickupType type, Vector2f position, bool visible)
         {
-            var tex = TextureManager.Load(type.ToString());
+            var tex = TextureLoader.Load(type.ToString());
             var entity = new Graphic(_Core)
             {
                 Texture = tex,
@@ -168,6 +173,8 @@ namespace BlackTournament.GameStates
 
         public void CreateEffect(EffectType effectType, Vector2f position, PickupType pickup, bool primaryFire)
         {
+            Listener.Position = _View.Center.ToVector3f(); // update listener position to avoid net offset
+
             switch (effectType)
             {
                 case EffectType.Environment:
@@ -175,7 +182,7 @@ namespace BlackTournament.GameStates
                     break;
 
                 case EffectType.Impact:
-                    var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx
+                    var entity = new Rectangle(_Core) // todo : replace debug view with proper shell/emitter fx
                     {
                         Position = position,
                         Size = new Vector2f(10, 10),
@@ -183,14 +190,25 @@ namespace BlackTournament.GameStates
                     };
                     Layer_Game.AddChild(entity);
                     _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: entity);
-
-                    Listener.Position = new Vector3f(_LocalPlayer.Position.X, _LocalPlayer.Position.Y, 0);
-                    _PickupSfxTMP.Position = new Vector3f(position.X, position.Y, 0);
-                    _PickupSfxTMP.Play();
                     break;
 
                 case EffectType.Gunfire:
-                    //Audio.PlayGunfire(position, pickup, primaryFire);
+                    switch (pickup)
+                    {
+                        case PickupType.Drake:
+                            _Sfx.Play(primaryFire ? Files.Sfx_Simpleshot : Files.Sfx_Grenatelauncher, position);
+                            break;
+                        case PickupType.Hedgeshock:
+                            _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
+                            break;
+                        case PickupType.Thumper:
+                            _Sfx.Play(Files.Sfx_Grenatelauncher, position);
+                            break;
+                        case PickupType.Titandrill:
+                            _Sfx.Play(Files.Sfx_Laserblast, position); // fixme
+                            break;
+                    }
+
                     break;
             }
         }

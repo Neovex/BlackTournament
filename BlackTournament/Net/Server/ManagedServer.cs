@@ -41,7 +41,7 @@ namespace BlackTournament.Net.Server
         {
             var user = new ServerUser<NetConnection>(GetNextFreeClientID(), connection, ValidateName(connection.RemoteHailMessage.ReadString()));
 
-            // Accept Client - respond with designated id, validated alias and the list of other connected users
+            // Accept Client - respond with assigned id, validated alias and the list of other connected users
             Send(user.Connection, _Commands.Handshake, new Action<NetOutgoingMessage>(m => 
             {
                 m.Write(user.Id);
