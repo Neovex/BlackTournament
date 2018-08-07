@@ -79,7 +79,8 @@ namespace BlackTournament.Controller
         private void AttachEvents()
         {
             // Connection Events
-            _Client.OnDisconnect += HandleConnectionLost;// _Client.ConnectionEstablished not required - connection already established when entering map state
+            // _Client.ConnectionEstablished not required - connection already established when entering map state
+            _Client.OnDisconnect += HandleConnectionLost;
             // Game Events
             _Client.Player.Fragged += HandlePlayerFragged;
             _Client.ChangeLevelReceived += HandleServerMapChange;
@@ -162,7 +163,7 @@ namespace BlackTournament.Controller
             }
             else
             {
-                // another one bites the dust uh yea
+                // another one bites the dust, uh yeah
             }
         }
 
@@ -198,7 +199,7 @@ namespace BlackTournament.Controller
 
             foreach (var efx in _Client.Effects)
             {
-                _State.CreateEffect(efx.EffectType, efx.Position, efx.Source, efx.Primary);
+                _State.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Length);
             }
         }
 
@@ -218,7 +219,7 @@ namespace BlackTournament.Controller
 
         private void HandleShotFired(Shot shot)
         {
-            _State.CreateShot(shot.Id, shot.SourceWeapon, shot.Position, shot.Direction);
+            _State.CreateProjectile(shot.Id, shot.SourceWeapon, shot.Position, shot.Direction, shot.Primary);
         }
 
         private void HandleShotRemoved(Shot shot)
@@ -228,7 +229,7 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition);
+            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition)-2;
             _State.RotatePlayer(_Client.PlayerRotation); // update state
         }
 

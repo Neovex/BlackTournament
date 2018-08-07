@@ -1,15 +1,6 @@
-﻿
-# implement map renderer see layername lookup in layerproperty 4 ease
-
-# complete input abstraction layer - key to action mapping - editable (maybe check tf3 for that)
-
-# server pure data abstraction layer - poco game data 4 serialization
-
-# create collision backend
-
-server game logic
+﻿server game logic
 # - static collisions
-UC - dynamic collision (dyn to dyn)
+# - dynamic collision (dyn to dyn)
 
 client game logic
 X - static collisions (dyn to stat where dyn is owned by local)
@@ -25,24 +16,30 @@ idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
 
-fix missing keyup event on focus loss?!
+# fix missing key-up event on focus loss?!
 
 
 #add id-d shots & 
 #pickups to serialization chain
 
-UC create game data from parsed mapdata?
+UC create game data from parsed map data?
 
 create basic UI elements
 
 add MD5 comparison against map tampering / versioning
 
 
-#Network data brainstorm
+Network data brainstorm MK2 >> delay mechanisms
+
+Operations:
+-Object Move
+-Weapon Change
+-Weapon Fire
+-Collision
 
 Type
 id
-xyr
+x,y,r
 active
 health
 shield

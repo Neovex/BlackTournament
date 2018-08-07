@@ -42,6 +42,7 @@ namespace BlackTournament.GameStates
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize.ToVector2f()));
             Layer_BG.View = _View;
+            Layer_Game.View = _View;
 
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
@@ -133,7 +134,6 @@ namespace BlackTournament.GameStates
             {
                 Texture = TextureLoader.Load("CharacterBase"),
                 Color = Color.Red,
-                View = _View,
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME!
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
@@ -150,7 +150,6 @@ namespace BlackTournament.GameStates
             {
                 Texture = tex,
                 Scale = new Vector2f(0.4f, 0.4f), // FIXME!
-                View = _View,
                 Position = position,
                 Origin = tex.Size.ToVector2f() / 2,
                 Visible = visible
@@ -159,26 +158,54 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(entity);
         }
 
-        public void CreateShot(int id, PickupType type, Vector2f position, float rotation)
+        public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
         {
-            var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx
+            if (primary) //csh
+            {
+                switch (type)
+                {
+                    case PickupType.Drake:
+                        break;
+                    case PickupType.Hedgeshock:
+                        break;
+                    case PickupType.Thumper:
+                        break;
+                    case PickupType.Titandrill:
+                        break;
+                }
+            }
+            else
+            {
+                switch (type)
+                {
+                    case PickupType.Drake:
+                        break;
+                    case PickupType.Hedgeshock:
+                        break;
+                    case PickupType.Thumper:
+                        break;
+                    case PickupType.Titandrill:
+                        break;
+                }
+            }
+
+            var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx (siehe oben)
             {
                 Position = position,
-                Size = new Vector2f(250, 2),
+                Size = new Vector2f(20, 20),
+                Origin = new Vector2f(10,10),
                 Color = Color.Red
             };
             _EnitityLookup.Add(id, entity);
             Layer_Game.AddChild(entity);
         }
 
-        public void CreateEffect(EffectType effectType, Vector2f position, PickupType pickup, bool primaryFire)
+        public void CreateEffect(EffectType effect, Vector2f position, float rotation, PickupType source, bool primary, float length = 0)
         {
-            Listener.Position = _View.Center.ToVector3f(); // update listener position to avoid net offset
-
-            switch (effectType)
+            switch (effect)
             {
                 case EffectType.Environment:
-                    //NA
+                    // None yet
                     break;
 
                 case EffectType.Impact:
@@ -186,29 +213,54 @@ namespace BlackTournament.GameStates
                     {
                         Position = position,
                         Size = new Vector2f(10, 10),
-                        Color = Color.Yellow
+                        Origin = new Vector2f(5, 5),
+                        Color = Color.Yellow,
+                        Alpha = 0.5f
                     };
                     Layer_Game.AddChild(entity);
                     _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: entity);
                     break;
 
                 case EffectType.Gunfire:
-                    switch (pickup)
+                    if (primary)
                     {
-                        case PickupType.Drake:
-                            _Sfx.Play(primaryFire ? Files.Sfx_Simpleshot : Files.Sfx_Grenatelauncher, position);
-                            break;
-                        case PickupType.Hedgeshock:
-                            _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
-                            break;
-                        case PickupType.Thumper:
-                            _Sfx.Play(Files.Sfx_Grenatelauncher, position);
-                            break;
-                        case PickupType.Titandrill:
-                            _Sfx.Play(Files.Sfx_Laserblast, position); // fixme
-                            break;
+                        switch (source)
+                        {
+                            case PickupType.Drake:
+                                var line = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, length), Color.White);
+                                Layer_Game.AddChild(line);
+                                _Core.AnimationManager.RunAdvanced(0.5f, 0, 0.2f, v => line.Alpha = v, a => Layer_Game.RemoveChild(line));
+                                _Sfx.Play(Files.Sfx_Simpleshot, position);
+                                break;
+                            case PickupType.Hedgeshock:
+                                _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
+                                break;
+                            case PickupType.Thumper:
+                                _Sfx.Play(Files.Sfx_Grenatelauncher, position);
+                                break;
+                            case PickupType.Titandrill:
+                                _Sfx.Play(Files.Sfx_Laserblast, position);
+                                break;
+                        }
                     }
-
+                    else
+                    {
+                        switch (source)
+                        {
+                            case PickupType.Drake:
+                                _Sfx.Play(Files.Sfx_Grenatelauncher, position);
+                                break;
+                            case PickupType.Hedgeshock:
+                                _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
+                                break;
+                            case PickupType.Thumper:
+                                _Sfx.Play(Files.Sfx_Grenatelauncher, position);
+                                break;
+                            case PickupType.Titandrill:
+                                _Sfx.Play(Files.Sfx_Laserblast, position); // fixme
+                                break;
+                        }
+                    }
                     break;
             }
         }

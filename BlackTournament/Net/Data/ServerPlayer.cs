@@ -9,6 +9,7 @@ using Lidgren.Network;
 using SFML.System;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
+using BlackCoat;
 
 namespace BlackTournament.Net.Data
 {
@@ -25,6 +26,7 @@ namespace BlackTournament.Net.Data
         public CircleCollisionShape Collision { get; private set; }
         public Dictionary<PickupType,Weapon> Weapons { get; private set; }
         public Weapon Weapon => Weapons[CurrentWeaponType];
+        public Vector2f WeaponSpawn => Position + VectorExtensions.VectorFromAngle(Rotation + 16, 35);
 
 
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };

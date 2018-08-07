@@ -67,36 +67,38 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            _Effects.Add(new Effect(Net.GetNextId(), EffectType.Gunfire, player.Position, player.Rotation, player.CurrentWeaponType, primaryFire));
+            var effect = new Effect(Net.GetNextId(), EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
 
             var data = primaryFire ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
             switch (data.ProjectileGeometry)
             {
                 case Geometry.Point:
                     // Spawn Shot
-                    var s = new Shot(Net.GetNextId(), player.Rotation, data.Speed, data.Damage, data.TTL, player.CurrentWeaponType, primaryFire, player.Position);
+                    var s = new Shot(Net.GetNextId(), player.Rotation, data.Speed, data.Damage, data.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
                 case Geometry.Line: // Ray caster
                     // Check Intersections, Occlusion etc. +
                     // Perform data adjustments (remove health etc.) +
-                    // Spawn effects
-                    CheckRayWeaponIntersections(player, data.Length, data.Damage, primaryFire);
+                    // Spawn impact effects
+                    CheckRayWeaponIntersections(player, data.Length, data.Damage, primaryFire, effect);
                     break;
                 case Geometry.Circle:
                     // Spawn Shot
-                    var circ = new CircleCollisionShape(_Core.CollisionSystem, player.Position, data.Length);
-                    s = new Shot(Net.GetNextId(), player.Rotation, data.Speed, data.Damage, data.TTL, player.CurrentWeaponType, primaryFire, player.Position, p => circ.Position = p, circ);
+                    var circ = new CircleCollisionShape(_Core.CollisionSystem, player.WeaponSpawn, data.Length);
+                    s = new Shot(Net.GetNextId(), player.Rotation, data.Speed, data.Damage, data.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn, p => circ.Position = p, circ);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
                 //NA: case Geometry.Rectangle:
                 //NA: case Geometry.Polygon:
                 default:
-                    Log.Error("Invalid weapon fire", data.ProjectileGeometry);
+                    Log.Error("Invalid weapon fire projectile geometry", data.ProjectileGeometry);
                     break;
             }
+
+            _Effects.Add(effect);
         }
 
         internal void ProcessGameAction(int id, GameAction action, Boolean activate)
@@ -164,11 +166,11 @@ namespace BlackTournament.Net.Data
             }
             _Shots.RemoveAll(s => !s.Alive);
 
-            // Impacts
+            // Effects
             msg.Write(_Effects.Count);
-            foreach (var impact in _Effects)
+            foreach (var effect in _Effects)
             {
-                impact.Serialize(msg);
+                effect.Serialize(msg);
             }
             _Effects.Clear();
         }
@@ -196,14 +198,14 @@ namespace BlackTournament.Net.Data
                 // Handle Collisions
                 if (!player.Dead)
                 {
-                    foreach (var wall in _Map.WallCollider) // Fix player glued to wall issue
+                    foreach (var wall in _Map.WallCollider) // Walls - Fix player glued to wall issue
                     {
                         if (player.Collision.Collide(wall))
                         {
                             player.Collision.Position = player.Position;
                         }
                     }
-                    foreach (var otherPlayer in _Players)
+                    foreach (var otherPlayer in _Players) // Players
                     {
                         if (!otherPlayer.Dead && otherPlayer != player
                             && player.Collision.Collide(otherPlayer.Collision))
@@ -211,7 +213,7 @@ namespace BlackTournament.Net.Data
                             player.Collision.Position = player.Position;
                         }
                     }
-                    foreach (var pickup in _Map.Pickups)
+                    foreach (var pickup in _Map.Pickups) // Pickups
                     {
                         if (pickup.Active && player.Collision.Collide(pickup.Collision))
                         {
@@ -224,20 +226,26 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        private float CheckRayWeaponIntersections(ServerPlayer player, float length, float damage, bool primary)
+        private void CheckRayWeaponIntersections(ServerPlayer player, float length, float damage, bool primary, Effect effect)
         {
+            // inaccuracy modification
+            var rotation = player.Rotation;
+            var weapon = primary ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
+            if (weapon.Inaccuracy != 0) rotation += _Core.Random.NextFloat(-weapon.Inaccuracy, weapon.Inaccuracy);
+
             // find first wall intersection
-            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.Position, player.Rotation, wall)).OrderBy(p => p.ToLocal(player.Position).LengthSquared()).ToArray();
+            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall))
+                                                                               .OrderBy(p => p.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray();
             
             if (wallIintersectionPoints.Length != 0)
             {
-                var impactlength = (float)wallIintersectionPoints[0].ToLocal(player.Position).Length();
+                var impactlength = (float)wallIintersectionPoints[0].ToLocal(player.WeaponSpawn).Length();
                 if (impactlength <= length)
                 {
                     // walls occlude ray weapons hence update the length for player intersections
                     length = impactlength;
                     // add impact
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, wallIintersectionPoints[0], player.Rotation, player.CurrentWeaponType, primary));
+                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
                 }
             }
 
@@ -246,21 +254,22 @@ namespace BlackTournament.Net.Data
                                           .Select(p => new
                                           {
                                               Player = p,
-                                              Intersections = _Core.CollisionSystem.Raycast(player.Position, player.Rotation, p.Collision)
-                                                              .OrderBy(i => i.ToLocal(player.Position).LengthSquared()).ToArray()
+                                              Intersections = _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, p.Collision)
+                                                              .OrderBy(i => i.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray()
                                           })
-                                          .Where(pi => pi.Intersections.Length != 0 && pi.Intersections[0].ToLocal(player.Position).Length() <= length);
+                                          .Where(pi => pi.Intersections.Length != 0 && pi.Intersections[0].ToLocal(player.WeaponSpawn).Length() <= length);
 
             //update game
             foreach (var pi in affectedPlayers)
             {
                 // add impacts
-                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, pi.Intersections[0], player.Rotation, player.CurrentWeaponType, primary));
+                _Effects.Add(new Effect(Net.GetNextId(), EffectType.Impact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
                 pi.Player.DamagePlayer(damage);
             }
 
-            return length;
+            effect.Length = length;
+            effect.Rotation = rotation;
         }
 
         private void CheckProjectileCollisions(Shot shot) // fix missing explosion damage

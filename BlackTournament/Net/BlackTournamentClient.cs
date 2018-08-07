@@ -186,7 +186,7 @@ namespace BlackTournament.Net
 
         private void ServerUpdate(NetIncomingMessage msg)
         {
-            // Effects are pure spawn info packets and exist only for a single frame hence need to be removed 
+            // Effect data are pure spawn info packets and exist only for a single frame hence need to be removed 
             _Effects.Clear();
 
             // Players
