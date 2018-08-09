@@ -234,8 +234,11 @@ namespace BlackTournament.Net
                 else
                 {
                     shot = new Shot(id, msg);
-                    _ShotLookup.Add(shot.Id, shot);
-                    ShotFired.Invoke(shot);
+                    if (shot.Alive)
+                    {
+                        _ShotLookup.Add(shot.Id, shot);
+                        ShotFired.Invoke(shot);
+                    }
                 }
             }
 

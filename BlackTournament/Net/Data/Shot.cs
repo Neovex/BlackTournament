@@ -16,8 +16,9 @@ namespace BlackTournament.Net.Data
         private Action<Vector2f> _UpdatePosition;
 
 
-        public float Damage { get; private set; }
         public float Speed { get; private set; }
+        public float Damage { get; private set; }
+        public float BlastRadius { get; private set; }
         public float TTL { get; private set; }
         public bool Alive => TTL > 0;
 
@@ -28,13 +29,19 @@ namespace BlackTournament.Net.Data
         public float Direction { get; private set; }
         public ICollisionShape Collision { get; }
 
-        public Shot(int id, float direction, float speed, float damage, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
+        public bool IsExplosive => BlastRadius != 0;
+        public bool IsBouncy => SourceWeapon == PickupType.Thumper && !Primary;
+        public bool Exploded { get; set; }
+
+
+        public Shot(int id, float direction, float speed, float damage, float blastRadius, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
         {
             _MovementVector = VectorExtensions.VectorFromAngle(direction);
             _UpdatePosition = updatePosition;
 
             Speed = speed;
             Damage = damage;
+            BlastRadius = blastRadius;
             TTL = ttl;
 
             SourceWeapon = sourceWeapon;

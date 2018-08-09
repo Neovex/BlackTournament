@@ -11,8 +11,10 @@ namespace BlackTournament.Net.Data
     public enum EffectType
     {
         Environment,
-        Impact,
-        Gunfire
+        WallImpact,
+        PlayerImpact,
+        Gunfire,
+        Explosion
     }
 
     public class Effect : NetEntityBase
@@ -22,7 +24,7 @@ namespace BlackTournament.Net.Data
         public float Rotation { get; set; }
         public PickupType Source { get; set; }
         public bool Primary { get; set; }
-        public float Length { get; set; }
+        public float Size { get; set; }
 
 
         public Effect(int id, NetIncomingMessage m) : base(id, m)
@@ -35,12 +37,12 @@ namespace BlackTournament.Net.Data
             Position = position;
         }
 
-        public Effect(int id, EffectType type, Vector2f position, float rotation, PickupType source, bool primary, float length = 0) : this(id, type, position)
+        public Effect(int id, EffectType type, Vector2f position, float rotation, PickupType source, bool primary, float size = 0) : this(id, type, position)
         {
             Rotation = rotation;
             Source = source;
             Primary = primary;
-            Length = length;
+            Size = size;
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -51,7 +53,7 @@ namespace BlackTournament.Net.Data
             Rotation = m.ReadSingle();
             Source = (PickupType)m.ReadInt32();
             Primary = m.ReadBoolean();
-            Length = m.ReadFloat();
+            Size = m.ReadFloat();
         }
 
         protected override void SerializeInternal(NetOutgoingMessage m)
@@ -63,7 +65,7 @@ namespace BlackTournament.Net.Data
             m.Write(Rotation);
             m.Write((int)Source);
             m.Write(Primary);
-            m.Write(Length);
+            m.Write(Size);
         }
     }
 }

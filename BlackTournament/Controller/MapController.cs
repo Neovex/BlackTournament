@@ -199,7 +199,7 @@ namespace BlackTournament.Controller
 
             foreach (var efx in _Client.Effects)
             {
-                _State.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Length);
+                _State.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Size);
             }
         }
 

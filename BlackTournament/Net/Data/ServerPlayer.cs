@@ -139,6 +139,7 @@ namespace BlackTournament.Net.Data
             Weapon.Release();
 
             var index = OwnedWeapons.IndexOf(CurrentWeaponType) + direction;
+            if (index < 0) index = OwnedWeapons.Count - 1;
             CurrentWeaponType = OwnedWeapons[index % OwnedWeapons.Count];
         }
 

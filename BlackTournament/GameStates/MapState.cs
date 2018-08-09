@@ -73,6 +73,7 @@ namespace BlackTournament.GameStates
             // TESTING ############################################
 
             // Debug Views
+            /*
             var wallColor = new Color(155, 155, 155, 155);
             foreach (var shape in _MapData.WallCollider) // Collision
             {
@@ -113,6 +114,7 @@ namespace BlackTournament.GameStates
                     Alpha = 0.3f
                 });
             }
+            */
             return true;
         }
 
@@ -200,16 +202,28 @@ namespace BlackTournament.GameStates
             Layer_Game.AddChild(entity);
         }
 
-        public void CreateEffect(EffectType effect, Vector2f position, float rotation, PickupType source, bool primary, float length = 0)
+        public void CreateEffect(EffectType effect, Vector2f position, float rotation, PickupType source, bool primary, float size = 0)
         {
-            switch (effect)
+            switch (effect) // todo : replace debug fx with proper shell/emitter fx
             {
                 case EffectType.Environment:
                     // None yet
                     break;
 
-                case EffectType.Impact:
-                    var entity = new Rectangle(_Core) // todo : replace debug view with proper shell/emitter fx
+                case EffectType.Explosion: // Also check grenade TTLs
+                    var explosion = new Circle(_Core)
+                    {
+                        Position = position,
+                        Radius = size,
+                        Color = Color.Yellow,
+                        Alpha = 0.5f
+                    };
+                    Layer_Game.AddChild(explosion);
+                    _Core.AnimationManager.Wait(1, a => Layer_Game.RemoveChild(a.Tag as Circle), tag: explosion);
+                    break;
+
+                case EffectType.WallImpact:
+                    var wallImpact = new Rectangle(_Core)
                     {
                         Position = position,
                         Size = new Vector2f(10, 10),
@@ -217,8 +231,11 @@ namespace BlackTournament.GameStates
                         Color = Color.Yellow,
                         Alpha = 0.5f
                     };
-                    Layer_Game.AddChild(entity);
-                    _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: entity);
+                    Layer_Game.AddChild(wallImpact);
+                    _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: wallImpact);
+                    break;
+
+                case EffectType.PlayerImpact: // TODO
                     break;
 
                 case EffectType.Gunfire:
@@ -227,11 +244,13 @@ namespace BlackTournament.GameStates
                         switch (source)
                         {
                             case PickupType.Drake:
-                                var line = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, length), Color.White);
-                                Layer_Game.AddChild(line);
-                                _Core.AnimationManager.RunAdvanced(0.5f, 0, 0.2f, v => line.Alpha = v, a => Layer_Game.RemoveChild(line));
                                 _Sfx.Play(Files.Sfx_Simpleshot, position);
-                                break;
+
+                                var traceLine = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.White);
+                                Layer_Game.AddChild(traceLine);
+                                _Core.AnimationManager.RunAdvanced(0.5f, 0, 0.2f, v => traceLine.Alpha = v, a => Layer_Game.RemoveChild(traceLine));
+                            break;
+
                             case PickupType.Hedgeshock:
                                 _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
                                 break;
@@ -240,6 +259,10 @@ namespace BlackTournament.GameStates
                                 break;
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_Laserblast, position);
+
+                                var laser = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.Yellow);
+                                Layer_Game.AddChild(laser);
+                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.4f, v => laser.Alpha = v, a => Layer_Game.RemoveChild(laser));
                                 break;
                         }
                     }
@@ -258,6 +281,20 @@ namespace BlackTournament.GameStates
                                 break;
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_Laserblast, position); // fixme
+
+                                var l1 = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.Red);
+                                Layer_Game.AddChild(l1);
+                                _Core.AnimationManager.RunAdvanced(1f, 0, 0.7f, v => l1.Alpha = v, a => Layer_Game.RemoveChild(l1));
+
+                                var offset = VectorExtensions.VectorFromAngle(rotation + 90);
+                                var l2 = new Line(_Core, l1.Start.Position + offset, l1.End.Position + offset, Color.Yellow);
+                                Layer_Game.AddChild(l2);
+                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.6f, v => l2.Alpha = v, a => Layer_Game.RemoveChild(l2));
+
+                                offset *= -1;
+                                var l3 = new Line(_Core, l1.Start.Position + offset, l1.End.Position + offset, Color.Yellow);
+                                Layer_Game.AddChild(l3);
+                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.6f, v => l3.Alpha = v, a => Layer_Game.RemoveChild(l3));
                                 break;
                         }
                     }
