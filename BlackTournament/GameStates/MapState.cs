@@ -162,44 +162,38 @@ namespace BlackTournament.GameStates
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
         {
-            if (primary) //csh
+            switch (type)
             {
-                switch (type)
-                {
-                    case PickupType.Drake:
-                        break;
-                    case PickupType.Hedgeshock:
-                        break;
-                    case PickupType.Thumper:
-                        break;
-                    case PickupType.Titandrill:
-                        break;
-                }
+                case PickupType.Drake:
+                case PickupType.Thumper:
+                    // create grenade
+                    var grenate = new Rectangle(_Core)
+                    {
+                        Position = position,
+                        Size = new Vector2f(8, 4),
+                        Origin = new Vector2f(0, 2),
+                        Rotation = rotation,
+                        Color = Color.Black
+                    };
+                    _EnitityLookup.Add(id, grenate);
+                    Layer_Game.AddChild(grenate);
+                    break;
+                case PickupType.Hedgeshock:
+                    // create shockOrb
+                    var orb = new Circle(_Core)
+                    {
+                        Position = position,
+                        Radius = 20,
+                        Color = Color.Cyan,
+                        Alpha = 0.8f
+                    };
+                    _EnitityLookup.Add(id, orb);
+                    Layer_Game.AddChild(orb);
+                    break;
+                case PickupType.Titandrill:
+                    // does not have projectiles
+                    break;
             }
-            else
-            {
-                switch (type)
-                {
-                    case PickupType.Drake:
-                        break;
-                    case PickupType.Hedgeshock:
-                        break;
-                    case PickupType.Thumper:
-                        break;
-                    case PickupType.Titandrill:
-                        break;
-                }
-            }
-
-            var entity = new Rectangle(_Core) // todo : replace debug view with proper shells/efx (siehe oben)
-            {
-                Position = position,
-                Size = new Vector2f(20, 20),
-                Origin = new Vector2f(10,10),
-                Color = Color.Red
-            };
-            _EnitityLookup.Add(id, entity);
-            Layer_Game.AddChild(entity);
         }
 
         public void CreateEffect(EffectType effect, Vector2f position, float rotation, PickupType source, bool primary, float size = 0)

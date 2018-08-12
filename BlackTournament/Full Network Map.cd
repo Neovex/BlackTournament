@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="BLACK TOURNAMENT NETWORK INTERFACE">
+    <Position X="7.186" Y="0.5" Height="0.291" Width="2.765" />
+  </Comment>
+  <Class Name="BlackTournament.GameStates.MapState" Collapsed="true">
+    <Position X="0.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EASEgAEAAgAAAIGEACCAAAAAgABAAAAAAAAACAAAICA=</HashCode>
+      <FileName>GameStates\MapState.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_MapData" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.GameStates.ConnectState" Collapsed="true">
+    <Position X="2.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAiAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameStates\ConnectState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Game" Collapsed="true">
+    <Position X="7" Y="9.25" Width="2.75" />
+    <AssociationLine Name="_Server" Type="BlackTournament.Net.BlackTournamentServer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.547" Y="9.25" />
+        <Point X="8.547" Y="8.875" />
+        <Point X="12.5" Y="8.875" />
+        <Point X="12.5" Y="8.441" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.117" Y="9.25" />
+        <Point X="8.117" Y="8.875" />
+        <Point X="6.375" Y="8.875" />
+        <Point X="6.375" Y="8.441" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ConnectController" Type="BlackTournament.Controller.ConnectController" FixedFromPoint="true">
+      <Path>
+        <Point X="7" Y="9.438" />
+        <Point X="4.25" Y="9.438" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.725" Y="0.07" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="MapController" Type="BlackTournament.Controller.MapController" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="9.625" />
+        <Point X="4.563" Y="9.625" />
+        <Point X="4.563" Y="11.49" />
+        <Point X="2.344" Y="11.49" />
+        <Point X="2.344" Y="9.688" />
+        <Point X="2" Y="9.688" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="2.971" Y="-0.194" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QKQGAAAABAQogAAAAAAgAAAAAgAAAEAAQAQAIAIBQAI=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Server" />
+      <Field Name="_Client" />
+      <Property Name="ConnectController" />
+      <Property Name="MapController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
+    <Position X="4.75" Y="7.75" Width="2" />
+    <InheritanceLine Type="BlackTournament.Net.Client.ManagedClient&lt;TEnum&gt;" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.375" Y="6.941" />
+        <Point X="1.375" Y="7.574" />
+        <Point X="4.938" Y="7.574" />
+        <Point X="4.938" Y="7.75" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="_PlayerLookup" Type="BlackTournament.Net.Data.ClientPlayer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.438" Y="7.75" />
+        <Point X="5.438" Y="7.375" />
+        <Point X="4.031" Y="7.375" />
+        <Point X="4.031" Y="6.941" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_PickupLookup" Type="BlackTournament.Net.Data.Pickup" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.062" Y="7.75" />
+        <Point X="6.062" Y="7.178" />
+        <Point X="8.562" Y="7.178" />
+        <Point X="8.562" Y="5.191" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_ShotLookup" Type="BlackTournament.Net.Data.Shot" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.312" Y="7.75" />
+        <Point X="6.312" Y="7.353" />
+        <Point X="10.062" Y="7.353" />
+        <Point X="10.062" Y="5.191" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_Effects" Type="BlackTournament.Net.Data.Effect" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="7.75" />
+        <Point X="6.5" Y="7.511" />
+        <Point X="10.933" Y="7.511" />
+        <Point X="10.933" Y="5.957" />
+        <Point X="11.855" Y="5.957" Type="JumpStart" />
+        <Point X="12.021" Y="5.957" Type="JumpEnd" />
+        <Point X="12.354" Y="5.957" />
+        <Point X="12.354" Y="5.191" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQQAAAEQ0AAAYAAAACUCEAAASRAsDEEAACCAAwgABAA=</HashCode>
+      <FileName>Net\BlackTournamentClient.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_PlayerLookup" />
+      <Field Name="_PickupLookup" />
+      <Field Name="_ShotLookup" />
+      <Field Name="_Effects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.BlackTournamentServer" Collapsed="true">
+    <Position X="11.5" Y="7.75" Width="2" />
+    <InheritanceLine Type="BlackTournament.Net.Server.ManagedServer&lt;TEnum&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="14.875" Y="6.941" />
+        <Point X="14.875" Y="7.375" />
+        <Point X="13.823" Y="7.375" Type="JumpStart" />
+        <Point X="13.657" Y="7.375" Type="JumpEnd" />
+        <Point X="12.688" Y="7.375" />
+        <Point X="12.688" Y="7.75" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="_Logic" Type="BlackTournament.Net.Data.GameLogic">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.735" Y="0.104" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQIAEAAAAAIIABAAAAA=</HashCode>
+      <FileName>Net\BlackTournamentServer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Logic" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Controller.MapController" Collapsed="true">
+    <Position X="0.5" Y="9.25" Width="1.5" />
+    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="0.906" Y="9.25" />
+        <Point X="0.906" Y="8.188" />
+        <Point X="4.75" Y="8.188" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAQICAAAAgAgDAAAgAAAAAQFKAAlEgAAAggCAEARA=</HashCode>
+      <FileName>Controller\MapController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+      <Field Name="_State" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Controller.ConnectController" Collapsed="true">
+    <Position X="2.75" Y="9.25" Width="1.5" />
+    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="9.25" />
+        <Point X="3.5" Y="8.875" />
+        <Point X="5.375" Y="8.875" />
+        <Point X="5.375" Y="8.441" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAgBAAAAAAAAAAgIAAEAIAIAAACAAAAA=</HashCode>
+      <FileName>Controller\ConnectController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+      <Field Name="_State" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.GameLogic" Collapsed="true">
+    <Position X="11.5" Y="6.25" Width="2" />
+    <AssociationLine Name="_Map" Type="BlackTournament.Tmx.TmxMapper" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.562" />
+        <Point X="13.74" Y="6.562" />
+        <Point X="13.74" Y="12.031" />
+        <Point X="2" Y="12.031" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_Shots" Type="BlackTournament.Net.Data.Shot" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.938" Y="6.25" />
+        <Point X="11.938" Y="5.614" />
+        <Point X="10.64" Y="5.614" />
+        <Point X="10.64" Y="5.191" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.723" Y="0.105" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_Effects" Type="BlackTournament.Net.Data.Effect">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.858" Y="0.095" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAIIAAAAAADEAAAAAQDAAAAAAACoEgAAAIBA=</HashCode>
+      <FileName>Net\Data\GameLogic.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Map" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_Players" />
+      <Field Name="_Shots" />
+      <Field Name="_Effects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Effect" Collapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAgIAgAAAAAADAAABAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Net\Data\Effect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.ServerPlayer" Collapsed="true">
+    <Position X="4.75" Y="6.25" Width="1.5" />
+    <AssociationLine Name="Weapon" Type="BlackTournament.Net.Data.Weapon" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.906" Y="6.25" />
+        <Point X="5.906" Y="5.875" />
+        <Point X="6.438" Y="5.875" />
+        <Point X="6.438" Y="5.312" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQBAAAQEIAABABAAAAAgAAAFAAgBAggIABACwAAEBA=</HashCode>
+      <FileName>Net\Data\ServerPlayer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Weapon" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Shot" Collapsed="true">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAQACABIAAAAAgACAEIBBBAABAAIQAAAAAAACAAAQ=</HashCode>
+      <FileName>Net\Data\Shot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Pickup" Collapsed="true">
+    <Position X="7.75" Y="4.5" Width="1.5" />
+    <AssociationLine Name="Type" Type="BlackTournament.Net.Data.PickupType" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="4.5" />
+        <Point X="8.25" Y="4.285" />
+        <Point X="4.875" Y="4.285" />
+        <Point X="4.875" Y="3.812" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.619" Y="0.045" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ADQAAAAIAMAAAAAgAAAQAADAAABAAAAgAQAAAAAAAAA=</HashCode>
+      <FileName>Net\Data\Pickup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.ClientPlayer" Collapsed="true">
+    <Position X="2.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAACAAAAAMAAIggAAAAAAAAAAAAAAQAAAABAAAAAAA=</HashCode>
+      <FileName>Net\Data\ClientPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Player" Collapsed="true">
+    <Position X="3.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAACAAAAAEQAIggAACAgABAAAFAAgQAAAAAAAAEAAA=</HashCode>
+      <FileName>Net\Data\Player.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentWeaponType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.NetEntityBase" Collapsed="true">
+    <Position X="7" Y="3.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAABAACBAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Net\Data\NetEntityBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.ManagedServer&lt;TEnum&gt;" Collapsed="true">
+    <Position X="14" Y="6.25" Width="1.75" />
+    <AssociationLine Name="_Commands" Type="BlackTournament.Net.Commands&lt;TEnum&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.75" Y="6.5" />
+        <Point X="16.037" Y="6.5" />
+        <Point X="16.037" Y="1.531" />
+        <Point X="9.5" Y="1.531" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_ConnectedClients" Type="BlackTournament.Net.Server.ServerUser&lt;TChannel&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.75" Y="6.688" />
+        <Point X="16.181" Y="6.688" />
+        <Point X="16.181" Y="0.875" />
+        <Point X="14.5" Y="0.875" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAA0AAAAAAAIAgCABAAAAAAAgAAAAAIQAAAAAA=</HashCode>
+      <FileName>Net\Server\ManagedServer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Commands" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_ConnectedClients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Client.ManagedClient&lt;TEnum&gt;" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.75" />
+    <AssociationLine Name="_Commands" Type="BlackTournament.Net.Commands&lt;TEnum&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="0.5" Y="6.5" />
+        <Point X="0.319" Y="6.5" />
+        <Point X="0.319" Y="1.531" />
+        <Point X="7.5" Y="1.531" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_ConnectedClients" Type="BlackTournament.Net.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="0.5" Y="6.688" />
+        <Point X="0.104" Y="6.688" />
+        <Point X="0.104" Y="0.781" />
+        <Point X="2" Y="0.781" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAUQKAAAAAIAACEJAACAAIAAAAAAAIAoAABAA=</HashCode>
+      <FileName>Net\Client\ManagedClient.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Commands" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_ConnectedClients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.Server&lt;TEnum&gt;" Collapsed="true">
+    <Position X="14" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAACAAAAAAEAAAAAAQBAACAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Server\Server.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.NetBase&lt;TEnum&gt;" Collapsed="true">
+    <Position X="7" Y="2" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgSAAAAAAAAgAAAAAAAAEAAKAAAgAAAACAAA=</HashCode>
+      <FileName>Net\NetBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="2.8" />
+  </Class>
+  <Class Name="BlackTournament.Net.Client.Client&lt;TEnum&gt;" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAAAQABAAEgAAIAAAAAAAEAAAAAAAgAAAAA=</HashCode>
+      <FileName>Net\Client\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Weapon" Collapsed="true">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAICAAAAQAAAAAACAAAAEAAABEBAAAAAAAAhAAAAA=</HashCode>
+      <FileName>Net\Data\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Commands&lt;TEnum&gt;" Collapsed="true">
+    <Position X="7.5" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Commands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Server.ServerUser&lt;TChannel&gt;" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="2" />
+    <InheritanceLine Type="BlackTournament.Net.User" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="0.875" />
+        <Point X="12.5" Y="0.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Server\ServerUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.User" Collapsed="true">
+    <Position X="2" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Tmx.TmxMapper" Collapsed="true">
+    <Position X="0.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABoAAAgAAAgAGAAACAAEQCMAIAAEgAAgAAEAAEEAI=</HashCode>
+      <FileName>Tmx\TmxMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BlackTournament.Net.Data.PickupType" Collapsed="true">
+    <Position X="3.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAAAQABAAAAAIAIA=</HashCode>
+      <FileName>Net\Data\PickupType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BlackTournament.Net.NetMessage" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAQAAAABAAAAACACAAUQAAAAAAAAACAQAAAAA=</HashCode>
+      <FileName>Net\NetMessage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

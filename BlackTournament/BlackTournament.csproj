@@ -81,7 +81,6 @@
     <Compile Include="Net\Client\Client.cs" />
     <Compile Include="Net\Client\ManagedClient.cs" />
     <Compile Include="Net\Commands.cs" />
-    <Compile Include="Net\Data\EntityType.cs" />
     <Compile Include="Net\Data\Pickup.cs" />
     <Compile Include="Net\Data\Player.cs" />
     <Compile Include="Net\Data\ServerPlayer.cs" />
@@ -145,7 +144,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Net\Data\Data.cd" />
-    <None Include="Net\Network.cd" />
+    <None Include="Net\Network Core.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -153,7 +152,7 @@
     <None Include="Assets\Music\Ten_Seconds_to_Rush.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Network.cd" />
+    <None Include="Full Network Map.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

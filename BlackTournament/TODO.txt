@@ -10,14 +10,12 @@ X - static collisions (dyn to stat where dyn is owned by local)
 
 
 idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?
+X idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
-idee: controller durch rollen ersetzen die am jeweiligen state hängen
+create emitter configurations for VFX
 
-
-
-# fix missing key-up event on focus loss?!
-
+fix collision bug: no collision / intersection between rectangle and 0 degree ray (->)
 
 #add id-d shots & 
 #pickups to serialization chain
@@ -27,44 +25,6 @@ UC create game data from parsed map data?
 create basic UI elements
 
 add MD5 comparison against map tampering / versioning
-
-
-Network data brainstorm MK2 >> delay mechanisms
-
-Operations:
--Object Move
--Weapon Change
--Weapon Fire
--Collision
-
-Type
-id
-x,y,r
-active
-health
-shield
-
-ex:
-player
-15
-0;15;74
-true
-100
-0
-
-pickup
-7
-false
-
-
-
-
-
-
-
-
-
-
 
 
 
