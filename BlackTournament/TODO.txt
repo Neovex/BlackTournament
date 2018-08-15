@@ -66,3 +66,20 @@ add MD5 comparison against map tampering / versioning
 blending:
 - static sprite internal rendermasks can be achieved with a pixel shader
 - dynamic blending can only be achieved with an aditional render to texture step and a custom blendmode using dstalpha
+
+
+
+
+emitter backup - beautiful fire:
+(new SmokeEmitter(_Core, smokeTex, BlendMode.Add)
+            {
+                ParticlesPerSpawn = 25,
+                Color = new Color(255,100,20,255),
+                Speed = 25,
+                Alpha = 1f,
+                Scale = new Vector2f(0.2f,0.2f),
+                Origin = smokeTex.Size.ToVector2f() / 2,
+
+                Loop = true,
+                SpawnRate = 0.05f
+            });

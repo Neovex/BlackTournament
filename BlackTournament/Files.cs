@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlackTournament
 {
     public static class Files
     {
+        // SFX
         public static readonly IReadOnlyCollection<String> MENUE_SFX = new[] { Sfx_Highlight, Sfx_Select };
         public static readonly IReadOnlyCollection<String> GAME_SFX = new[] { Sfx_Explosion1, Sfx_Explosion2, Sfx_Grenatelauncher, Sfx_Laser, Sfx_Laserblast, Sfx_LaserPL013, Sfx_Pickup1, Sfx_Pickup2, Sfx_Pickup3, Sfx_Simpleshot };
 
@@ -24,6 +22,7 @@ namespace BlackTournament
         public const String Sfx_Highlight = "Highlight";
         public const String Sfx_Select = "Select";
 
+        // MUSIC
         public static readonly IReadOnlyCollection<String> MENUE_MUSIC = new[] { Music_Invading_a_Submarine, Music_Ten_Seconds_to_Rush, Music_Third_Level_Encryption };
         public static readonly IReadOnlyCollection<String> GAME_MUSIC = new[] { Music_Industrial_Rage, Music_Its_Totally_and_Completely_Barbaric, Music_Teks_Abomination, Music_Venting_Your_Spleen_on_Low_B, Music_Wall_of_Anger };
 
@@ -35,5 +34,11 @@ namespace BlackTournament
         public const String Music_Third_Level_Encryption = "Third_Level_Encryption";
         public const String Music_Venting_Your_Spleen_on_Low_B = "Venting_Your_Spleen_on_Low_B";
         public const String Music_Wall_of_Anger = "Wall_of_Anger";
+
+        // EMITTER
+        public const String Emitter_Smoke_Black = "Smoke_Black";
+        public const String Emitter_Smoke_Grey = "Smoke_Grey";
+        public const String Emitter_Smoke_White = "Smoke_White";
+        public const String Emitter_Shockwave = "Shockwave";
     }
 }

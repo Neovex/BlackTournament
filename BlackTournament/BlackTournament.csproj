@@ -24,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,6 +64,11 @@
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\GameText.cs" />
+    <Compile Include="Particles\WaveParticle.cs" />
+    <Compile Include="Particles\WaveEmitter.cs" />
+    <Compile Include="Particles\AlphaParticle.cs" />
+    <Compile Include="Particles\SparkEmitter.cs" />
+    <Compile Include="Particles\SmokeEmitter.cs" />
     <Compile Include="Files.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Entities\MapRenderer.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="Net\Server\Server.cs" />
     <Compile Include="Net\Server\ServerUser.cs" />
     <Compile Include="Net\User.cs" />
+    <Compile Include="Particles\TriggerComposite.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -186,10 +192,22 @@
     <Content Include="Assets\Textures\Hedgeshock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\Shockwave.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\SmallHealth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\SmallShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Smoke_Black.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Smoke_Grey.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Smoke_White.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\Thumper.png">
