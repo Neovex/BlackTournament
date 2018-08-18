@@ -46,8 +46,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,11 +66,8 @@
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\GameText.cs" />
-    <Compile Include="Particles\WaveParticle.cs" />
-    <Compile Include="Particles\WaveEmitter.cs" />
-    <Compile Include="Particles\AlphaParticle.cs" />
-    <Compile Include="Particles\SparkEmitter.cs" />
-    <Compile Include="Particles\SmokeEmitter.cs" />
+    <Compile Include="Particles\SmokeInfo.cs" />
+    <Compile Include="Particles\SparkInfo.cs" />
     <Compile Include="Files.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Entities\MapRenderer.cs" />
@@ -98,7 +97,6 @@
     <Compile Include="Net\Server\Server.cs" />
     <Compile Include="Net\Server\ServerUser.cs" />
     <Compile Include="Net\User.cs" />
-    <Compile Include="Particles\TriggerComposite.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

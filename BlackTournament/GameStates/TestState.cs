@@ -9,16 +9,18 @@ using BlackCoat;
 using BlackCoat.ParticleSystem;
 using BlackTournament.Particles;
 using BlackCoat.Entities.Shapes;
+using BlackCoat.Entities;
+using BlackTournament.Systems;
+using BlackCoat.Tools;
 
 namespace BlackTournament.GameStates
 {
     class TestState : BaseGamestate
     {
         private ParticleEmitterHost _Host;
-        private SparkEmitter _Emitter;
 
         private SfxManager _Sfx;
-        private TriggerComposite _Composite;
+        private CompositeEmitter _Composite;
 
         public TestState(Core core) : base(core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -28,41 +30,44 @@ namespace BlackTournament.GameStates
         {
             _Core.Input.MouseButtonPressed += Input_MouseButtonPressed;
 
+
             Layer_Game.AddChild(new Rectangle(_Core)
             {
                 Size= new Vector2f(_Core.DeviceSize.X/2, _Core.DeviceSize.Y),
-                Color=Color.White
+                Color=Color.White,Visible =false
             });
 
-            _Composite = new TriggerComposite(_Core);
-            _Composite.Add(new SparkEmitter(_Core)
+            _Composite = new CompositeEmitter(_Core);
+            _Composite.Add(new BasicPixelEmitter(_Core, 0, new SparkInfo(_Core, 400, 10, 180)
             {
-                DefaultTTL = 2,
-                ParticlesPerSpawn = 0, // WARN!!!! ###############
-                Color = Color.Green,
-                Speed = 100,
-                Gravity = new Vector2f(0,50)
-            });
+                TTL = 0.2f,
+                Color = new Color(255, 255, 120, 255),
+                Acceleration = new Vector2f(0, 950)
+                //AlphaFadeOut = -4
+            }));
+
             var smokeTex = TextureLoader.Load(Files.Emitter_Smoke_Grey);
-            _Composite.Add(new SmokeEmitter(_Core, smokeTex, BlendMode.Add)
+            _Composite.Add(new BasicTextureEmitter(_Core, smokeTex, 25, new SmokeInfo(_Core, 25)
             {
-                ParticlesPerSpawn = 25,
-                Color = new Color(255,100,20,255),
-                Speed = 25,
+                TTL = 25,
+                Color = new Color(255, 100, 20, 255),
                 Alpha = 1f,
-                Scale = new Vector2f(0.5f,0.5f),
-                Origin = smokeTex.Size.ToVector2f() / 2
-
-                //Loop = true,
-                //SpawnRate = 0.05f
-            });
-            _Composite.Add(new WaveEmitter(_Core, TextureLoader.Load(Files.Emitter_Shockwave))
+                Scale = new Vector2f(0.5f, 0.5f),
+                Origin = smokeTex.Size.ToVector2f() / 2,
+                AlphaFade = -1,
+                UseAlphaAsTTL = true
+            }, blendMode: BlendMode.Add));
+            var shockTex = TextureLoader.Load(Files.Emitter_Shockwave);
+            _Composite.Add(new BasicTextureEmitter(_Core, shockTex, 1, new TextureParticleAnimationInfo()
             {
+                TTL = 25,
                 Alpha = 0.75f,
-                StartScale = 0.05f,
-                EndScale = 1.2f,
-                Speed = 2.5f
-            });
+                Origin = shockTex.Size.ToVector2f() / 2,
+                Scale = new Vector2f(0.05f, 0.05f),
+                ScaleVelocity = new Vector2f(4f, 4f),
+                AlphaFade = -2.5f,
+                UseAlphaAsTTL = true
+            }));
 
             _Host = new ParticleEmitterHost(_Core);
             _Host.AddEmitter(_Composite);
@@ -86,8 +91,8 @@ namespace BlackTournament.GameStates
             switch (btn)
             {
                 case SFML.Window.Mouse.Button.Left:
-                    _Composite.Trigger();
                     _Sfx.Play(Files.Sfx_Explosion1);
+                    _Composite.Trigger();
                     break;
 
                 case SFML.Window.Mouse.Button.Right:
@@ -109,6 +114,7 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
+            _Core.Input.MouseButtonPressed -= Input_MouseButtonPressed;
         }
     }
 }
