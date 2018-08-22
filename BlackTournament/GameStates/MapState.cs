@@ -5,26 +5,41 @@ using System.Text;
 
 using SFML.System;
 using SFML.Graphics;
+using SFML.Audio;
 
 using BlackCoat;
 using BlackCoat.Entities;
-using BlackCoat.Collision.Shapes;
+using BlackCoat.ParticleSystem;
 
-using BlackTournament.Entities;
 using BlackTournament.Tmx;
+using BlackTournament.Entities;
 using BlackCoat.Entities.Shapes;
 using BlackTournament.Net.Data;
-using SFML.Audio;
+using BlackTournament.Particles;
 
 namespace BlackTournament.GameStates
 {
     class MapState : BaseGamestate
     {
+        // Rendering
         private TmxMapper _MapData;
+        private View _View;
+
+        // Sound
         private SfxManager _Sfx;
 
+        // Emitters
+        private BasicPixelEmitter _SparkEmitter;
+        private SparkInfo _SparkInfo;
+        private ImpactInfo _ImpactInfo;
+        private CompositeEmitter _ImpactEmitter;
+
+        private SmokeInfo _ExplosionInfo;
+        private TextureParticleAnimationInfo _WaveInfo;
+        private CompositeEmitter _ExplosionEmitter;
+
+        // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
-        private View _View;
         private IEntity _LocalPlayer;
 
         public Vector2f ViewMovement { get; set; }
@@ -37,12 +52,14 @@ namespace BlackTournament.GameStates
             _EnitityLookup = new Dictionary<int, IEntity>();
         }
 
+
         protected override bool Load()
         {
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize.ToVector2f()));
             Layer_BG.View = _View;
             Layer_Game.View = _View;
+            Layer_Overlay.View = _View;
 
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
@@ -69,6 +86,9 @@ namespace BlackTournament.GameStates
             _Sfx.LoadFromDirectory();
             // Setup Sounds
             foreach (var sfx in Files.GAME_SFX) _Sfx.AddToLibrary(sfx, 100, true); // doublecheck
+
+            // Setup Special Effects
+            SetupEmitters();
 
             // TESTING ############################################
 
@@ -116,6 +136,74 @@ namespace BlackTournament.GameStates
             }
             */
             return true;
+        }
+
+        private void SetupEmitters()
+        {
+            // Sparks for ricochets and wall impacts
+            _SparkInfo = new SparkInfo(_Core, 200, 10, null)
+            {
+                TTL = 0.2f,
+                ParticlesPerSpawn = 4,
+                DefaultColor = new Color(255, 255, 120, 255),
+                Acceleration = new Vector2f(0, 950)
+            };
+            _SparkEmitter = new BasicPixelEmitter(_Core, _SparkInfo);
+
+            // Wall impact glow
+            _ImpactInfo = new ImpactInfo(_Core)
+            {
+                TTL = 25,
+                AlphaFade = -0.7f,
+                Color = Color.Yellow,
+                UseAlphaAsTTL = true
+            };
+            var impactEmitter = new BasicPixelEmitter(_Core, _ImpactInfo);
+
+            // Combine sparks and impact
+            _ImpactEmitter = new CompositeEmitter(_Core);
+            _ImpactEmitter.Add(_SparkEmitter);
+            _ImpactEmitter.Add(impactEmitter);
+
+            // Orange/White Explosion
+            var smokeTex = TextureLoader.Load(Files.Emitter_Smoke_Grey);
+            _ExplosionInfo = new SmokeInfo(_Core, 50)
+            {
+                TTL = 25,
+                ParticlesPerSpawn = 25,
+                Color = new Color(255, 100, 20, 255),
+                Alpha = 1f,
+                Scale = new Vector2f(0.5f, 0.5f),
+                Origin = smokeTex.Size.ToVector2f() / 2,
+                AlphaFade = -1,
+                UseAlphaAsTTL = true
+            };
+            var explosionSmokeEmitter = new BasicTextureEmitter(_Core, smokeTex, _ExplosionInfo, BlendMode.Add);
+
+            // Explosion shock wave
+            var shockTex = TextureLoader.Load(Files.Emitter_Shockwave);
+            _WaveInfo = new TextureParticleAnimationInfo()
+            {
+                TTL = 25,
+                Alpha = 0.75f,
+                Origin = shockTex.Size.ToVector2f() / 2,
+                Scale = new Vector2f(0.05f, 0.05f),
+                ScaleVelocity = new Vector2f(4f, 4f),
+                AlphaFade = -2.5f,
+                UseAlphaAsTTL = true
+            };
+            var explosionWaveEmitter = new BasicTextureEmitter(_Core, shockTex, _WaveInfo);
+
+            // Combine Explosion core and shock wave
+            _ExplosionEmitter = new CompositeEmitter(_Core);
+            _ExplosionEmitter.Add(explosionSmokeEmitter);
+            _ExplosionEmitter.Add(explosionWaveEmitter);
+
+            // Add to scene via host
+            var host = new ParticleEmitterHost(_Core);
+            host.AddEmitter(_ImpactEmitter);
+            host.AddEmitter(_ExplosionEmitter);
+            Layer_Overlay.AddChild(host);
         }
 
         protected override void Update(float deltaT)
@@ -167,19 +255,25 @@ namespace BlackTournament.GameStates
                 case PickupType.Drake:
                 case PickupType.Thumper:
                     // create grenade
+                    var size = new Vector2f(8, 4);
                     var grenate = new Rectangle(_Core)
                     {
                         Position = position,
-                        Size = new Vector2f(8, 4),
-                        Origin = new Vector2f(0, 2),
+                        Size = size,
+                        Origin = size / 2,
                         Rotation = rotation,
                         Color = Color.Black
                     };
+                    if (primary)
+                    {
+                        grenate.OutlineColor = Color.White;
+                        grenate.OutlineThickness = 0.5f;
+                    }
                     _EnitityLookup.Add(id, grenate);
                     Layer_Game.AddChild(grenate);
                     break;
                 case PickupType.Hedgeshock:
-                    // create shockOrb
+                    // create shock orb
                     var orb = new Circle(_Core)
                     {
                         Position = position,
@@ -204,32 +298,27 @@ namespace BlackTournament.GameStates
                     // None yet
                     break;
 
-                case EffectType.Explosion: // Also check grenade TTLs
-                    var explosion = new Circle(_Core)
-                    {
-                        Position = position,
-                        Radius = size,
-                        Color = Color.Yellow,
-                        Alpha = 0.5f
-                    };
-                    Layer_Game.AddChild(explosion);
-                    _Core.AnimationManager.Wait(1, a => Layer_Game.RemoveChild(a.Tag as Circle), tag: explosion);
+                case EffectType.Explosion:
+                    _Sfx.Play(Files.Sfx_Explosion1, position);
+                    _ExplosionInfo.Scale = VectorExtensions.VectorFromValue(size / 120);
+                    _ExplosionEmitter.Position = position;
+                    _ExplosionEmitter.Trigger();
                     break;
 
                 case EffectType.WallImpact:
-                    var wallImpact = new Rectangle(_Core)
-                    {
-                        Position = position,
-                        Size = new Vector2f(10, 10),
-                        Origin = new Vector2f(5, 5),
-                        Color = Color.Yellow,
-                        Alpha = 0.5f
-                    };
-                    Layer_Game.AddChild(wallImpact);
-                    _Core.AnimationManager.Wait(0.3f, a => Layer_Game.RemoveChild(a.Tag as Rectangle), tag: wallImpact);
+                    _SparkInfo.Update(source); 
+                    _ImpactInfo.Update(source);
+                    _ImpactEmitter.Position = position;
+                    _ImpactEmitter.Trigger();
                     break;
 
-                case EffectType.PlayerImpact: // TODO
+                case EffectType.PlayerImpact:
+                    _SparkInfo.Update(PickupType.Drake);
+                    _SparkInfo.Color = Color.Red;
+                    _SparkInfo.Direction = rotation;
+                    _SparkEmitter.Position = position;
+                    _SparkEmitter.Trigger();
+                    _SparkInfo.Direction = null;
                     break;
 
                 case EffectType.Gunfire:

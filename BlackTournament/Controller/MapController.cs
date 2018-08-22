@@ -82,7 +82,7 @@ namespace BlackTournament.Controller
             // _Client.ConnectionEstablished not required - connection already established when entering map state
             _Client.OnDisconnect += HandleConnectionLost;
             // Game Events
-            _Client.Player.Fragged += HandlePlayerFragged;
+            //_Client.Player.Fragged += HandlePlayerFragged; Added by _manual_ invocation of player joined
             _Client.ChangeLevelReceived += HandleServerMapChange;
             _Client.MessageReceived += HandleTextMessage;
             _Client.UpdateReceived += UpdateReceived;
@@ -104,7 +104,7 @@ namespace BlackTournament.Controller
             // Connection Events
             _Client.OnDisconnect -= HandleConnectionLost;
             // Game Events
-            _Client.Player.Fragged -= HandlePlayerFragged;
+            _Client.Player.Fragged -= HandlePlayerFragged; // See also notes under AttachEvents
             _Client.ChangeLevelReceived -= HandleServerMapChange;
             _Client.MessageReceived -= HandleTextMessage;
             _Client.UpdateReceived -= UpdateReceived;
@@ -229,7 +229,8 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition)-2;
+            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition) - 2;
+            _Client.PlayerRotation = MathHelper.ValidateAngle(_Client.PlayerRotation);
             _State.RotatePlayer(_Client.PlayerRotation); // update state
         }
 

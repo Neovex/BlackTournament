@@ -232,7 +232,11 @@ namespace BlackTournament.Net.Data
             // inaccuracy modification
             var rotation = player.Rotation;
             var weapon = primary ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
-            if (weapon.Inaccuracy != 0) rotation += _Core.Random.NextFloat(-weapon.Inaccuracy, weapon.Inaccuracy);
+            if (weapon.Inaccuracy != 0)
+            {
+                rotation += _Core.Random.NextFloat(-weapon.Inaccuracy, weapon.Inaccuracy);
+                rotation = MathHelper.ValidateAngle(rotation);
+            }
 
             // find first wall intersection
             var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall))
