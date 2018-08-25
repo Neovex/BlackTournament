@@ -9,7 +9,7 @@ using BlackTournament.Entities;
 
 namespace BlackTournament.GameStates
 {
-    class ConnectState:BaseGamestate
+    class ConnectState:Gamestate
     {
         private GameText _Text;
         private string _Host;

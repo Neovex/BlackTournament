@@ -12,16 +12,16 @@ namespace BlackTournament
     {
         private const int _INF = 100000;
 
-        public static readonly WeaponData DrakePrimary = new WeaponData(14.3f, 0, 200, 0.075f, _INF, 0, 0, Geometry.Line, 3);
+        public static readonly WeaponData DrakePrimary = new WeaponData(14.3f, 0, 200, 0.075f, _INF, 0, 0, Geometry.Line, 4);
         public static readonly WeaponData DrakeSecundary = new WeaponData(35, 80, 2, 0.7f, 0, 700, 1.5f, Geometry.Point);
 
-        public static readonly WeaponData HedgeshockPrimary = new WeaponData(10, 0, 180, 0.0666f, 200, 0, 0, Geometry.Line, 12);
+        public static readonly WeaponData HedgeshockPrimary = new WeaponData(10, 0, 180, 0.05f, 200, 0, 0, Geometry.Line, 15);
         public static readonly WeaponData HedgeshockSecundary = new WeaponData(1, 20, 6, 0.3f, 0, 600, 3, Geometry.Circle); // check penetration damage
 
         public static readonly WeaponData ThumperPrimary = new WeaponData(DrakeSecundary.Damage, DrakeSecundary.BlastRadius, 10, 0.6f, DrakeSecundary.Length, DrakeSecundary.Speed, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
         public static readonly WeaponData ThumperSecundary = new WeaponData(DrakeSecundary.Damage*1.5f, DrakeSecundary.BlastRadius*1.5f, 4, 0.9f, DrakeSecundary.Length, 450, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
 
-        public static readonly WeaponData TitandrillPrimary = new WeaponData(8, 0, 30, 0.2f, 500, 0, 0, Geometry.Line);
+        public static readonly WeaponData TitandrillPrimary = new WeaponData(25, 0, 30, 0.8f, 500, 0, 0, Geometry.Line);
         public static readonly WeaponData TitandrillSecundary = new WeaponData(99, 0, 2, 2, _INF, 0, 0, Geometry.Line);
 
 

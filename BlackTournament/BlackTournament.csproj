@@ -67,7 +67,9 @@
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Particles\ImpactInfo.cs" />
+    <Compile Include="Particles\LightningEmitter.cs" />
     <Compile Include="Particles\LineEmitter.cs" />
+    <Compile Include="Particles\LightningInfo.cs" />
     <Compile Include="Particles\LineInfo.cs" />
     <Compile Include="Particles\LineParticle.cs" />
     <Compile Include="Particles\SmokeInfo.cs" />
@@ -173,7 +175,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Sfx\laserblastshort.wav">
+    <Content Include="Assets\Sfx\explosion.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sfx\laserblastbig.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sfx\laserblastsmall.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sfx\pew.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sfx\spark.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\AztekTiles.png">
@@ -219,22 +233,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Doc\3rd Party.txt" />
-    <Content Include="Assets\Sfx\explosion1.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\explosion2.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\Sfx\grenatelauncher.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sfx\Highlight.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\Laser PL013.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\laser.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sfx\pickup1.wav">

@@ -6,14 +6,14 @@ namespace BlackTournament.Controller
     public abstract class ControllerBase
     {
         protected Game _Game;
-        private BaseGamestate _State;
+        private Gamestate _State;
 
         public ControllerBase(Game game)
         {
             _Game = game;
         }
 
-        protected virtual void Activate(BaseGamestate state)
+        protected virtual void Activate(Gamestate state)
         {
             _State = state ?? throw new ArgumentNullException(nameof(state));
             AttachEvents();

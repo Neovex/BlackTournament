@@ -7,7 +7,7 @@ using BlackTournament.Net.Data;
 
 namespace BlackTournament.Particles
 {
-    class SparkInfo : ParticleAnimationInfo
+    class SparkInfo : PixelParticleInitializationInfo
     {
         private readonly Core _Core;
         private readonly float _Speed;

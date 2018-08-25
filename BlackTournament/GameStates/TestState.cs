@@ -15,9 +15,9 @@ using BlackCoat.Tools;
 
 namespace BlackTournament.GameStates
 {
-    class TestState : BaseGamestate
+    class TestState : Gamestate
     {
-        private LineEmitter _LineEmitter;
+        private LightningEmitter _LineEmitter;
         private SfxManager _Sfx;
         private ParticleEmitterHost _Host;
 
@@ -36,21 +36,9 @@ namespace BlackTournament.GameStates
                 Color=Color.White,Visible =false
             });
 
-            _LineEmitter = new LineEmitter(_Core, new LineInfo(_Core)
-            {
-                TTL = 0.1f,
-                //Velocity = new Vector2f(10, 10),
-                Color = Color.Blue,
-                //Position2 = new Vector2f(100, 50),
-                ParticlesPerSpawn = 10,
-                SpawnRate =0.1f,
-                Loop = true
-            });
-
             Layer_Game.AddChild(_Host = new ParticleEmitterHost(_Core));
             _Host.AddEmitter(_LineEmitter);
             _LineEmitter.Position = _Core.DeviceSize.ToVector2f() / 2;
-            _LineEmitter.Trigger();
 
             // Snd
             _Sfx = new SfxManager(SfxLoader);
@@ -64,7 +52,8 @@ namespace BlackTournament.GameStates
             switch (btn)
             {
                 case SFML.Window.Mouse.Button.Left:
-                    _Sfx.Play(Files.Sfx_Explosion1);
+                    _Sfx.Play(Files.Sfx_Explosion);
+                    _LineEmitter.Trigger();
                     break;
 
                 case SFML.Window.Mouse.Button.Right:
@@ -74,7 +63,7 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            _LineEmitter.ParticleInfo.Target = _Core.Input.MousePosition;
+            _LineEmitter.ParticleInfo.LigtningTarget = _Core.Input.MousePosition;
 
             //_Emitter.Rotation += deltaT * 1000;
             //_Emitter.Velocity = VectorExtensions.VectorFromAngle(_Emitter.Rotation, 100);

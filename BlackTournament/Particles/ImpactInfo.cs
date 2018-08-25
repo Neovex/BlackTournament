@@ -6,12 +6,12 @@ using SFML.Graphics;
 
 namespace BlackTournament.Particles
 {
-    class ImpactInfo:ParticleAnimationInfo
+    class ImpactInfo:PixelParticleInitializationInfo
     {
         private Core _Core;
         private float _Spread;
 
-        public override Vector2f Offset { get => _Core.Random.NextVector(-_Spread, _Spread); set => base.Offset = value; }
+        public override Vector2f Offset { get => VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(0, 360), _Core.Random.NextFloat(0, _Spread)); set => base.Offset = value; }
 
         public ImpactInfo(Core core)
         {

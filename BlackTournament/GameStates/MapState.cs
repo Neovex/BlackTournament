@@ -19,7 +19,7 @@ using BlackTournament.Particles;
 
 namespace BlackTournament.GameStates
 {
-    class MapState : BaseGamestate
+    class MapState : Gamestate
     {
         // Rendering
         private TmxMapper _MapData;
@@ -29,14 +29,18 @@ namespace BlackTournament.GameStates
         private SfxManager _Sfx;
 
         // Emitters
-        private BasicPixelEmitter _SparkEmitter;
+        private LineInfo _LineInfo;
+        private LineEmitter _LineEmitter;
+        private LightningInfo _LigtningInfo;
+        private LightningEmitter _LigtningEmitter;
+        private PixelEmitter _SparkEmitter;
         private SparkInfo _SparkInfo;
         private ImpactInfo _ImpactInfo;
-        private CompositeEmitter _ImpactEmitter;
+        private EmitterComposition _ImpactEmitter;
 
         private SmokeInfo _ExplosionInfo;
-        private TextureParticleAnimationInfo _WaveInfo;
-        private CompositeEmitter _ExplosionEmitter;
+        private TextureParticleInitializationInfo _WaveInfo;
+        private EmitterComposition _ExplosionEmitter;
 
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
@@ -140,7 +144,26 @@ namespace BlackTournament.GameStates
 
         private void SetupEmitters()
         {
-            // Sparks for ricochets and wall impacts
+            // Tracer and Laser Lines
+            _LineInfo = new LineInfo()
+            {
+                TTL = 25,
+                UseAlphaAsTTL = true
+            };
+            _LineEmitter = new LineEmitter(_Core, _LineInfo);
+
+            // Electro Sparks Effect
+            _LigtningInfo = new LightningInfo(_Core)
+            {
+                TTL =25,
+                ParticlesPerSpawn = 10,
+                Color = Color.Cyan,
+                AlphaFade =-3,
+                UseAlphaAsTTL =true
+            };
+            _LigtningEmitter = new LightningEmitter(_Core, _LigtningInfo);
+
+            // Pixel Sparks for ricochets and wall impacts
             _SparkInfo = new SparkInfo(_Core, 200, 10, null)
             {
                 TTL = 0.2f,
@@ -148,7 +171,7 @@ namespace BlackTournament.GameStates
                 DefaultColor = new Color(255, 255, 120, 255),
                 Acceleration = new Vector2f(0, 950)
             };
-            _SparkEmitter = new BasicPixelEmitter(_Core, _SparkInfo);
+            _SparkEmitter = new PixelEmitter(_Core, _SparkInfo);
 
             // Wall impact glow
             _ImpactInfo = new ImpactInfo(_Core)
@@ -158,31 +181,30 @@ namespace BlackTournament.GameStates
                 Color = Color.Yellow,
                 UseAlphaAsTTL = true
             };
-            var impactEmitter = new BasicPixelEmitter(_Core, _ImpactInfo);
+            var impactEmitter = new PixelEmitter(_Core, _ImpactInfo);
 
             // Combine sparks and impact
-            _ImpactEmitter = new CompositeEmitter(_Core);
+            _ImpactEmitter = new EmitterComposition(_Core);
             _ImpactEmitter.Add(_SparkEmitter);
             _ImpactEmitter.Add(impactEmitter);
 
             // Orange/White Explosion
             var smokeTex = TextureLoader.Load(Files.Emitter_Smoke_Grey);
-            _ExplosionInfo = new SmokeInfo(_Core, 50)
+            _ExplosionInfo = new SmokeInfo(_Core, smokeTex, 50)
             {
                 TTL = 25,
                 ParticlesPerSpawn = 25,
                 Color = new Color(255, 100, 20, 255),
-                Alpha = 1f,
                 Scale = new Vector2f(0.5f, 0.5f),
                 Origin = smokeTex.Size.ToVector2f() / 2,
                 AlphaFade = -1,
                 UseAlphaAsTTL = true
             };
-            var explosionSmokeEmitter = new BasicTextureEmitter(_Core, smokeTex, _ExplosionInfo, BlendMode.Add);
+            var explosionSmokeEmitter = new TextureEmitter(_Core, _ExplosionInfo, BlendMode.Add);
 
             // Explosion shock wave
             var shockTex = TextureLoader.Load(Files.Emitter_Shockwave);
-            _WaveInfo = new TextureParticleAnimationInfo()
+            _WaveInfo = new TextureParticleInitializationInfo(shockTex)
             {
                 TTL = 25,
                 Alpha = 0.75f,
@@ -192,15 +214,17 @@ namespace BlackTournament.GameStates
                 AlphaFade = -2.5f,
                 UseAlphaAsTTL = true
             };
-            var explosionWaveEmitter = new BasicTextureEmitter(_Core, shockTex, _WaveInfo);
+            var explosionWaveEmitter = new TextureEmitter(_Core, _WaveInfo);
 
             // Combine Explosion core and shock wave
-            _ExplosionEmitter = new CompositeEmitter(_Core);
+            _ExplosionEmitter = new EmitterComposition(_Core);
             _ExplosionEmitter.Add(explosionSmokeEmitter);
             _ExplosionEmitter.Add(explosionWaveEmitter);
 
             // Add to scene via host
             var host = new ParticleEmitterHost(_Core);
+            host.AddEmitter(_LineEmitter);
+            host.AddEmitter(_LigtningEmitter);
             host.AddEmitter(_ImpactEmitter);
             host.AddEmitter(_ExplosionEmitter);
             Layer_Overlay.AddChild(host);
@@ -250,7 +274,7 @@ namespace BlackTournament.GameStates
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
         {
-            switch (type)
+            switch (type) // todo : replace debug fx with proper shell/emitter fx
             {
                 case PickupType.Drake:
                 case PickupType.Thumper:
@@ -272,6 +296,7 @@ namespace BlackTournament.GameStates
                     _EnitityLookup.Add(id, grenate);
                     Layer_Game.AddChild(grenate);
                     break;
+
                 case PickupType.Hedgeshock:
                     // create shock orb
                     var orb = new Circle(_Core)
@@ -284,22 +309,19 @@ namespace BlackTournament.GameStates
                     _EnitityLookup.Add(id, orb);
                     Layer_Game.AddChild(orb);
                     break;
-                case PickupType.Titandrill:
-                    // does not have projectiles
-                    break;
             }
         }
 
         public void CreateEffect(EffectType effect, Vector2f position, float rotation, PickupType source, bool primary, float size = 0)
         {
-            switch (effect) // todo : replace debug fx with proper shell/emitter fx
+            switch (effect)
             {
                 case EffectType.Environment:
                     // None yet
                     break;
 
                 case EffectType.Explosion:
-                    _Sfx.Play(Files.Sfx_Explosion1, position);
+                    _Sfx.Play(Files.Sfx_Explosion, position);
                     _ExplosionInfo.Scale = VectorExtensions.VectorFromValue(size / 120);
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
@@ -328,24 +350,33 @@ namespace BlackTournament.GameStates
                         {
                             case PickupType.Drake:
                                 _Sfx.Play(Files.Sfx_Simpleshot, position);
-
-                                var traceLine = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.White);
-                                Layer_Game.AddChild(traceLine);
-                                _Core.AnimationManager.RunAdvanced(0.5f, 0, 0.2f, v => traceLine.Alpha = v, a => Layer_Game.RemoveChild(traceLine));
-                            break;
+                                _LineInfo.TargetOffset = VectorExtensions.VectorFromAngleLookup(rotation, size);
+                                _LineInfo.Color = Color.White;
+                                _LineInfo.Alpha = 0.5f;
+                                _LineInfo.AlphaFade = -3;
+                                _LineEmitter.Position = position;
+                                _LineEmitter.Trigger();
+                                break;
 
                             case PickupType.Hedgeshock:
-                                _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
+                                _Sfx.Play(Files.Sfx_Spark, position);
+                                _LigtningInfo.LigtningTarget = position + VectorExtensions.VectorFromAngleLookup(rotation, size);
+                                _LigtningEmitter.Position = position;
+                                _LigtningEmitter.Trigger();
                                 break;
+
                             case PickupType.Thumper:
                                 _Sfx.Play(Files.Sfx_Grenatelauncher, position);
                                 break;
-                            case PickupType.Titandrill:
-                                _Sfx.Play(Files.Sfx_Laserblast, position);
 
-                                var laser = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.Yellow);
-                                Layer_Game.AddChild(laser);
-                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.4f, v => laser.Alpha = v, a => Layer_Game.RemoveChild(laser));
+                            case PickupType.Titandrill:
+                                _Sfx.Play(Files.Sfx_LaserBlastSmall, position);
+                                _LineInfo.TargetOffset = VectorExtensions.VectorFromAngleLookup(rotation, size);
+                                _LineInfo.Color = Color.Yellow;
+                                _LineInfo.Alpha = 0.8f;
+                                _LineInfo.AlphaFade = -2;
+                                _LineEmitter.Position = position;
+                                _LineEmitter.Trigger();
                                 break;
                         }
                     }
@@ -354,30 +385,21 @@ namespace BlackTournament.GameStates
                         switch (source)
                         {
                             case PickupType.Drake:
-                                _Sfx.Play(Files.Sfx_Grenatelauncher, position);
-                                break;
-                            case PickupType.Hedgeshock:
-                                _Sfx.Play(Files.Sfx_Simpleshot, position); // fixme
-                                break;
                             case PickupType.Thumper:
                                 _Sfx.Play(Files.Sfx_Grenatelauncher, position);
                                 break;
+                            case PickupType.Hedgeshock:
+                                _Sfx.Play(Files.Sfx_Pew, position);
+                                break;
                             case PickupType.Titandrill:
-                                _Sfx.Play(Files.Sfx_Laserblast, position); // fixme
-
-                                var l1 = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, size), Color.Red);
-                                Layer_Game.AddChild(l1);
-                                _Core.AnimationManager.RunAdvanced(1f, 0, 0.7f, v => l1.Alpha = v, a => Layer_Game.RemoveChild(l1));
-
-                                var offset = VectorExtensions.VectorFromAngle(rotation + 90);
-                                var l2 = new Line(_Core, l1.Start.Position + offset, l1.End.Position + offset, Color.Yellow);
-                                Layer_Game.AddChild(l2);
-                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.6f, v => l2.Alpha = v, a => Layer_Game.RemoveChild(l2));
-
-                                offset *= -1;
-                                var l3 = new Line(_Core, l1.Start.Position + offset, l1.End.Position + offset, Color.Yellow);
-                                Layer_Game.AddChild(l3);
-                                _Core.AnimationManager.RunAdvanced(0.8f, 0, 0.6f, v => l3.Alpha = v, a => Layer_Game.RemoveChild(l3));
+                                _Sfx.Play(Files.Sfx_LaserBlastBig, position);
+                                var target = VectorExtensions.VectorFromAngleLookup(rotation, size);
+                                _LineInfo.TargetOffset = target;
+                                _LineInfo.Color = new Color(255, 100,100);
+                                _LineInfo.Alpha = 1f;
+                                _LineInfo.AlphaFade = -2;
+                                _LineEmitter.Position = position;
+                                _LineEmitter.Trigger();
                                 break;
                         }
                     }

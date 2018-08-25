@@ -13,7 +13,7 @@ using BlackTournament.Entities;
 
 namespace BlackTournament.GameStates
 {
-    class MainMenu:BaseGamestate
+    class MainMenu:Gamestate
     {
         private GameText _Text;
 

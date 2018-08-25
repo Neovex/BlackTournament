@@ -7,20 +7,20 @@ namespace BlackTournament
     {
         // SFX
         public static readonly IReadOnlyCollection<String> MENUE_SFX = new[] { Sfx_Highlight, Sfx_Select };
-        public static readonly IReadOnlyCollection<String> GAME_SFX = new[] { Sfx_Explosion1, Sfx_Explosion2, Sfx_Grenatelauncher, Sfx_Laser, Sfx_Laserblast, Sfx_LaserPL013, Sfx_Pickup1, Sfx_Pickup2, Sfx_Pickup3, Sfx_Simpleshot };
+        public static readonly IReadOnlyCollection<String> GAME_SFX = new[] { Sfx_Explosion, Sfx_Grenatelauncher, Sfx_LaserBlastSmall, Sfx_LaserBlastBig, Sfx_Pickup1, Sfx_Pickup2, Sfx_Pickup3, Sfx_Simpleshot, Sfx_Spark, Sfx_Pew };
 
-        public const String Sfx_Explosion1 = "explosion1";
-        public const String Sfx_Explosion2 = "explosion2";
+        public const String Sfx_Explosion = "explosion";
         public const String Sfx_Grenatelauncher = "grenatelauncher";
-        public const String Sfx_Laserblast = "laserblastshort";
-        public const String Sfx_LaserPL013 = "Laser PL013";
-        public const String Sfx_Laser = "laser";
+        public const String Sfx_LaserBlastSmall = "laserblastsmall";
+        public const String Sfx_LaserBlastBig = "laserblastbig";
         public const String Sfx_Pickup1 = "pickup1";
         public const String Sfx_Pickup2 = "pickup2";
         public const String Sfx_Pickup3 = "pickup3 long";
         public const String Sfx_Simpleshot = "simple shot";
         public const String Sfx_Highlight = "Highlight";
         public const String Sfx_Select = "Select";
+        public const String Sfx_Spark = "spark";
+        public const String Sfx_Pew = "pew";
 
         // MUSIC
         public static readonly IReadOnlyCollection<String> MENUE_MUSIC = new[] { Music_Invading_a_Submarine, Music_Ten_Seconds_to_Rush, Music_Third_Level_Encryption };

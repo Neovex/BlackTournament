@@ -10,7 +10,7 @@ using BlackCoat;
 
 namespace BlackTournament.Entities
 {
-    class MapRenderer : BaseEntity
+    class MapRenderer : EntityBase
     {
         private Vertex[] _Vertices;
         private Texture _Texture;

@@ -10,9 +10,9 @@ using SFML.System;
 
 namespace BlackTournament.Particles
 {
-    class LineParticle : BasicPixelParticle
+    class LineParticle : PixelParticle, IInitializableByInfo<LineInfo>, IInitializableByInfo<LightningInfo>
     {
-        private Vector2f _Position2;
+        private Vector2f _TargetOffset;
 
 
         public LineParticle(Core core) : base(core)
@@ -22,8 +22,13 @@ namespace BlackTournament.Particles
 
         public void Initialize(Vector2f position, LineInfo info)
         {
-            _Position2 = info.Position2;
+            _TargetOffset = info.TargetOffset;
             base.Initialize(position, info);
+        }
+
+        public void Initialize(Vector2f position, LightningInfo info)
+        {
+            Initialize(position, info as LineInfo);
         }
 
         protected override unsafe void Clear(Vertex* vPtr)
@@ -35,7 +40,7 @@ namespace BlackTournament.Particles
         protected override unsafe bool UpdateInternal(float deltaT, Vertex* vPtr)
         {
             vPtr++;
-            vPtr->Position = _Position + _Position2;
+            vPtr->Position = _Position + _TargetOffset;
             vPtr->Color = _Color;
             vPtr--;
             return base.UpdateInternal(deltaT, vPtr);

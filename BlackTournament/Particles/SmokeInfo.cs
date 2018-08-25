@@ -1,11 +1,12 @@
 ﻿using System;
 using BlackCoat;
 using BlackCoat.ParticleSystem;
+using SFML.Graphics;
 using SFML.System;
 
 namespace BlackTournament.Particles
 {
-    class SmokeInfo:TextureParticleAnimationInfo
+    class SmokeInfo:TextureParticleInitializationInfo
     {
         private readonly Core _Core;
         private readonly float _Speed;
@@ -17,7 +18,7 @@ namespace BlackTournament.Particles
         public override float RotationVelocity { get => _Core.Random.NextFloat(-_Speed, _Speed)+base.RotationVelocity; set => base.RotationVelocity = value; }
         public override float AlphaFade { get => _Core.Random.NextFloat(-2, -1.1f); set => base.AlphaFade = value; }
 
-        public SmokeInfo(Core core, float speed)
+        public SmokeInfo(Core core, Texture texture, float speed) : base(texture)
         {
             _Core = core ?? throw new ArgumentNullException(nameof(core));
             _Speed = speed;
