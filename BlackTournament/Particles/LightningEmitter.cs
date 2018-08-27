@@ -15,27 +15,17 @@ namespace BlackTournament.Particles
         {
         }
 
-        protected override void Update(float deltaT)
+        public override void Trigger()
         {
-            if (IsTriggered)
+            var amount = ParticleInfo.ParticlesPerSpawn;
+            for (int i = 0; i < amount; i++)
             {
-                _SpawnTimer -= deltaT;
-                if (_SpawnTimer < 0)
-                {
-                    _SpawnTimer = ParticleInfo.SpawnRate;
-                    IsTriggered = ParticleInfo.Loop;
-
-                    var amount = ParticleInfo.ParticlesPerSpawn;
-                    for (int i = 0; i < amount; i++)
-                    {
-                        var particle = RetrieveFromCache() as LineParticle ?? new LineParticle(_Core);
-                        ParticleInfo.UpdateCluster(Position, i);
-                        particle.Initialize(Position, ParticleInfo);
-                        AddParticle(particle, ParticleInfo.TTL);
-                    }
-                    ParticleInfo.Reset();
-                }
+                var particle = RetrieveFromCache() as LineParticle ?? new LineParticle(_Core);
+                ParticleInfo.UpdateCluster(Position, i);
+                particle.Initialize(Position, ParticleInfo);
+                AddParticle(particle, ParticleInfo.TTL);
             }
+            ParticleInfo.Reset();
         }
     }
 }

@@ -299,15 +299,12 @@ namespace BlackTournament.GameStates
 
                 case PickupType.Hedgeshock:
                     // create shock orb
-                    var orb = new Circle(_Core)
-                    {
-                        Position = position,
-                        Radius = 20,
-                        Color = Color.Cyan,
-                        Alpha = 0.8f
-                    };
-                    _EnitityLookup.Add(id, orb);
-                    Layer_Game.AddChild(orb);
+                    //var orb = new EmitterRemote<LineParticle, LightningInfo>(_LigtningEmitter, WeaponData.HedgeshockPrimary.FireRate / 2);
+                    //orb.Triggered += info => info.LigtningTarget = orb.Position + VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(0, 360), WeaponData.HedgeshockPrimary.Length / 2);
+
+                    var r = new Line(_Core, position, position + new Vector2f(5, 5), Color.Magenta);
+                    _EnitityLookup.Add(id, r);
+                    Layer_Game.AddChild(r);
                     break;
             }
         }
@@ -317,7 +314,9 @@ namespace BlackTournament.GameStates
             switch (effect)
             {
                 case EffectType.Environment:
-                    // None yet
+                    var line = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, 50), Color.Cyan);
+                    Layer_Game.AddChild(line);
+                    _Core.AnimationManager.Wait(3, () => Layer_Game.RemoveChild(line));
                     break;
 
                 case EffectType.Explosion:
@@ -337,6 +336,7 @@ namespace BlackTournament.GameStates
                 case EffectType.PlayerImpact:
                     _SparkInfo.Update(PickupType.Drake);
                     _SparkInfo.Color = Color.Red;
+                    _SparkInfo.ParticlesPerSpawn = 15;
                     _SparkInfo.Direction = rotation;
                     _SparkEmitter.Position = position;
                     _SparkEmitter.Trigger();
@@ -380,7 +380,7 @@ namespace BlackTournament.GameStates
                                 break;
                         }
                     }
-                    else
+                    else // secondary
                     {
                         switch (source)
                         {

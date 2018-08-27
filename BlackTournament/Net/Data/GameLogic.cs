@@ -187,7 +187,7 @@ namespace BlackTournament.Net.Data
             foreach (var shot in _Shots)
             {
                 shot.Update(deltaT);
-                if (shot.Alive) CheckProjectileCollisions(shot);
+                if (shot.Alive) CheckProjectileCollisions(shot, deltaT);
                 else if (shot.IsExplosive) CheckExplosion(shot);
             }
 
@@ -239,7 +239,7 @@ namespace BlackTournament.Net.Data
             }
 
             // find first wall intersection
-            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall))
+            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall)).Select(i=>i.Position) // ANGLE REMOVED
                                                                                .OrderBy(p => p.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray();
             
             if (wallIintersectionPoints.Length != 0)
@@ -259,8 +259,8 @@ namespace BlackTournament.Net.Data
                                           .Select(p => new
                                           {
                                               Player = p,
-                                              Intersections = _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, p.Collision)
-                                                              .OrderBy(i => i.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray()
+                                              Intersections = _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, p.Collision).Select(i => i.Position)
+                                                              .OrderBy(ip => ip.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray()
                                           })
                                           .Where(pi => pi.Intersections.Length != 0 && pi.Intersections[0].ToLocal(player.WeaponSpawn).Length() <= length);
 
@@ -277,7 +277,7 @@ namespace BlackTournament.Net.Data
             effect.Rotation = rotation;
         }
 
-        private void CheckProjectileCollisions(Shot shot)
+        private void CheckProjectileCollisions(Shot shot, float deltaT)
         {
             var wall = _Map.WallCollider.FirstOrDefault(w => shot.Collision == null ? w.Collide(shot.Position) : w.Collide(shot.Collision));
             if(wall != null)
@@ -285,6 +285,9 @@ namespace BlackTournament.Net.Data
                 if (shot.IsBouncy)
                 {
                     // do bounce
+                    var (position, angle) = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.Direction, wall).First();
+                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, position, angle, shot.SourceWeapon, shot.Primary));
+                    shot.Direction = MathHelper.CalculateReflectionAngle(shot.Direction, angle);
                 }
                 else
                 {
@@ -308,19 +311,29 @@ namespace BlackTournament.Net.Data
             var player = _Players.FirstOrDefault(p => !p.Dead && (shot.Collision == null ? p.Collision.Collide(shot.Position) : p.Collision.Collide(shot.Collision)));
             if(player != null)
             {
-                // remove shot
-                shot.Destroy();
                 if (shot.IsExplosive)
                 {
                     // go boom
                     CheckExplosion(shot);
+                    // remove shot
+                    shot.Destroy();
                 }
                 else
                 {
                     // add impact
                     _Effects.Add(new Effect(Net.GetNextId(), EffectType.PlayerImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
-                    // damage player
-                    player.DamagePlayer(shot.Damage);
+                    if (shot.IsPenetrating)
+                    {
+                        // damage player
+                        player.DamagePlayer(shot.Damage * deltaT); // TODO : check damage
+                    }
+                    else
+                    {
+                        // damage player
+                        player.DamagePlayer(shot.Damage);
+                        // remove shot
+                        shot.Destroy();
+                    }
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace BlackTournament.Net.Data
     {
         private Vector2f _MovementVector;
         private Action<Vector2f> _UpdatePosition;
-
+        private float _Direction;
 
         public float Speed { get; private set; }
         public float Damage { get; private set; }
@@ -26,17 +26,17 @@ namespace BlackTournament.Net.Data
         public bool Primary { get; private set; }
 
         public Vector2f Position { get; private set; }
-        public float Direction { get; private set; }
+        public Vector2f LastPosition { get; private set; }
+        public float Direction { get => _Direction; set { _Direction = value; _MovementVector = VectorExtensions.VectorFromAngle(value); } }
         public ICollisionShape Collision { get; }
 
         public bool IsExplosive => BlastRadius != 0;
-        public bool IsBouncy => SourceWeapon == PickupType.Thumper && !Primary;
+        public bool IsBouncy => !Primary && (SourceWeapon == PickupType.Thumper || SourceWeapon == PickupType.Hedgeshock);
+        public bool IsPenetrating => !Primary && (SourceWeapon == PickupType.Titandrill || SourceWeapon == PickupType.Hedgeshock);
         public bool Exploded { get; set; }
-
 
         public Shot(int id, float direction, float speed, float damage, float blastRadius, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
         {
-            _MovementVector = VectorExtensions.VectorFromAngle(direction);
             _UpdatePosition = updatePosition;
 
             Speed = speed;
@@ -59,8 +59,9 @@ namespace BlackTournament.Net.Data
         public void Update(float deltaT)
         {
             TTL -= deltaT;
+            LastPosition = Position;
             Position += _MovementVector * Speed * deltaT;
-            _UpdatePosition?.Invoke(Position);
+            _UpdatePosition?.Invoke(Position); // To update collision shape position.
         }
 
         public void Destroy()

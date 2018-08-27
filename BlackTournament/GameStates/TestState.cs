@@ -12,14 +12,20 @@ using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities;
 using BlackTournament.Systems;
 using BlackCoat.Tools;
+using SFML.Window;
 
 namespace BlackTournament.GameStates
 {
     class TestState : Gamestate
     {
-        private LightningEmitter _LineEmitter;
-        private SfxManager _Sfx;
-        private ParticleEmitterHost _Host;
+        private Shader _Shader;
+        private Graphic _BlurTest;
+        private float _Blurryness = 0;
+        private Line _Ray;
+        private Circle _Circle;
+        private Line _Line;
+        private float _LineAngle = 320;
+        private Rectangle _Rect;
 
         public TestState(Core core) : base(core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -27,55 +33,120 @@ namespace BlackTournament.GameStates
 
         protected override bool Load()
         {
-            _Core.Input.MouseButtonPressed += Input_MouseButtonPressed;
-
-
-            Layer_Game.AddChild(new Rectangle(_Core)
-            {
-                Size= new Vector2f(_Core.DeviceSize.X/2, _Core.DeviceSize.Y),
-                Color=Color.White,Visible =false
-            });
-
-            Layer_Game.AddChild(_Host = new ParticleEmitterHost(_Core));
-            _Host.AddEmitter(_LineEmitter);
-            _LineEmitter.Position = _Core.DeviceSize.ToVector2f() / 2;
-
-            // Snd
-            _Sfx = new SfxManager(SfxLoader);
-            _Sfx.LoadFromDirectory();
-            foreach (var sfx in Files.GAME_SFX) _Sfx.AddToLibrary(sfx, 100, true);
+            IntersectionTest();
+            //ShaderTest();
             return true;
-        }
-
-        private void Input_MouseButtonPressed(SFML.Window.Mouse.Button btn)
-        {
-            switch (btn)
-            {
-                case SFML.Window.Mouse.Button.Left:
-                    _Sfx.Play(Files.Sfx_Explosion);
-                    _LineEmitter.Trigger();
-                    break;
-
-                case SFML.Window.Mouse.Button.Right:
-                    break;
-            }
         }
 
         protected override void Update(float deltaT)
         {
-            _LineEmitter.ParticleInfo.LigtningTarget = _Core.Input.MousePosition;
-
-            //_Emitter.Rotation += deltaT * 1000;
-            //_Emitter.Velocity = VectorExtensions.VectorFromAngle(_Emitter.Rotation, 100);
-
-            //_Emitter.Velocity = (_OldPos - _Core.Input.MousePosition)*-10000*deltaT;
-            //if (_Emitter.Velocity.X < 1 && _Emitter.Velocity.Y < 1) _Emitter.Velocity = new Vector2f(0, -5);
-            //ChangeColor();
+            _Ray.End.Position = VectorExtensions.VectorFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
         }
 
         protected override void Destroy()
         {
-            _Core.Input.MouseButtonPressed -= Input_MouseButtonPressed;
+        }
+
+
+
+        private void IntersectionTest()
+        {
+            _Ray = new Line(_Core, new Vector2f(300, 300), new Vector2f(), Color.Green);
+            Layer_Game.AddChild(_Ray);
+
+            _Circle = new Circle(_Core)
+            {
+                Position = _Ray.Start.Position + new Vector2f(150, 80),
+                Radius = 50,
+                Color = Color.Transparent,
+                OutlineColor = Color.Cyan,
+                OutlineThickness = 0.5f
+            };
+            Layer_Game.AddChild(_Circle);
+
+
+            _Rect = new Rectangle(_Core)
+            {
+                Position = new Vector2f(450, 100),
+                Size = VectorExtensions.VectorFromValue(200),
+                Color = Color.Yellow,
+                Alpha = 0.3f
+            };
+            Layer_Game.AddChild(_Rect);
+
+            _Line = new Line(_Core, _Circle.Position, _Circle.Position + VectorExtensions.VectorFromAngle(_LineAngle, 230), Color.Blue);
+            Layer_Game.AddChild(_Line);
+
+            _Core.Input.MouseButtonPressed += RayMouseButtonPressed;
+        }
+
+        private void RayMouseButtonPressed(Mouse.Button btn)
+        {
+            if (btn == Mouse.Button.Left)
+            {
+                float rayAngle = _Ray.Start.Position.AngleTowards(_Ray.End.Position);
+                Log.Info("Ray Angle:", rayAngle);
+                var intersections = _Core.CollisionSystem.Raycast(_Ray.Start.Position, rayAngle, _Rect)
+                            .Concat(_Core.CollisionSystem.Raycast(_Ray.Start.Position, rayAngle, _Line));
+
+                foreach (var (position, angle) in intersections)
+                {
+                    Log.Info("Intersection Angle:", angle);
+
+                    var r = new Rectangle(_Core)
+                    {
+                        Size = new Vector2f(10, 10),
+                        Origin = new Vector2f(5, 5),
+                        Position = position,
+                        Color = Color.Red,
+                        Alpha = 0.75f
+                    };
+                    Layer_Game.AddChild(r);
+
+                    var l = new Line(_Core, position, position+VectorExtensions.VectorFromAngle(MathHelper.CalculateReflectionAngle(rayAngle, angle), 100), Color.Cyan);
+                    Layer_Game.AddChild(l);
+
+                    _Core.AnimationManager.Run(0, 2000, 5f, v => r.Rotation = v, () => { Layer_Game.RemoveChild(r); Layer_Game.RemoveChild(l); });
+                }
+            }
+            else
+            {
+                _Ray.Start.Position = _Core.Input.MousePosition;
+            }
+        }
+
+        private void ShaderTest()
+        {
+            TextureLoader.RootFolder = "Assets";
+            var tex = TextureLoader.Load("AztekTiles");
+            Log.Fatal("Shader Available: ", Shader.IsAvailable); // fixme - isnt this done already?
+
+            _Shader = new Shader(null, @"C:\Users\Fox\Desktop\blur.frag"); // Wrap into effect class?
+            _Shader.SetParameter("texture", tex);
+            _Shader.SetParameter("blur_radius", _Blurryness);
+
+            _BlurTest = new Graphic(_Core);
+            _BlurTest.Position = new Vector2f(100, 100);
+            _BlurTest.Texture = tex;
+            var state = _BlurTest.RenderState;
+            state.Shader = _Shader;
+            _BlurTest.RenderState = state;
+            Layer_Game.AddChild(_BlurTest);
+
+            _Core.Input.KeyPressed += (k) =>
+            {
+                if (k == Keyboard.Key.Up)
+                {
+                    _Blurryness += 0.001f;
+                    Log.Debug(_Blurryness);
+                }
+                else if (k == Keyboard.Key.Down)
+                {
+                    _Blurryness -= 0.001f;
+                    Log.Debug(_Blurryness);
+                }
+                _Shader.SetParameter("blur_radius", _Blurryness);
+            };
         }
     }
 }

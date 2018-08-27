@@ -19,7 +19,7 @@ namespace BlackTournament
         public static readonly WeaponData HedgeshockSecundary = new WeaponData(1, 20, 6, 0.3f, 0, 600, 3, Geometry.Circle); // check penetration damage
 
         public static readonly WeaponData ThumperPrimary = new WeaponData(DrakeSecundary.Damage, DrakeSecundary.BlastRadius, 10, 0.6f, DrakeSecundary.Length, DrakeSecundary.Speed, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
-        public static readonly WeaponData ThumperSecundary = new WeaponData(DrakeSecundary.Damage*1.5f, DrakeSecundary.BlastRadius*1.5f, 4, 0.9f, DrakeSecundary.Length, 450, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
+        public static readonly WeaponData ThumperSecundary = new WeaponData(DrakeSecundary.Damage*0.8f, DrakeSecundary.BlastRadius*0.8f, 4, 0.9f, DrakeSecundary.Length, DrakeSecundary.Speed * 1.2f, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
 
         public static readonly WeaponData TitandrillPrimary = new WeaponData(25, 0, 30, 0.8f, 500, 0, 0, Geometry.Line);
         public static readonly WeaponData TitandrillSecundary = new WeaponData(99, 0, 2, 2, _INF, 0, 0, Geometry.Line);
