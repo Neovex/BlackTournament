@@ -29,18 +29,24 @@ namespace BlackTournament.GameStates
         private SfxManager _Sfx;
 
         // Emitters
-        private LineInfo _LineInfo;
-        private LineEmitter _LineEmitter;
+        private LineInfo _TracerLinesInfo;
+        private LineEmitter _TracerLinesEmitter;
+
         private LightningInfo _LigtningInfo;
         private LightningEmitter _LigtningEmitter;
+
         private PixelEmitter _SparkEmitter;
         private SparkInfo _SparkInfo;
+
         private ImpactInfo _ImpactInfo;
         private EmitterComposition _ImpactEmitter;
 
         private SmokeInfo _ExplosionInfo;
         private TextureParticleInitializationInfo _WaveInfo;
         private EmitterComposition _ExplosionEmitter;
+
+        private SmokeTrailEmitter _SmokeTrailEmitter;
+
 
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
@@ -145,12 +151,12 @@ namespace BlackTournament.GameStates
         private void SetupEmitters()
         {
             // Tracer and Laser Lines
-            _LineInfo = new LineInfo()
+            _TracerLinesInfo = new LineInfo()
             {
                 TTL = 25,
                 UseAlphaAsTTL = true
             };
-            _LineEmitter = new LineEmitter(_Core, _LineInfo);
+            _TracerLinesEmitter = new LineEmitter(_Core, _TracerLinesInfo);
 
             // Electro Sparks Effect
             _LigtningInfo = new LightningInfo(_Core)
@@ -221,12 +227,27 @@ namespace BlackTournament.GameStates
             _ExplosionEmitter.Add(explosionSmokeEmitter);
             _ExplosionEmitter.Add(explosionWaveEmitter);
 
+            var smokeTrailInfo = new SmokeInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 50)
+            {
+                TTL = 25,
+                Alpha = 0.8f,
+                ParticlesPerSpawn = 1,
+                SpawnRate = 0.01f,
+                Color = new Color(100, 100, 100),
+                Scale = new Vector2f(0.05f, 0.05f),
+                Origin = smokeTex.Size.ToVector2f() / 2,
+                AlphaFade = -1,
+                UseAlphaAsTTL = true
+            };
+            _SmokeTrailEmitter = new SmokeTrailEmitter(_Core, smokeTrailInfo, -1);
+
             // Add to scene via host
             var host = new ParticleEmitterHost(_Core);
-            host.AddEmitter(_LineEmitter);
+            host.AddEmitter(_TracerLinesEmitter);
             host.AddEmitter(_LigtningEmitter);
             host.AddEmitter(_ImpactEmitter);
             host.AddEmitter(_ExplosionEmitter);
+            host.AddEmitter(_SmokeTrailEmitter);
             Layer_Overlay.AddChild(host);
         }
 
@@ -274,13 +295,14 @@ namespace BlackTournament.GameStates
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
         {
-            switch (type) // todo : replace debug fx with proper shell/emitter fx
+            switch (type)
             {
                 case PickupType.Drake:
                 case PickupType.Thumper:
                     // create grenade
+                    var grenate = new Container(_Core);
                     var size = new Vector2f(8, 4);
-                    var grenate = new Rectangle(_Core)
+                    var grenateGfx = new Rectangle(_Core)
                     {
                         Position = position,
                         Size = size,
@@ -290,21 +312,33 @@ namespace BlackTournament.GameStates
                     };
                     if (primary)
                     {
-                        grenate.OutlineColor = Color.White;
-                        grenate.OutlineThickness = 0.5f;
+                        grenateGfx.OutlineColor = Color.White;
+                        grenateGfx.OutlineThickness = 0.5f;
                     }
+                    grenate.AddChild(grenateGfx);
+                    // Add Smoke Trail
+                    grenate.AddChild(new Remote<SmokeTrailEmitter>(_SmokeTrailEmitter, _SmokeTrailEmitter.ParticleInfo.SpawnRate));
                     _EnitityLookup.Add(id, grenate);
                     Layer_Game.AddChild(grenate);
                     break;
 
                 case PickupType.Hedgeshock:
                     // create shock orb
-                    //var orb = new EmitterRemote<LineParticle, LightningInfo>(_LigtningEmitter, WeaponData.HedgeshockPrimary.FireRate / 2);
-                    //orb.Triggered += info => info.LigtningTarget = orb.Position + VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(0, 360), WeaponData.HedgeshockPrimary.Length / 2);
-
-                    var r = new Line(_Core, position, position + new Vector2f(5, 5), Color.Magenta);
-                    _EnitityLookup.Add(id, r);
-                    Layer_Game.AddChild(r);
+                    var shockCoreTex = TextureLoader.Load(Files.Emitter_Shockwave);
+                    var shockOrb = new Container(_Core)
+                    {
+                        Texture = shockCoreTex,
+                        Origin = shockCoreTex.Size.ToVector2f() / 2,
+                        Scale = Create.Vector2f(0.15f),
+                        Color = Color.Cyan
+                    };
+                    // Add lightning decoration
+                    var orb = new Remote<LightningEmitter>(_LigtningEmitter, WeaponData.HedgeshockPrimary.FireRate / 2);
+                    orb.AdditionalTriggers = 1;
+                    orb.AboutToBeTriggered += e => e.ParticleInfo.LigtningTarget = orb.Position + Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(0, 360), WeaponData.HedgeshockSecundary.Length);
+                    shockOrb.AddChild(orb);
+                    _EnitityLookup.Add(id, shockOrb);
+                    Layer_Game.AddChild(shockOrb);
                     break;
             }
         }
@@ -314,14 +348,14 @@ namespace BlackTournament.GameStates
             switch (effect)
             {
                 case EffectType.Environment:
-                    var line = new Line(_Core, position, position + VectorExtensions.VectorFromAngle(rotation, 50), Color.Cyan);
+                    var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 50), Color.Cyan);
                     Layer_Game.AddChild(line);
                     _Core.AnimationManager.Wait(3, () => Layer_Game.RemoveChild(line));
                     break;
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);
-                    _ExplosionInfo.Scale = VectorExtensions.VectorFromValue(size / 120);
+                    _ExplosionInfo.Scale = Create.Vector2f(size / 120);
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
                     break;
@@ -331,6 +365,7 @@ namespace BlackTournament.GameStates
                     _ImpactInfo.Update(source);
                     _ImpactEmitter.Position = position;
                     _ImpactEmitter.Trigger();
+                    if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
                     break;
 
                 case EffectType.PlayerImpact:
@@ -350,17 +385,17 @@ namespace BlackTournament.GameStates
                         {
                             case PickupType.Drake:
                                 _Sfx.Play(Files.Sfx_Simpleshot, position);
-                                _LineInfo.TargetOffset = VectorExtensions.VectorFromAngleLookup(rotation, size);
-                                _LineInfo.Color = Color.White;
-                                _LineInfo.Alpha = 0.5f;
-                                _LineInfo.AlphaFade = -3;
-                                _LineEmitter.Position = position;
-                                _LineEmitter.Trigger();
+                                _TracerLinesInfo.TargetOffset = Create.Vector2fFromAngleLookup(rotation, size);
+                                _TracerLinesInfo.Color = Color.White;
+                                _TracerLinesInfo.Alpha = 0.5f;
+                                _TracerLinesInfo.AlphaFade = -3;
+                                _TracerLinesEmitter.Position = position;
+                                _TracerLinesEmitter.Trigger();
                                 break;
 
                             case PickupType.Hedgeshock:
                                 _Sfx.Play(Files.Sfx_Spark, position);
-                                _LigtningInfo.LigtningTarget = position + VectorExtensions.VectorFromAngleLookup(rotation, size);
+                                _LigtningInfo.LigtningTarget = position + Create.Vector2fFromAngleLookup(rotation, size);
                                 _LigtningEmitter.Position = position;
                                 _LigtningEmitter.Trigger();
                                 break;
@@ -371,12 +406,12 @@ namespace BlackTournament.GameStates
 
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_LaserBlastSmall, position);
-                                _LineInfo.TargetOffset = VectorExtensions.VectorFromAngleLookup(rotation, size);
-                                _LineInfo.Color = Color.Yellow;
-                                _LineInfo.Alpha = 0.8f;
-                                _LineInfo.AlphaFade = -2;
-                                _LineEmitter.Position = position;
-                                _LineEmitter.Trigger();
+                                _TracerLinesInfo.TargetOffset = Create.Vector2fFromAngleLookup(rotation, size);
+                                _TracerLinesInfo.Color = Color.Yellow;
+                                _TracerLinesInfo.Alpha = 0.8f;
+                                _TracerLinesInfo.AlphaFade = -2;
+                                _TracerLinesEmitter.Position = position;
+                                _TracerLinesEmitter.Trigger();
                                 break;
                         }
                     }
@@ -393,13 +428,13 @@ namespace BlackTournament.GameStates
                                 break;
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_LaserBlastBig, position);
-                                var target = VectorExtensions.VectorFromAngleLookup(rotation, size);
-                                _LineInfo.TargetOffset = target;
-                                _LineInfo.Color = new Color(255, 100,100);
-                                _LineInfo.Alpha = 1f;
-                                _LineInfo.AlphaFade = -2;
-                                _LineEmitter.Position = position;
-                                _LineEmitter.Trigger();
+                                var target = Create.Vector2fFromAngleLookup(rotation, size);
+                                _TracerLinesInfo.TargetOffset = target;
+                                _TracerLinesInfo.Color = new Color(255, 100,100);
+                                _TracerLinesInfo.Alpha = 1f;
+                                _TracerLinesInfo.AlphaFade = -2;
+                                _TracerLinesEmitter.Position = position;
+                                _TracerLinesEmitter.Trigger();
                                 break;
                         }
                     }

@@ -35,7 +35,7 @@ namespace BlackTournament.Particles
             if (index != ParticlesPerSpawn)
             {
                 var jitter = (float)dir.Length() / 12; // consider adding ParticlesPerSpawn into the auto jitter calc
-                TargetOffset += VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(0, 360), _Core.Random.NextFloat(0, jitter));
+                TargetOffset += Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(0, 360), _Core.Random.NextFloat(0, jitter));
             }
             _Last = TargetOffset;
             TargetOffset = TargetOffset.ToLocal(Offset);

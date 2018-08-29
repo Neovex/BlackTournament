@@ -27,7 +27,7 @@ namespace BlackTournament.Net.Data
 
         public Vector2f Position { get; private set; }
         public Vector2f LastPosition { get; private set; }
-        public float Direction { get => _Direction; set { _Direction = value; _MovementVector = VectorExtensions.VectorFromAngle(value); } }
+        public float Direction { get => _Direction; set { _Direction = value; _MovementVector = Create.Vector2fFromAngle(value); } }
         public ICollisionShape Collision { get; }
 
         public bool IsExplosive => BlastRadius != 0;
@@ -86,6 +86,12 @@ namespace BlackTournament.Net.Data
             m.Write((int)SourceWeapon);
             m.Write(Primary);
             m.Write(TTL);
+        }
+
+        internal void Reset()
+        {
+            Position = LastPosition;
+            _UpdatePosition?.Invoke(Position); // To update collision shape position.
         }
     }
 }

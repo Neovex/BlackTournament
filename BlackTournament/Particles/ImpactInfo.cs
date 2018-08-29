@@ -11,7 +11,7 @@ namespace BlackTournament.Particles
         private Core _Core;
         private float _Spread;
 
-        public override Vector2f Offset { get => VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(0, 360), _Core.Random.NextFloat(0, _Spread)); set => base.Offset = value; }
+        public override Vector2f Offset { get => Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(0, 360), _Core.Random.NextFloat(0, _Spread)); set => base.Offset = value; }
 
         public ImpactInfo(Core core)
         {
@@ -23,6 +23,7 @@ namespace BlackTournament.Particles
             switch (weapon)
             {
                 case PickupType.Drake:
+                case PickupType.Thumper:
                     _Spread = 1;
                     Color = Color.Yellow;
                     ParticlesPerSpawn = 6;

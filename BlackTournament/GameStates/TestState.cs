@@ -40,7 +40,7 @@ namespace BlackTournament.GameStates
 
         protected override void Update(float deltaT)
         {
-            _Ray.End.Position = VectorExtensions.VectorFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
+            _Ray.End.Position = Create.Vector2fFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
         }
 
         protected override void Destroy()
@@ -68,13 +68,13 @@ namespace BlackTournament.GameStates
             _Rect = new Rectangle(_Core)
             {
                 Position = new Vector2f(450, 100),
-                Size = VectorExtensions.VectorFromValue(200),
+                Size = Create.Vector2f(200),
                 Color = Color.Yellow,
                 Alpha = 0.3f
             };
             Layer_Game.AddChild(_Rect);
 
-            _Line = new Line(_Core, _Circle.Position, _Circle.Position + VectorExtensions.VectorFromAngle(_LineAngle, 230), Color.Blue);
+            _Line = new Line(_Core, _Circle.Position, _Circle.Position + Create.Vector2fFromAngle(_LineAngle, 230), Color.Blue);
             Layer_Game.AddChild(_Line);
 
             _Core.Input.MouseButtonPressed += RayMouseButtonPressed;
@@ -103,7 +103,7 @@ namespace BlackTournament.GameStates
                     };
                     Layer_Game.AddChild(r);
 
-                    var l = new Line(_Core, position, position+VectorExtensions.VectorFromAngle(MathHelper.CalculateReflectionAngle(rayAngle, angle), 100), Color.Cyan);
+                    var l = new Line(_Core, position, position+ Create.Vector2fFromAngle(MathHelper.CalculateReflectionAngle(rayAngle, angle), 100), Color.Cyan);
                     Layer_Game.AddChild(l);
 
                     _Core.AnimationManager.Run(0, 2000, 5f, v => r.Rotation = v, () => { Layer_Game.RemoveChild(r); Layer_Game.RemoveChild(l); });

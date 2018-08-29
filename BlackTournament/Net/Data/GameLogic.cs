@@ -285,9 +285,36 @@ namespace BlackTournament.Net.Data
                 if (shot.IsBouncy)
                 {
                     // do bounce
-                    var (position, angle) = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.Direction, wall).First();
+                    var intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.Direction, wall);
+                    if (intersects.Length == 0)
+                    {
+                        switch (wall)
+                        {
+                            case RectangleCollisionShape rect:
+                                intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.LastPosition.AngleTowards(rect.Position + rect.Size / 2), wall);
+                                break;
+                            case PolygonCollisionShape poly:
+                                float minX, minY;
+                                minX = minY = float.MaxValue;
+                                float maxX, maxY;
+                                maxX = maxY = float.MinValue;
+                                foreach (var point in poly.Points)
+                                {
+                                    minX = Math.Min(minX, point.X);
+                                    maxX = Math.Max(maxX, point.X);
+                                    minY = Math.Min(minY, point.Y);
+                                    maxY = Math.Max(maxY, point.Y);
+                                }
+                                var polyCenter = poly.Position + new Vector2f((maxX + minX) / 2f, (maxY + minY) / 2f);
+                                intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.LastPosition.AngleTowards(polyCenter), wall);
+                                break;
+                        }
+                    }
+                    var (position, angle) = intersects[0];
                     _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, position, angle, shot.SourceWeapon, shot.Primary));
                     shot.Direction = MathHelper.CalculateReflectionAngle(shot.Direction, angle);
+                    shot.Reset();
+                    //while (shot.Collision.Collide(wall)) shot.Update(deltaT);
                 }
                 else
                 {

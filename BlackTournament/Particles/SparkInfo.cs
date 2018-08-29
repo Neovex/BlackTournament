@@ -20,7 +20,7 @@ namespace BlackTournament.Particles
             {
                 var dmin = (Direction ?? _Spread) - _Spread;
                 var dmax = (Direction ?? 360 - _Spread) + _Spread;
-                return VectorExtensions.VectorFromAngleLookup(_Core.Random.NextFloat(dmin, dmax), _Speed + _Core.Random.NextFloat(-80, 60));
+                return Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(dmin, dmax), _Speed + _Core.Random.NextFloat(-80, 60));
             }
         }
         //public override bool UseAlphaAsTTL { get => true; set => base.UseAlphaAsTTL = value; }
@@ -41,6 +41,7 @@ namespace BlackTournament.Particles
             switch (weapon)
             {
                 case PickupType.Drake:
+                case PickupType.Thumper:
                     ParticlesPerSpawn = 6;
                     Color = DefaultColor;
                     break;

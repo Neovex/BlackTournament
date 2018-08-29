@@ -14,8 +14,6 @@ namespace BlackTournament.Controller
         private BlackTournamentClient _Client;
         private ConnectState _State;
 
-        //public event Action ConnectionEstablished = () => { }; //?
-
 
         public ConnectController(Game game) : base(game)
         {
@@ -69,13 +67,13 @@ namespace BlackTournament.Controller
 
         private bool MapIsAvailable(string mapName)
         {
-            Log.Fatal("Skipped map validity check for", mapName); // TODO : implement and maybe move to game or another map collection handler that checks all map at game load
+            Log.Fatal("Skipped map validity check for", mapName); // TODO : implement and maybe move to game or another map collection handler that checks all maps at game load
             return true;
         }
 
         private void ConnectionFailed()
         {
-            _Game.MenuController.Activate("Connection Failed");//$
+            _Game.MenuController.Activate("Connection failed");//$
         }
     }
 }
