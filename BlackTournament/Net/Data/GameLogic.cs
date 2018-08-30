@@ -282,39 +282,34 @@ namespace BlackTournament.Net.Data
             var wall = _Map.WallCollider.FirstOrDefault(w => shot.Collision == null ? w.Collide(shot.Position) : w.Collide(shot.Collision));
             if(wall != null)
             {
-                if (shot.IsBouncy)
+                if (shot.IsBouncy) // do bounce
                 {
-                    // do bounce
-                    var intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.Direction, wall);
+                    //Move Projectile backwards out of the collision
+                    shot.Direction += 180;
+                    do
+                    {
+                        shot.Update(deltaT + 0.001f);
+                    } while (shot.Collision == null ? wall.Collide(shot.Position) : wall.Collide(shot.Collision));
+                    shot.Direction -= 180;
+                    // Find collision surface angle
+                    var intersects = _Core.CollisionSystem.Raycast(shot.Position, shot.Direction, wall);
                     if (intersects.Length == 0)
                     {
-                        switch (wall)
+                        //only happens when a collision shape grazes a wall
+                        var hitscan = new List<(Vector2f position, float angle)>();
+                        var direction = shot.Direction - 90;
+                        for (int i = 0; i <= 180; i++)
                         {
-                            case RectangleCollisionShape rect:
-                                intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.LastPosition.AngleTowards(rect.Position + rect.Size / 2), wall);
-                                break;
-                            case PolygonCollisionShape poly:
-                                float minX, minY;
-                                minX = minY = float.MaxValue;
-                                float maxX, maxY;
-                                maxX = maxY = float.MinValue;
-                                foreach (var point in poly.Points)
-                                {
-                                    minX = Math.Min(minX, point.X);
-                                    maxX = Math.Max(maxX, point.X);
-                                    minY = Math.Min(minY, point.Y);
-                                    maxY = Math.Max(maxY, point.Y);
-                                }
-                                var polyCenter = poly.Position + new Vector2f((maxX + minX) / 2f, (maxY + minY) / 2f);
-                                intersects = _Core.CollisionSystem.Raycast(shot.LastPosition, shot.LastPosition.AngleTowards(polyCenter), wall);
-                                break;
+                            hitscan.AddRange(_Core.CollisionSystem.Raycast(shot.Position, MathHelper.ValidateAngle(direction + i), wall));
                         }
+                        if (hitscan.Count == 0) return; // should never happen - hopefully
+                        intersects = hitscan.OrderBy(i => shot.Position.DistanceBetweenSquared(i.position)).ToArray();
+                        if (shot.Collision.CollisionGeometry == Geometry.Circle) intersects[0].Angle = MathHelper.ValidateAngle(shot.Position.AngleTowards(intersects[0].Position) + 90);
                     }
                     var (position, angle) = intersects[0];
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, position, angle, shot.SourceWeapon, shot.Primary));
+                    //_Effects.Add(new Effect(Net.GetNextId(), EffectType.Environment, position, angle, shot.SourceWeapon, shot.Primary));
                     shot.Direction = MathHelper.CalculateReflectionAngle(shot.Direction, angle);
-                    shot.Reset();
-                    //while (shot.Collision.Collide(wall)) shot.Update(deltaT);
+                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, position, shot.Direction, shot.SourceWeapon, shot.Primary));
                 }
                 else
                 {

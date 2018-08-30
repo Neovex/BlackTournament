@@ -304,10 +304,8 @@ namespace BlackTournament.GameStates
                     var size = new Vector2f(8, 4);
                     var grenateGfx = new Rectangle(_Core)
                     {
-                        Position = position,
                         Size = size,
                         Origin = size / 2,
-                        Rotation = rotation,
                         Color = Color.Black
                     };
                     if (primary)
@@ -315,8 +313,8 @@ namespace BlackTournament.GameStates
                         grenateGfx.OutlineColor = Color.White;
                         grenateGfx.OutlineThickness = 0.5f;
                     }
-                    grenate.AddChild(grenateGfx);
                     // Add Smoke Trail
+                    grenate.AddChild(grenateGfx);
                     grenate.AddChild(new Remote<SmokeTrailEmitter>(_SmokeTrailEmitter, _SmokeTrailEmitter.ParticleInfo.SpawnRate));
                     _EnitityLookup.Add(id, grenate);
                     Layer_Game.AddChild(grenate);
@@ -348,7 +346,7 @@ namespace BlackTournament.GameStates
             switch (effect)
             {
                 case EffectType.Environment:
-                    var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 50), Color.Cyan);
+                    var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 30), primary ? Color.Cyan : Color.Red);
                     Layer_Game.AddChild(line);
                     _Core.AnimationManager.Wait(3, () => Layer_Game.RemoveChild(line));
                     break;
