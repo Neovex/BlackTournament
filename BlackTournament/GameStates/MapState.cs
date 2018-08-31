@@ -71,6 +71,8 @@ namespace BlackTournament.GameStates
             Layer_Game.View = _View;
             Layer_Overlay.View = _View;
 
+            _Core.DeviceResized += HandleDeviceResized;
+
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
             foreach (var layer in _MapData.TileLayers)
@@ -87,7 +89,7 @@ namespace BlackTournament.GameStates
                 }
                 Layer_BG.AddChild(mapLayer);
             }
-
+            
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
 
@@ -100,52 +102,12 @@ namespace BlackTournament.GameStates
             // Setup Special Effects
             SetupEmitters();
 
-            // TESTING ############################################
-
-            // Debug Views
-            /*
-            var wallColor = new Color(155, 155, 155, 155);
-            foreach (var shape in _MapData.WallCollider) // Collision
-            {
-                if (shape is RectangleCollisionShape)
-                {
-                    var s = (RectangleCollisionShape)shape;
-                    Layer_BG.AddChild(new Rectangle(_Core)
-                    {
-                        Position = s.Position,
-                        Size = s.Size,
-                        FillColor = wallColor,
-                        OutlineColor = Color.Black,
-                        OutlineThickness = 1
-                    });
-                }
-                else if (shape is PolygonCollisionShape)
-                {
-                    var s = (PolygonCollisionShape)shape;
-                    Layer_BG.AddChild(new Polygon(_Core, s.Points)
-                    {
-                        Position = s.Position,
-                        FillColor = wallColor,
-                        OutlineColor = Color.Black,
-                        OutlineThickness = 1
-                    });
-                }
-            }
-            foreach (var pos in _MapData.SpawnPoints) // Spawns
-            {
-                Layer_BG.AddChild(new Rectangle(_Core)
-                {
-                    Position = pos,
-                    Size = new Vector2f(10, 10),
-                    Origin = new Vector2f(5, 5),
-                    OutlineThickness = 1,
-                    OutlineColor = Color.Blue,
-                    FillColor = Color.White,
-                    Alpha = 0.3f
-                });
-            }
-            */
             return true;
+        }
+
+        private void HandleDeviceResized(Vector2u size)
+        {
+            _View.Size = size.ToVector2f();
         }
 
         private void SetupEmitters()
@@ -261,6 +223,7 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
+            _Core.DeviceResized -= HandleDeviceResized;
         }
 
         public void CreatePlayer(int id, bool isLocalPlayer = false)

@@ -54,7 +54,10 @@ namespace BlackTournament
         public void Run(String arguments)
         {
             // Init Black Coat Engine
-            using (Core = new Core(Core.CreateDevice(800, 600, "Black Tournament", Styles.Close, 8)))
+            var device = Device.Create(new VideoMode(800, 600), "Black Tournament", Styles.Default, 8);
+            //var device = Core.DesktopDevice;
+            device.SetTitle("Black Tournament");
+            using (Core = new Core(device))
             {
                 // Init Core
                 Core.Debug = true;
@@ -80,7 +83,6 @@ namespace BlackTournament
                 // Start Game
                 if (String.IsNullOrWhiteSpace(arguments))
                 {
-                    //ExecuteCommand("ld thepit");
                     MenuController.Activate();
                     //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core)));
                 }
@@ -107,7 +109,6 @@ namespace BlackTournament
         {
             _Server.Update(deltaT);
             _Client.Update(deltaT);
-            System.Threading.Thread.Sleep(1);
         }
 
         public void StartNewGame(String map = null, String host = null, int port = 0)

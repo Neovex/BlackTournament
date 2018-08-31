@@ -60,11 +60,10 @@ namespace BlackTournament.Controller
 
         public void Activate(BlackTournamentClient client)
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
             if (_Client != null || _State != null) throw new InvalidStateException();
 
             // Init
-            _Client = client;
+            _Client = client ?? throw new ArgumentNullException(nameof(client));
             if (_MapData.Load(_Client.MapName, _Game.Core.CollisionSystem))
             {
                 Activate(_State = new MapState(_Game.Core, _MapData));
