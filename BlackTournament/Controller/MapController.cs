@@ -228,7 +228,7 @@ namespace BlackTournament.Controller
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
-            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).ToVector2f().AngleTowards(mousePosition) - 2;
+            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).AngleTowards(mousePosition) - 2;
             _Client.PlayerRotation = MathHelper.ValidateAngle(_Client.PlayerRotation);
             _State.RotatePlayer(_Client.PlayerRotation); // update state
         }

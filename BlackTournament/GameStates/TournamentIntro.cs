@@ -24,7 +24,7 @@ namespace BlackTournament.GameStates
             _Text = new GameText(_Core);
             _Text.Position = new Vector2f(225, 399);
             _Text.Text = "HOLY SHIT! We got an Intro?";
-            Layer_Game.AddChild(_Text);
+            Layer_Game.Add(_Text);
             _Core.AnimationManager.Wait(2, () => _Core.StateManager.ChangeState(new MainMenu(_Core)));
 
             return true;
@@ -39,7 +39,7 @@ namespace BlackTournament.GameStates
         {
             // todo : unload intro
 
-            Layer_Game.RemoveChild(_Text);
+            Layer_Game.Remove(_Text);
         }
     }
 }

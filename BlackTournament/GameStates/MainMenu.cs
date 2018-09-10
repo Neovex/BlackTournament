@@ -33,7 +33,7 @@ namespace BlackTournament.GameStates
             _Text = new GameText(_Core);
             _Text.Position = new Vector2f(300, 100);
             _Text.Text = "MAIN MENU";
-            Layer_Game.AddChild(_Text);
+            Layer_Game.Add(_Text);
             
             music = MusicLoader.Load("Ten_Seconds_to_Rush");
             music.Volume = 15;

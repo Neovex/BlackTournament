@@ -12,6 +12,7 @@ using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities;
 using BlackTournament.Systems;
 using BlackCoat.Tools;
+using BlackCoat.UI;
 using SFML.Window;
 
 namespace BlackTournament.GameStates
@@ -33,14 +34,16 @@ namespace BlackTournament.GameStates
 
         protected override bool Load()
         {
-            IntersectionTest();
+            //IntersectionTest();
             //ShaderTest();
+            //UiTest();
+            Log.Info("Nobody here but us chickens");
             return true;
         }
 
         protected override void Update(float deltaT)
         {
-            _Ray.End.Position = Create.Vector2fFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
+            //_Ray.End.Position = Create.Vector2fFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
         }
 
         protected override void Destroy()
@@ -52,7 +55,7 @@ namespace BlackTournament.GameStates
         private void IntersectionTest()
         {
             _Ray = new Line(_Core, new Vector2f(300, 300), new Vector2f(), Color.Green);
-            Layer_Game.AddChild(_Ray);
+            Layer_Game.Add(_Ray);
 
             _Circle = new Circle(_Core)
             {
@@ -62,7 +65,7 @@ namespace BlackTournament.GameStates
                 OutlineColor = Color.Cyan,
                 OutlineThickness = 0.5f
             };
-            Layer_Game.AddChild(_Circle);
+            Layer_Game.Add(_Circle);
 
 
             _Rect = new Rectangle(_Core)
@@ -72,10 +75,10 @@ namespace BlackTournament.GameStates
                 Color = Color.Yellow,
                 Alpha = 0.3f
             };
-            Layer_Game.AddChild(_Rect);
+            Layer_Game.Add(_Rect);
 
             _Line = new Line(_Core, _Circle.Position, _Circle.Position + Create.Vector2fFromAngle(_LineAngle, 230), Color.Blue);
-            Layer_Game.AddChild(_Line);
+            Layer_Game.Add(_Line);
 
             _Core.Input.MouseButtonPressed += RayMouseButtonPressed;
         }
@@ -101,12 +104,12 @@ namespace BlackTournament.GameStates
                         Color = Color.Red,
                         Alpha = 0.75f
                     };
-                    Layer_Game.AddChild(r);
+                    Layer_Game.Add(r);
 
-                    var l = new Line(_Core, position, position+ Create.Vector2fFromAngle(MathHelper.CalculateReflectionAngle(rayAngle, angle), 100), Color.Cyan);
-                    Layer_Game.AddChild(l);
+                    var l = new Line(_Core, position, position + Create.Vector2fFromAngle(MathHelper.CalculateReflectionAngle(rayAngle, angle), 100), Color.Cyan);
+                    Layer_Game.Add(l);
 
-                    _Core.AnimationManager.Run(0, 2000, 5f, v => r.Rotation = v, () => { Layer_Game.RemoveChild(r); Layer_Game.RemoveChild(l); });
+                    _Core.AnimationManager.Run(0, 2000, 5f, v => r.Rotation = v, () => { Layer_Game.Remove(r); Layer_Game.Remove(l); });
                 }
             }
             else
@@ -131,7 +134,7 @@ namespace BlackTournament.GameStates
             var state = _BlurTest.RenderState;
             state.Shader = _Shader;
             _BlurTest.RenderState = state;
-            Layer_Game.AddChild(_BlurTest);
+            Layer_Game.Add(_BlurTest);
 
             _Core.Input.KeyPressed += (k) =>
             {
@@ -147,6 +150,70 @@ namespace BlackTournament.GameStates
                 }
                 _Shader.SetParameter("blur_radius", _Blurryness);
             };
+        }
+
+        private void UiTest()
+        {
+            var labels = new List<Label>();
+            for (int i = 0; i < 10; i++)
+            {
+                labels.Add(new Label(_Core, "Banana " + i)
+                {
+                    CharacterSize = 14
+                });
+            }
+
+
+            var container = new UIContainer(_Core)
+            {
+                Input = new UIInput(_Core.Input, true),
+                BackgroundColor = new Color(100, 100, 100),
+                BackgroundAlpha = 1,
+                Init = new UIComponent[]
+                {
+                    new AnchoredContainer(_Core, Anchor.TopRight)
+                    {
+                        BackgroundAlpha = 0.4f,
+                        Init = labels.Take(1)
+                    },
+
+                    new OffsetContainer(_Core)
+                    {
+                        BackgroundAlpha = 0.4f,
+                        Position = new Vector2f(200, 200),
+                        Init = labels.Skip(1).Take(3)
+                    },
+
+                    new UICanvas(_Core, new Vector2f(20, 20))
+                    {
+                        BackgroundAlpha = 0.4f,
+                        Padding=new FloatRect(10,10,10,10),
+                        DockX = true,
+                        DockY = true,
+                        Init = new UIComponent[]
+                        {
+                            labels.Skip(4).First(),
+                            new DistributionContainer(_Core, true)
+                            {
+                                BackgroundAlpha = 0.4f,
+                                Position = new Vector2f(100, 100),
+                                DockX = true,
+                                Init = labels.Skip(5).Take(4)
+                            }
+                        }
+                    },
+
+                    new TextBox(_Core)
+                    {
+                        Position = new Vector2f(50,150),
+                        InnerPadding = new FloatRect(5,5,5,5)
+                    }
+                }
+            };
+            Layer_Game.Add(container);
+
+
+            OpenInspector();
         }
     }
 }

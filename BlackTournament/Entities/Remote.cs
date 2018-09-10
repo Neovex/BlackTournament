@@ -17,6 +17,7 @@ namespace BlackTournament.Entities
         protected float _TriggerTimer;
 
 
+        public string Name { get; set; }
         public virtual Container Parent { get; set; }
         public virtual bool Visible { get => false; set { } }
         public virtual View View { get => null; set { } }
@@ -35,6 +36,12 @@ namespace BlackTournament.Entities
 
         public IEntity Source { get; set; }
         public int AdditionalTriggers { get; set; }
+
+        /// <summary>
+        /// Gets the position of this <see cref="IEntity"/> independent from scene graph and view.
+        /// </summary>
+        public Vector2f GlobalPosition => Parent == null ? Position : Position.ToGlobal(Parent.GlobalPosition);
+
 
         public Remote(TEmitter emitter, float triggerFrequency, IEntity source = null)
         {

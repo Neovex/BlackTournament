@@ -66,7 +66,7 @@ namespace BlackTournament.GameStates
         protected override bool Load()
         {
             // Setup View
-            _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize.ToVector2f()));
+            _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize));
             Layer_BG.View = _View;
             Layer_Game.View = _View;
             Layer_Overlay.View = _View;
@@ -87,7 +87,7 @@ namespace BlackTournament.GameStates
                     mapLayer.AddTile(i * 4, tile.Position, tile.TexCoords); // mayhaps find a better solution
                     i++;
                 }
-                Layer_BG.AddChild(mapLayer);
+                Layer_BG.Add(mapLayer);
             }
             
             // Set camera to the center of the map
@@ -105,9 +105,9 @@ namespace BlackTournament.GameStates
             return true;
         }
 
-        private void HandleDeviceResized(Vector2u size)
+        private void HandleDeviceResized(Vector2f size)
         {
-            _View.Size = size.ToVector2f();
+            _View.Size = size;
         }
 
         private void SetupEmitters()
@@ -210,7 +210,7 @@ namespace BlackTournament.GameStates
             host.AddEmitter(_ImpactEmitter);
             host.AddEmitter(_ExplosionEmitter);
             host.AddEmitter(_SmokeTrailEmitter);
-            Layer_Overlay.AddChild(host);
+            Layer_Overlay.Add(host);
         }
 
         protected override void Update(float deltaT)
@@ -235,7 +235,7 @@ namespace BlackTournament.GameStates
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME!
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
-            Layer_Game.AddChild(player);
+            Layer_Game.Add(player);
             _EnitityLookup.Add(id, player);
 
             if (isLocalPlayer) _LocalPlayer = player;
@@ -253,7 +253,7 @@ namespace BlackTournament.GameStates
                 Visible = visible
             };
             _EnitityLookup.Add(id, entity);
-            Layer_Game.AddChild(entity);
+            Layer_Game.Add(entity);
         }
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
@@ -277,10 +277,10 @@ namespace BlackTournament.GameStates
                         grenateGfx.OutlineThickness = 0.5f;
                     }
                     // Add Smoke Trail
-                    grenate.AddChild(grenateGfx);
-                    grenate.AddChild(new Remote<SmokeTrailEmitter>(_SmokeTrailEmitter, _SmokeTrailEmitter.ParticleInfo.SpawnRate));
+                    grenate.Add(grenateGfx);
+                    grenate.Add(new Remote<SmokeTrailEmitter>(_SmokeTrailEmitter, _SmokeTrailEmitter.ParticleInfo.SpawnRate));
                     _EnitityLookup.Add(id, grenate);
-                    Layer_Game.AddChild(grenate);
+                    Layer_Game.Add(grenate);
                     break;
 
                 case PickupType.Hedgeshock:
@@ -297,9 +297,9 @@ namespace BlackTournament.GameStates
                     var orb = new Remote<LightningEmitter>(_LigtningEmitter, WeaponData.HedgeshockPrimary.FireRate / 2);
                     orb.AdditionalTriggers = 1;
                     orb.AboutToBeTriggered += e => e.ParticleInfo.LigtningTarget = orb.Position + Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(0, 360), WeaponData.HedgeshockSecundary.Length);
-                    shockOrb.AddChild(orb);
+                    shockOrb.Add(orb);
                     _EnitityLookup.Add(id, shockOrb);
-                    Layer_Game.AddChild(shockOrb);
+                    Layer_Game.Add(shockOrb);
                     break;
             }
         }
@@ -310,8 +310,8 @@ namespace BlackTournament.GameStates
             {
                 case EffectType.Environment:
                     var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 30), primary ? Color.Cyan : Color.Red);
-                    Layer_Game.AddChild(line);
-                    _Core.AnimationManager.Wait(3, () => Layer_Game.RemoveChild(line));
+                    Layer_Game.Add(line);
+                    _Core.AnimationManager.Wait(3, () => Layer_Game.Remove(line));
                     break;
 
                 case EffectType.Explosion:
@@ -406,7 +406,7 @@ namespace BlackTournament.GameStates
         public void DestroyEntity(int id)
         {
             var entity = _EnitityLookup[id];
-            entity.Parent.RemoveChild(entity);
+            entity.Parent.Remove(entity);
             _EnitityLookup.Remove(id);
         }
 
