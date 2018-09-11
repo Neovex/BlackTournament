@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BlackTournament.Net.Client;
-using BlackTournament.Net.Data;
-using BlackTournament.Systems;
 using Lidgren.Network;
+using BlackCoat.Network;
+using BlackTournament.Systems;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.Net
 {
@@ -27,7 +25,7 @@ namespace BlackTournament.Net
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
         public IEnumerable<Effect> Effects => _Effects;
-        public override Int32 AdminId => Net.ADMIN_ID;
+        public override Int32 AdminId => NetIdProvider.ADMIN_ID;
 
 
         // Connection Events
@@ -253,13 +251,13 @@ namespace BlackTournament.Net
             UpdateReceived.Invoke();
         }
 
-        protected override void UserConnected(User user)
+        protected override void UserConnected(NetUser user)
         {
             // Called from server when another user has connected to the current server
             // override is intentionally empty - user adding is handled in ServerUpdate(msg);
         }
 
-        protected override void UserDisconnected(User user)
+        protected override void UserDisconnected(NetUser user)
         {
             UserLeft.Invoke(_PlayerLookup[user.Id]);
             _PlayerLookup.Remove(user.Id);

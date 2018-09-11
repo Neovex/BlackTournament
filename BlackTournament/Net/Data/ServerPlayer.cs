@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlackTournament.Net.Server;
 using BlackTournament.Systems;
 using Lidgren.Network;
 using SFML.System;
+using BlackCoat;
+using BlackCoat.Network;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
-using BlackCoat;
 
 namespace BlackTournament.Net.Data
 {

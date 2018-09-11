@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using SFML.System;
 
 using BlackCoat;
+using BlackCoat.Network;
 
 using BlackTournament.GameStates;
 using BlackTournament.Net;
 using BlackTournament.Tmx;
 using BlackTournament.Net.Data;
-using System.Collections.Generic;
 using BlackTournament.Systems;
 
 namespace BlackTournament.Controller
@@ -27,7 +28,7 @@ namespace BlackTournament.Controller
 
         public MapController(Game game) : base(game)
         {
-            _MapData = new TmxMapper(Net.Net.GetNextId);
+            _MapData = new TmxMapper(() => NetIdProvider.NEXT_ID);
             _Players = new List<ClientPlayer>();
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using BlackCoat.Network;
 
 namespace BlackTournament.Net
 {
@@ -9,10 +10,5 @@ namespace BlackTournament.Net
         public const Single UPDATE_IMPULSE = 1f / 60;
 
         public static readonly Commands<NetMessage> COMMANDS = new Commands<NetMessage>(NetMessage.Handshake, NetMessage.UserConnected, NetMessage.UserDisconnected);
-
-        private static  Int32 _ID_PROVIDER = new Random().Next(Int32.MinValue / 2, 0);
-        public static readonly Int32 ADMIN_ID = GetNextId();
-
-        public static Int32 GetNextId() => _ID_PROVIDER++;
     }
 }

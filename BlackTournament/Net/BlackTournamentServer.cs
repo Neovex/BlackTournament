@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BlackCoat;
-using BlackTournament.Net.Data;
-using BlackTournament.Net.Server;
-using BlackTournament.Systems;
 using Lidgren.Network;
+using BlackCoat;
+using BlackCoat.Network;
 using BlackTournament.Tmx;
+using BlackTournament.Systems;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.Net
 {
@@ -19,8 +17,8 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
-        public override int AdminId => Net.ADMIN_ID;
-        public override int NextClientId => Net.GetNextId();
+        public override int AdminId => NetIdProvider.ADMIN_ID;
+        public override int NextClientId => NetIdProvider.NEXT_ID;
 
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
@@ -52,7 +50,7 @@ namespace BlackTournament.Net
 
         private TmxMapper LoadMapFromMapname(string mapName)
         {
-            var mapper = new TmxMapper(Net.GetNextId);
+            var mapper = new TmxMapper(() => NextClientId);
             if (mapper.Load(mapName, _Core.CollisionSystem))
             {
                 return mapper;

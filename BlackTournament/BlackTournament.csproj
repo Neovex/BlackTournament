@@ -90,9 +90,6 @@
     <Compile Include="Net\Data\NetEntityBase.cs" />
     <Compile Include="Net\BlackTournamentClient.cs" />
     <Compile Include="Net\BlackTournamentServer.cs" />
-    <Compile Include="Net\Client\Client.cs" />
-    <Compile Include="Net\Client\ManagedClient.cs" />
-    <Compile Include="Net\Commands.cs" />
     <Compile Include="Net\Data\Pickup.cs" />
     <Compile Include="Net\Data\Player.cs" />
     <Compile Include="Net\Data\ServerPlayer.cs" />
@@ -100,11 +97,6 @@
     <Compile Include="Net\Data\Weapon.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\Net.cs" />
-    <Compile Include="Net\NetBase.cs" />
-    <Compile Include="Net\Server\ManagedServer.cs" />
-    <Compile Include="Net\Server\Server.cs" />
-    <Compile Include="Net\Server\ServerUser.cs" />
-    <Compile Include="Net\User.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -156,7 +148,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Net\Data\Data.cd" />
-    <None Include="Net\Network Core.cd" />
     <None Include="Maps\ThePit.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

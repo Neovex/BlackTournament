@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 using BlackCoat;
 using BlackTournament.Systems;
-using BlackTournament.Net.Server;
 using BlackTournament.Tmx;
 using Lidgren.Network;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 using SFML.System;
+using BlackCoat.Network;
 
 namespace BlackTournament.Net.Data
 {
@@ -67,14 +67,14 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            var effect = new Effect(Net.GetNextId(), EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
+            var effect = new Effect(NetIdProvider.NEXT_ID, EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
 
             var weaponData = primaryFire ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
             switch (weaponData.ProjectileGeometry)
             {
                 case Geometry.Point:
                     // Spawn Shot
-                    var s = new Shot(Net.GetNextId(), player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn);
+                    var s = new Shot(NetIdProvider.NEXT_ID, player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
@@ -87,7 +87,7 @@ namespace BlackTournament.Net.Data
                 case Geometry.Circle:
                     // Spawn Shot
                     var circ = new CircleCollisionShape(_Core.CollisionSystem, player.WeaponSpawn, weaponData.Length);
-                    s = new Shot(Net.GetNextId(), player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn, p => circ.Position = p, circ);
+                    s = new Shot(NetIdProvider.NEXT_ID, player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn, p => circ.Position = p, circ);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
@@ -250,7 +250,7 @@ namespace BlackTournament.Net.Data
                     // walls occlude ray weapons hence update the length for player intersections
                     length = impactlength;
                     // add impact
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
+                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
                 }
             }
 
@@ -268,7 +268,7 @@ namespace BlackTournament.Net.Data
             foreach (var pi in affectedPlayers)
             {
                 // add impacts
-                _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
+                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
                 pi.Player.DamagePlayer(damage);
             }
@@ -307,9 +307,9 @@ namespace BlackTournament.Net.Data
                         if (shot.Collision.CollisionGeometry == Geometry.Circle) intersects[0].Angle = MathHelper.ValidateAngle(shot.Position.AngleTowards(intersects[0].Position) + 90);
                     }
                     var (position, angle) = intersects[0];
-                    //_Effects.Add(new Effect(Net.GetNextId(), EffectType.Environment, position, angle, shot.SourceWeapon, shot.Primary));
+                    //_Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Environment, position, angle, shot.SourceWeapon, shot.Primary));
                     shot.Direction = MathHelper.CalculateReflectionAngle(shot.Direction, angle);
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, position, shot.Direction, shot.SourceWeapon, shot.Primary));
                 }
                 else
                 {
@@ -324,7 +324,7 @@ namespace BlackTournament.Net.Data
                     else
                     {
                         // add impact
-                        _Effects.Add(new Effect(Net.GetNextId(), EffectType.WallImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                     }
                     return;
                 }
@@ -343,7 +343,7 @@ namespace BlackTournament.Net.Data
                 else
                 {
                     // add impact
-                    _Effects.Add(new Effect(Net.GetNextId(), EffectType.PlayerImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                     if (shot.IsPenetrating)
                     {
                         // damage player
@@ -366,7 +366,7 @@ namespace BlackTournament.Net.Data
             shot.Exploded = true;
 
             // Visualize
-            _Effects.Add(new Effect(Net.GetNextId(), EffectType.Explosion, shot.Position, 0, shot.SourceWeapon, shot.Primary, shot.BlastRadius));
+            _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Explosion, shot.Position, 0, shot.SourceWeapon, shot.Primary, shot.BlastRadius));
 
             // Distribute Damage
             foreach (var player in _Players)
