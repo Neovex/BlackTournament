@@ -312,14 +312,14 @@ namespace BlackTournament.GameStates
                     var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 30), primary ? Color.Cyan : Color.Red);
                     Layer_Game.Add(line);
                     _Core.AnimationManager.Wait(3, () => Layer_Game.Remove(line));
-                    break;
+                break;
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);
                     _ExplosionInfo.Scale = Create.Vector2f(size / 120);
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
-                    break;
+                break;
 
                 case EffectType.WallImpact:
                     _SparkInfo.Update(source); 
@@ -327,17 +327,20 @@ namespace BlackTournament.GameStates
                     _ImpactEmitter.Position = position;
                     _ImpactEmitter.Trigger();
                     if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
-                    break;
+                break;
 
                 case EffectType.PlayerImpact:
+                    // hacky but works decent
+                    _SparkEmitter.Position = position;
                     _SparkInfo.Update(PickupType.Drake);
                     _SparkInfo.Color = Color.Red;
-                    _SparkInfo.ParticlesPerSpawn = 15;
+                    _SparkInfo.ParticlesPerSpawn = (!primary && source == PickupType.Hedgeshock) ? 2u : 15u;
                     _SparkInfo.Direction = rotation;
-                    _SparkEmitter.Position = position;
+                    _SparkInfo.Offset = new Vector2f(-10, 10);
                     _SparkEmitter.Trigger();
+                    _SparkInfo.Offset = default(Vector2f);
                     _SparkInfo.Direction = null;
-                    break;
+                break;
 
                 case EffectType.Gunfire:
                     if (primary)
@@ -352,18 +355,18 @@ namespace BlackTournament.GameStates
                                 _TracerLinesInfo.AlphaFade = -3;
                                 _TracerLinesEmitter.Position = position;
                                 _TracerLinesEmitter.Trigger();
-                                break;
+                            break;
 
                             case PickupType.Hedgeshock:
                                 _Sfx.Play(Files.Sfx_Spark, position);
                                 _LigtningInfo.LigtningTarget = position + Create.Vector2fFromAngleLookup(rotation, size);
                                 _LigtningEmitter.Position = position;
                                 _LigtningEmitter.Trigger();
-                                break;
+                            break;
 
                             case PickupType.Thumper:
                                 _Sfx.Play(Files.Sfx_Grenatelauncher, position);
-                                break;
+                            break;
 
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_LaserBlastSmall, position);
@@ -373,7 +376,7 @@ namespace BlackTournament.GameStates
                                 _TracerLinesInfo.AlphaFade = -2;
                                 _TracerLinesEmitter.Position = position;
                                 _TracerLinesEmitter.Trigger();
-                                break;
+                            break;
                         }
                     }
                     else // secondary
@@ -383,10 +386,10 @@ namespace BlackTournament.GameStates
                             case PickupType.Drake:
                             case PickupType.Thumper:
                                 _Sfx.Play(Files.Sfx_Grenatelauncher, position);
-                                break;
+                            break;
                             case PickupType.Hedgeshock:
                                 _Sfx.Play(Files.Sfx_Pew, position);
-                                break;
+                            break;
                             case PickupType.Titandrill:
                                 _Sfx.Play(Files.Sfx_LaserBlastBig, position);
                                 var target = Create.Vector2fFromAngleLookup(rotation, size);
@@ -396,10 +399,10 @@ namespace BlackTournament.GameStates
                                 _TracerLinesInfo.AlphaFade = -2;
                                 _TracerLinesEmitter.Position = position;
                                 _TracerLinesEmitter.Trigger();
-                                break;
+                            break;
                         }
                     }
-                    break;
+                 break;
             }
         }
 

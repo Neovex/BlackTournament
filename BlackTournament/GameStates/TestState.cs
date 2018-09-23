@@ -37,6 +37,7 @@ namespace BlackTournament.GameStates
             //IntersectionTest();
             //ShaderTest();
             //UiTest();
+            TextureTests();
             Log.Info("Nobody here but us chickens");
             return true;
         }
@@ -214,6 +215,26 @@ namespace BlackTournament.GameStates
 
 
             OpenInspector();
+        }
+
+        private void TextureTests()
+        {
+            var tex = TextureLoader.Load(Files.Emitter_Smoke_White);
+            Log.Debug(tex.Repeated);
+            var graphic = new Graphic(_Core, tex)
+            {
+                Position = new Vector2f(40,100)
+            };
+            Layer_Game.Add( new Graphic(_Core, tex)
+            {
+                Position = new Vector2f(240, 100)
+            });
+
+            var renderTexture = new PrerenderedContainer(_Core);
+            renderTexture.Add(graphic);
+            renderTexture.RedrawNow();
+            Layer_Game.Add(renderTexture);
+
         }
     }
 }

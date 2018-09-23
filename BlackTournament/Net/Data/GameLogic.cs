@@ -82,7 +82,7 @@ namespace BlackTournament.Net.Data
                     // Check Intersections, Occlusion etc. +
                     // Perform data adjustments (remove health etc.) +
                     // Spawn impact effects
-                    CheckRayWeaponIntersections(player, weaponData.Length, weaponData.Damage, primaryFire, effect);
+                    CheckRayWeaponIntersections(player, primaryFire, effect);
                     break;
                 case Geometry.Circle:
                     // Spawn Shot
@@ -227,7 +227,7 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        private void CheckRayWeaponIntersections(ServerPlayer player, float length, float damage, bool primary, Effect effect)
+        private void CheckRayWeaponIntersections(ServerPlayer player, bool primary, Effect effect)
         {
             // inaccuracy modification
             var rotation = player.Rotation;
@@ -238,19 +238,33 @@ namespace BlackTournament.Net.Data
                 rotation = MathHelper.ValidateAngle(rotation);
             }
 
-            // find first wall intersection
-            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall)).Select(i=>i.Position) // ANGLE REMOVED
-                                                                               .OrderBy(p => p.ToLocal(player.WeaponSpawn).LengthSquared()).ToArray();
-            
+            // find wall intersections
+            var wallIintersectionPoints = _Map.WallCollider.SelectMany(wall => _Core.CollisionSystem.Raycast(player.WeaponSpawn, rotation, wall))
+                                                                               .Select(i => i.Position)
+                                                                               .OrderBy(p => p.ToLocal(player.WeaponSpawn).LengthSquared())
+                                                                               .ToArray();
+
+            var length = weapon.Length;
             if (wallIintersectionPoints.Length != 0)
             {
-                var impactlength = (float)wallIintersectionPoints[0].ToLocal(player.WeaponSpawn).Length();
-                if (impactlength <= length)
+                if (!primary && player.CurrentWeaponType == PickupType.Titandrill) // titan drills secondary fire penetrates walls!
                 {
-                    // walls occlude ray weapons hence update the length for player intersections
-                    length = impactlength;
-                    // add impact
-                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
+                    foreach (var wallIntersection in wallIintersectionPoints)
+                    {
+                        // add impact
+                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIntersection, rotation, player.CurrentWeaponType, primary));
+                    }
+                }
+                else
+                {
+                    var impactlength = (float)wallIintersectionPoints[0].ToLocal(player.WeaponSpawn).Length();
+                    if (impactlength <= length)
+                    {
+                        // walls occlude ray weapons hence update the length for player intersections
+                        length = impactlength;
+                        // add impact
+                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
+                    }
                 }
             }
 
@@ -264,15 +278,16 @@ namespace BlackTournament.Net.Data
                                           })
                                           .Where(pi => pi.Intersections.Length != 0 && pi.Intersections[0].ToLocal(player.WeaponSpawn).Length() <= length);
 
-            //update game
+            //update players
             foreach (var pi in affectedPlayers)
             {
                 // add impacts
-                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
+                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
-                pi.Player.DamagePlayer(damage);
+                pi.Player.DamagePlayer(weapon.Damage);
             }
 
+            // update weapon effect
             effect.Size = length;
             effect.Rotation = rotation;
         }
@@ -343,7 +358,7 @@ namespace BlackTournament.Net.Data
                 else
                 {
                     // add impact
-                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                     if (shot.IsPenetrating)
                     {
                         // damage player
@@ -377,6 +392,8 @@ namespace BlackTournament.Net.Data
                     if (distance <= shot.BlastRadius)
                     {
                         player.DamagePlayer(Math.Max(shot.Damage / 3, shot.Damage * (1 - (distance / shot.BlastRadius)))); // Todo : check damage falloff
+                        // Add impact
+                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Position.AngleTowards(player.Position), shot.SourceWeapon, shot.Primary));
                     }
                 }
             }

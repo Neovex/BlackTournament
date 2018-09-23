@@ -155,7 +155,7 @@
     <None Include="Assets\Music\Ten_Seconds_to_Rush.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Full Network Map.cd" />
+    <None Include="Net\Full Network Map.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -32,7 +32,7 @@ namespace BlackTournament.Net.Data
 
         public bool IsExplosive => BlastRadius != 0;
         public bool IsBouncy => !Primary && (SourceWeapon == PickupType.Thumper || SourceWeapon == PickupType.Hedgeshock);
-        public bool IsPenetrating => !Primary && (SourceWeapon == PickupType.Titandrill || SourceWeapon == PickupType.Hedgeshock);
+        public bool IsPenetrating => !Primary && SourceWeapon == PickupType.Hedgeshock;
         public bool Exploded { get; set; }
 
         public Shot(int id, float direction, float speed, float damage, float blastRadius, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)

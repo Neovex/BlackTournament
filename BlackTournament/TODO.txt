@@ -13,16 +13,16 @@ idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos an
 X idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 
-create emitter configurations for VFX
+# create emitter configurations for VFX
 
-fix collision bug: no collision / intersection between rectangle and 0 degree ray (->)
+# fix collision bug: no collision / intersection between rectangle and 0 degree ray (->)
 
 #add id-d shots & 
 #pickups to serialization chain
 
 UC create game data from parsed map data?
 
-create basic UI elements
+# create basic UI elements
 
 add MD5 comparison against map tampering / versioning
 

@@ -24,9 +24,19 @@ namespace BlackTournament.Particles
             }
         }
         //public override bool UseAlphaAsTTL { get => true; set => base.UseAlphaAsTTL = value; }
-        public override float TTL { get => base.TTL + _Core.Random.NextFloat(-0.05f, 0.05f); set => base.TTL = value; }
+        public override float TTL
+        {
+            get => base.TTL + _Core.Random.NextFloat(-0.05f, 0.05f);
+            set => base.TTL = value;
+        }
         public float? Direction { get; set; }
         public Color DefaultColor { get; internal set; }
+        public override Vector2f Offset
+        {
+            get => _Core.Random.NextVector(base.Offset.X, base.Offset.Y);
+            set => base.Offset = value;
+        }
+
 
         public SparkInfo(Core core, float speed, float spread, float? direction = null)
         {

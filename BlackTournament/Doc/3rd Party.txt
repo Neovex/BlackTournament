@@ -11,13 +11,17 @@ http://www.facebook.com/wolfbainx
 
 Graphics
 --------
-Tile Textture Pack & Sinistar Graphics
+Tile Texture Pack & Sinistar Graphics
 by Daniel Cook
 http://www.lostgarden.com/
 
 Gun, Player & Pickup Graphics
 by Maximilian Stempel
 http://zaphiron.artstation.com/
+
+Some Menue Graphics
+by MillionthVector
+http://millionthvector.blogspot.com
 
 
 Music

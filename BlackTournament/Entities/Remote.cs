@@ -12,8 +12,8 @@ namespace BlackTournament.Entities
         public event Action<TEmitter> AboutToBeTriggered = i => { };
 
 
-        protected readonly TEmitter _Emitter;
-        protected readonly float _TriggerFrequency;
+        protected TEmitter _Emitter;
+        protected float _TriggerFrequency;
         protected float _TriggerTimer;
 
 
@@ -26,7 +26,7 @@ namespace BlackTournament.Entities
         public virtual BlendMode BlendMode { get => BlendMode.Alpha; set { } }
         public virtual Color Color { get => Color.White; set { } }
         public virtual float Alpha { get => 1; set { } }
-        public virtual RenderTarget RenderTarget => null;
+        public virtual RenderTarget RenderTarget { get => null; set { } }
         public virtual Vector2f Origin { get => default(Vector2f); set { } }
         public virtual Vector2f Position { get => _Emitter.Position; set => _Emitter.Position = value; }
         public virtual float Rotation { get => 0; set { } }
@@ -71,6 +71,12 @@ namespace BlackTournament.Entities
                     _Emitter.Trigger();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _Emitter = null;
+            Source = null;
         }
     }
 }
