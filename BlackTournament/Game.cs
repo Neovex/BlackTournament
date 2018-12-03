@@ -18,13 +18,15 @@ namespace BlackTournament
     public class Game
     {
         public static Font DefaultFont { get; private set; }
+        public static Font StyleFont { get; private set; }
 
         public const String ID = "BlackTournament";
         public const String TEXTURE_ROOT = "Assets\\Textures";
         public const String MUSIC_ROOT = "Assets\\Music";
         public const String FONT_ROOT = "Assets\\Fonts";
         public const String SFX_ROOT = "Assets\\Sfx";
-        public const String DEFAULT_FONT = "HighlandGothicLightFLF";
+        private const String DEFAULT_FONT = "HighlandGothicLightFLF";
+        private const String STYLE_FONT = "VTCBelialsBladeItalic";
         private const String _LOGFILE = "Log.txt";
 
 
@@ -46,7 +48,7 @@ namespace BlackTournament
             // Init Logging
             Log.Level = LogLevel.Debug;
             if (File.Exists(_LOGFILE)) File.AppendAllText(_LOGFILE, Environment.NewLine);
-            Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}"); // no good
+            // Log.OnLog += m => File.AppendAllText(_LOGFILE, $"{m}{Environment.NewLine}"); // TODO : find a better log to file solution
             Log.Info("################", "New Session:", DateTime.Now.ToLongTimeString(), "################");
         }
 
@@ -66,9 +68,12 @@ namespace BlackTournament
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 
-                // Init Game Font
+                // Init Game Fonts
                 _GlobalFonts = new FontLoader(FONT_ROOT);
                 DefaultFont = _GlobalFonts.Load(DEFAULT_FONT);
+                Core.InitializeFontHack(DefaultFont);
+                StyleFont = _GlobalFonts.Load(STYLE_FONT);
+                Core.InitializeFontHack(StyleFont);
                 // Todo: test text blur issue (might need round)
 
                 // Init Input
@@ -141,7 +146,7 @@ namespace BlackTournament
                 {
                     case "test":
                         TestController.Activate();
-                        break;
+                        return true;
 
                     case "state":
                         Log.Info("Current State:", Core.StateManager.CurrentStateName);

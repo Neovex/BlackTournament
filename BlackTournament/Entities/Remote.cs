@@ -40,7 +40,7 @@ namespace BlackTournament.Entities
         /// <summary>
         /// Gets the position of this <see cref="IEntity"/> independent from scene graph and view.
         /// </summary>
-        public Vector2f GlobalPosition => Parent == null ? Position : Position.ToGlobal(Parent.GlobalPosition);
+        public Vector2f GlobalPosition => Parent == null ? Position : (Position - Origin).ToGlobal(Parent.GlobalPosition);
 
 
         public Remote(TEmitter emitter, float triggerFrequency, IEntity source = null)

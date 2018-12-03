@@ -40,5 +40,15 @@ namespace BlackTournament
         public const String Emitter_Smoke_Grey = "Smoke_Grey";
         public const String Emitter_Smoke_White = "Smoke_White";
         public const String Emitter_Shockwave = "Shockwave";
+
+        // MENUE
+        public const String Menue_Logo = "Logo";
+        public const String Menue_Bg = "menue_bg";
+        public const String Menue_Button = "menue_button";
+        public const String Menue_Button_Active = "menue_button_active";
+        public const String Menue_Glow = "menue_glow";
+        public const String Menue_Gore = "menue_gore";
+        public const String Menue_Panel = "menue_panel";
+        public const String Menue_Title = "menue_title";
     }
 }

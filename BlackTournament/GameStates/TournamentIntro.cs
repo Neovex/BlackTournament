@@ -1,45 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.System;
-using BlackCoat;
-using BlackTournament.Entities;
+﻿using SFML.System;
 using SFML.Graphics;
+using BlackCoat;
+using BlackCoat.Entities;
 
 namespace BlackTournament.GameStates
 {
     public class TournamentIntro : Gamestate
     {
-        private GameText _Text;
+        private float _Counter;
+        private Graphic _BG;
+        private Graphic _Title;
+        private Graphic _Logo;
+        private TextItem _Text;
+        private Graphic _CenterT;
 
-        public TournamentIntro(Core core) : base(core)
+
+        public TournamentIntro(Core core) : base(core, nameof(TournamentIntro), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
         }
 
+
         protected override bool Load()
         {
-            // todo : load intro
+            // Title BG
+            Layer_Game.Add(_BG = new Graphic(_Core, TextureLoader.Load(Files.Menue_Glow))
+            {
+                Alpha = 0.6f
+            });
 
-            _Text = new GameText(_Core);
-            _Text.Position = new Vector2f(225, 399);
-            _Text.Text = "HOLY SHIT! We got an Intro?";
-            Layer_Game.Add(_Text);
-            _Core.AnimationManager.Wait(2, () => _Core.StateManager.ChangeState(new MainMenu(_Core)));
+            // Title Text Graphic
+            Layer_Game.Add(_Title = new Graphic(_Core, TextureLoader.Load(Files.Menue_Title)));
+            _Title.Origin = new Vector2f(_Title.Texture.Size.X / 2, 0);
 
+            // Logo
+            Layer_Game.Add(_Logo = new Graphic(_Core, TextureLoader.Load(Files.Menue_Logo))
+            {
+                Origin = new Vector2f(345, 355)
+            });
+
+            // Loading Text
+            Layer_Game.Add(_Text = new TextItem(_Core, "loading...", Game.StyleFont)
+            {
+                Position = Create.Vector2f(30),
+                CharacterSize = 16
+            });
+
+            // Stationary "T" in Logo center
+            Layer_Game.Add(_CenterT = new Graphic(_Core, TextureLoader.Load(Files.Menue_Title))
+            {
+                TextureRect = new IntRect(0, 90, 100, 100),
+                Origin = new Vector2f(50, 25)
+            });
+            
+            // Adapt to Resolution
+            _Core.DeviceResized += HandleDeviceResized;
+            HandleDeviceResized(_Core.DeviceSize);
+
+            // Animation
+            _Core.AnimationManager.Wait(_Core.Random.NextFloat(4, 6), () => _Core.StateManager.ChangeState(new MainMenu(_Core)));
             return true;
+        }
+
+        private void HandleDeviceResized(Vector2f size)
+        {
+            // Update Scaling
+            _Title.Scale = _Logo.Scale = _CenterT.Scale = Create.Vector2f(size.X < _Logo.Texture.Size.X * 2 ? 0.5f : 1);
+            //Update Positions
+            _BG.Position = new Vector2f(size.X / 2 - _BG.Texture.Size.X / 2, size.Y - _BG.Texture.Size.Y * 0.7f);
+            _Title.Position = new Vector2f(size.X / 2, size.Y - _Title.GetGlobalBounds().Height - 30);
+            _Logo.Position = new Vector2f(size.X / 2, (size.Y + (_Title.Position.Y - size.Y)) / 2);
+            _CenterT.Position = _Logo.Position-new Vector2f(2,0);
         }
 
         protected override void Update(float deltaT)
         {
-            
+            _Logo.Rotation += 20 * deltaT;
+
+            _Counter += deltaT;
+            if (_Counter > 0.45f)
+            {
+                _Counter = 0;
+                // Not pretty but gets the job done
+                if (_Text.DisplayedString == "loading") _Text.DisplayedString = "loading.";
+                else if (_Text.DisplayedString == "loading.") _Text.DisplayedString = "loading..";
+                else if (_Text.DisplayedString == "loading..") _Text.DisplayedString = "loading...";
+                else if (_Text.DisplayedString == "loading...") _Text.DisplayedString = "loading";
+            }
         }
 
         protected override void Destroy()
         {
-            // todo : unload intro
-
-            Layer_Game.Remove(_Text);
+            _Core.DeviceResized -= HandleDeviceResized;
         }
     }
 }

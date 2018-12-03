@@ -36,8 +36,8 @@ namespace BlackTournament.GameStates
         {
             //IntersectionTest();
             //ShaderTest();
-            //UiTest();
-            TextureTests();
+            UiTest();
+            //TextureTests();
             Log.Info("Nobody here but us chickens");
             return true;
         }

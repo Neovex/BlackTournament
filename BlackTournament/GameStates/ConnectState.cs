@@ -25,7 +25,8 @@ namespace BlackTournament.GameStates
             _Text = new GameText(_Core);
             _Text.Position = new Vector2f(60, 60);
             _Text.Text = $"Connecting to \"{_Host}\"";
-            return Layer_Game.Add(_Text);
+            Layer_Game.Add(_Text);
+            return true;
         }
 
         protected override void Update(float deltaT)
