@@ -115,6 +115,7 @@
     <Compile Include="Tmx\Layer.cs" />
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
+    <Compile Include="UI\BigButton.cs" />
     <Compile Include="WeaponData.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -21,10 +21,12 @@ namespace BlackTournament.Controller
             _Message = message;
             Activate(_State = new MainMenu(_Game.Core));
         }
+
         protected override void StateLoadingFailed()
         {
             throw new Exception("FUBAR");
         }
+
         protected override void StateReady()
         {
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
