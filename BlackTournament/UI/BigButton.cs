@@ -6,6 +6,7 @@ using SFML.System;
 using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.UI;
+using BlackTournament.Properties;
 
 namespace BlackTournament.UI
 {
@@ -15,18 +16,22 @@ namespace BlackTournament.UI
         private static readonly Color ActiveColor = new Color(50, 250, 0);
 
         private TextureLoader _Loader;
+        private SfxManager _Sfx;
         private Label _Label;
 
 
-        public BigButton(Core core, TextureLoader loader, String text) : base(core, null)
+        public BigButton(Core core, TextureLoader loader, SfxManager sfx, String text) : base(core, null)
         {
             _Loader = loader ?? throw new ArgumentNullException(nameof(loader));
+            _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             SetSize(Texture.Size.ToVector2f());
+            _Sfx.AddToLibrary(Files.Sfx_Highlight, Settings.Default.SfxVolume);
+            _Sfx.AddToLibrary(Files.Sfx_Select, Settings.Default.SfxVolume);
 
             Init = new UIComponent[]
             {
-                new AnchoredContainer(_Core, Anchor.Center)
+                new AlignedContainer(_Core, Alignment.Center)
                 {
                     Init = new UIComponent[]
                     {
@@ -34,7 +39,7 @@ namespace BlackTournament.UI
                         {
                             CharacterSize = 18,
                             TextColor = NormalColor,
-                            Padding = new FloatRect(0,0,0,3)
+                            Padding = new FloatRect(0,0,0,5)
                         }
                     }
                 }
@@ -43,13 +48,16 @@ namespace BlackTournament.UI
 
         protected override void InvokeFocusGained()
         {
+            _Sfx.Play(Files.Sfx_Highlight);
             _Label.TextColor = ActiveColor;
+            _Label.Style = Text.Styles.Bold;
             base.InvokeFocusGained();
         }
 
         protected override void InvokeFocusLost()
         {
             _Label.TextColor = NormalColor;
+            _Label.Style = Text.Styles.Regular;
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             base.InvokeFocusLost();
         }
@@ -62,6 +70,7 @@ namespace BlackTournament.UI
 
         protected override void InvokeReleased()
         {
+            _Sfx.Play(Files.Sfx_Select);
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             base.InvokeReleased();
         }

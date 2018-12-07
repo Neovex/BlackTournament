@@ -34,5 +34,29 @@ namespace BlackTournament.Properties {
                 this["PlayerName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int MusikVolume {
+            get {
+                return ((int)(this["MusikVolume"]));
+            }
+            set {
+                this["MusikVolume"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int SfxVolume {
+            get {
+                return ((int)(this["SfxVolume"]));
+            }
+            set {
+                this["SfxVolume"] = value;
+            }
+        }
     }
 }

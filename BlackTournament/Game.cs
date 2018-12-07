@@ -58,8 +58,8 @@ namespace BlackTournament
             //var device = Device.Create("Black Tournament"); // TODO: Add launcher data to settings
 
             // Init Black Coat Engine
-            var device = Device.Create(new VideoMode(800, 600), "Black Tournament", Styles.Default, 8);
-            //var device = Core.DesktopDevice;
+            var device = Device.Create(new VideoMode(1024, 768), "Black Tournament", Styles.Default, 8);
+            //var device = Device.Fullscreen;
             device.SetTitle("Black Tournament");
             using (Core = new Core(device))
             {

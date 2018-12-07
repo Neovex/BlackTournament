@@ -5,5 +5,11 @@
     <Setting Name="PlayerName" Type="System.String" Scope="User">
       <Value Profile="(Default)">KillAz</Value>
     </Setting>
+    <Setting Name="MusikVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="SfxVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
