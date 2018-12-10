@@ -32,7 +32,7 @@ namespace BlackTournament.Net
             return id == AdminId;
         }
 
-        public bool HostGame(string mapName, int port)
+        public bool HostGame(string serverName, string mapName, int port)
         {
             Log.Debug("Trying to host", mapName, "on", port);
             var map = LoadMapFromMapname(mapName);
@@ -42,7 +42,7 @@ namespace BlackTournament.Net
                 return false;
             }
 
-            Host(port);
+            Host(serverName, port);
             Log.Debug("Host active");
             ChangeLevel(map);
             return true;

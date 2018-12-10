@@ -36,7 +36,7 @@ namespace BlackTournament.Controller
 
         private void State_HostClicked()
         {
-            _Game.StartNewGame("thepit");
+            _Game.StartNewGame(map: "thepit");
         }
 
         protected override void StateReleased()

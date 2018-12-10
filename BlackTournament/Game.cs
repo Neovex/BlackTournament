@@ -118,7 +118,7 @@ namespace BlackTournament
             _Client.Update(deltaT);
         }
 
-        public void StartNewGame(String map = null, String host = null, int port = 0)
+        public void StartNewGame(String serverName = null, String map = null, String host = null, int port = 0)
         {
             if (map == null && host == null) throw new ArgumentException($"Failed to start with {map} - {host}");
             host = host ?? Net.Net.DEFAULT_HOST;
@@ -127,7 +127,8 @@ namespace BlackTournament
             // Setup Server
             if(host == Net.Net.DEFAULT_HOST)
             {
-                if(!_Server.HostGame(map, port)) return;
+                var name = serverName ?? $"{Settings.Default.PlayerName}'s Server";
+                if (!_Server.HostGame(name, map, port)) return;
             }
 
             // Setup Client

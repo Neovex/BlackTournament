@@ -322,7 +322,7 @@ namespace BlackTournament.GameStates
                 break;
 
                 case EffectType.WallImpact:
-                    _SparkInfo.Update(source); 
+                    _SparkInfo.Update(source);
                     _ImpactInfo.Update(source);
                     _ImpactEmitter.Position = position;
                     _ImpactEmitter.Trigger();
