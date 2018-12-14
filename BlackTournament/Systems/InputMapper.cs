@@ -5,6 +5,7 @@ using SFML.Window;
 
 namespace BlackTournament.Systems
 {
+    // This class initializes a SimpleInputMap with a default mapping or a mapping from a file or settings (incomplete)
     // TODO : consider adding to engine as a core system
     public class InputMapper
     {

@@ -9,7 +9,9 @@ namespace BlackTournament
         public static void Main(string[] args)
         {
             var blackTournament = new Game();
-            // TODO : Master try catch (see TF3 & co)
+#if !DEBUG
+            Failsafe.Enable(e => Log.Fatal(e));
+#endif
             blackTournament.Run(String.Join(" ", args ?? Enumerable.Empty<String>()));
             blackTournament = null;
         }

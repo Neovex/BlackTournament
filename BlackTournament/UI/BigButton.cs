@@ -25,7 +25,7 @@ namespace BlackTournament.UI
             _Loader = loader ?? throw new ArgumentNullException(nameof(loader));
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             Texture = _Loader.Load(Files.Menue_Button, false, true);
-            SetSize(Texture.Size.ToVector2f());
+            Resize(Texture.Size.ToVector2f());
             _Sfx.AddToLibrary(Files.Sfx_Highlight, Settings.Default.SfxVolume);
             _Sfx.AddToLibrary(Files.Sfx_Select, Settings.Default.SfxVolume);
 
@@ -73,6 +73,11 @@ namespace BlackTournament.UI
             _Sfx.Play(Files.Sfx_Select);
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             base.InvokeReleased();
+        }
+        protected override void InvokeEnabledChanged()
+        {
+            Alpha = Enabled ? 1 : 0.5f;
+            base.InvokeEnabledChanged();
         }
     }
 }

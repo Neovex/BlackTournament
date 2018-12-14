@@ -44,6 +44,7 @@ namespace BlackTournament
         // MENUE
         public const String Menue_Logo = "Logo";
         public const String Menue_Bg = "menue_bg";
+        public const String Menue_Bg2 = "menue_bg2";
         public const String Menue_Button = "menue_button";
         public const String Menue_Button_Active = "menue_button_active";
         public const String Menue_Glow = "menue_glow";

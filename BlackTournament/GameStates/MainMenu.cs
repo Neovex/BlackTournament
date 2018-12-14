@@ -18,6 +18,7 @@ namespace BlackTournament.GameStates
 {
     class MainMenu:Gamestate
     {
+        public event Action Browse = () => { };
         public event Action Host = () => { };
 
         // Audio
@@ -33,8 +34,8 @@ namespace BlackTournament.GameStates
         // Animation
         private Int32 _Shots;
         // UI
-        private UICanvas _UI;
-        private BigButton _BrowseButton;
+        private Canvas _UI;
+        private BigButton _BrowseRefreshButton;
         private BigButton _HostButton;
         private BigButton _CreditsButton;
         private BigButton _ExitButton;
@@ -42,7 +43,9 @@ namespace BlackTournament.GameStates
         private Graphic _Glow;
         private Graphic _Title;
         private Graphic _Logo;
-
+        private Canvas _ServerBrowser;
+        private BigButton _BrowseBackButton;
+        private BigButton _BrowseJoinButton;
 
         public MainMenu(Core core):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -76,7 +79,8 @@ namespace BlackTournament.GameStates
             var buttonTex = TextureLoader.Load(Files.Menue_Button, false, true);
             Layer_Game.Add
             (
-                _UI = new UICanvas(_Core, tex.Size.ToVector2f())
+                // MAIN
+                _UI = new Canvas(_Core, tex.Size.ToVector2f())
                 {
                     Texture = tex,
                     Input = new UIInput(_Core.Input, true),
@@ -91,7 +95,7 @@ namespace BlackTournament.GameStates
                                     Offset = 25,
                                     Init = new UIComponent[]
                                     {
-                                        _BrowseButton = new BigButton(_Core, TextureLoader, _Sfx, "Browse Servers")
+                                        _BrowseRefreshButton = new BigButton(_Core, TextureLoader, _Sfx, "Browse Servers")
                                         {
                                             InitReleased = ButtonClicked
                                         },
@@ -106,6 +110,63 @@ namespace BlackTournament.GameStates
                                         _ExitButton = new BigButton(_Core, TextureLoader, _Sfx,"Exit")
                                         {
                                             InitReleased = ButtonClicked
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                // SERVER BROWSER
+                _ServerBrowser = new Canvas(_Core, new Vector2f(700, 540))
+                {
+                    Input = _UI.Input,
+                    BackgroundAlpha = 1,
+                    BackgroundColor = new Color(180, 0, 0),
+                    Init = new UIComponent[]
+                    {
+                        new Canvas(_Core)
+                        {
+                            DockX = true, DockY = true,
+                            Padding = new FloatRect(1,1,1,1),
+                            BackgroundColor = Color.Black,
+                            BackgroundAlpha = 0.85f,
+                            Texture=TextureLoader.Load(Files.Menue_Bg2, true),
+                            Init = new UIComponent[]
+                            {
+                                new DistributionContainer(_Core,false)
+                                {
+                                    DockX = true,
+                                    Padding = new FloatRect(10,10,10,10),
+                                    Init = new UIComponent[]
+                                    {
+                                        new DistributionContainer(_Core,true)
+                                        {
+                                            DockY = true,
+                                            Init = new UIComponent[]
+                                            {
+                                                _BrowseBackButton = new BigButton(_Core, TextureLoader, _Sfx, "Back")
+                                                {
+                                                    InitReleased = ButtonClicked
+                                                },
+                                                _BrowseRefreshButton = new BigButton(_Core, TextureLoader, _Sfx, "Refresh")
+                                                {
+                                                    InitReleased = ButtonClicked
+                                                },
+                                                _BrowseJoinButton = new BigButton(_Core, TextureLoader, _Sfx, "Join")
+                                                {
+                                                    Enabled = false,
+                                                    InitReleased = ButtonClicked
+                                                }
+                                            }
+                                        },
+                                        new Canvas(_Core, new Vector2f(100, 100))
+                                        {
+                                            BackgroundColor = Color.White,
+                                            BackgroundAlpha = 0.03f,
+                                            Padding = new FloatRect(0,55,0,0),
+                                            DockX = true,
+                                            DockY = true
                                         }
                                     }
                                 }
@@ -140,8 +201,9 @@ namespace BlackTournament.GameStates
 
         private void ButtonClicked(Button button)
         {
+            if (button == _BrowseRefreshButton) Browse.Invoke();
             if (button == _HostButton) Host.Invoke();
-            if (button == _ExitButton) _Core.AnimationManager.Wait(1, () => _Core.Exit("Exit by menu"));
+            if (button == _ExitButton) _Core.AnimationManager.Wait(0.7f, () => _Core.Exit("Exit by menu"));
         }
 
         private void HandleCoreDeviceResized(Vector2f size)
@@ -150,7 +212,8 @@ namespace BlackTournament.GameStates
             _MenueGore.Position = new Vector2f(size.X/2 - _MenueGore.Texture.Size.X / 2, 0);
             _AmbientLight.Size = size;
             _Lighting.RedrawNow();
-            _UI.Position = size / 2 - _UI.OuterSize / 2;
+            _UI.Position = new Vector2f(size.X/2,size.Y *0.6f) - _UI.OuterSize / 2;
+            _ServerBrowser.Position = new Vector2f(size.X/2,size.Y *0.6f) - _ServerBrowser.OuterSize / 2;
 
             _Title.Scale = Create.Vector2f(Math.Min(Math.Min(1, size.X / _Title.TextureRect.Width),
                                                     Math.Min(1, _UI.Position.Y / _Title.TextureRect.Height)));
@@ -203,6 +266,7 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
+            _Core.DeviceResized -= HandleCoreDeviceResized;
             _Sfx = null;
         }
     }

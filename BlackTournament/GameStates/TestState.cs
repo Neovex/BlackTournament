@@ -177,15 +177,15 @@ namespace BlackTournament.GameStates
                         BackgroundAlpha = 0.4f,
                         Init = labels.Take(1)
                     },
-
+                    
                     new OffsetContainer(_Core)
                     {
                         BackgroundAlpha = 0.4f,
                         Position = new Vector2f(200, 200),
                         Init = labels.Skip(1).Take(3)
                     },
-
-                    new UICanvas(_Core, new Vector2f(20, 20))
+                    
+                    new Canvas(_Core, new Vector2f(20, 20))
                     {
                         BackgroundAlpha = 0.4f,
                         Padding=new FloatRect(10,10,10,10),
@@ -198,7 +198,6 @@ namespace BlackTournament.GameStates
                             {
                                 BackgroundAlpha = 0.4f,
                                 Position = new Vector2f(100, 100),
-                                DockX = true,
                                 Init = labels.Skip(5).Take(4)
                             }
                         }
