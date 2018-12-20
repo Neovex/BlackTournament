@@ -34,18 +34,23 @@ namespace BlackTournament.GameStates
         // Animation
         private Int32 _Shots;
         // UI
-        private Canvas _UI;
-        private BigButton _BrowseRefreshButton;
+        private Canvas _MainUI;
+        private BigButton _BrowseButton;
         private BigButton _HostButton;
         private BigButton _CreditsButton;
         private BigButton _ExitButton;
+        private Canvas _ServerBrowser;
+
+        private BigButton _BrowseRefreshButton;
+        private BigButton _BrowseBackButton;
+        private BigButton _BrowseDirectConnectButton;
+        private BigButton _BrowseJoinButton;
+        private Canvas _Credits;
+        private BigButton _CreditsBackButton;
         // Overlay decors
         private Graphic _Glow;
         private Graphic _Title;
         private Graphic _Logo;
-        private Canvas _ServerBrowser;
-        private BigButton _BrowseBackButton;
-        private BigButton _BrowseJoinButton;
 
         public MainMenu(Core core):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -80,7 +85,7 @@ namespace BlackTournament.GameStates
             Layer_Game.Add
             (
                 // MAIN
-                _UI = new Canvas(_Core, tex.Size.ToVector2f())
+                _MainUI = new Canvas(_Core, tex.Size.ToVector2f())
                 {
                     Texture = tex,
                     Input = new UIInput(_Core.Input, true),
@@ -95,7 +100,7 @@ namespace BlackTournament.GameStates
                                     Offset = 25,
                                     Init = new UIComponent[]
                                     {
-                                        _BrowseRefreshButton = new BigButton(_Core, TextureLoader, _Sfx, "Browse Servers")
+                                        _BrowseButton = new BigButton(_Core, TextureLoader, _Sfx, "Browse Servers")
                                         {
                                             InitReleased = ButtonClicked
                                         },
@@ -120,7 +125,8 @@ namespace BlackTournament.GameStates
                 // SERVER BROWSER
                 _ServerBrowser = new Canvas(_Core, new Vector2f(700, 540))
                 {
-                    Input = _UI.Input,
+                    Visible = false,
+                    Input = _MainUI.Input,
                     BackgroundAlpha = 1,
                     BackgroundColor = new Color(180, 0, 0),
                     Init = new UIComponent[]
@@ -142,7 +148,6 @@ namespace BlackTournament.GameStates
                                     {
                                         new DistributionContainer(_Core,true)
                                         {
-                                            DockY = true,
                                             Init = new UIComponent[]
                                             {
                                                 _BrowseBackButton = new BigButton(_Core, TextureLoader, _Sfx, "Back")
@@ -153,6 +158,23 @@ namespace BlackTournament.GameStates
                                                 {
                                                     InitReleased = ButtonClicked
                                                 },
+                                            }
+                                        },
+                                        new Canvas(_Core, new Vector2f(100, 100))
+                                        {
+                                            DockX = true, DockY = true,
+                                            Padding = new FloatRect(5,10,5,10),
+                                            BackgroundColor = Color.White,
+                                            BackgroundAlpha = 0.03f,
+                                        },
+                                        new DistributionContainer(_Core,true)
+                                        {
+                                            Init = new UIComponent[]
+                                            {
+                                                _BrowseDirectConnectButton = new BigButton(_Core, TextureLoader, _Sfx, "Direct Connect")
+                                                {
+                                                    InitReleased = ButtonClicked
+                                                },
                                                 _BrowseJoinButton = new BigButton(_Core, TextureLoader, _Sfx, "Join")
                                                 {
                                                     Enabled = false,
@@ -160,15 +182,47 @@ namespace BlackTournament.GameStates
                                                 }
                                             }
                                         },
-                                        new Canvas(_Core, new Vector2f(100, 100))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                // CREDITS
+                _Credits = new Canvas(_Core, new Vector2f(700, 540))
+                {
+                    Visible = false,
+                    Input = _MainUI.Input,
+                    BackgroundAlpha = 1,
+                    BackgroundColor = new Color(180, 0, 0),
+                    Init = new UIComponent[]
+                    {
+                        new Canvas(_Core)
+                        {
+                            DockX = true, DockY = true,
+                            Padding = new FloatRect(1,1,1,1),
+                            BackgroundColor = Color.Black,
+                            BackgroundAlpha = 0.85f,
+                            Texture=TextureLoader.Load(Files.Menue_Bg2, true),
+                            Init = new UIComponent[]
+                            {
+                                new ScrollContainer(_Core)
+                                {
+                                    DockX = true, DockY = true,
+                                    Init = new UIComponent[]
+                                    {
+                                        new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), Game.DefaultFont)
                                         {
-                                            BackgroundColor = Color.White,
-                                            BackgroundAlpha = 0.03f,
-                                            Padding = new FloatRect(0,55,0,0),
-                                            DockX = true,
-                                            DockY = true
+                                            CharacterSize = 12,
+                                            Position = Create.Vector2f(10),
+                                            TextColor = new Color(0,100,255)
                                         }
                                     }
+                                },
+                                _CreditsBackButton = new BigButton(_Core, TextureLoader, _Sfx, "Back")
+                                {
+                                    Position = new Vector2f(700-buttonTex.Size.X-10,10),
+                                    InitReleased = ButtonClicked
                                 }
                             }
                         }
@@ -201,9 +255,31 @@ namespace BlackTournament.GameStates
 
         private void ButtonClicked(Button button)
         {
-            if (button == _BrowseRefreshButton) Browse.Invoke();
+            //Main
+            if (button == _BrowseButton) Browse.Invoke();
             if (button == _HostButton) Host.Invoke();
-            if (button == _ExitButton) _Core.AnimationManager.Wait(0.7f, () => _Core.Exit("Exit by menu"));
+            if (button == _CreditsButton) OpenCredits(true);
+            if (button == _CreditsBackButton) OpenCredits(false);
+            if (button == _ExitButton) _Core.Exit("Exit by menu");
+            // Server Browser
+            if (button == _BrowseBackButton) OpenServerBrowser(false);
+            if (button == _BrowseRefreshButton) Browse.Invoke();
+            if (button == _BrowseDirectConnectButton) { }
+            if (button == _BrowseJoinButton) { }
+        }
+
+        internal void OpenServerBrowser(bool open = true)
+        {
+            _MainUI.Visible = _Logo.Visible = !open;
+            _ServerBrowser.Visible = open;
+
+            // todo : feed server info
+        }
+
+        internal void OpenCredits(bool open)
+        {
+            _MainUI.Visible = _Logo.Visible = !open;
+            _Credits.Visible = open;
         }
 
         private void HandleCoreDeviceResized(Vector2f size)
@@ -212,13 +288,14 @@ namespace BlackTournament.GameStates
             _MenueGore.Position = new Vector2f(size.X/2 - _MenueGore.Texture.Size.X / 2, 0);
             _AmbientLight.Size = size;
             _Lighting.RedrawNow();
-            _UI.Position = new Vector2f(size.X/2,size.Y *0.6f) - _UI.OuterSize / 2;
+            _MainUI.Position = new Vector2f(size.X/2,size.Y *0.6f) - _MainUI.OuterSize / 2;
             _ServerBrowser.Position = new Vector2f(size.X/2,size.Y *0.6f) - _ServerBrowser.OuterSize / 2;
+            _Credits.Position = _ServerBrowser.Position;
 
             _Title.Scale = Create.Vector2f(Math.Min(Math.Min(1, size.X / _Title.TextureRect.Width),
-                                                    Math.Min(1, _UI.Position.Y / _Title.TextureRect.Height)));
-            _Title.Position = new Vector2f(size.X / 2 - _Title.TextureRect.Width * _Title.Scale.X / 2, _UI.Position.Y / 2 - _Title.TextureRect.Height * _Title.Scale.Y / 2);
-            _Glow.Scale = new Vector2f(1, _UI.Position.Y / _Glow.TextureRect.Height * -1.5f);
+                                                    Math.Min(1, _MainUI.Position.Y / _Title.TextureRect.Height)));
+            _Title.Position = new Vector2f(size.X / 2 - _Title.TextureRect.Width * _Title.Scale.X / 2, _MainUI.Position.Y / 2 - _Title.TextureRect.Height * _Title.Scale.Y / 2);
+            _Glow.Scale = new Vector2f(1, _MainUI.Position.Y / _Glow.TextureRect.Height * -1.5f);
             _Glow.Position = new Vector2f(size.X / 2 - _Glow.TextureRect.Width / 2, _Glow.TextureRect.Height * -_Glow.Scale.Y);
             _Logo.Position = size - Create.Vector2f(150);
         }

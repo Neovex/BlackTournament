@@ -1,0 +1,60 @@
+Programming & Production:
+
+Alexander Schwahl
+
+--------------------------------------------------
+
+Fonts:
+
+HighlandGothicLightFLF.ttf
+Casady & Greene
+http://moorstation.org/typoasis/designers/casady_greene
+
+VTCBelialsBlade.ttf
+by Vigilante Typeface Corporation
+http://www.facebook.com/wolfbainx
+
+--------------------------------------------------
+
+Additional Graphics:
+
+Tile Texture Pack & Sinistar Graphics
+by Daniel Cook
+http://www.lostgarden.com/
+
+Gun, Player & Pickup Graphics
+by Maximilian Stempel
+http://zaphiron.artstation.com/
+
+Some Menue Graphics
+by MillionthVector
+http://millionthvector.blogspot.com
+
+--------------------------------------------------
+
+Music:
+
+Invading a Submarine
+Ten Seconds to Rush
+Third Level Encryption
+Venting Your Spleen on Low B
+Wall of Anger
+Its Totally and Completely Barbaric
+Teks Abomination
+Industrial Rage
+
+all by
+Matthew Huffaker
+http://teknoaxe.com
+
+--------------------------------------------------
+
+Special Thanks to:
+
+The Developers of SFML. Without you this would have never gotten so far.
+
+Epicgames for Inspiration and not sueing my ass.
+
+Youtube for hours and hours of coding music.
+
+Microsoft for an amazing, free IDE & Framework.

@@ -30,8 +30,14 @@ namespace BlackTournament.Controller
         protected override void StateReady()
         {
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
+            _State.Browse += State_BrowseClicked;
             _State.Host += State_HostClicked;
             // TODO: restore UI State
+        }
+
+        private void State_BrowseClicked()
+        {
+            _State.OpenServerBrowser();
         }
 
         private void State_HostClicked()
@@ -41,6 +47,7 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
+            _State.Browse -= State_BrowseClicked;
             _State.Host -= State_HostClicked;
             _Message = null;
             _State = null;

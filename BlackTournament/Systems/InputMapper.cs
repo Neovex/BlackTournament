@@ -83,7 +83,7 @@ namespace BlackTournament.Systems
             DefaultMapping.AddScrollMapping(ScrollDirection.Down, GameAction.PreviousWeapon);
         }
 
-        private void HandleInput(GameAction action, Boolean activate)
+        private void HandleInput(GameAction action, Boolean activate, Boolean mouse)
         {
             Action.Invoke(action, activate);
         }
