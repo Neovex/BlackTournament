@@ -17,8 +17,10 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
+        public string LastError { get; private set; }
         public override int AdminId => NetIdProvider.ADMIN_ID;
         public override int NextClientId => NetIdProvider.NEXT_ID;
+
 
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
@@ -38,7 +40,8 @@ namespace BlackTournament.Net
             var map = LoadMapFromMapname(mapName);
             if (map == null)
             {
-                Log.Error("Failed to host", mapName, "on", port, "reason: unknown map");
+                LastError = $"Failed to host {mapName} on {port} reason: unknown map";
+                Log.Error(LastError);
                 return false;
             }
 
@@ -55,7 +58,8 @@ namespace BlackTournament.Net
             {
                 return mapper;
             }
-            Log.Warning("Failed to load level", mapName);
+            LastError = $"Failed to load level {mapName}";
+            Log.Warning(LastError);
             return null;
         }
 

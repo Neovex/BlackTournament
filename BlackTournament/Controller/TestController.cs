@@ -16,7 +16,7 @@ namespace BlackTournament.Controller
 
         internal void Activate()
         {
-            Activate(new TestState(_Game.Core));
+            Activate(new TestState(_Game));
         }
 
         protected override void StateLoadingFailed()

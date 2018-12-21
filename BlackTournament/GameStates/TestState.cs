@@ -19,6 +19,7 @@ namespace BlackTournament.GameStates
 {
     class TestState : Gamestate
     {
+        private Game _Game;
         private Shader _Shader;
         private Graphic _BlurTest;
         private float _Blurryness = 0;
@@ -28,8 +29,9 @@ namespace BlackTournament.GameStates
         private float _LineAngle = 320;
         private Rectangle _Rect;
 
-        public TestState(Core core) : base(core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public TestState(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
+            _Game = game;
         }
 
         protected override bool Load()
@@ -38,6 +40,7 @@ namespace BlackTournament.GameStates
             //ShaderTest();
             UiTest();
             //TextureTests();
+            //Particles();
             Log.Info("Nobody here but us chickens");
             return true;
         }
@@ -206,7 +209,9 @@ namespace BlackTournament.GameStates
                     new TextBox(_Core)
                     {
                         Position = new Vector2f(50,150),
-                        InnerPadding = new FloatRect(5,5,5,5)
+                        InnerPadding = new FloatRect(5,5,5,5),
+                        Font = Game.DefaultFont
+                        
                     }
                 }
             };
@@ -234,6 +239,35 @@ namespace BlackTournament.GameStates
             renderTexture.RedrawNow();
             Layer_Game.Add(renderTexture);
 
+        }
+
+        private void Particles()
+        {
+            var host = new ParticleEmitterHost(_Core);
+            Layer_Game.Add(host);
+            var info = new PixelInfo(_Core);
+            var emitter = new PixelEmitter(_Core, info);
+            host.AddEmitter(emitter);
+            emitter.Trigger();
+        }
+    }
+    class PixelInfo : PixelParticleInitializationInfo
+    {
+        private Core _Core;
+
+        public override Vector2f Velocity { get => _Core.Random.NextVector(-10, +10, -100, -10); set => base.Acceleration = value; }
+        public override Vector2f Offset { get => new Vector2f(_Core.Random.NextFloat(0, _Core.DeviceSize.X), _Core.DeviceSize.Y); set => base.Offset = value; }
+        public override float AlphaFade { get => _Core.Random.NextFloat(-1,-0.1f); set => base.AlphaFade = value; }
+
+        public PixelInfo(Core core)
+        {
+            _Core = core;
+            TTL = 100;
+            Loop = true;
+            ParticlesPerSpawn = 10;
+            SpawnRate = 0.01f;
+            UseAlphaAsTTL = true;
+            Color = Color.White;
         }
     }
 }

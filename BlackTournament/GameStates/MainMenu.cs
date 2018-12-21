@@ -39,19 +39,31 @@ namespace BlackTournament.GameStates
         private BigButton _HostButton;
         private BigButton _CreditsButton;
         private BigButton _ExitButton;
-        private Canvas _ServerBrowser;
 
+        private OffsetContainer _HostUI;
+
+        private Canvas _ServerBrowser;
         private BigButton _BrowseRefreshButton;
         private BigButton _BrowseBackButton;
         private BigButton _BrowseDirectConnectButton;
         private BigButton _BrowseJoinButton;
+
         private Canvas _Credits;
         private BigButton _CreditsBackButton;
+        
         // Overlay decors
         private Graphic _Glow;
         private Graphic _Title;
         private Graphic _Logo;
 
+
+        // Properties
+        public string Mapname { get; private set; }
+        public string Servername { get; private set; }
+        public int Port { get; private set; }
+
+
+        // CTOR
         public MainMenu(Core core):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
         }
@@ -119,6 +131,10 @@ namespace BlackTournament.GameStates
                                     }
                                 }
                             }
+                        },
+                        _HostUI = new OffsetContainer(_Core, false)
+                        {
+                            // TODO : create hosting ui 4 Mapname, Servername & Port 1025-65535 ################################# CH !!!
                         }
                     }
                 },
@@ -257,7 +273,7 @@ namespace BlackTournament.GameStates
         {
             //Main
             if (button == _BrowseButton) Browse.Invoke();
-            if (button == _HostButton) Host.Invoke();
+            if (button == _HostButton) OpenHostUI(true);
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
@@ -268,18 +284,24 @@ namespace BlackTournament.GameStates
             if (button == _BrowseJoinButton) { }
         }
 
+        private void OpenHostUI(bool open)
+        {
+            _MainUI.Visible = _Logo.Visible = !open;
+            
+        }
+
+        private void OpenCredits(bool open)
+        {
+            _MainUI.Visible = _Logo.Visible = !open;
+            _Credits.Visible = open;
+        }
+
         internal void OpenServerBrowser(bool open = true)
         {
             _MainUI.Visible = _Logo.Visible = !open;
             _ServerBrowser.Visible = open;
 
             // todo : feed server info
-        }
-
-        internal void OpenCredits(bool open)
-        {
-            _MainUI.Visible = _Logo.Visible = !open;
-            _Credits.Visible = open;
         }
 
         private void HandleCoreDeviceResized(Vector2f size)

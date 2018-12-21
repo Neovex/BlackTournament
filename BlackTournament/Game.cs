@@ -58,7 +58,7 @@ namespace BlackTournament
             //var device = Device.Create("Black Tournament"); // TODO: Add launcher data to settings
 
             // Init Black Coat Engine
-            var device = Device.Create(new VideoMode(1024, 768), "Black Tournament", Styles.Default, 8, false);
+            var device = Device.Create(new VideoMode(1024, 768), "Black Tournament", Styles.Default, 0, false);
             //var device = Device.Fullscreen;
             device.SetTitle("Black Tournament");
             using (Core = new Core(device))
@@ -68,48 +68,50 @@ namespace BlackTournament
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 
-                // Init Game Fonts
-                _GlobalFonts = new FontLoader(FONT_ROOT);
-                DefaultFont = _GlobalFonts.Load(DEFAULT_FONT);
-                Core.InitializeFontHack(DefaultFont);
-                StyleFont = _GlobalFonts.Load(STYLE_FONT);
-                Core.InitializeFontHack(StyleFont);
-                // Todo: test text blur issue (might need round)
-
-                // Init Input
-                InputMapper = new InputMapper(Core.Input);
-
-                // Init Game
-                TestController = new TestController(this);
-                MenuController = new MenuController(this);
-                ConnectController = new ConnectController(this);
-                MapController = new MapController(this);
-                _Server = new BlackTournamentServer(Core);
-                _Client = new BlackTournamentClient(Settings.Default.PlayerName);
-
-                // Start Game
-                if (String.IsNullOrWhiteSpace(arguments))
+                using (_GlobalFonts = new FontLoader(FONT_ROOT))
                 {
-                    //TestController.Activate();
-                    MenuController.Activate();
-                    //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core)));
-                }
-                else
-                {
-                    ExecuteCommand(arguments);
-                }
+                    // Init Game Fonts
+                    DefaultFont = _GlobalFonts.Load(DEFAULT_FONT);
+                    Core.InitializeFontHack(DefaultFont);
+                    StyleFont = _GlobalFonts.Load(STYLE_FONT);
+                    Core.InitializeFontHack(StyleFont);
+                    // Todo: test text blur issue (might need round)
 
-                Core.Run();
+                    // Init Input
+                    InputMapper = new InputMapper(Core.Input);
 
-                // Cleanup
-                _Client.Disconnect();
-                _Client.Dispose();
-                _Client = null;
-                _Server.StopServer();
-                _Server.Dispose();
-                _Server = null;
-                _GlobalFonts.Dispose();
-                _GlobalFonts = null;
+                    // Init Game
+                    TestController = new TestController(this);
+                    MenuController = new MenuController(this);
+                    ConnectController = new ConnectController(this);
+                    MapController = new MapController(this);
+                    _Server = new BlackTournamentServer(Core);
+                    _Client = new BlackTournamentClient(Settings.Default.PlayerName);
+
+                    // Start Game
+                    if (String.IsNullOrWhiteSpace(arguments))
+                    {
+                        //TestController.Activate();
+                        MenuController.Activate();
+
+                        //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core))); // TODO create global music controller
+                    }
+                    else
+                    {
+                        ExecuteCommand(arguments);
+                    }
+
+                    // Start Rendering
+                    Core.Run();
+
+                    // Cleanup
+                    _Client.Disconnect();
+                    _Client.Dispose();
+                    _Client = null;
+                    _Server.StopServer();
+                    _Server.Dispose();
+                    _Server = null;
+                }
             }
         }
 
@@ -119,21 +121,17 @@ namespace BlackTournament
             _Client.Update(deltaT);
         }
 
-        public void StartNewGame(String serverName = null, String map = null, String host = null, int port = 0)
+        public bool Host(String map, String serverName, int port)
         {
-            if (map == null && host == null) throw new ArgumentException($"Failed to start with {map} - {host}");
-            host = host ?? Net.Net.DEFAULT_HOST;
-            port = port == 0 ? Net.Net.DEFAULT_PORT : port;
+            if (string.IsNullOrWhiteSpace(map)) throw new ArgumentNullException(nameof(map));
+            return _Server.HostGame(serverName, map, port);
+        }
 
-            // Setup Server
-            if(host == Net.Net.DEFAULT_HOST)
-            {
-                var name = serverName ?? $"{Settings.Default.PlayerName}'s Server";
-                if (!_Server.HostGame(name, map, port)) return;
-            }
-
-            // Setup Client
+        public void Connect(String host, int port)
+        {
+            if (string.IsNullOrWhiteSpace(host)) throw new ArgumentNullException(nameof(host));
             _Client.Disconnect();
+            _Client.Dispose();
             _Client = new BlackTournamentClient(Settings.Default.PlayerName);
             ConnectController.Activate(_Client, host, port);
         }
@@ -187,7 +185,8 @@ namespace BlackTournament
                     case "loadmap":
                         if (commandData.Length == 2)
                         {
-                            StartNewGame(map: commandData[1]);
+                            if (Host(commandData[1], $"{Settings.Default.PlayerName}'s Server", Net.Net.DEFAULT_PORT))
+                                Connect(Net.Net.DEFAULT_HOST, Net.Net.DEFAULT_PORT);
                         }
                         else
                         {
@@ -200,20 +199,21 @@ namespace BlackTournament
                         if (commandData.Length > 2)
                         {
                             var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
-                            StartNewGame(host: commandData[1], port: port);
+                            Connect(commandData[1], port);
                         }
-                        Log.Info("Invalid connect command. Use connect [host name] optional:[port]", cmd);
+                        else Log.Info("Invalid connect command. Use connect [host name] [(optional)port]", cmd);
                         return true;
 
                     case "srv":
                     case "startserver":
                     case "start server":
-                        if (commandData.Length > 2)
+                        if (commandData.Length != 0)
                         {
-                            var port = commandData.Length == 3 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
-                            StartNewGame(map: commandData[1], port: port);
+                            var port = commandData.Length > 2 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
+                            var name = commandData.Length > 3 ? commandData[3] : $"{Settings.Default.PlayerName}'s Server";
+                            if (Host(commandData[1], name, port)) Connect(Net.Net.DEFAULT_HOST, port);
                         }
-                        Log.Info("Invalid host command. Use host [map name] optional:[port]", cmd);
+                        else Log.Info("Invalid host command. Use host [map name] [(optional)port] [(optional)server name]", cmd);
                         return true;
                 }
             }
