@@ -191,7 +191,7 @@ namespace BlackTournament.GameStates
                     new Canvas(_Core, new Vector2f(20, 20))
                     {
                         BackgroundAlpha = 0.4f,
-                        Padding=new FloatRect(10,10,10,10),
+                        Margin=new FloatRect(10,10,10,10),
                         DockX = true,
                         DockY = true,
                         Init = new UIComponent[]
@@ -209,7 +209,7 @@ namespace BlackTournament.GameStates
                     new TextBox(_Core)
                     {
                         Position = new Vector2f(50,150),
-                        InnerPadding = new FloatRect(5,5,5,5),
+                        Padding = new FloatRect(5,5,5,5),
                         Font = Game.DefaultFont
                         
                     }

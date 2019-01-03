@@ -35,11 +35,11 @@ namespace BlackTournament.UI
                 {
                     Init = new UIComponent[]
                     {
-                        _Label = new Label(_Core, text, Game.DefaultFont)
+                        _Label = new Label(_Core, text, font:Game.DefaultFont)
                         {
                             CharacterSize = 18,
                             TextColor = NormalColor,
-                            Padding = new FloatRect(0,0,0,5)
+                            Margin = new FloatRect(0,0,0,5)
                         }
                     }
                 }

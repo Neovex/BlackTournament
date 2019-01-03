@@ -35,12 +35,18 @@ namespace BlackTournament.GameStates
         private Int32 _Shots;
         // UI
         private Canvas _MainUI;
+        private AlignedContainer _MainUIContent;
         private BigButton _BrowseButton;
         private BigButton _HostButton;
         private BigButton _CreditsButton;
         private BigButton _ExitButton;
 
-        private OffsetContainer _HostUI;
+        private AlignedContainer _HostDialog;
+        private TextBox _HostMapNameTempTextBox;
+        private TextBox _HostServerNameTextBox;
+        private TextBox _HostPortTextBox;
+        private BigButton _HostCancelButton;
+        private BigButton _HostHostButton;
 
         private Canvas _ServerBrowser;
         private BigButton _BrowseRefreshButton;
@@ -58,9 +64,9 @@ namespace BlackTournament.GameStates
 
 
         // Properties
-        public string Mapname { get; private set; }
-        public string Servername { get; private set; }
-        public int Port { get; private set; }
+        public string Mapname => _HostMapNameTempTextBox?.Text;
+        public string Servername => _HostServerNameTextBox?.Text;
+        public int Port => Int32.TryParse(_HostPortTextBox?.Text, out int r) ? r : -1;
 
 
         // CTOR
@@ -74,6 +80,7 @@ namespace BlackTournament.GameStates
             // Music
             music = MusicLoader.Load(Files.MENUE_MUSIC.Skip(_Core.Random.Next(Files.MENUE_MUSIC.Count)).First());
             music.Volume = Settings.Default.MusikVolume;
+            music.Loop = true; // TODO : consider music manager 4 looping play-lists etc
             //music.Play();
 
             // Sfx
@@ -103,7 +110,7 @@ namespace BlackTournament.GameStates
                     Input = new UIInput(_Core.Input, true),
                     Init = new UIComponent[]
                     {
-                        new AlignedContainer(_Core, Alignment.Center)
+                        _MainUIContent = new AlignedContainer(_Core, Alignment.Center)
                         {
                             Init = new UIComponent[]
                             {
@@ -132,9 +139,49 @@ namespace BlackTournament.GameStates
                                 }
                             }
                         },
-                        _HostUI = new OffsetContainer(_Core, false)
+                        _HostDialog = new AlignedContainer(_Core, Alignment.Center)
                         {
-                            // TODO : create hosting ui 4 Mapname, Servername & Port 1025-65535 ################################# CH !!!
+                            Visible = false,
+                            Init = new UIComponent[]
+                            {
+                                new OffsetContainer(_Core, false)
+                                {
+                                    Offset = 8,
+                                    Init = new UIComponent[]
+                                    {
+                                        new Label(_Core, "Map", 16, Game.DefaultFont),
+                                        _HostMapNameTempTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+                                        {
+                                            Text = "TODO Combobox",             // TODO : Combobox
+                                            Margin = new FloatRect(0,0,0,15),
+                                            Padding = new FloatRect(5,5,0,0),
+                                        },
+                                        new Label(_Core, "Server Name", 16, Game.DefaultFont),
+                                        _HostServerNameTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+                                        {
+                                            Text = $"{Settings.Default.PlayerName}'s Server",
+                                            Margin = new FloatRect(0,0,0,15),
+                                            Padding = new FloatRect(5,5,0,0),
+                                        },
+                                        new Label(_Core, "Port", 16, Game.DefaultFont),
+                                        _HostPortTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+                                        {
+                                            Text = Net.Net.DEFAULT_PORT.ToString(),      // TODO : Limit to 1025-65535
+                                            Margin = new FloatRect(0,0,0,15),
+                                            Padding = new FloatRect(5,5,0,0),
+                                        },
+                                        _HostHostButton = new BigButton(_Core, TextureLoader, _Sfx,"Host")
+                                        {
+                                            InitReleased = ButtonClicked // TODO : implement next
+                                        },
+                                        _HostCancelButton = new BigButton(_Core, TextureLoader, _Sfx,"Cancel")
+                                        {
+                                            Margin = new FloatRect(0,10,0,0),
+                                            InitReleased = ButtonClicked
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -150,7 +197,7 @@ namespace BlackTournament.GameStates
                         new Canvas(_Core)
                         {
                             DockX = true, DockY = true,
-                            Padding = new FloatRect(1,1,1,1),
+                            Margin = new FloatRect(1,1,1,1),
                             BackgroundColor = Color.Black,
                             BackgroundAlpha = 0.85f,
                             Texture=TextureLoader.Load(Files.Menue_Bg2, true),
@@ -159,7 +206,7 @@ namespace BlackTournament.GameStates
                                 new DistributionContainer(_Core,false)
                                 {
                                     DockX = true,
-                                    Padding = new FloatRect(10,10,10,10),
+                                    Margin = new FloatRect(10,10,10,10),
                                     Init = new UIComponent[]
                                     {
                                         new DistributionContainer(_Core,true)
@@ -179,7 +226,7 @@ namespace BlackTournament.GameStates
                                         new Canvas(_Core, new Vector2f(100, 100))
                                         {
                                             DockX = true, DockY = true,
-                                            Padding = new FloatRect(5,10,5,10),
+                                            Margin = new FloatRect(5,10,5,10),
                                             BackgroundColor = Color.White,
                                             BackgroundAlpha = 0.03f,
                                         },
@@ -216,7 +263,7 @@ namespace BlackTournament.GameStates
                         new Canvas(_Core)
                         {
                             DockX = true, DockY = true,
-                            Padding = new FloatRect(1,1,1,1),
+                            Margin = new FloatRect(1,1,1,1),
                             BackgroundColor = Color.Black,
                             BackgroundAlpha = 0.85f,
                             Texture=TextureLoader.Load(Files.Menue_Bg2, true),
@@ -227,7 +274,7 @@ namespace BlackTournament.GameStates
                                     DockX = true, DockY = true,
                                     Init = new UIComponent[]
                                     {
-                                        new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), Game.DefaultFont)
+                                        new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
                                             Position = Create.Vector2f(10),
@@ -274,6 +321,7 @@ namespace BlackTournament.GameStates
             //Main
             if (button == _BrowseButton) Browse.Invoke();
             if (button == _HostButton) OpenHostUI(true);
+            if (button == _HostCancelButton) OpenHostUI(false);
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
@@ -286,8 +334,8 @@ namespace BlackTournament.GameStates
 
         private void OpenHostUI(bool open)
         {
-            _MainUI.Visible = _Logo.Visible = !open;
-            
+            _MainUIContent.Visible = !open;
+            _HostDialog.Visible = open;
         }
 
         private void OpenCredits(bool open)

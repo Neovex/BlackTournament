@@ -39,10 +39,9 @@ namespace BlackTournament.GameStates
             });
 
             // Loading Text
-            Layer_Game.Add(_Text = new TextItem(_Core, "loading...", Game.StyleFont)
+            Layer_Game.Add(_Text = new TextItem(_Core, "loading...", 16, Game.StyleFont)
             {
-                Position = Create.Vector2f(30),
-                CharacterSize = 16
+                Position = Create.Vector2f(30)
             });
 
             // Stationary "T" in Logo center
