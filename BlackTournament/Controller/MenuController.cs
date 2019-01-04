@@ -39,13 +39,13 @@ namespace BlackTournament.Controller
         private void State_BrowseClicked()
         {
             // TODO : get available servers from client
-            _State.OpenServerBrowser();
+            _State.OpenServerBrowser(true, new object[0]); // todo: add server data
         }
 
         private void State_HostClicked()
         {
             var name = String.IsNullOrWhiteSpace(_State.Servername) ? $"{Settings.Default.PlayerName}'s Server" : _State.Servername;
-            var port = _State.Port == 0 ? Net.Net.DEFAULT_PORT : _State.Port;
+            var port = _State.Port < 1 ? Net.Net.DEFAULT_PORT : _State.Port;
 
             if (_Game.Host(_State.Mapname, name, port)) _Game.Connect(Net.Net.DEFAULT_HOST, port);
             else _State.DisplayPopupMessage($"Failed to host {_State.Mapname} on {Net.Net.DEFAULT_HOST}:{port}. Is the map and port valid?");

@@ -166,13 +166,15 @@ namespace BlackTournament.GameStates
                                         new Label(_Core, "Port", 16, Game.DefaultFont),
                                         _HostPortTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
                                         {
-                                            Text = Net.Net.DEFAULT_PORT.ToString(),      // TODO : Limit to 1025-65535
+                                            Text = Net.Net.DEFAULT_PORT.ToString(),
                                             Margin = new FloatRect(0,0,0,15),
                                             Padding = new FloatRect(5,5,0,0),
+                                            InitFocusLost = PortLimit,
+                                            InitTextChanged = PortFilter
                                         },
                                         _HostHostButton = new BigButton(_Core, TextureLoader, _Sfx,"Host")
                                         {
-                                            InitReleased = ButtonClicked // TODO : implement next
+                                            InitReleased = ButtonClicked
                                         },
                                         _HostCancelButton = new BigButton(_Core, TextureLoader, _Sfx,"Cancel")
                                         {
@@ -322,11 +324,12 @@ namespace BlackTournament.GameStates
             if (button == _BrowseButton) Browse.Invoke();
             if (button == _HostButton) OpenHostUI(true);
             if (button == _HostCancelButton) OpenHostUI(false);
+            if (button == _HostHostButton) Host.Invoke();
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
             // Server Browser
-            if (button == _BrowseBackButton) OpenServerBrowser(false);
+            if (button == _BrowseBackButton) OpenServerBrowser(false, null);
             if (button == _BrowseRefreshButton) Browse.Invoke();
             if (button == _BrowseDirectConnectButton) { }
             if (button == _BrowseJoinButton) { }
@@ -344,12 +347,22 @@ namespace BlackTournament.GameStates
             _Credits.Visible = open;
         }
 
-        internal void OpenServerBrowser(bool open = true)
+        internal void OpenServerBrowser(bool open, object[] serverData)
         {
             _MainUI.Visible = _Logo.Visible = !open;
             _ServerBrowser.Visible = open;
 
             // todo : feed server info
+        }
+        private void PortLimit(UIComponent component)
+        {
+            var label = component as Label;
+            if (Port < 1025 || Port > 65535) label.Text = Net.Net.DEFAULT_PORT.ToString();
+        }
+
+        private void PortFilter(Label label)
+        {
+            if (!label.Text.All(c => Char.IsDigit(c))) label.Text = new string(label.Text.Where(c => Char.IsDigit(c)).ToArray());
         }
 
         private void HandleCoreDeviceResized(Vector2f size)
