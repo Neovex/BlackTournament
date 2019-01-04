@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
+using BlackTournament.Net;
 using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
@@ -12,6 +14,7 @@ namespace BlackTournament.Controller
     {
         private String _Message;
         private MainMenu _State;
+        private BlackTournamentClient _Client;
 
         public MenuController(Game game) : base(game)
         {
@@ -30,16 +33,25 @@ namespace BlackTournament.Controller
 
         protected override void StateReady()
         {
+            _Client = new BlackTournamentClient(Settings.Default.PlayerName);
+            _Client.LanServerListUpdated += HandleLanServerListUpdated;
+            _Client.DiscoverLanServers(Net.Net.DEFAULT_PORT); // move
+
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
             _State.Browse += State_BrowseClicked;
             _State.Host += State_HostClicked;
             // TODO: restore UI State
         }
 
+        private void HandleLanServerListUpdated()
+        {
+            var l = _Client.LanServers.Concat(new(IPEndPoint, string)[] { (new IPEndPoint(123456789, 4711), "Testserver") }).ToArray();
+            _State.UpdateServerList(l);
+        }
+
         private void State_BrowseClicked()
         {
-            // TODO : get available servers from client
-            _State.OpenServerBrowser(true, new object[0]); // todo: add server data
+            _State.OpenServerBrowser(true); 
         }
 
         private void State_HostClicked()
@@ -53,9 +65,12 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
+            _Client.LanServerListUpdated -= HandleLanServerListUpdated;
+            _Client.Dispose();
+            _Client = null;
+
             _State.Browse -= State_BrowseClicked;
             _State.Host -= State_HostClicked;
-            _Message = null;
             _State = null;
         }
     }

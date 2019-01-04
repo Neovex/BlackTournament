@@ -13,6 +13,7 @@ using BlackCoat.Entities.Shapes;
 
 using BlackTournament.UI;
 using BlackTournament.Properties;
+using System.Net;
 
 namespace BlackTournament.GameStates
 {
@@ -20,6 +21,9 @@ namespace BlackTournament.GameStates
     {
         public event Action Browse = () => { };
         public event Action Host = () => { };
+
+        // System
+        private EndPoint _SelectedServer;
 
         // Audio
         private Music music;
@@ -49,9 +53,11 @@ namespace BlackTournament.GameStates
         private BigButton _HostHostButton;
 
         private Canvas _ServerBrowser;
+        private OffsetContainer _ServerList;
         private BigButton _BrowseRefreshButton;
         private BigButton _BrowseBackButton;
         private BigButton _BrowseDirectConnectButton;
+
         private BigButton _BrowseJoinButton;
 
         private Canvas _Credits;
@@ -205,7 +211,7 @@ namespace BlackTournament.GameStates
                             Texture=TextureLoader.Load(Files.Menue_Bg2, true),
                             Init = new UIComponent[]
                             {
-                                new DistributionContainer(_Core,false)
+                                new DistributionContainer(_Core, false)
                                 {
                                     DockX = true,
                                     Margin = new FloatRect(10,10,10,10),
@@ -231,6 +237,13 @@ namespace BlackTournament.GameStates
                                             Margin = new FloatRect(5,10,5,10),
                                             BackgroundColor = Color.White,
                                             BackgroundAlpha = 0.03f,
+                                            Init = new UIComponent[]
+                                            {
+                                                _ServerList = new OffsetContainer(_Core, false)
+                                                {
+                                                    DockX = true
+                                                }
+                                            }
                                         },
                                         new DistributionContainer(_Core,true)
                                         {
@@ -329,10 +342,10 @@ namespace BlackTournament.GameStates
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
             // Server Browser
-            if (button == _BrowseBackButton) OpenServerBrowser(false, null);
-            if (button == _BrowseRefreshButton) Browse.Invoke();
-            if (button == _BrowseDirectConnectButton) { }
-            if (button == _BrowseJoinButton) { }
+            if (button == _BrowseBackButton) OpenServerBrowser(false);
+            if (button == _BrowseRefreshButton) { } // TODO : connect
+            if (button == _BrowseDirectConnectButton) { } // TODO : implement
+            if (button == _BrowseJoinButton) { } // TODO : connect
         }
 
         private void OpenHostUI(bool open)
@@ -347,12 +360,10 @@ namespace BlackTournament.GameStates
             _Credits.Visible = open;
         }
 
-        internal void OpenServerBrowser(bool open, object[] serverData)
+        internal void OpenServerBrowser(bool open)
         {
             _MainUI.Visible = _Logo.Visible = !open;
             _ServerBrowser.Visible = open;
-
-            // todo : feed server info
         }
         private void PortLimit(UIComponent component)
         {
@@ -385,7 +396,27 @@ namespace BlackTournament.GameStates
 
         internal void DisplayPopupMessage(string message)
         {
-            Log.Debug(message);
+            Log.Debug(message); // TODO : implement
+        }
+
+        internal void UpdateServerList((IPEndPoint, string)[] server)
+        {
+            foreach (ServerInfo info in _ServerList.Components)
+            {
+                info.Checked -= HandleServerSelected;
+            }
+            foreach (var s in server)
+            {
+                var info = new ServerInfo(_Core, _Sfx, s);
+                info.Checked += HandleServerSelected;
+                _ServerList.Add(info);
+            }
+        }
+
+        private void HandleServerSelected(ServerInfo server)
+        {
+            _SelectedServer = server?.Endpoint;
+            _BrowseJoinButton.Enabled = server != null;
         }
 
         protected override void Update(float deltaT)
@@ -426,6 +457,11 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
+            foreach (ServerInfo info in _ServerList.Components)
+            {
+                info.Checked -= HandleServerSelected;
+            }
+
             _Core.DeviceResized -= HandleCoreDeviceResized;
             _Sfx = null;
         }
