@@ -334,7 +334,7 @@ namespace BlackTournament.GameStates
         private void ButtonClicked(Button button)
         {
             //Main
-            if (button == _BrowseButton) Browse.Invoke();
+            if (button == _BrowseButton) OpenServerBrowser(true);
             if (button == _HostButton) OpenHostUI(true);
             if (button == _HostCancelButton) OpenHostUI(false);
             if (button == _HostHostButton) Host.Invoke();
@@ -343,7 +343,7 @@ namespace BlackTournament.GameStates
             if (button == _ExitButton) _Core.Exit("Exit by menu");
             // Server Browser
             if (button == _BrowseBackButton) OpenServerBrowser(false);
-            if (button == _BrowseRefreshButton) { } // TODO : connect
+            if (button == _BrowseRefreshButton) Browse.Invoke();
             if (button == _BrowseDirectConnectButton) { } // TODO : implement
             if (button == _BrowseJoinButton) { } // TODO : connect
         }
@@ -405,6 +405,7 @@ namespace BlackTournament.GameStates
             {
                 info.Checked -= HandleServerSelected;
             }
+            _ServerList.Clear();
             foreach (var s in server)
             {
                 var info = new ServerInfo(_Core, _Sfx, s);

@@ -34,7 +34,7 @@ namespace BlackTournament.UI
                 new Label(_Core, serverData.Server.Name, 16, Game.DefaultFont),
                 new Label(_Core, serverData.Server.Map, 16, Game.DefaultFont),
                 new Label(_Core, $"{serverData.Server.CurrentPlayers} / {serverData.Server.MaxPlayers}", 16, Game.DefaultFont),
-                new Label(_Core, serverData.Server.Ping.ToString(), 16, Game.DefaultFont),
+                new Label(_Core, $"{serverData.Server.Ping} ms", 16, Game.DefaultFont),
                 new Label(_Core, serverData.Endpoint.ToString(), 16, Game.DefaultFont)
             };
             ResizeToFitContent();

@@ -14,7 +14,7 @@ namespace BlackTournament.Controller
     {
         private String _Message;
         private MainMenu _State;
-        private BlackTournamentClient _Client;
+        private BlackTournamentClient _LanDiscoveryClient;
 
         public MenuController(Game game) : base(game)
         {
@@ -33,25 +33,31 @@ namespace BlackTournament.Controller
 
         protected override void StateReady()
         {
-            _Client = new BlackTournamentClient(Settings.Default.PlayerName);
-            _Client.LanServerListUpdated += HandleLanServerListUpdated;
-            _Client.DiscoverLanServers(Net.Net.DEFAULT_PORT); // move
+            _LanDiscoveryClient = new BlackTournamentClient(Settings.Default.PlayerName); // TODO : move discovery into a seperate client class - there WAN servers (sh)could be handled as well
+            _Game.Core.OnUpdate += _LanDiscoveryClient.Update;
+            _LanDiscoveryClient.LanServerListUpdated += HandleLanServerListUpdated;
+            _LanDiscoveryClient.DiscoverLanServers(Net.Net.DEFAULT_PORT); // consider making the entire discovery on demand - moving it into browse clicked
+            HandleLanServerListUpdated(); // HACK
 
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
             _State.Browse += State_BrowseClicked;
             _State.Host += State_HostClicked;
-            // TODO: restore UI State
         }
 
         private void HandleLanServerListUpdated()
         {
-            var l = _Client.LanServers.Concat(new(IPEndPoint, Net.Data.ServerInfo)[] { (new IPEndPoint(123456789, 4711), new Net.Data.ServerInfo("TestServer", "TestMap")) }).ToArray();
+            var l = _LanDiscoveryClient.LanServers.Concat(new(IPEndPoint, Net.Data.ServerInfo)[]
+            {
+                (new IPEndPoint(123456789, 4711), new Net.Data.ServerInfo("TestServer", "TestMap"){ Ping = 32 }),
+                (new IPEndPoint(456456456, 4711), new Net.Data.ServerInfo("TestServer2", "OtherMap"){ Ping = 17 })
+            }).ToArray();
+            Log.Debug("Refreshing server list with", l.Length, "Servers");
             _State.UpdateServerList(l);
         }
 
         private void State_BrowseClicked()
         {
-            _State.OpenServerBrowser(true); 
+            _LanDiscoveryClient.DiscoverLanServers(Net.Net.DEFAULT_PORT, false);
         }
 
         private void State_HostClicked()
@@ -65,9 +71,10 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
-            _Client.LanServerListUpdated -= HandleLanServerListUpdated;
-            _Client.Dispose();
-            _Client = null;
+            _Game.Core.OnUpdate -= _LanDiscoveryClient.Update;
+            _LanDiscoveryClient.LanServerListUpdated -= HandleLanServerListUpdated;
+            _LanDiscoveryClient.Dispose();
+            _LanDiscoveryClient = null;
 
             _State.Browse -= State_BrowseClicked;
             _State.Host -= State_HostClicked;

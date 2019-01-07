@@ -12,6 +12,8 @@ namespace BlackTournament.Net
     public class BlackTournamentClient : ManagedClient<NetMessage>
     {
         private Dictionary<IPEndPoint, ServerInfo> _Serverlist;
+        private System.Diagnostics.Stopwatch _DiscoveryTimer = new System.Diagnostics.Stopwatch();
+
         private Dictionary<int, ClientPlayer> _PlayerLookup;
         private Dictionary<int, Pickup> _PickupLookup;
         private Dictionary<int, Shot> _ShotLookup;
@@ -22,6 +24,7 @@ namespace BlackTournament.Net
         public String MapName { get; private set; }
         public ClientPlayer Player { get; private set; }
         public float PlayerRotation { get; set; }
+
 
         public IEnumerable<(IPEndPoint, ServerInfo)> LanServers => _Serverlist.AsEnumerable().Select(kvp => (kvp.Key, kvp.Value));
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
@@ -113,6 +116,9 @@ namespace BlackTournament.Net
         public void DiscoverLanServers(int port, bool clearOldEntries = true)
         {
             if (clearOldEntries) _Serverlist.Clear();
+            _BasePeer.Start();
+            _DiscoveryTimer.Reset();
+            _DiscoveryTimer.Start();
             _BasePeer.DiscoverLocalPeers(port);
         }
 
@@ -150,12 +156,12 @@ namespace BlackTournament.Net
             {
                 var server = _Serverlist[endPoint];
                 server.Deserialize(msg);
-                server.Ping = (int)(msg.SenderConnection.AverageRoundtripTime * 1000);
+                server.Ping = (int)_DiscoveryTimer.ElapsedMilliseconds;
             }
             else
             {
                 var server = new ServerInfo(msg);
-                server.Ping = (int)(msg.SenderConnection.AverageRoundtripTime * 1000);
+                server.Ping = (int)_DiscoveryTimer.ElapsedMilliseconds;
                 _Serverlist[endPoint] = server;
             }
             base.DiscoveryResponseReceived(endPoint, msg);
