@@ -12,6 +12,7 @@ using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.Systems;
 using BlackTournament.GameStates;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament
 {
@@ -121,10 +122,11 @@ namespace BlackTournament
             _Client.Update(deltaT);
         }
 
-        public bool Host(String map, String serverName, int port)
+        public bool Host(int port, ServerInfo info) => _Server.HostGame(port, info);
+        public bool Host(int port, String map, String serverName)
         {
             if (string.IsNullOrWhiteSpace(map)) throw new ArgumentNullException(nameof(map));
-            return _Server.HostGame(serverName, map, port);
+            return Host(port, new ServerInfo(serverName, map));
         }
 
         public void Connect(String host, int port)
@@ -183,9 +185,12 @@ namespace BlackTournament
                     case "ld":
                     case "load":
                     case "loadmap":
+                    case "srv":
+                    case "startserver":
+                    case "start server":
                         if (commandData.Length == 2)
                         {
-                            if (Host(commandData[1], $"{Settings.Default.PlayerName}'s Server", Net.Net.DEFAULT_PORT))
+                            if (Host(Net.Net.DEFAULT_PORT, commandData[1], $"{Settings.Default.PlayerName}'s Server"))
                                 Connect(Net.Net.DEFAULT_HOST, Net.Net.DEFAULT_PORT);
                         }
                         else
@@ -202,18 +207,6 @@ namespace BlackTournament
                             Connect(commandData[1], port);
                         }
                         else Log.Info("Invalid connect command. Use connect [host name] [(optional)port]", cmd);
-                        return true;
-
-                    case "srv":
-                    case "startserver":
-                    case "start server":
-                        if (commandData.Length != 0)
-                        {
-                            var port = commandData.Length > 2 ? Int32.Parse(commandData[2]) : Net.Net.DEFAULT_PORT;
-                            var name = commandData.Length > 3 ? commandData[3] : $"{Settings.Default.PlayerName}'s Server";
-                            if (Host(commandData[1], name, port)) Connect(Net.Net.DEFAULT_HOST, port);
-                        }
-                        else Log.Info("Invalid host command. Use host [map name] [(optional)port] [(optional)server name]", cmd);
                         return true;
                 }
             }

@@ -5,11 +5,13 @@ using Lidgren.Network;
 using BlackCoat.Network;
 using BlackTournament.Systems;
 using BlackTournament.Net.Data;
+using System.Net;
 
 namespace BlackTournament.Net
 {
     public class BlackTournamentClient : ManagedClient<NetMessage>
     {
+        private Dictionary<IPEndPoint, ServerInfo> _Serverlist;
         private Dictionary<int, ClientPlayer> _PlayerLookup;
         private Dictionary<int, Pickup> _PickupLookup;
         private Dictionary<int, Shot> _ShotLookup;
@@ -21,6 +23,7 @@ namespace BlackTournament.Net
         public ClientPlayer Player { get; private set; }
         public float PlayerRotation { get; set; }
 
+        public IEnumerable<(IPEndPoint, ServerInfo)> LanServers => _Serverlist.AsEnumerable().Select(kvp => (kvp.Key, kvp.Value));
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
@@ -47,6 +50,7 @@ namespace BlackTournament.Net
 
         public BlackTournamentClient(String userName):base(Game.ID, userName, Net.COMMANDS)
         {
+            _Serverlist = new Dictionary<IPEndPoint, ServerInfo>();
         }
 
 
@@ -106,6 +110,17 @@ namespace BlackTournament.Net
             Disconnect(String.Empty);
         }
 
+        public void DiscoverLanServers(int port, bool clearOldEntries = true)
+        {
+            if (clearOldEntries) _Serverlist.Clear();
+            _BasePeer.DiscoverLocalPeers(port);
+        }
+
+        public void DiscoverPublicServers()
+        {
+            throw new NotImplementedException(); // TODO : this
+        }
+
 
         // INCOMMING
         protected override void DataReceived(NetMessage message, NetIncomingMessage msg)
@@ -128,6 +143,22 @@ namespace BlackTournament.Net
                     ServerUpdate(msg);
                 break;
             }
+        }
+        protected override void DiscoveryResponseReceived(IPEndPoint endPoint, NetIncomingMessage msg)
+        {
+            if (_Serverlist.ContainsKey(endPoint))
+            {
+                var server = _Serverlist[endPoint];
+                server.Deserialize(msg);
+                server.Ping = (int)(msg.SenderConnection.AverageRoundtripTime * 1000);
+            }
+            else
+            {
+                var server = new ServerInfo(msg);
+                server.Ping = (int)(msg.SenderConnection.AverageRoundtripTime * 1000);
+                _Serverlist[endPoint] = server;
+            }
+            base.DiscoveryResponseReceived(endPoint, msg);
         }
 
         private void TextMessage(NetIncomingMessage msg)

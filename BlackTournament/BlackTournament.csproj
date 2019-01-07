@@ -70,6 +70,7 @@
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\Remote.cs" />
     <Compile Include="Entities\GameText.cs" />
+    <Compile Include="Net\Data\ServerInfo.cs" />
     <Compile Include="Particles\ImpactInfo.cs" />
     <Compile Include="Particles\LightningEmitter.cs" />
     <Compile Include="Particles\LineEmitter.cs" />

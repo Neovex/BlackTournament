@@ -7,6 +7,7 @@ using BlackCoat.Network;
 using BlackTournament.Tmx;
 using BlackTournament.Systems;
 using BlackTournament.Net.Data;
+using System.Net;
 
 namespace BlackTournament.Net
 {
@@ -21,6 +22,8 @@ namespace BlackTournament.Net
         public override int AdminId => NetIdProvider.ADMIN_ID;
         public override int NextClientId => NetIdProvider.NEXT_ID;
 
+        public ServerInfo Info { get; set; }
+
 
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
@@ -29,23 +32,22 @@ namespace BlackTournament.Net
 
 
         // CONTROL
-        private bool IsAdmin(int id)
-        {
-            return id == AdminId;
-        }
+        private bool IsAdmin(int id) => id == AdminId;
 
-        public bool HostGame(string serverName, string mapName, int port)
+        public bool HostGame(int port, ServerInfo info)
         {
-            Log.Debug("Trying to host", mapName, "on", port);
-            var map = LoadMapFromMapname(mapName);
+            if (info == null) throw new ArgumentNullException(nameof(info));
+            Log.Debug("Trying to host", info.Name, "on", port);
+            var map = LoadMapFromMapname(info.Map);
             if (map == null)
             {
-                LastError = $"Failed to host {mapName} on {port} reason: unknown map";
+                LastError = $"Failed to host {info.Map} on {port} reason: unknown map";
                 Log.Error(LastError);
                 return false;
             }
 
-            Host(serverName, port);
+            Host(info.Name, port);
+            Info = info;
             Log.Debug("Host active");
             ChangeLevel(map);
             return true;
@@ -54,10 +56,7 @@ namespace BlackTournament.Net
         private TmxMapper LoadMapFromMapname(string mapName)
         {
             var mapper = new TmxMapper(() => NextClientId);
-            if (mapper.Load(mapName, _Core.CollisionSystem))
-            {
-                return mapper;
-            }
+            if (mapper.Load(mapName, _Core.CollisionSystem)) return mapper;
             LastError = $"Failed to load level {mapName}";
             Log.Warning(LastError);
             return null;
@@ -69,6 +68,8 @@ namespace BlackTournament.Net
 
             _Logic = new GameLogic(_Core, map);
             _Logic.PlayerGotPickup += SendPlayerPickup;
+
+            Info.Map = map.Name;
 
             // Add users
             foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
@@ -133,6 +134,10 @@ namespace BlackTournament.Net
                     break;
             }
         }
+        protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
+        {
+            Info.Serialize(msg); // respond with server info
+        }
 
 
         // OUTGOING
@@ -157,6 +162,7 @@ namespace BlackTournament.Net
             if (IsAdmin(id))
             {
                 StopServer(String.Empty);
+                Info = null;
                 // TODO : check if dropped players will be removed by other events or if this needs to be done here manually
                 _Logic.PlayerGotPickup -= SendPlayerPickup;
                 _Logic = null;

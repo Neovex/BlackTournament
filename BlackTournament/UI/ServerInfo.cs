@@ -11,19 +11,18 @@ using SFML.Graphics;
 
 namespace BlackTournament.UI
 {
-    class ServerInfo : Canvas
+    class ServerInfo : DistributionContainer
     {
         private static ServerInfo LastInfo;
         private SfxManager _Sfx;
 
-        public override bool DockX { get => true; set => base.DockX = value; }
         public IPEndPoint Endpoint { get; private set; }
 
         public event Action<ServerInfo> Checked = i => { };
         public Action<ServerInfo> InitChecked { set => Checked += value; }
 
 
-        public ServerInfo(Core core, SfxManager sfx, (IPEndPoint Endpoint, string Servername) serverData) : base(core)
+        public ServerInfo(Core core, SfxManager sfx, (IPEndPoint Endpoint, Net.Data.ServerInfo Server) serverData) : base(core)
         {
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             Endpoint = serverData.Endpoint;
@@ -32,14 +31,11 @@ namespace BlackTournament.UI
 
             Init = new UIComponent[]
             {
-                new Label(_Core, serverData.Servername, 16, Game.DefaultFont),
-                new AlignedContainer(_Core, Alignment.TopRight)
-                {
-                    Init = new UIComponent[]
-                    {
-                        new Label(_Core, serverData.Endpoint.ToString(), 16, Game.DefaultFont)
-                    }
-                }
+                new Label(_Core, serverData.Server.Name, 16, Game.DefaultFont),
+                new Label(_Core, serverData.Server.Map, 16, Game.DefaultFont),
+                new Label(_Core, $"{serverData.Server.CurrentPlayers} / {serverData.Server.MaxPlayers}", 16, Game.DefaultFont),
+                new Label(_Core, serverData.Server.Ping.ToString(), 16, Game.DefaultFont),
+                new Label(_Core, serverData.Endpoint.ToString(), 16, Game.DefaultFont)
             };
             ResizeToFitContent();
         }

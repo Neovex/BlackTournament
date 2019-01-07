@@ -399,7 +399,7 @@ namespace BlackTournament.GameStates
             Log.Debug(message); // TODO : implement
         }
 
-        internal void UpdateServerList((IPEndPoint, string)[] server)
+        internal void UpdateServerList((IPEndPoint, Net.Data.ServerInfo)[] server)
         {
             foreach (ServerInfo info in _ServerList.Components)
             {
