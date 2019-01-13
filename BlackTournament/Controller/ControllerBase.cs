@@ -10,7 +10,7 @@ namespace BlackTournament.Controller
 
         public ControllerBase(Game game)
         {
-            _Game = game;
+            _Game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
         protected virtual void Activate(Gamestate state)

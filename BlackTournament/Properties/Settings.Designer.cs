@@ -58,5 +58,17 @@ namespace BlackTournament.Properties {
                 this["SfxVolume"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string ManagementServerAdress {
+            get {
+                return ((string)(this["ManagementServerAdress"]));
+            }
+            set {
+                this["ManagementServerAdress"] = value;
+            }
+        }
     }
 }

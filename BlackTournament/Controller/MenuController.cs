@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
+using BlackTournament.Net.Data;
 using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
@@ -14,7 +14,7 @@ namespace BlackTournament.Controller
     {
         private String _Message;
         private MainMenu _State;
-        private BlackTournamentClient _LanDiscoveryClient;
+        private NetworkManagementClient _NetworkManagementClient;
 
         public MenuController(Game game) : base(game)
         {
@@ -33,34 +33,50 @@ namespace BlackTournament.Controller
 
         protected override void StateReady()
         {
-            _LanDiscoveryClient = new BlackTournamentClient(Settings.Default.PlayerName); // TODO : move discovery into a seperate client class - there WAN servers (sh)could be handled as well
-            _Game.Core.OnUpdate += _LanDiscoveryClient.Update;
-            _LanDiscoveryClient.LanServerListUpdated += HandleLanServerListUpdated;
-            _LanDiscoveryClient.DiscoverLanServers(Net.Net.DEFAULT_PORT); // consider making the entire discovery on demand - moving it into browse clicked
-            HandleLanServerListUpdated(); // HACK
-
             if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
-            _State.Browse += State_BrowseClicked;
-            _State.Host += State_HostClicked;
+            _State.ServerBrowserOpen += HandleStateServerBrowserOpen;
+            _State.ServerBrowserRefresh += HandleStateServerBrowserRefresh;
+            _State.JoinServer += _Game.Connect;
+            _State.StartHosting += HandleStateStartHosting;
         }
 
-        private void HandleLanServerListUpdated()
+        private void HandleLanServersUpdated()
         {
-            var l = _LanDiscoveryClient.LanServers.Concat(new(IPEndPoint, Net.Data.ServerInfo)[]
-            {
-                (new IPEndPoint(123456789, 4711), new Net.Data.ServerInfo("TestServer", "TestMap"){ Ping = 32 }),
-                (new IPEndPoint(456456456, 4711), new Net.Data.ServerInfo("TestServer2", "OtherMap"){ Ping = 17 })
-            }).ToArray();
+            var l = _NetworkManagementClient.LanServers.ToArray();
             Log.Debug("Refreshing server list with", l.Length, "Servers");
             _State.UpdateServerList(l);
         }
 
-        private void State_BrowseClicked()
+        private void HandleWanServersUpdated()
         {
-            _LanDiscoveryClient.DiscoverLanServers(Net.Net.DEFAULT_PORT, false);
+            // TODO : Implement this when management server is functional
+            throw new NotImplementedException();
         }
 
-        private void State_HostClicked()
+        private void HandleStateServerBrowserOpen()
+        {
+            _NetworkManagementClient = new NetworkManagementClient();
+            _NetworkManagementClient.LanServersUpdated += HandleLanServersUpdated;
+            _NetworkManagementClient.WanServersUpdated += HandleWanServersUpdated;
+            _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT);
+            HandleLanServersUpdated(); // HACK
+
+            _Game.Core.OnUpdate += HandleCoreUpdate;
+
+            _State.OpenServerBrowser(true);
+        }
+
+        private void HandleCoreUpdate(float deltaT)
+        {
+            _NetworkManagementClient.ProcessMessages();
+        }
+
+        private void HandleStateServerBrowserRefresh()
+        {
+            _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT, false);
+        }
+
+        private void HandleStateStartHosting()
         {
             var name = String.IsNullOrWhiteSpace(_State.Servername) ? $"{Settings.Default.PlayerName}'s Server" : _State.Servername;
             var port = _State.Port < 1 ? Net.Net.DEFAULT_PORT : _State.Port;
@@ -71,13 +87,20 @@ namespace BlackTournament.Controller
 
         protected override void StateReleased()
         {
-            _Game.Core.OnUpdate -= _LanDiscoveryClient.Update;
-            _LanDiscoveryClient.LanServerListUpdated -= HandleLanServerListUpdated;
-            _LanDiscoveryClient.Dispose();
-            _LanDiscoveryClient = null;
+            if (_NetworkManagementClient != null)
+            {
+                _NetworkManagementClient.LanServersUpdated -= HandleLanServersUpdated;
+                _NetworkManagementClient.WanServersUpdated -= HandleWanServersUpdated;
+                _NetworkManagementClient.Dispose();
+                _NetworkManagementClient = null;
 
-            _State.Browse -= State_BrowseClicked;
-            _State.Host -= State_HostClicked;
+                _Game.Core.OnUpdate -= HandleCoreUpdate;
+            }
+
+            _State.ServerBrowserOpen -= HandleStateServerBrowserOpen;
+            _State.ServerBrowserRefresh -= HandleStateServerBrowserRefresh;
+            _State.JoinServer -= _Game.Connect;
+            _State.StartHosting -= HandleStateStartHosting;
             _State = null;
         }
     }

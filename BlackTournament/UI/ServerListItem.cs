@@ -4,38 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SFML.System;
+using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.UI;
-using System.Net;
-using SFML.Graphics;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.UI
 {
-    class ServerInfo : DistributionContainer
+    class ServerListItem : DistributionContainer
     {
-        private static ServerInfo LastInfo;
+        private static ServerListItem LastInfo;
         private SfxManager _Sfx;
 
-        public IPEndPoint Endpoint { get; private set; }
+        public ServerInfo ServerInfo { get; private set; }
 
-        public event Action<ServerInfo> Checked = i => { };
-        public Action<ServerInfo> InitChecked { set => Checked += value; }
+        public event Action<ServerListItem> Checked = i => { };
+        public Action<ServerListItem> InitChecked { set => Checked += value; }
 
 
-        public ServerInfo(Core core, SfxManager sfx, (IPEndPoint Endpoint, Net.Data.ServerInfo Server) serverData) : base(core)
+        public ServerListItem(Core core, SfxManager sfx, ServerInfo serverInfo) : base(core)
         {
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
-            Endpoint = serverData.Endpoint;
+            ServerInfo = serverInfo;
             CanFocus = true;
             Margin = new FloatRect(5, 5, 5, 0);
 
             Init = new UIComponent[]
             {
-                new Label(_Core, serverData.Server.Name, 16, Game.DefaultFont),
-                new Label(_Core, serverData.Server.Map, 16, Game.DefaultFont),
-                new Label(_Core, $"{serverData.Server.CurrentPlayers} / {serverData.Server.MaxPlayers}", 16, Game.DefaultFont),
-                new Label(_Core, $"{serverData.Server.Ping} ms", 16, Game.DefaultFont),
-                new Label(_Core, serverData.Endpoint.ToString(), 16, Game.DefaultFont)
+                new Label(_Core, serverInfo.Name, 16, Game.DefaultFont),
+                new Label(_Core, serverInfo.Map, 16, Game.DefaultFont),
+                new Label(_Core, $"{serverInfo.CurrentPlayers} / {serverInfo.MaxPlayers}", 16, Game.DefaultFont),
+                new Label(_Core, $"{serverInfo.Ping} ms", 16, Game.DefaultFont),
+                new Label(_Core, serverInfo.EndPoint.ToString(), 16, Game.DefaultFont)
             };
             ResizeToFitContent();
         }

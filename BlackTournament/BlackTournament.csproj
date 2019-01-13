@@ -70,6 +70,8 @@
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\Remote.cs" />
     <Compile Include="Entities\GameText.cs" />
+    <Compile Include="Net\NetMessage.cs" />
+    <Compile Include="Net\NetworkManagementClient.cs" />
     <Compile Include="Net\Data\ServerInfo.cs" />
     <Compile Include="Particles\ImpactInfo.cs" />
     <Compile Include="Particles\LightningEmitter.cs" />
@@ -99,7 +101,7 @@
     <Compile Include="Net\Data\ServerPlayer.cs" />
     <Compile Include="Net\Data\Shot.cs" />
     <Compile Include="Net\Data\Weapon.cs" />
-    <Compile Include="Net\NetMessage.cs" />
+    <Compile Include="Net\ManagementMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -120,7 +122,7 @@
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
     <Compile Include="UI\BigButton.cs" />
-    <Compile Include="UI\ServerInfo.cs" />
+    <Compile Include="UI\ServerListItem.cs" />
     <Compile Include="WeaponData.cs" />
   </ItemGroup>
   <ItemGroup>

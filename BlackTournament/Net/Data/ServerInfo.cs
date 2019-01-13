@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
@@ -9,6 +10,8 @@ namespace BlackTournament.Net.Data
 {
     public class ServerInfo:NetEntityBase
     {
+        public IPEndPoint EndPoint { get; }
+
         public String Name { get; private set; }
         public String Map { get; set; }
         public int CurrentPlayers { get; set; }
@@ -16,14 +19,16 @@ namespace BlackTournament.Net.Data
         public int Ping { get; set; }
         public Boolean HasPassword { get; set; }
 
+
         public ServerInfo(string serverName, string map, int maxPlayers = 8) : base(0)
         {
             Name = serverName;
             Map = map;
             MaxPlayers = maxPlayers;
         }
-        public ServerInfo(NetIncomingMessage msg):base(0, msg)
+        public ServerInfo(IPEndPoint endPoint, NetIncomingMessage msg):base(0, msg)
         {
+            EndPoint = endPoint;
         }
 
         protected override void SerializeInternal(NetOutgoingMessage m)
@@ -32,16 +37,19 @@ namespace BlackTournament.Net.Data
             m.Write(Map);
             m.Write(CurrentPlayers);
             m.Write(MaxPlayers);
+            m.Write(Ping);
             m.Write(HasPassword);
         }
 
         public override void Deserialize(NetIncomingMessage m)
         {
             m.ReadInt32(); // skip id
+
             Name = m.ReadString();
             Map = m.ReadString();
             CurrentPlayers = m.ReadInt32();
             MaxPlayers = m.ReadInt32();
+            Ping = m.ReadInt32();
             HasPassword = m.ReadBoolean();
         }
     }

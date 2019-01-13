@@ -8,11 +8,11 @@ using SFML.Graphics;
 using BlackCoat;
 
 using BlackTournament.Properties;
-using BlackTournament.Net;
 using BlackTournament.Controller;
 using BlackTournament.Systems;
-using BlackTournament.GameStates;
+using BlackTournament.Net;
 using BlackTournament.Net.Data;
+
 
 namespace BlackTournament
 {
@@ -132,10 +132,21 @@ namespace BlackTournament
         public void Connect(String host, int port)
         {
             if (string.IsNullOrWhiteSpace(host)) throw new ArgumentNullException(nameof(host));
+            ResetClient();
+            ConnectController.Activate(_Client, host, port);
+        }
+        public void Connect(ServerInfo host)
+        {
+            if (host == null) throw new ArgumentNullException(nameof(host));
+            ResetClient();
+            ConnectController.Activate(_Client, host);
+        }
+
+        private void ResetClient()
+        {
             _Client.Disconnect();
             _Client.Dispose();
             _Client = new BlackTournamentClient(Settings.Default.PlayerName);
-            ConnectController.Activate(_Client, host, port);
         }
 
         private bool ExecuteCommand(string cmd)
@@ -157,8 +168,8 @@ namespace BlackTournament
                     case "disconnect":
                         if (_Client.IsConnected)
                         {
+                            Log.Info("Disconnecting...");
                             _Client.Disconnect();
-                            Log.Info("Disconnected");
                         }
                         else
                         {

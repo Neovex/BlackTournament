@@ -13,17 +13,19 @@ using BlackCoat.Entities.Shapes;
 
 using BlackTournament.UI;
 using BlackTournament.Properties;
-using System.Net;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.GameStates
 {
     class MainMenu:Gamestate
     {
-        public event Action Browse = () => { };
-        public event Action Host = () => { };
+        public event Action ServerBrowserOpen = () => { };
+        public event Action ServerBrowserRefresh = () => { };
+        public event Action StartHosting = () => { };
+        public event Action<ServerInfo> JoinServer = i => { };
 
         // System
-        private EndPoint _SelectedServer;
+        private ServerInfo _SelectedServer;
 
         // Audio
         private Music music;
@@ -334,18 +336,18 @@ namespace BlackTournament.GameStates
         private void ButtonClicked(Button button)
         {
             //Main
-            if (button == _BrowseButton) OpenServerBrowser(true);
+            if (button == _BrowseButton) ServerBrowserOpen.Invoke();
             if (button == _HostButton) OpenHostUI(true);
             if (button == _HostCancelButton) OpenHostUI(false);
-            if (button == _HostHostButton) Host.Invoke();
+            if (button == _HostHostButton) StartHosting.Invoke();
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
             // Server Browser
             if (button == _BrowseBackButton) OpenServerBrowser(false);
-            if (button == _BrowseRefreshButton) Browse.Invoke();
+            if (button == _BrowseRefreshButton) ServerBrowserRefresh.Invoke();
             if (button == _BrowseDirectConnectButton) { } // TODO : implement
-            if (button == _BrowseJoinButton) { } // TODO : connect
+            if (button == _BrowseJoinButton) JoinServer.Invoke(_SelectedServer);
         }
 
         private void OpenHostUI(bool open)
@@ -399,24 +401,24 @@ namespace BlackTournament.GameStates
             Log.Debug(message); // TODO : implement
         }
 
-        internal void UpdateServerList((IPEndPoint, Net.Data.ServerInfo)[] server)
+        internal void UpdateServerList(ServerInfo[] servers)
         {
-            foreach (ServerInfo info in _ServerList.Components)
+            foreach (ServerListItem info in _ServerList.Components)
             {
                 info.Checked -= HandleServerSelected;
             }
             _ServerList.Clear();
-            foreach (var s in server)
+            foreach (var s in servers)
             {
-                var info = new ServerInfo(_Core, _Sfx, s);
+                var info = new ServerListItem(_Core, _Sfx, s);
                 info.Checked += HandleServerSelected;
                 _ServerList.Add(info);
             }
         }
 
-        private void HandleServerSelected(ServerInfo server)
+        private void HandleServerSelected(ServerListItem server)
         {
-            _SelectedServer = server?.Endpoint;
+            _SelectedServer = server?.ServerInfo;
             _BrowseJoinButton.Enabled = server != null;
         }
 
@@ -458,7 +460,7 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
-            foreach (ServerInfo info in _ServerList.Components)
+            foreach (ServerListItem info in _ServerList.Components)
             {
                 info.Checked -= HandleServerSelected;
             }

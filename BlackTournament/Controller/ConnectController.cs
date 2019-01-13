@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
+using BlackTournament.Net.Data;
 using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
@@ -14,28 +15,45 @@ namespace BlackTournament.Controller
         private BlackTournamentClient _Client;
         private ConnectState _State;
 
+        private ServerInfo _ServerInfo;
+        private (String Host, Int32 Port) _AltServerInfo;
+
 
         public ConnectController(Game game) : base(game)
         {
         }
 
-        public void Activate(BlackTournamentClient client,String host, Int32 port)
+
+        public void Activate(BlackTournamentClient client, String host, Int32 port)
         {
             if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
             _Client = client;
+            if (String.IsNullOrWhiteSpace(host)) throw new ArgumentNullException(nameof(host));
+            _AltServerInfo.Host = host;
+            _AltServerInfo.Port = port;
 
             // Build and switch to Connect State
             Activate(_State = new ConnectState(_Game.Core, host));
+        }
 
-            // Connect to Host
-            _Client.ChangeLevelReceived += LevelReady;
-            _Client.OnDisconnect += ConnectionFailed;
-            _Client.Connect(host, port);
+        public void Activate(BlackTournamentClient client, ServerInfo host)
+        {
+            if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
+            _Client = client;
+            _ServerInfo = host ?? throw new ArgumentNullException(nameof(host));
+
+            // Build and switch to Connect State
+            var displayName = String.IsNullOrWhiteSpace(_ServerInfo.Name) ? host.EndPoint.ToString() : _ServerInfo.Name;
+            Activate(_State = new ConnectState(_Game.Core, displayName));
         }
 
         protected override void StateReady()
         {
-            // TODO : feed state (aka view) with data here and only now
+            // Connect to Host
+            _Client.ChangeLevelReceived += LevelReady;
+            _Client.OnDisconnect += ConnectionFailed;
+            if (_ServerInfo != null) _Client.Connect(_ServerInfo.EndPoint);
+            else _Client.Connect(_AltServerInfo.Host, _AltServerInfo.Port);
         }
         protected override void StateLoadingFailed()
         {
