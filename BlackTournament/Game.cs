@@ -65,7 +65,8 @@ namespace BlackTournament
             using (Core = new Core(device))
             {
                 // Init Core
-                Core.Debug = true;  Core.PauseUpdateOnFocusLoss = false;
+                Core.Debug = true;
+                //Core.PauseUpdateOnFocusLoss = false;
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 

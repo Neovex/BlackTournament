@@ -21,8 +21,9 @@ namespace BlackTournament.GameStates
     {
         public event Action ServerBrowserOpen = () => { };
         public event Action ServerBrowserRefresh = () => { };
-        public event Action StartHosting = () => { };
+        public event Action<String, String, Int32> StartHosting = (m,n,p) => { };
         public event Action<ServerInfo> JoinServer = i => { };
+        public event Action<String, Int32> DirectConnect = (s,p) => { };
 
         // System
         private ServerInfo _SelectedServer;
@@ -59,22 +60,21 @@ namespace BlackTournament.GameStates
         private BigButton _BrowseRefreshButton;
         private BigButton _BrowseBackButton;
         private BigButton _BrowseDirectConnectButton;
-
         private BigButton _BrowseJoinButton;
+        private AlignedContainer _DirectConnectDialog;
+        private TextBox _DirectConnectServerNameTextBox;
+        private TextBox _DirectConnectPortTextBox;
 
         private Canvas _Credits;
         private BigButton _CreditsBackButton;
+        private UIContainer _MessageBox;
+        private Label _MessageBoxLabel;
+        private BigButton _MessageBoxOkButton;
         
         // Overlay decors
         private Graphic _Glow;
         private Graphic _Title;
         private Graphic _Logo;
-
-
-        // Properties
-        public string Mapname => _HostMapNameTempTextBox?.Text;
-        public string Servername => _HostServerNameTextBox?.Text;
-        public int Port => Int32.TryParse(_HostPortTextBox?.Text, out int r) ? r : -1;
 
 
         // CTOR
@@ -263,6 +263,35 @@ namespace BlackTournament.GameStates
                                             }
                                         },
                                     }
+                                },
+                                _DirectConnectDialog = new AlignedContainer(_Core, Alignment.Center)
+                                {
+                                    Visible = false,
+                                    Init = new UIComponent[]
+                                    {
+                                        new OffsetContainer(_Core, false)
+                                        {
+                                            Offset = 8,
+                                            Init = new UIComponent[]
+                                            {
+                                                new Label(_Core, "Server name or IP", 16, Game.DefaultFont),
+                                                _DirectConnectServerNameTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+                                                {
+                                                    Margin = new FloatRect(0,0,0,15),
+                                                    Padding = new FloatRect(5,5,0,0),
+                                                },
+                                                new Label(_Core, "Port", 16, Game.DefaultFont),
+                                                _DirectConnectPortTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+                                                {
+                                                    Text = Net.Net.DEFAULT_PORT.ToString(),
+                                                    Margin = new FloatRect(0,0,0,15),
+                                                    Padding = new FloatRect(5,5,0,0),
+                                                    InitFocusLost = PortLimit,
+                                                    InitTextChanged = PortFilter
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -307,6 +336,51 @@ namespace BlackTournament.GameStates
                             }
                         }
                     }
+                },
+                _MessageBox = new Canvas(_Core, new Vector2f(550, 200))
+                {
+                    Visible = false,
+                    Input = _MainUI.Input,
+                    BackgroundAlpha = 1,
+                    BackgroundColor = new Color(180, 0, 0),
+                    Init = new UIComponent[]
+                    {
+                        new Canvas(_Core)
+                        {
+                            DockX = true, DockY = true,
+                            Margin = new FloatRect(1,1,1,1),
+                            BackgroundColor = Color.Black,
+                            BackgroundAlpha = 0.85f,
+                            Texture=TextureLoader.Load(Files.Menue_Bg2, true),
+                            Init = new UIComponent[]
+                            {
+                                new AlignedContainer(_Core, Alignment.CenterTop)
+                                {
+                                    Init = new UIComponent[]
+                                    {
+                                        _MessageBoxLabel = new Label(_Core, "Message", font:Game.DefaultFont)
+                                        {
+                                            CharacterSize = 12,
+                                            Position = Create.Vector2f(10),
+                                            TextColor = new Color(0,100,255),
+                                            Padding = new FloatRect(10,40,10,10)
+                                        }
+                                    }
+                                },
+                                new AlignedContainer(_Core, Alignment.CenterBottom)
+                                {
+                                    Init = new UIComponent[]
+                                    {
+                                        _MessageBoxOkButton = new BigButton(_Core, TextureLoader, _Sfx, "OK")
+                                        {
+                                            Margin = new FloatRect(0,0,0,20),
+                                            InitReleased = ButtonClicked
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             );
             // Decors
@@ -339,15 +413,23 @@ namespace BlackTournament.GameStates
             if (button == _BrowseButton) ServerBrowserOpen.Invoke();
             if (button == _HostButton) OpenHostUI(true);
             if (button == _HostCancelButton) OpenHostUI(false);
-            if (button == _HostHostButton) StartHosting.Invoke();
+            if (button == _HostHostButton) StartHosting.Invoke(_HostMapNameTempTextBox.Text, _HostServerNameTextBox.Text, Int32.Parse(_HostPortTextBox.Text));
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit("Exit by menu");
             // Server Browser
             if (button == _BrowseBackButton) OpenServerBrowser(false);
             if (button == _BrowseRefreshButton) ServerBrowserRefresh.Invoke();
-            if (button == _BrowseDirectConnectButton) { } // TODO : implement
-            if (button == _BrowseJoinButton) JoinServer.Invoke(_SelectedServer);
+            if (button == _BrowseDirectConnectButton) ToggleDirectConnectDialog();
+            if (button == _BrowseJoinButton)
+            {
+                if (_DirectConnectDialog.Visible)
+                    DirectConnect.Invoke(_DirectConnectServerNameTextBox.Text, Int32.Parse(_DirectConnectPortTextBox.Text));
+                else
+                    JoinServer.Invoke(_SelectedServer);
+            }
+            //Misc
+            if (button == _MessageBoxOkButton) ClosePopupMessage();
         }
 
         private void OpenHostUI(bool open)
@@ -367,10 +449,23 @@ namespace BlackTournament.GameStates
             _MainUI.Visible = _Logo.Visible = !open;
             _ServerBrowser.Visible = open;
         }
+
+        private void ToggleDirectConnectDialog()
+        {
+            if (!_ServerBrowser.Visible) return;
+            _DirectConnectDialog.Visible = !_DirectConnectDialog.Visible;
+            _ServerList.Visible = !_DirectConnectDialog.Visible;
+            _BrowseJoinButton.Enabled = _DirectConnectDialog.Visible || _SelectedServer != null;
+        }
+
         private void PortLimit(UIComponent component)
         {
-            var label = component as Label;
-            if (Port < 1025 || Port > 65535) label.Text = Net.Net.DEFAULT_PORT.ToString();
+            if (component is Label label)
+            {
+                if (!Int32.TryParse(label.Text, out int value)) value = -1;
+                if (value < 1025 || value > 65535) label.Text = Net.Net.DEFAULT_PORT.ToString();
+            }
+            else throw new Exception("SNH");
         }
 
         private void PortFilter(Label label)
@@ -398,7 +493,15 @@ namespace BlackTournament.GameStates
 
         internal void DisplayPopupMessage(string message)
         {
-            Log.Debug(message); // TODO : implement
+            Log.Debug(message);
+            _MessageBox.Visible = true;
+            _MessageBoxLabel.Text = message;
+            _MainUI.Visible = false;
+        }
+        private void ClosePopupMessage()
+        {
+            _MessageBox.Visible = false;
+            _MainUI.Visible = true;
         }
 
         internal void UpdateServerList(ServerInfo[] servers)
@@ -425,6 +528,7 @@ namespace BlackTournament.GameStates
         protected override void Update(float deltaT)
         {
             _Logo.Rotation += 30 * deltaT;
+            if (_MessageBox.Visible) _MessageBox.Position = _Core.DeviceSize / 2 - _MessageBox.OuterSize / 2;
         }
 
         private void StartAnimation()
@@ -434,23 +538,23 @@ namespace BlackTournament.GameStates
             _EffectLight.Rotation = _Core.Random.NextFloat(0, 360);
             _EffectLight.Scale = Create.Vector2f(_Core.Random.NextFloat(8.5f, 14.4f));
             _EffectLight.Position = new Vector2f(_Core.DeviceSize.X * _Core.Random.Next(2), _Core.DeviceSize.Y * _Core.Random.Next(2));
-            Shot();
+            PlayShotAnimation();
         }
 
-        private void Shot()
+        private void PlayShotAnimation()
         {
             if (Destroyed) return;
             if (_EffectLight.Visible)
             {
                 _EffectLight.Visible = false;
-                _Core.AnimationManager.Wait(WeaponData.DrakePrimary.FireRate / 2, Shot);
+                _Core.AnimationManager.Wait(WeaponData.DrakePrimary.FireRate / 2, PlayShotAnimation);
             }
             else if (_Shots != 0)
             {
                 _Shots--;
                 _Sfx.Play(Files.Sfx_Simpleshot);
                 _EffectLight.Visible = true;
-                _Core.AnimationManager.Wait(WeaponData.DrakePrimary.FireRate / 2, Shot);
+                _Core.AnimationManager.Wait(WeaponData.DrakePrimary.FireRate / 2, PlayShotAnimation);
             }
             else
             {

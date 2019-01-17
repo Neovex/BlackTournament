@@ -18,7 +18,6 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
-        public string LastError { get; private set; }
         public override int AdminId => NetIdProvider.ADMIN_ID;
         public override int NextClientId => NetIdProvider.NEXT_ID;
 
@@ -46,11 +45,14 @@ namespace BlackTournament.Net
                 return false;
             }
 
-            Host(info.Name, port);
-            Info = info;
-            Log.Debug("Host active");
-            ChangeLevel(map);
-            return true;
+            if (Host(info.Name, port))
+            {
+                Info = info;
+                Log.Debug("Host active");
+                ChangeLevel(map);
+                return true;
+            }
+            return false;
         }
 
         private TmxMapper LoadMapFromMapname(string mapName)

@@ -38,6 +38,7 @@ namespace BlackTournament.Controller
             _State.ServerBrowserRefresh += HandleStateServerBrowserRefresh;
             _State.JoinServer += _Game.Connect;
             _State.StartHosting += HandleStateStartHosting;
+            _State.DirectConnect += _Game.Connect;
         }
 
         private void HandleLanServersUpdated()
@@ -76,13 +77,12 @@ namespace BlackTournament.Controller
             _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT, false);
         }
 
-        private void HandleStateStartHosting()
+        private void HandleStateStartHosting(string mapName, string serverName, int port)
         {
-            var name = String.IsNullOrWhiteSpace(_State.Servername) ? $"{Settings.Default.PlayerName}'s Server" : _State.Servername;
-            var port = _State.Port < 1 ? Net.Net.DEFAULT_PORT : _State.Port;
+            var name = String.IsNullOrWhiteSpace(serverName) ? $"{Settings.Default.PlayerName}'s Server" : serverName;
 
-            if (_Game.Host(port, _State.Mapname, name)) _Game.Connect(Net.Net.DEFAULT_HOST, port);
-            else _State.DisplayPopupMessage($"Failed to host {_State.Mapname} on {Net.Net.DEFAULT_HOST}:{port}. Is the map and port valid?");
+            if (_Game.Host(port, mapName, name)) _Game.Connect(Net.Net.DEFAULT_HOST, port);
+            else _State.DisplayPopupMessage($"Failed to host {mapName} on {Net.Net.DEFAULT_HOST}:{port}. Is the map and port valid?");
         }
 
         protected override void StateReleased()
@@ -101,6 +101,7 @@ namespace BlackTournament.Controller
             _State.ServerBrowserRefresh -= HandleStateServerBrowserRefresh;
             _State.JoinServer -= _Game.Connect;
             _State.StartHosting -= HandleStateStartHosting;
+            _State.DirectConnect -= _Game.Connect;
             _State = null;
         }
     }

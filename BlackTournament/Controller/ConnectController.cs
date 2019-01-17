@@ -52,8 +52,10 @@ namespace BlackTournament.Controller
             // Connect to Host
             _Client.ChangeLevelReceived += LevelReady;
             _Client.OnDisconnect += ConnectionFailed;
-            if (_ServerInfo != null) _Client.Connect(_ServerInfo.EndPoint);
-            else _Client.Connect(_AltServerInfo.Host, _AltServerInfo.Port);
+            bool connected;
+            if (_ServerInfo != null) connected = _Client.Connect(_ServerInfo.EndPoint);
+            else connected = _Client.Connect(_AltServerInfo.Host, _AltServerInfo.Port);
+            if (!connected) _Game.MenuController.Activate(_Client.LastError);
         }
         protected override void StateLoadingFailed()
         {
