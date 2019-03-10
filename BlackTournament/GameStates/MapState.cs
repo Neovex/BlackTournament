@@ -16,6 +16,7 @@ using BlackTournament.Entities;
 using BlackCoat.Entities.Shapes;
 using BlackTournament.Net.Data;
 using BlackTournament.Particles;
+using BlackCoat.Collision.Shapes;
 
 namespace BlackTournament.GameStates
 {
@@ -102,7 +103,39 @@ namespace BlackTournament.GameStates
                         break;
                 }
             }
-            
+
+			/* Debug Killzone View
+            foreach (var kz in _MapData.Killzones)
+            {
+                switch (kz.CollisionShape.CollisionGeometry)
+                {
+                    case BlackCoat.Collision.Geometry.Circle:
+                        var c = kz.CollisionShape as CircleCollisionShape;
+                        Layer_Overlay.Add(new Circle(_Core)
+                        {
+                            Position = c.Position,
+                            Radius = c.Radius
+                        });
+                        break;
+                    case BlackCoat.Collision.Geometry.Rectangle:
+                        var r = kz.CollisionShape as RectangleCollisionShape;
+                        Layer_Overlay.Add(new Rectangle(_Core)
+                        {
+                            Position = r.Position,
+                            Size =r.Size
+                        });
+                        break;
+                    case BlackCoat.Collision.Geometry.Polygon:
+                        var p = kz.CollisionShape as PolygonCollisionShape;
+                        Layer_Overlay.Add(new Polygon(_Core, p.Points)
+                        {
+                            Position = p.Position
+                        });
+                        break;
+                }
+            }
+            */
+
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
 
@@ -326,6 +359,15 @@ namespace BlackTournament.GameStates
                     Layer_Game.Add(line);
                     _Core.AnimationManager.Wait(3, () => Layer_Game.Remove(line));
                 break;
+
+                case EffectType.Drop: // TODO UNHACK
+                    _Sfx.Play(Files.Sfx_Highlight, position); // FIXME wrong sound
+                    CreateEffect(EffectType.PlayerImpact, position, rotation, source, primary, size);
+                    break;
+                case EffectType.Gore: // TODO UNHACK
+                    _Sfx.Play(Files.Sfx_Select, position); // FIXME wrong sound
+                    CreateEffect(EffectType.PlayerImpact, position, rotation, source, primary, size);
+                    break;
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);

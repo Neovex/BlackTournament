@@ -14,7 +14,10 @@ namespace BlackTournament.Net.Data
         WallImpact,
         PlayerImpact,
         Gunfire,
-        Explosion
+        Explosion,
+        Drop,
+        Gore,
+        None
     }
 
     public class Effect : NetEntityBase

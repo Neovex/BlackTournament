@@ -27,7 +27,7 @@ namespace BlackTournament.Tmx
         private List<Pickup> _Pickups;
         private List<Vector2f> _SpawnPoints;
         private List<CollisionShape> _WallCollider;
-        private List<CollisionShape> _Killzones;
+        private List<Killzone> _Killzones;
 
 
         public string Name { get; private set; }
@@ -39,7 +39,7 @@ namespace BlackTournament.Tmx
         public IEnumerable<Pickup> Pickups => _Pickups;
         public IEnumerable<Vector2f> SpawnPoints => _SpawnPoints;
         public IEnumerable<CollisionShape> WallCollider => _WallCollider;
-        public IEnumerable<CollisionShape> Killzones => _Killzones;
+        public IEnumerable<Killzone> Killzones => _Killzones;
 
         private Func<int> IdProvider { get; }
 
@@ -68,7 +68,7 @@ namespace BlackTournament.Tmx
                 _Pickups = new List<Pickup>();
                 _SpawnPoints = new List<Vector2f>();
                 _WallCollider = new List<CollisionShape>();
-                _Killzones = new List<CollisionShape>();
+                _Killzones = new List<Killzone>();
 
                 // Load all Layers
                 foreach (var itmxLayer in _MapData.Layers)
@@ -109,7 +109,7 @@ namespace BlackTournament.Tmx
                                         break;
 
                                     case "Killzone":
-                                        _Killzones.Add(ParseCollisionShape(cSys, obj));
+                                        _Killzones.Add(Killzone.Create(obj, ParseCollisionShape(cSys, obj)));
                                         break;
 
                                     case "Rotor":
@@ -154,7 +154,7 @@ namespace BlackTournament.Tmx
             {
                 case TmxObjectType.Basic: return new RectangleCollisionShape(cSys, new Vector2f((float)obj.X, (float)obj.Y), new Vector2f((float)obj.Width, (float)obj.Height));
                 case TmxObjectType.Tile:  return new RectangleCollisionShape(cSys, new Vector2f((float)obj.X, (float)obj.Y), TileSize.ToVector2f());
-                case TmxObjectType.Ellipse:  return new CircleCollisionShape(cSys, new Vector2f((float)obj.X, (float)obj.Y) - new Vector2f((float)obj.Width, (float)obj.Height) / 2, (float)obj.Width / 2);
+                case TmxObjectType.Ellipse:  return new CircleCollisionShape(cSys, new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2, (float)obj.Width / 2);
                 case TmxObjectType.Polygon: return new PolygonCollisionShape(cSys, new Vector2f((float)obj.X, (float)obj.Y), obj.Points.Select(point => new Vector2f((float)point.X, (float)point.Y)));
                 case TmxObjectType.Polyline:
                     Log.Warning("Primitive", TmxObjectType.Polyline, "is currently not supported");

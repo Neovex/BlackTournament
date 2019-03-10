@@ -14,6 +14,9 @@ using BlackTournament.Systems;
 using BlackCoat.Tools;
 using BlackCoat.UI;
 using SFML.Window;
+using BlackTournament.Tmx;
+using BlackCoat.Collision.Shapes;
+using BlackCoat.Collision;
 
 namespace BlackTournament.GameStates
 {
@@ -28,6 +31,8 @@ namespace BlackTournament.GameStates
         private Line _Line;
         private float _LineAngle = 320;
         private Rectangle _Rect;
+        private IEntity _Test;
+        private CollisionShape _Test2;
 
         public TestState(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -38,8 +43,9 @@ namespace BlackTournament.GameStates
         {
             //IntersectionTest();
             //ShaderTest();
-            UiTest();
+            //UiTest();
             //TextureTests();
+            CollisionTest();
             //Particles();
             Log.Info("Nobody here but us chickens");
             return true;
@@ -48,6 +54,10 @@ namespace BlackTournament.GameStates
         protected override void Update(float deltaT)
         {
             //_Ray.End.Position = Create.Vector2fFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
+            _Test.Position = Input.DEFAULT.MousePosition;
+            var c = Layer_Overlay.GetAll<Polygon>().Any(p => p.CollidesWith(_Test.Position)) ? Color.Red : Color.Blue;
+            c.A = (byte)(byte.MaxValue * 0.7);
+            _Test.Color = c;
         }
 
         protected override void Destroy()
@@ -239,6 +249,65 @@ namespace BlackTournament.GameStates
             renderTexture.RedrawNow();
             Layer_Game.Add(renderTexture);
 
+        }
+
+
+        private void CollisionTest()
+        {
+            /*
+            var mapper = new TmxMapper(() => 0);
+            mapper.Load("turbine", _Core.CollisionSystem);
+
+            foreach (var kz in mapper.Killzones.Skip(2).Take(2))
+            {
+                switch (kz.CollisionShape.CollisionGeometry)
+                {
+                    case BlackCoat.Collision.Geometry.Circle:
+                        var c = kz.CollisionShape as CircleCollisionShape;
+                        Layer_Overlay.Add(new Circle(_Core)
+                        {
+                            Radius = c.Radius
+                        });
+                        break;
+                    case BlackCoat.Collision.Geometry.Rectangle:
+                        var r = kz.CollisionShape as RectangleCollisionShape;
+                        Layer_Overlay.Add(new Rectangle(_Core)
+                        {
+                            Size = r.Size
+                        });
+                        break;
+                    case BlackCoat.Collision.Geometry.Polygon:
+                        var p = kz.CollisionShape as PolygonCollisionShape;
+                        Layer_Overlay.Add(new Polygon(_Core, p.Points)
+                        {
+                            Position = _Core.Random.NextVector(200,500)
+                        });
+                        _Test2 = p;
+                        break;
+                }
+            }*/
+
+            var points = new Vector2f[] { new Vector2f(), new Vector2f(100, -150), new Vector2f(200, 0) };
+            Layer_Overlay.Add(new Polygon(_Core, points)
+            {
+                Position = new Vector2f(100, 100)
+            });
+            Layer_Overlay.Add(new Polygon(_Core, points.Reverse())
+            {
+                Position = new Vector2f(450, 100)
+            });
+
+            Layer_Overlay.Add( _Test = new Circle(_Core)
+            {
+                Radius = 50
+            });
+
+            Input.DEFAULT.MouseButtonPressed += DEFAULT_MouseButtonPressed;
+        }
+
+        private void DEFAULT_MouseButtonPressed(Mouse.Button obj)
+        {
+            Update(0);
         }
 
         private void Particles()

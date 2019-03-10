@@ -59,7 +59,7 @@ namespace BlackTournament.Net.Data
 
         private void Spawn(ServerPlayer player)
         {
-            var spawnPoint = _Players.All(p => p.Dead) ? _Map.SpawnPoints.First()
+            var spawnPoint = _Players.All(p => p.Dead) ? _Map.SpawnPoints.OrderBy(p=> _Core.Random.Next()).First()
                 : _Map.SpawnPoints.OrderByDescending(sp => _Players.Where(p => !p.Dead).Min(p => p.Position.DistanceBetweenSquared(sp))).First();
 
             player.Respawn(spawnPoint);
@@ -201,7 +201,7 @@ namespace BlackTournament.Net.Data
                 {
                     foreach (var wall in _Map.WallCollider) // TODO : Walls -> Fix player glued to wall issue
                     {
-                        if (player.Collision.Collide(wall))
+                        if (player.Collision.CollidesWith(wall))
                         {
                             player.Collision.Position = player.Position;
                         }
@@ -209,20 +209,28 @@ namespace BlackTournament.Net.Data
                     foreach (var otherPlayer in _Players) // Players
                     {
                         if (!otherPlayer.Dead && otherPlayer != player
-                            && player.Collision.Collide(otherPlayer.Collision))
+                            && player.Collision.CollidesWith(otherPlayer.Collision))
                         {
                             player.Collision.Position = player.Position;
                         }
                     }
                     foreach (var pickup in _Map.Pickups) // Pickups
                     {
-                        if (pickup.Active && player.Collision.Collide(pickup.Collision))
+                        if (pickup.Active && player.Collision.CollidesWith(pickup.Collision))
                         {
                             pickup.Active = false;
                             player.GivePickup(pickup.Type, pickup.Amount);
                         }
                     }
-                    // TODO : Killzones!
+                    foreach (var killzone in _Map.Killzones) // Killzones
+                    {
+                        if (killzone.CollisionShape.CollidesWith(player.Position))
+                        {
+                            Log.Debug(killzone.Damage * deltaT);
+                            player.DamagePlayer(killzone.Damage * deltaT);
+                            if (player.Dead) _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
+                        }
+                    }
                 }
                 player.Move(player.Collision.Position);
             }
@@ -295,7 +303,7 @@ namespace BlackTournament.Net.Data
 
         private void CheckProjectileCollisions(Shot shot, float deltaT)
         {
-            var wall = _Map.WallCollider.FirstOrDefault(w => shot.Collision == null ? w.Collide(shot.Position) : w.Collide(shot.Collision));
+            var wall = _Map.WallCollider.FirstOrDefault(w => shot.Collision == null ? w.CollidesWith(shot.Position) : w.CollidesWith(shot.Collision));
             if(wall != null)
             {
                 if (shot.IsBouncy) // do bounce
@@ -305,7 +313,7 @@ namespace BlackTournament.Net.Data
                     do
                     {
                         shot.Update(deltaT + 0.001f);
-                    } while (shot.Collision == null ? wall.Collide(shot.Position) : wall.Collide(shot.Collision));
+                    } while (shot.Collision == null ? wall.CollidesWith(shot.Position) : wall.CollidesWith(shot.Collision));
                     shot.Direction -= 180;
                     // Find collision surface angle
                     var intersects = _Core.CollisionSystem.Raycast(shot.Position, shot.Direction, wall);
@@ -346,7 +354,7 @@ namespace BlackTournament.Net.Data
                 }
             }
 
-            var player = _Players.FirstOrDefault(p => !p.Dead && (shot.Collision == null ? p.Collision.Collide(shot.Position) : p.Collision.Collide(shot.Collision)));
+            var player = _Players.FirstOrDefault(p => !p.Dead && (shot.Collision == null ? p.Collision.CollidesWith(shot.Position) : p.Collision.CollidesWith(shot.Collision)));
             if(player != null)
             {
                 if (shot.IsExplosive)

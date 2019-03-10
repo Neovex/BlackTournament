@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="132">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="145">
  <tileset firstgid="1" name="IndustrialTiles" tilewidth="128" tileheight="128" tilecount="119" columns="7">
   <image source="../Assets/Textures/IndustrialTiles.png" width="896" height="2176"/>
  </tileset>
@@ -77,7 +77,7 @@
 113,114,114,114,114,114,114,114,114,114,114,115,0,0,0,0,0,0,0,113,114,114,114,114,114,114,114,114,114,115
 </data>
  </layer>
- <objectgroup id="3" name="Fans">
+ <objectgroup id="3" name="Fans" locked="1">
   <object id="114" type="Rotor" x="1408" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
@@ -426,89 +426,109 @@
   <object id="112" type="Collision" x="3484.09" y="742.212" width="211.818" height="127.576"/>
   <object id="113" type="Collision" x="3612.09" y="872.212" width="125.818" height="251.576"/>
  </objectgroup>
- <objectgroup id="8" name="Killzones" locked="1">
+ <objectgroup id="8" name="Killzones">
   <object id="19" type="Killzone" x="264" y="3337" width="240" height="240">
    <properties>
-    <property name="Damage" type="float" value="10000"/>
+    <property name="Damage" type="float" value="999999999"/>
     <property name="Effect" value="Drop"/>
    </properties>
   </object>
   <object id="20" type="Killzone" x="2190" y="121" width="248" height="250">
    <properties>
-    <property name="Damage" type="float" value="10000"/>
+    <property name="Damage" type="float" value="99999999"/>
     <property name="Effect" value="Drop"/>
    </properties>
   </object>
-  <object id="22" type="Killzone" x="1395" y="1638">
-   <polygon points="0,0 1,-214 -65,-183 -98,-108 -67,-27"/>
-  </object>
-  <object id="23" type="Killzone" x="1396" y="1422">
+  <object id="23" type="Killzone" x="1397.04" y="1416.86">
    <properties>
-    <property name="Damage" type="float" value="10000"/>
+    <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
-   <polygon points="0,0 70,26 123,99 1,99"/>
+   <polygon points="-8.03704,15.1392 37.1481,17.2025 88.3333,51.2658 115.963,105.975 -8.03704,107.139"/>
   </object>
-  <object id="24" type="Killzone" x="1556.12" y="1784.09" rotation="270">
+  <object id="34" type="Killzone" x="2317" y="2445" width="230" height="230">
    <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="25" type="Killzone" x="1769.4" y="1798.4" rotation="450">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="26" type="Killzone" x="2071.44" y="1526.3" rotation="90">
-   <polygon points="0,0 1,-214 -65,-183 -98,-108 -67,-27"/>
-  </object>
-  <object id="27" type="Killzone" x="2328" y="1526" rotation="90">
-   <polygon points="0,0 1,-214 -65,-183 -98,-108 -67,-27"/>
-  </object>
-  <object id="28" type="Killzone" x="2187" y="1686">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="29" type="Killzone" x="1558" y="2294" rotation="90">
-   <polygon points="0,0 1,-214 -65,-183 -98,-108 -67,-27"/>
-  </object>
-  <object id="30" type="Killzone" x="1399.67" y="2667.9" rotation="540">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="31" type="Killzone" x="1676" y="2457" rotation="180">
-   <polygon points="0,0 1,-214 -65,-183 -98,-108 -67,-27"/>
-  </object>
-  <object id="32" type="Killzone" x="1659" y="2668" rotation="540">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="33" type="Killzone" x="2067.82" y="2553.74" rotation="270">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
-    <property name="Effect" value="Gore"/>
-   </properties>
-   <polygon points="0,0 70,26 99.0019,97.9548 1,99"/>
-  </object>
-  <object id="34" type="Killzone" x="2322" y="2450" width="220" height="220">
-   <properties>
-    <property name="Damage" type="float" value="10000"/>
+    <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <ellipse/>
+  </object>
+  <object id="132" type="Killzone" x="1378.68" y="1638.51">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="10.3235,2.4881 -37.1029,-23.6183 -66.5294,-62.2024 -79.1029,-104.092 -67.6765,-141.821 -37.25,-182.485 9.17647,-206.512"/>
+  </object>
+  <object id="133" type="Killzone" x="2068" y="1525">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
+  </object>
+  <object id="136" type="Killzone" x="2324" y="1525">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
+  </object>
+  <object id="137" type="Killzone" x="1554" y="1784">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 9,-38 30,-71 68,-95 101,-104 102,-1"/>
+  </object>
+  <object id="138" type="Killzone" x="1671" y="1903">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 -1,-106 105,-106 96,-63 68,-30 39,-11"/>
+  </object>
+  <object id="139" type="Killzone" x="2185" y="1785">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 1,-105 39,-95 73,-67 100,-26 103,-2"/>
+  </object>
+  <object id="140" type="Killzone" x="1556" y="2295">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
+  </object>
+  <object id="141" type="Killzone" x="1399" y="2567">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 2,106 -47,87 -83,54 -104,-1"/>
+  </object>
+  <object id="142" type="Killzone" x="1669.7" y="2568.96">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 2.30189,102.037 -54.0943,83.7477 -95.5283,51.9813 -119.698,-0.962617"/>
+  </object>
+  <object id="143" type="Killzone" x="1672" y="2447">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 43,16 80,48 101,94 99,140 80,183 42,214 -3,227"/>
+  </object>
+  <object id="144" type="Killzone" x="2066" y="2552">
+   <properties>
+    <property name="Damage" value="9999999"/>
+    <property name="Effect" value="Gore"/>
+   </properties>
+   <polygon points="0,0 9,-38 30,-71 68,-95 101,-104 102,-1"/>
   </object>
  </objectgroup>
 </map>
