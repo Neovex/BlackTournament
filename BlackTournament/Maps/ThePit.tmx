@@ -136,7 +136,7 @@
    <polygon points="0,0 5,-732 107,-830 261,-833 231,-129 105,-3"/>
   </object>
  </objectgroup>
- <objectgroup name="Killzones" visible="0">
+ <objectgroup name="Killzones">
   <object id="33" type="Killzone" x="2136" y="0" width="1700" height="1308">
    <properties>
     <property name="Damage" type="float" value="10000"/>

@@ -3,9 +3,9 @@ using SFML.System;
 
 namespace BlackTournament.Tmx
 {
-    class Layer
+    class Layer : IAssetLayer
     {
-        public String TextureName { get; internal set; }
+        public string Asset { get; internal set; }
         public Vector2f Offset { get; internal set; }
         public Tile[] Tiles { get; internal set; }
     }

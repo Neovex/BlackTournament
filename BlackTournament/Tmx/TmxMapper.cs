@@ -23,21 +23,23 @@ namespace BlackTournament.Tmx
 
         private TmxMap _MapData;
         private Dictionary<String, int> _TextureColumnLookup;
-        private List<Layer> _Layers;
+        private List<IAssetLayer> _Layers;
         private List<Pickup> _Pickups;
         private List<Vector2f> _SpawnPoints;
         private List<CollisionShape> _WallCollider;
         private List<CollisionShape> _Killzones;
 
-        public String Name { get; private set; }
+
+        public string Name { get; private set; }
         public Color ClearColor { get; private set; }
         public Vector2i Size { get; internal set; }
         public Vector2i TileSize { get; internal set; }
-        public IEnumerable<Layer> TileLayers { get { return _Layers; } }
-        public IEnumerable<Pickup> Pickups { get { return _Pickups; } }
-        public IEnumerable<Vector2f> SpawnPoints { get { return _SpawnPoints; } }
-        public IEnumerable<CollisionShape> WallCollider { get { return _WallCollider; } }
-        public IEnumerable<CollisionShape> Killzones { get { return _Killzones; } }
+
+        public IEnumerable<IAssetLayer> Layers => _Layers;
+        public IEnumerable<Pickup> Pickups => _Pickups;
+        public IEnumerable<Vector2f> SpawnPoints => _SpawnPoints;
+        public IEnumerable<CollisionShape> WallCollider => _WallCollider;
+        public IEnumerable<CollisionShape> Killzones => _Killzones;
 
         private Func<int> IdProvider { get; }
 
@@ -62,54 +64,65 @@ namespace BlackTournament.Tmx
                 TileSize = new Vector2i(_MapData.TileWidth, _MapData.TileHeight);
 
                 // Load Tile Layers
-                _Layers = new List<Layer>(_MapData.Layers.Count);
-                foreach (var layer in _MapData.Layers)
-                {
-                    var textureName = layer.Properties["TilesetName"];
-                    var columns = _TextureColumnLookup[textureName];
-
-                    Layer l = new Layer();
-                    l.TextureName = textureName;
-                    l.Offset = new Vector2f((float)(layer.OffsetX ?? 0), (float)(layer.OffsetY ?? 0));
-                    l.Tiles = layer.Tiles.Select(t => new Tile(new Vector2f(t.X * TileSize.X, t.Y * TileSize.Y),
-                                                               new Vector2i(((t.Gid - 1) % columns) * TileSize.X, ((t.Gid - 1) / columns) * TileSize.Y)
-                                                )).ToArray();
-                    _Layers.Add(l);
-                }
-
-                // Load Entities
+                _Layers = new List<IAssetLayer>();
                 _Pickups = new List<Pickup>();
                 _SpawnPoints = new List<Vector2f>();
                 _WallCollider = new List<CollisionShape>();
                 _Killzones = new List<CollisionShape>();
-                foreach (var group in _MapData.ObjectGroups)
+
+                // Load all Layers
+                foreach (var itmxLayer in _MapData.Layers)
                 {
-                    //Log.Debug(group.Name);
-                    foreach (var obj in group.Objects)
+                    switch (itmxLayer)
                     {
+                        case TmxLayer layer:
+                            // Load Tile Layers
+                            var textureName = layer.Properties["TilesetName"];
+                            var columns = _TextureColumnLookup[textureName];
 
-                        switch (obj.Type)
-                        {
-                            case "Pickup":
-                                _Pickups.Add(ParsePickup(cSys, obj));
-                                break;
+                            Layer l = new Layer();
+                            l.Asset = textureName;
+                            l.Offset = new Vector2f((float)(layer.OffsetX ?? 0), (float)(layer.OffsetY ?? 0));
+                            l.Tiles = layer.Tiles.Select(t => new Tile(new Vector2f(t.X * TileSize.X, t.Y * TileSize.Y),
+                                                                       new Vector2i(((t.Gid - 1) % columns) * TileSize.X, ((t.Gid - 1) / columns) * TileSize.Y)
+                                                         )).ToArray();
+                            _Layers.Add(l);
+                        break;
 
-                            case "Spawn":
-                                _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2);
-                                break;
 
-                            case "Collision":
-                                _WallCollider.Add(ParseCollisionShape(cSys, obj));
-                                break;
+                        case TmxObjectGroup group:
+                            // Load Entities
+                            foreach (var obj in group.Objects)
+                            {
+                                switch (obj.Type)
+                                {
+                                    case "Pickup":
+                                        _Pickups.Add(ParsePickup(cSys, obj));
+                                        break;
 
-                            case "Killzone":
-                                _Killzones.Add(ParseCollisionShape(cSys, obj));
-                                break;
+                                    case "Spawn":
+                                        _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2);
+                                        break;
 
-                            default:
-                                Log.Warning("Unknown map object type", obj.Type);
-                                break;
-                        }
+                                    case "Collision":
+                                        _WallCollider.Add(ParseCollisionShape(cSys, obj));
+                                        break;
+
+                                    case "Killzone":
+                                        _Killzones.Add(ParseCollisionShape(cSys, obj));
+                                        break;
+
+                                    case "Rotor":
+                                        _Layers.Add(RotorInfo.Parse(obj));
+                                        break;
+
+                                    default:
+                                        Log.Warning("Unknown map object type", obj.Type);
+                                        break;
+                                }
+                            }
+                        break;
+
                     }
                 }
                 return true;
@@ -123,13 +136,13 @@ namespace BlackTournament.Tmx
 
         private Pickup ParsePickup(CollisionSystem cSys, TmxObject obj)
         {
-            if (!Enum.TryParse<PickupType>(ReadProperty(obj.Properties, "Item"), out PickupType type))
+            if (!Enum.TryParse<PickupType>(ReadTmxObjectProperty(obj.Properties, "Item"), out PickupType type))
             {
                 Log.Warning("Invalid Pickup entry skipped");
                 return null;
             }
-            if (!Int32.TryParse(ReadProperty(obj.Properties, "Amount"), out int amount)) amount = 1;
-            if (!Single.TryParse(ReadProperty(obj.Properties, "RespawnTime"), out float respawnTime)) respawnTime = 1;
+            if (!Int32.TryParse(ReadTmxObjectProperty(obj.Properties, "Amount"), out int amount)) amount = 1;
+            if (!Single.TryParse(ReadTmxObjectProperty(obj.Properties, "RespawnTime"), out float respawnTime)) respawnTime = 1;
             var position = new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2;
 
             return new Pickup(IdProvider(), position, type, amount, respawnTime, cSys);
@@ -153,9 +166,9 @@ namespace BlackTournament.Tmx
             return null;
         }
 
-        private string ReadProperty(PropertyDict properties, string propertyName, string defaultValue = null)
+        internal static string ReadTmxObjectProperty(PropertyDict properties, string propertyName, object defaultValue = null)
         {
-            return properties.TryGetValue(propertyName, out string value) ? value : defaultValue;
+            return properties.TryGetValue(propertyName, out string value) ? value : defaultValue?.ToString();
         }
     }
 }

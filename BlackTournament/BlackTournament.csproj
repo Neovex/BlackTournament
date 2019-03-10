@@ -55,9 +55,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TiledSharp">
-      <HintPath>..\packages\TiledSharp.0.15\lib\TiledSharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\Librarys\Failsafe.cs">
@@ -70,6 +67,7 @@
     <Compile Include="Controller\TestController.cs" />
     <Compile Include="Entities\Remote.cs" />
     <Compile Include="Entities\GameText.cs" />
+    <Compile Include="Entities\RotatingGraphic.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\NetworkManagementClient.cs" />
     <Compile Include="Net\Data\ServerInfo.cs" />
@@ -118,7 +116,10 @@
     </Compile>
     <Compile Include="Systems\GameAction.cs" />
     <Compile Include="Systems\InputMapper.cs" />
+    <Compile Include="Tmx\ActorInfo.cs" />
+    <Compile Include="Tmx\IAssetLayer.cs" />
     <Compile Include="Tmx\Layer.cs" />
+    <Compile Include="Tmx\RotorInfo.cs" />
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
     <Compile Include="UI\BigButton.cs" />
@@ -154,13 +155,20 @@
     <None Include="Assets\Music\Wall_of_Anger.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Tmx\Tmx.cd" />
-    <None Include="Maps\ld.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Maps\Powerplant.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Maps\Temple.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Maps\Turbine.tmx">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tmx\Tmx.cd" />
     <None Include="Net\Data\Data.cd" />
     <None Include="Maps\ThePit.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
     <None Include="Assets\Music\Ten_Seconds_to_Rush.ogg">
@@ -209,7 +217,13 @@
     <Content Include="Assets\Textures\Drake.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\Fan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\Hedgeshock.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\IndustrialTiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\Logo.png">
@@ -306,6 +320,10 @@
     <ProjectReference Include="..\..\..\Librarys\SFML.Net\src\Window\sfml-window.csproj">
       <Project>{D17DE83D-A592-461F-8AF2-53F9E22E1D0F}</Project>
       <Name>sfml-window</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Librarys\TiledSharp\TiledSharp\TiledSharp.csproj">
+      <Project>{38b179f0-2fc8-463e-aeeb-ad9f09fdd252}</Project>
+      <Name>TiledSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

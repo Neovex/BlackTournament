@@ -10,25 +10,10 @@
       <Property Name="Tiles" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="BlackTournament.Tmx.Tile">
-    <Position X="0.5" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Tmx\Tile.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BlackTournament.Tmx.TmxMapper">
     <Position X="3.5" Y="0.5" Width="2" />
-    <AssociationLine Name="_Pickups" Type="BlackTournament.Net.Data.Pickup" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="4.5" Y="5.391" />
-        <Point X="4.5" Y="5.766" />
-        <Point X="9.875" Y="5.766" />
-        <Point X="9.875" Y="5.011" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AEABoAAAgAAAgAGAAACAAEQCMAIAAEgAAgAAEAAEEAI=</HashCode>
+      <HashCode>AAABoAAAgABAgAGAAACAAEQCMAIAAEgAAgAAEAAMEQI=</HashCode>
       <FileName>Tmx\TmxMapper.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -36,9 +21,9 @@
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="_Layers" />
+      <Field Name="_Pickups" />
       <Field Name="_WallCollider" />
       <Field Name="_Killzones" />
-      <Field Name="_Pickups" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackCoat.Collision.Shapes.CollisionShape" Collapsed="true">
@@ -57,5 +42,12 @@
       <FileName>Net\Data\Pickup.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Struct Name="BlackTournament.Tmx.Tile">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

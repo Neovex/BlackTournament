@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" nextobjectid="66">
- <tileset firstgid="1" name="Industrial" tilewidth="128" tileheight="128" tilecount="119" columns="7">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="132">
+ <tileset firstgid="1" name="IndustrialTiles" tilewidth="128" tileheight="128" tilecount="119" columns="7">
   <image source="../Assets/Textures/IndustrialTiles.png" width="896" height="2176"/>
  </tileset>
- <layer name="Floor" width="30" height="30">
+ <layer id="1" name="Floor" width="30" height="30" locked="1">
+  <properties>
+   <property name="TilesetName" value="IndustrialTiles"/>
+  </properties>
   <data encoding="csv">
 9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
 9,9,9,9,9,58,58,58,58,58,58,58,58,58,58,58,58,0,0,9,9,9,9,9,9,9,9,9,9,9,
@@ -37,7 +40,10 @@
 9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9
 </data>
  </layer>
- <layer name="Wall" width="30" height="30">
+ <layer id="2" name="Wall" width="30" height="30" locked="1">
+  <properties>
+   <property name="TilesetName" value="IndustrialTiles"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,99,100,100,100,100,100,100,100,100,100,100,100,100,100,100,101,0,0,0,0,0,0,0,0,0,0,
 0,0,0,99,110,0,0,0,0,0,0,0,0,0,0,0,0,0,0,108,0,0,0,0,0,0,0,0,0,0,
@@ -71,41 +77,148 @@
 113,114,114,114,114,114,114,114,114,114,114,115,0,0,0,0,0,0,0,113,114,114,114,114,114,114,114,114,114,115
 </data>
  </layer>
- <layer name="_Delme Fans" width="30" height="30" visible="0">
-  <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,86,87,86,87,0,0,86,87,86,87,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,93,94,93,94,0,0,93,94,93,94,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,86,87,86,87,0,0,86,87,86,87,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,93,94,93,94,0,0,93,94,93,94,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,86,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,93,94,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,86,87,0,0,0,0,86,87,86,87,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,93,94,0,0,0,0,93,94,93,94,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,86,87,86,87,0,0,86,87,86,87,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,93,94,93,94,0,0,93,94,93,94,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer name="Decor" width="30" height="30">
+ <objectgroup id="3" name="Fans">
+  <object id="114" type="Rotor" x="1408" y="1536" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="250"/>
+   </properties>
+  </object>
+  <object id="116" type="Rotor" x="1664" y="1536" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-30"/>
+   </properties>
+  </object>
+  <object id="117" type="Rotor" x="1664" y="1792" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="600"/>
+   </properties>
+  </object>
+  <object id="118" type="Rotor" x="1408" y="1792" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="80"/>
+   </properties>
+  </object>
+  <object id="119" type="Rotor" x="2176" y="1536" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-366"/>
+   </properties>
+  </object>
+  <object id="120" type="Rotor" x="2432" y="1536" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-300"/>
+   </properties>
+  </object>
+  <object id="121" type="Rotor" x="2432" y="1792" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="122" type="Rotor" x="2176" y="1792" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="123" type="Rotor" x="1920" y="2048" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="222"/>
+   </properties>
+  </object>
+  <object id="124" type="Rotor" x="1408" y="2304" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-40"/>
+   </properties>
+  </object>
+  <object id="125" type="Rotor" x="1664" y="2304" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-344"/>
+   </properties>
+  </object>
+  <object id="126" type="Rotor" x="2176" y="2304" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="25"/>
+   </properties>
+  </object>
+  <object id="127" type="Rotor" x="2432" y="2304" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="55"/>
+   </properties>
+  </object>
+  <object id="128" type="Rotor" x="1408" y="2560" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="66"/>
+   </properties>
+  </object>
+  <object id="129" type="Rotor" x="1664" y="2560" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="850"/>
+   </properties>
+  </object>
+  <object id="130" type="Rotor" x="2176" y="2560" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-222"/>
+   </properties>
+  </object>
+  <object id="131" type="Rotor" x="2432" y="2560" width="45.3333" height="46.3333">
+   <properties>
+    <property name="Asset" value="Fan"/>
+    <property name="OriginX" type="float" value="128"/>
+    <property name="OriginY" type="float" value="128"/>
+    <property name="Speed" type="float" value="-902"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="4" name="Decor" width="30" height="30" locked="1">
+  <properties>
+   <property name="TilesetName" value="IndustrialTiles"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -139,7 +252,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Pickups" visible="0">
+ <objectgroup id="5" name="Pickups" locked="1">
   <object id="42" type="Pickup" x="1854" y="1983" width="130" height="130">
    <properties>
     <property name="Item" value="BigShield"/>
@@ -241,7 +354,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="Spawns" visible="0">
+ <objectgroup id="6" name="Spawns" locked="1">
   <object id="36" type="Spawn" x="3639" y="1269" width="28" height="28"/>
   <object id="37" type="Spawn" x="3509" y="3118" width="28" height="28"/>
   <object id="38" type="Spawn" x="946" y="3442" width="28" height="28"/>
@@ -263,8 +376,57 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="TODO Collision"/>
- <objectgroup name="Killzones" visible="0">
+ <objectgroup id="7" name="Collision" locked="1">
+  <object id="66" type="Collision" x="925.879" y="541.576" width="836.485" height="838.909"/>
+  <object id="67" type="Collision" x="925.758" y="1383.21" width="323.151" height="505.576"/>
+  <object id="68" type="Collision" x="927.091" y="2207.21" width="321.818" height="577.576"/>
+  <object id="69" type="Collision" x="1053.09" y="2721.21" width="707.818" height="195.576"/>
+  <object id="70" type="Collision" x="1566.09" y="2918.21" width="194.485" height="123.576"/>
+  <object id="71" type="Collision" x="4.091" y="354.879" width="95.818" height="3474.91"/>
+  <object id="72" type="Collision" x="100.091" y="2590.21" width="127.818" height="195.576"/>
+  <object id="73" type="Collision" x="414.091" y="2589.21" width="195.818" height="195.576"/>
+  <object id="74" type="Collision" x="285.091" y="2974.21" width="195.818" height="195.576"/>
+  <object id="75" type="Collision" x="669.091" y="2975.21" width="195.818" height="195.576"/>
+  <object id="76" type="Collision" x="669.091" y="3358.21" width="195.818" height="195.576"/>
+  <object id="77" type="Collision" x="1053.09" y="3358.21" width="195.818" height="195.576"/>
+  <object id="78" type="Collision" x="102.091" y="3740.21" width="3729.82" height="89.576"/>
+  <object id="79" type="Collision" x="1436.09" y="3357.55" width="329.818" height="382.243"/>
+  <object id="80" type="Collision" x="1766.09" y="3618.21" width="761.818" height="121.576"/>
+  <object id="81" type="Collision" x="3738.09" y="1032.21" width="93.818" height="2709.58"/>
+  <object id="82" type="Collision" x="286.091" y="1822.21" width="453.818" height="195.576"/>
+  <object id="83" type="Collision" x="414.091" y="2018.88" width="195.818" height="128.909"/>
+  <object id="84" type="Collision" x="542.091" y="1694.21" width="195.818" height="127.576"/>
+  <object id="85" type="Collision" x="414.091" y="542.212" width="195.818" height="835.576"/>
+  <object id="86" type="Collision" x="926.091" y="412.212" width="195.818" height="127.576"/>
+  <object id="87" type="Collision" x="1436.09" y="414.212" width="195.818" height="127.576"/>
+  <object id="88" type="Collision" x="1762.09" y="541.879" width="770.485" height="196.909"/>
+  <object id="89" type="Collision" x="2336.09" y="740.212" width="195.818" height="127.576"/>
+  <object id="90" type="Collision" x="2720.09" y="928.212" width="195.818" height="961.576"/>
+  <object id="91" type="Collision" x="2590.09" y="1052.21" width="127.818" height="837.576"/>
+  <object id="92" type="Collision" x="2076.09" y="1052.21" width="513.818" height="323.576"/>
+  <object id="93" type="Collision" x="2918.09" y="1310.21" width="125.818" height="195.576"/>
+  <object id="94" type="Collision" x="3102.09" y="2974.21" width="323.818" height="323.576"/>
+  <object id="95" type="Collision" x="3230.09" y="3297.55" width="195.818" height="128.243"/>
+  <object id="96" type="Collision" x="2970.09" y="3102.21" width="133.151" height="195.576"/>
+  <object id="97" type="Collision" x="2076.09" y="2718.21" width="837.818" height="195.576"/>
+  <object id="98" type="Collision" x="2589.42" y="2204.21" width="198.485" height="514.909"/>
+  <object id="99" type="Collision" x="2786.09" y="2204.21" width="127.818" height="195.576"/>
+  <object id="100" type="Collision" x="2076.09" y="2914.21" width="579.818" height="385.576"/>
+  <object id="101" type="Collision" x="2076.09" y="3299.55" width="453.818" height="126.243"/>
+  <object id="102" type="Collision" x="3614.09" y="1434.21" width="121.818" height="1865.58"/>
+  <object id="103" type="Collision" x="3358.09" y="1566.21" width="257.151" height="1089.58"/>
+  <object id="104" type="Collision" x="3100.09" y="2206.21" width="255.818" height="449.576"/>
+  <object id="105" type="Collision" x="582.091" y="2.212" width="1963.82" height="97.576"/>
+  <object id="106" type="Collision" x="16.091" y="160.212" width="465.818" height="195.576"/>
+  <object id="107" type="Collision" x="484.091" y="104.212" width="125.818" height="125.576"/>
+  <object id="108" type="Collision" x="2462.09" y="100.212" width="339.818" height="255.576"/>
+  <object id="109" type="Collision" x="2716.09" y="358.212" width="595.818" height="125.576"/>
+  <object id="110" type="Collision" x="3228.09" y="485.545" width="213.818" height="128.243"/>
+  <object id="111" type="Collision" x="3356.09" y="614.212" width="211.818" height="127.576"/>
+  <object id="112" type="Collision" x="3484.09" y="742.212" width="211.818" height="127.576"/>
+  <object id="113" type="Collision" x="3612.09" y="872.212" width="125.818" height="251.576"/>
+ </objectgroup>
+ <objectgroup id="8" name="Killzones" locked="1">
   <object id="19" type="Killzone" x="264" y="3337" width="240" height="240">
    <properties>
     <property name="Damage" type="float" value="10000"/>

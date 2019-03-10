@@ -75,19 +75,32 @@ namespace BlackTournament.GameStates
 
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
-            foreach (var layer in _MapData.TileLayers)
+            foreach (var layer in _MapData.Layers)
             {
-                var mapTex = TextureLoader.Load(layer.TextureName);
-                var mapLayer = new MapRenderer(_Core, _MapData.Size, mapTex, _MapData.TileSize);
-                mapLayer.Position = layer.Offset;
-
-                int i = 0;
-                foreach (var tile in layer.Tiles)
+                switch (layer)
                 {
-                    mapLayer.AddTile(i * 4, tile.Position, tile.TexCoords); // mayhaps find a better solution
-                    i++;
+                    case Tmx.Layer tileLayer:
+                        var mapTex = TextureLoader.Load(layer.Asset);
+                        var mapLayer = new MapRenderer(_Core, _MapData.Size, mapTex, _MapData.TileSize)
+                        {
+                            Position = tileLayer.Offset
+                        };
+
+                        for (int i = 0; i < tileLayer.Tiles.Length; i++)
+                        {
+                            mapLayer.AddTile(i * 4, tileLayer.Tiles[i].Position, tileLayer.Tiles[i].TexCoords); // mayhaps find a better solution
+                        }
+                        Layer_BG.Add(mapLayer);
+                    break;
+
+                    case Tmx.RotorInfo rotor:
+                        Layer_BG.Add(new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
+                        {
+                            Position = rotor.Position,
+                            Origin = rotor.Origin
+                        });
+                        break;
                 }
-                Layer_BG.Add(mapLayer);
             }
             
             // Set camera to the center of the map

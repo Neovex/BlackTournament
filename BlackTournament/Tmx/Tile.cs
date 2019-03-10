@@ -2,7 +2,7 @@
 
 namespace BlackTournament.Tmx
 {
-    class Tile
+    struct Tile
     {
         public Vector2f Position { get; private set; }
         public Vector2i TexCoords { get; private set; }

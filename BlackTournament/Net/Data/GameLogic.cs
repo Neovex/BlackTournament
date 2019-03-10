@@ -222,6 +222,7 @@ namespace BlackTournament.Net.Data
                             player.GivePickup(pickup.Type, pickup.Amount);
                         }
                     }
+                    // TODO : Killzones!
                 }
                 player.Move(player.Collision.Position);
             }
