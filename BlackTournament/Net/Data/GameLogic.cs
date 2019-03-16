@@ -199,11 +199,22 @@ namespace BlackTournament.Net.Data
                 // Handle Collisions
                 if (!player.Dead)
                 {
-                    foreach (var wall in _Map.WallCollider) // TODO : Walls -> Fix player glued to wall issue
+                    foreach (var wall in _Map.WallCollider) // Walls
                     {
                         if (player.Collision.CollidesWith(wall))
                         {
-                            player.Collision.Position = player.Position;
+                            var movement = player.Collision.Position.ToLocal(player.Position);
+                            var angle = movement.Angle();
+                            var length = (float)movement.Length();
+                            for (int i = -50; i < 50; i+=2)
+                            {
+                                player.Collision.Position = player.Position + Create.Vector2fFromAngleLookup(MathHelper.ValidateAngle(angle + i), length);
+                                if (player.Collision.CollidesWith(wall))
+                                {
+                                    player.Collision.Position = player.Position;
+                                }
+                                else break;
+                            }
                         }
                     }
                     foreach (var otherPlayer in _Players) // Players
@@ -226,7 +237,6 @@ namespace BlackTournament.Net.Data
                     {
                         if (killzone.CollisionShape.CollidesWith(player.Position))
                         {
-                            Log.Debug(killzone.Damage * deltaT);
                             player.DamagePlayer(killzone.Damage * deltaT);
                             if (player.Dead) _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
                         }
