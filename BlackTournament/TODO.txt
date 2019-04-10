@@ -26,6 +26,13 @@ UC create game data from parsed map data?
 
 add MD5 comparison against map tampering / versioning
 
+Notes on Lighting:
+	Pointlight
+		Position
+		Color
+		SIze
+		Flicker
+
 
 
 #Collision Notes:

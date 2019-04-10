@@ -426,7 +426,7 @@
   <object id="112" type="Collision" x="3484.09" y="742.212" width="211.818" height="127.576"/>
   <object id="113" type="Collision" x="3612.09" y="872.212" width="125.818" height="251.576"/>
  </objectgroup>
- <objectgroup id="8" name="Killzones">
+ <objectgroup id="8" name="Killzones" locked="1">
   <object id="19" type="Killzone" x="264" y="3337" width="240" height="240">
    <properties>
     <property name="Damage" type="float" value="999999999"/>

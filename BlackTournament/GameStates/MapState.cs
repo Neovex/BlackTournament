@@ -9,6 +9,7 @@ using SFML.Audio;
 
 using BlackCoat;
 using BlackCoat.Entities;
+using BlackCoat.Entities.Lights;
 using BlackCoat.ParticleSystem;
 
 using BlackTournament.Tmx;
@@ -23,8 +24,9 @@ namespace BlackTournament.GameStates
     class MapState : Gamestate
     {
         // Rendering
-        private TmxMapper _MapData;
         private View _View;
+        private TmxMapper _MapData;
+        private Lightmap _Lightmap;
 
         // Sound
         private SfxManager _Sfx;
@@ -104,7 +106,15 @@ namespace BlackTournament.GameStates
                 }
             }
 
-			/* Debug Killzone View
+            // Setup Lightmap
+            _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y))
+            {
+                View = _View
+            };
+            Layer_BG.Add(_Lightmap);
+            _Lightmap.AddLight(TextureLoader, Create.Vector2f(150)); // create lightmaps with light editor
+
+            /* Debug Killzone View
             foreach (var kz in _MapData.Killzones)
             {
                 switch (kz.CollisionShape.CollisionGeometry)

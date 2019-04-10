@@ -32,7 +32,6 @@ namespace BlackTournament.GameStates
         private float _LineAngle = 320;
         private Rectangle _Rect;
         private IEntity _Test;
-        private CollisionShape _Test2;
 
         public TestState(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
