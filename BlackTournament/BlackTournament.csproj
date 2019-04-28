@@ -117,10 +117,8 @@
     <Compile Include="Systems\GameAction.cs" />
     <Compile Include="Systems\InputMapper.cs" />
     <Compile Include="Tmx\ActorInfo.cs" />
-    <Compile Include="Tmx\IAssetLayer.cs" />
     <Compile Include="Tmx\Killzone.cs" />
     <Compile Include="Tmx\Layer.cs" />
-    <Compile Include="Tmx\RotorInfo.cs" />
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
     <Compile Include="UI\BigButton.cs" />

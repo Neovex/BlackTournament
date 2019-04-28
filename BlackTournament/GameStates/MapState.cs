@@ -54,6 +54,7 @@ namespace BlackTournament.GameStates
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
+        private IPropertyInspector _Inspector;
 
         public Vector2f ViewMovement { get; set; }
         
@@ -82,8 +83,8 @@ namespace BlackTournament.GameStates
             {
                 switch (layer)
                 {
-                    case Tmx.Layer tileLayer:
-                        var mapTex = TextureLoader.Load(layer.Asset);
+                    case TileLayer tileLayer: // MAP TILES
+                        var mapTex = TextureLoader.Load(tileLayer.Asset);
                         var mapLayer = new MapRenderer(_Core, _MapData.Size, mapTex, _MapData.TileSize)
                         {
                             Position = tileLayer.Offset
@@ -96,55 +97,41 @@ namespace BlackTournament.GameStates
                         Layer_BG.Add(mapLayer);
                     break;
 
-                    case Tmx.RotorInfo rotor:
-                        Layer_BG.Add(new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
+                    case ObjectLayer objectLayer: // MAP ENTITIES
+                        var objContainer = new Container(_Core);
+                        foreach (var obj in objectLayer.Objects)
                         {
-                            Position = rotor.Position,
-                            Origin = rotor.Origin
-                        });
-                        break;
+                            switch (obj)
+                            {
+                                case RotorInfo rotor:
+                                    Layer_BG.Add(new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
+                                    {
+                                        Position = rotor.Position,
+                                        Origin = rotor.Origin
+                                    });
+                                break;
+
+                                case AssetActorInfo actor:
+                                    Layer_BG.Add(new Graphic(_Core, TextureLoader.Load(actor.Asset))
+                                    {
+                                        Position = actor.Position
+                                    });
+                                break;
+                            }
+                        }
+                        Layer_BG.Add(objContainer);
+                    break;
                 }
             }
 
-            // Setup Lightmap
+            // Setup Lighting
             _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y))
             {
                 View = _View
             };
-            Layer_BG.Add(_Lightmap);
-            _Lightmap.AddLight(TextureLoader, Create.Vector2f(150)); // create lightmaps with light editor
+            Layer_Overlay.Add(_Lightmap);
 
-            /* Debug Killzone View
-            foreach (var kz in _MapData.Killzones)
-            {
-                switch (kz.CollisionShape.CollisionGeometry)
-                {
-                    case BlackCoat.Collision.Geometry.Circle:
-                        var c = kz.CollisionShape as CircleCollisionShape;
-                        Layer_Overlay.Add(new Circle(_Core)
-                        {
-                            Position = c.Position,
-                            Radius = c.Radius
-                        });
-                        break;
-                    case BlackCoat.Collision.Geometry.Rectangle:
-                        var r = kz.CollisionShape as RectangleCollisionShape;
-                        Layer_Overlay.Add(new Rectangle(_Core)
-                        {
-                            Position = r.Position,
-                            Size =r.Size
-                        });
-                        break;
-                    case BlackCoat.Collision.Geometry.Polygon:
-                        var p = kz.CollisionShape as PolygonCollisionShape;
-                        Layer_Overlay.Add(new Polygon(_Core, p.Points)
-                        {
-                            Position = p.Position
-                        });
-                        break;
-                }
-            }
-            */
+            _Inspector = OpenInspector(); // DELME!
 
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
@@ -275,6 +262,9 @@ namespace BlackTournament.GameStates
             _View.Center += ViewMovement * 2000 * deltaT;
             // Update listener position for spatial sounds
             Listener.Position = _View.Center.ToVector3f();
+
+            // DELME:
+            if (Input.DEFAULT.IsMButtonDown(SFML.Window.Mouse.Button.Middle)) _Inspector.SetPosition(Input.DEFAULT.MousePosition + _View.Center - _View.Size / 2);
         }
 
         protected override void Destroy()

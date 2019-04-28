@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BlackTournament.Tmx.Layer">
-    <Position X="0.5" Y="1.5" Width="1.5" />
+    <Position X="7.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAgAgAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Tmx\Layer.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Tiles" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackTournament.Tmx.TmxMapper">
     <Position X="3.5" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAABoAAAgABAgAGAAACAAEQCMAIAAEgAAgAAEAAMEQI=</HashCode>
+      <HashCode>AAABoAAAAABAgAGAAACAAEQCMAIAAEgEAgAAEAAEEAI=</HashCode>
       <FileName>Tmx\TmxMapper.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -21,9 +18,9 @@
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="_Layers" />
-      <Field Name="_Pickups" />
-      <Field Name="_WallCollider" />
-      <Field Name="_Killzones" />
+      <Property Name="Pickups" />
+      <Property Name="WallCollider" />
+      <Property Name="Killzones" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackCoat.Collision.Shapes.CollisionShape" Collapsed="true">
@@ -31,19 +28,68 @@
     <TypeIdentifier />
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TiledSharp.TmxMap">
-    <Position X="6.5" Y="0.5" Width="1.75" />
+  <Class Name="TiledSharp.TmxMap" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="BlackTournament.Net.Data.Pickup">
-    <Position X="9" Y="0.5" Width="1.75" />
+    <Position X="0.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ADQAAAAIAMAAAAAgAAAQAADAAABAAAAgAQAAAAAAAAA=</HashCode>
       <FileName>Net\Data\Pickup.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="BlackTournament.Tmx.Killzone">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAgAAAAAAAAAAAAAAAgAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\Killzone.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.156" />
+  </Class>
+  <Class Name="BlackTournament.Tmx.TileLayer">
+    <Position X="6.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAAA=</HashCode>
+      <FileName>Tmx\Layer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tiles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Tmx.ObjectLayer" Collapsed="true">
+    <Position X="8.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\Layer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Objects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Tmx.ActorInfo">
+    <Position X="8.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\ActorInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Tmx.AssetActorInfo">
+    <Position X="8.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Tmx\ActorInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Tmx.RotorInfo">
+    <Position X="8.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Tmx\ActorInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="BlackTournament.Tmx.Tile">
-    <Position X="0.5" Y="3.25" Width="1.5" />
+    <Position X="6.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tmx\Tile.cs</FileName>

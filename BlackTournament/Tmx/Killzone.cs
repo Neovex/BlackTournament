@@ -16,14 +16,11 @@ namespace BlackTournament.Tmx
         public float Damage { get; set; }
         public EffectType Effect { get; set; }
 
-        internal static Killzone Create(TmxObject obj, CollisionShape collisionShape)
+        public Killzone(TmxObject obj, CollisionShape collisionShape)
         {
-            return new Killzone()
-            {
-                CollisionShape = collisionShape,
-                Damage = float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Damage), float.MaxValue)),
-                Effect = (EffectType)Enum.Parse(typeof(EffectType), TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Effect), EffectType.Gore), true)
-            };
+            CollisionShape = collisionShape;
+            Damage = float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Damage), float.MaxValue));
+            Effect = (EffectType)Enum.Parse(typeof(EffectType), TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Effect), EffectType.Gore), true);
         }
     }
 }

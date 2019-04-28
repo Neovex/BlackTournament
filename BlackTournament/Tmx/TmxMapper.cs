@@ -23,7 +23,7 @@ namespace BlackTournament.Tmx
 
         private TmxMap _MapData;
         private Dictionary<String, int> _TextureColumnLookup;
-        private List<IAssetLayer> _Layers;
+        private List<Layer> _Layers;
         private List<Pickup> _Pickups;
         private List<Vector2f> _SpawnPoints;
         private List<CollisionShape> _WallCollider;
@@ -35,7 +35,7 @@ namespace BlackTournament.Tmx
         public Vector2i Size { get; internal set; }
         public Vector2i TileSize { get; internal set; }
 
-        public IEnumerable<IAssetLayer> Layers => _Layers;
+        public IEnumerable<Layer> Layers => _Layers;
         public IEnumerable<Pickup> Pickups => _Pickups;
         public IEnumerable<Vector2f> SpawnPoints => _SpawnPoints;
         public IEnumerable<CollisionShape> WallCollider => _WallCollider;
@@ -63,24 +63,24 @@ namespace BlackTournament.Tmx
                 Size = new Vector2i(_MapData.Width, _MapData.Height);
                 TileSize = new Vector2i(_MapData.TileWidth, _MapData.TileHeight);
 
-                // Load Tile Layers
-                _Layers = new List<IAssetLayer>();
+                // Prepare Layers
+                _Layers = new List<Layer>();
                 _Pickups = new List<Pickup>();
                 _SpawnPoints = new List<Vector2f>();
                 _WallCollider = new List<CollisionShape>();
                 _Killzones = new List<Killzone>();
 
                 // Load all Layers
-                foreach (var itmxLayer in _MapData.Layers)
+                foreach (var itmxLayer in _MapData.Layers) // LAYER
                 {
                     switch (itmxLayer)
                     {
+                        // Parse Tile Layers
                         case TmxLayer layer:
-                            // Load Tile Layers
                             var textureName = layer.Properties["TilesetName"];
                             var columns = _TextureColumnLookup[textureName];
 
-                            Layer l = new Layer();
+                            TileLayer l = new TileLayer();
                             l.Asset = textureName;
                             l.Offset = new Vector2f((float)(layer.OffsetX ?? 0), (float)(layer.OffsetY ?? 0));
                             l.Tiles = layer.Tiles.Select(t => new Tile(new Vector2f(t.X * TileSize.X, t.Y * TileSize.Y),
@@ -90,8 +90,10 @@ namespace BlackTournament.Tmx
                         break;
 
 
+                        // Parse Object Layers
                         case TmxObjectGroup group:
-                            // Load Entities
+                            var objects = new List<ActorInfo>();
+                            // Parse Objects / Actors
                             foreach (var obj in group.Objects)
                             {
                                 switch (obj.Type)
@@ -109,11 +111,15 @@ namespace BlackTournament.Tmx
                                         break;
 
                                     case "Killzone":
-                                        _Killzones.Add(Killzone.Create(obj, ParseCollisionShape(cSys, obj)));
+                                        _Killzones.Add(new Killzone(obj, ParseCollisionShape(cSys, obj)));
+                                        break;
+
+                                    case "Actor":
+                                        objects.Add(new AssetActorInfo(obj));
                                         break;
 
                                     case "Rotor":
-                                        _Layers.Add(RotorInfo.Parse(obj));
+                                        objects.Add(new RotorInfo(obj));
                                         break;
 
                                     default:
@@ -121,8 +127,16 @@ namespace BlackTournament.Tmx
                                         break;
                                 }
                             }
-                        break;
 
+                            if (objects.Count != 0)
+                            {
+                                _Layers.Add(new ObjectLayer()
+                                {
+                                    Offset = new Vector2f((float)group.OffsetX, (float)group.OffsetY),
+                                    Objects = objects.ToArray()
+                                });
+                            }
+                        break;
                     }
                 }
                 return true;

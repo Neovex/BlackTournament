@@ -101,7 +101,7 @@
   <object id="58" type="Spawn" x="384" y="1578" width="28" height="28"/>
   <object id="59" type="Spawn" x="1498" y="432" width="28" height="28"/>
  </objectgroup>
- <objectgroup id="4" name="Collision" locked="1">
+ <objectgroup id="4" name="Collision" visible="0" locked="1">
   <object id="1" type="Collision" x="-1" y="6" width="219" height="1932"/>
   <object id="3" type="Collision" x="60" y="2" width="1794" height="212"/>
   <object id="6" type="Collision" x="1694" y="118" width="276" height="232"/>
@@ -136,7 +136,7 @@
    <polygon points="0,0 5,-732 107,-830 261,-833 231,-129 105,-3"/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Killzones" locked="1">
+ <objectgroup id="5" name="Killzones" visible="0" locked="1">
   <object id="33" type="Killzone" x="2136" y="0" width="1700" height="1308">
    <properties>
     <property name="Damage" type="float" value="10000"/>
