@@ -24,11 +24,14 @@ namespace BlackTournament.Tmx
     class AssetActorInfo : ActorInfo
     {
         public String Asset { get; }
+        public Vector2f Scale { get; set; }
 
         public AssetActorInfo() { }
         public AssetActorInfo(TmxObject obj):base(obj)
         {
             Asset = TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Asset));
+            Scale = new Vector2f(float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "ScaleX", 1), System.Globalization.CultureInfo.CurrentUICulture),
+                                 float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "ScaleY", 1), System.Globalization.CultureInfo.CurrentUICulture));
         }
     }
 
@@ -40,9 +43,9 @@ namespace BlackTournament.Tmx
         public RotorInfo() { }
         public RotorInfo(TmxObject obj) : base(obj)
         {
-            Origin = new Vector2f(float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "OriginX", 0)),
-                                  float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "OriginY", 0)));
-            Speed = float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Speed), 0));
+            Origin = new Vector2f(float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "OriginX", 0), System.Globalization.CultureInfo.CurrentUICulture),
+                                  float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, "OriginY", 0), System.Globalization.CultureInfo.CurrentUICulture));
+            Speed = float.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Speed), 0), System.Globalization.CultureInfo.CurrentUICulture);
         }
     }
 }

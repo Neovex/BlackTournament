@@ -376,7 +376,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="7" name="Collision" locked="1">
+ <objectgroup id="7" name="Collision" visible="0" locked="1">
   <object id="66" type="Collision" x="925.879" y="541.576" width="836.485" height="838.909"/>
   <object id="67" type="Collision" x="925.758" y="1383.21" width="323.151" height="505.576"/>
   <object id="68" type="Collision" x="927.091" y="2207.21" width="321.818" height="577.576"/>

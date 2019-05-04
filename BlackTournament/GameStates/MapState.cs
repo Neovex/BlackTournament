@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 
 using SFML.System;
 using SFML.Graphics;
@@ -25,6 +25,7 @@ namespace BlackTournament.GameStates
     {
         // Rendering
         private View _View;
+        private ParticleEmitterHost _ParticleEmitterHost;
         private TmxMapper _MapData;
         private Lightmap _Lightmap;
 
@@ -74,8 +75,11 @@ namespace BlackTournament.GameStates
             Layer_BG.View = _View;
             Layer_Game.View = _View;
             Layer_Overlay.View = _View;
+            _Core.DeviceResized += UpdateViewOnDeviceResize;
 
-            _Core.DeviceResized += HandleDeviceResized;
+
+            // Setup Particle Host
+            Layer_Overlay.Add(_ParticleEmitterHost = new ParticleEmitterHost(_Core));
 
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
@@ -101,10 +105,11 @@ namespace BlackTournament.GameStates
                         var objContainer = new Container(_Core);
                         foreach (var obj in objectLayer.Objects)
                         {
+                            IEntity entity = null;
                             switch (obj)
                             {
                                 case RotorInfo rotor:
-                                    Layer_BG.Add(new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
+                                    Layer_BG.Add(entity = new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
                                     {
                                         Position = rotor.Position,
                                         Origin = rotor.Origin
@@ -112,11 +117,23 @@ namespace BlackTournament.GameStates
                                 break;
 
                                 case AssetActorInfo actor:
-                                    Layer_BG.Add(new Graphic(_Core, TextureLoader.Load(actor.Asset))
+                                    var texture = TextureLoader.Load(actor.Asset);
+                                    Layer_BG.Add(entity = new Graphic(_Core, texture)
                                     {
-                                        Position = actor.Position
+                                        Position = actor.Position,
+                                        Origin = texture.Size.ToVector2f() / 2,
+                                        Scale = actor.Scale,
                                     });
                                 break;
+                            }
+                            switch (obj.Tag)
+                            {
+                                case "TorchEmitter":
+                                    var emitter = new TextureEmitter(_Core, new FireInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 25), BlendMode.Add);
+                                    emitter.Position = entity.Position;
+                                    emitter.Trigger();
+                                    _ParticleEmitterHost.AddEmitter(emitter);
+                                    break;
                             }
                         }
                         Layer_BG.Add(objContainer);
@@ -125,11 +142,15 @@ namespace BlackTournament.GameStates
             }
 
             // Setup Lighting
-            _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y))
+            var lightFile = $"Maps\\{_MapData.Name}.bcl";
+            if (File.Exists(lightFile))
             {
-                View = _View
-            };
-            Layer_Overlay.Add(_Lightmap);
+                _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
+                _Lightmap.View = _View;
+                _Lightmap.Load(TextureLoader, lightFile);
+                _Lightmap.RedrawNow(); // no dynamic lighting for now
+                Layer_Overlay.Add(_Lightmap);
+            }
 
             _Inspector = OpenInspector(); // DELME!
 
@@ -148,7 +169,7 @@ namespace BlackTournament.GameStates
             return true;
         }
 
-        private void HandleDeviceResized(Vector2f size)
+        private void UpdateViewOnDeviceResize(Vector2f size)
         {
             _View.Size = size;
         }
@@ -269,7 +290,7 @@ namespace BlackTournament.GameStates
 
         protected override void Destroy()
         {
-            _Core.DeviceResized -= HandleDeviceResized;
+            _Core.DeviceResized -= UpdateViewOnDeviceResize;
         }
 
         public void CreatePlayer(int id, bool isLocalPlayer = false)

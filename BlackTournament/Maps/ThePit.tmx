@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="61">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="28" tilewidth="128" tileheight="128" infinite="0" backgroundcolor="#000000" nextlayerid="7" nextobjectid="76">
  <tileset firstgid="1" name="AztekTiles" tilewidth="128" tileheight="128" tilecount="380" columns="10">
   <image source="../Assets/Textures/AztekTiles.png" width="1280" height="4864"/>
  </tileset>
@@ -145,6 +145,128 @@
   <object id="34" type="Killzone" x="0" y="2000" width="1540" height="1576">
    <properties>
     <property name="Damage" type="float" value="10000"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Lights" locked="1">
+  <object id="61" type="Actor" x="352" y="151" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="62" type="Actor" x="808.833" y="147.167" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="63" type="Actor" x="1258.17" y="148.833" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="64" type="Actor" x="1835.5" y="276.833" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="65" type="Actor" x="651.5" y="1303.5" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="66" type="Actor" x="1074.17" y="1299.5" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="67" type="Actor" x="1487.5" y="1194.17" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="68" type="Actor" x="1788.83" y="1532.83" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="69" type="Actor" x="2047.5" y="1915.5" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="70" type="Actor" x="2482.17" y="1435.5" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="71" type="Actor" x="2916.83" y="1430.17" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="72" type="Actor" x="3499.5" y="1424.83" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="73" type="Actor" x="2163.5" y="2972.83" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="74" type="Actor" x="3158.17" y="2976.83" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
+   </properties>
+  </object>
+  <object id="75" type="Actor" x="2735.5" y="2974.17" width="25" height="25">
+   <properties>
+    <property name="Asset" value="Torch"/>
+    <property name="ScaleX" type="float" value="0.5"/>
+    <property name="ScaleY" type="float" value="0.5"/>
+    <property name="Tag" value="TorchEmitter"/>
    </properties>
   </object>
  </objectgroup>

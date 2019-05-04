@@ -51,5 +51,8 @@ namespace BlackTournament
         public const String Menue_Gore = "menue_gore";
         public const String Menue_Panel = "menue_panel";
         public const String Menue_Title = "menue_title";
+
+        // MISC
+        public const String Misc_Torch = "Torch";
     }
 }

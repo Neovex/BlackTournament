@@ -71,6 +71,7 @@
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\NetworkManagementClient.cs" />
     <Compile Include="Net\Data\ServerInfo.cs" />
+    <Compile Include="Particles\FireInfo.cs" />
     <Compile Include="Particles\ImpactInfo.cs" />
     <Compile Include="Particles\LightningEmitter.cs" />
     <Compile Include="Particles\LineEmitter.cs" />
@@ -158,6 +159,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Maps\Temple.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Maps\ThePit.bcl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Maps\Turbine.bcl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Maps\Turbine.tmx">
@@ -295,6 +302,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sfx\simple shot.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Torch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TODO.txt" />
