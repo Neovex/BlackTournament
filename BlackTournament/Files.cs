@@ -54,5 +54,6 @@ namespace BlackTournament
 
         // MISC
         public const String Misc_Torch = "Torch";
+        public const String Misc_TorchCone = "TorchCone";
     }
 }

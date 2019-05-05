@@ -147,8 +147,8 @@ namespace BlackTournament.GameStates
             {
                 _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
                 _Lightmap.View = _View;
+                _Lightmap.RenderEachFrame = true;
                 _Lightmap.Load(TextureLoader, lightFile);
-                _Lightmap.RedrawNow(); // no dynamic lighting for now
                 Layer_Overlay.Add(_Lightmap);
             }
 
@@ -297,13 +297,18 @@ namespace BlackTournament.GameStates
         {
             var player = new Graphic(_Core)
             {
-                Texture = TextureLoader.Load("CharacterBase"),
-                Color = Color.Red,
-                Scale = new Vector2f(0.5f, 0.5f) // FIXME!
+                Texture = TextureLoader.Load("CharacterBase"), // TODO : replace with proper char graphic
+                Color = Color.Red, // this is a test
+                Scale = new Vector2f(0.5f, 0.5f) // FIXME !!!
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
             Layer_Game.Add(player);
             _EnitityLookup.Add(id, player);
+
+            if (_Lightmap != null) // add player lights
+            {
+                _Lightmap.AddCustomLight(new PlayerLight(_Core, player, TextureLoader));
+            }
 
             if (isLocalPlayer) _LocalPlayer = player;
         }
