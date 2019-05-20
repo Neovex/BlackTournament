@@ -55,7 +55,7 @@ namespace BlackTournament.GameStates
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
-        private IPropertyInspector _Inspector;
+
 
         public Vector2f ViewMovement { get; set; }
         
@@ -151,8 +151,6 @@ namespace BlackTournament.GameStates
                 _Lightmap.Load(TextureLoader, lightFile);
                 Layer_Overlay.Add(_Lightmap);
             }
-
-            _Inspector = OpenInspector(); // DELME!
 
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
@@ -283,9 +281,6 @@ namespace BlackTournament.GameStates
             _View.Center += ViewMovement * 2000 * deltaT;
             // Update listener position for spatial sounds
             Listener.Position = _View.Center.ToVector3f();
-
-            // DELME:
-            if (Input.DEFAULT.IsMButtonDown(SFML.Window.Mouse.Button.Middle)) _Inspector.SetPosition(Input.DEFAULT.MousePosition + _View.Center - _View.Size / 2);
         }
 
         protected override void Destroy()

@@ -220,6 +220,12 @@ namespace BlackTournament
                         }
                         else Log.Info("Invalid connect command. Use connect [host name] [(optional)port]", cmd);
                         return true;
+
+                    case "light":
+                        if (commandData.Length > 1) new LightController(this).Activate(commandData[1]);
+                        else Log.Info("Invalid light command. Use light [map name]", cmd);
+                        return true;
+
                 }
             }
             catch (Exception ex)

@@ -61,6 +61,7 @@
       <Link>Failsafe.cs</Link>
     </Compile>
     <Compile Include="Controller\ConnectController.cs" />
+    <Compile Include="Controller\LightController.cs" />
     <Compile Include="Controller\MapController.cs" />
     <Compile Include="Controller\ControllerBase.cs" />
     <Compile Include="Controller\MenuController.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Entities\Remote.cs" />
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Entities\RotatingGraphic.cs" />
+    <Compile Include="GameStates\LightEditorState.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\NetworkManagementClient.cs" />
     <Compile Include="Net\Data\ServerInfo.cs" />
