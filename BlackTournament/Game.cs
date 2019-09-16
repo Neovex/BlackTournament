@@ -189,7 +189,7 @@ namespace BlackTournament
                             }
                             else
                             {
-                                Log.Info("Cannot send any messages, not connected to any server");
+                                Log.Info("Cannot send messages, not connected to any server");
                             }
                         }
                         return true;

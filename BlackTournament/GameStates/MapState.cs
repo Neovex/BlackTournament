@@ -18,6 +18,7 @@ using BlackCoat.Entities.Shapes;
 using BlackTournament.Net.Data;
 using BlackTournament.Particles;
 using BlackCoat.Collision.Shapes;
+using BlackCoat.Properties;
 
 namespace BlackTournament.GameStates
 {
@@ -51,6 +52,8 @@ namespace BlackTournament.GameStates
 
         private SmokeTrailEmitter _SmokeTrailEmitter;
 
+        private TextureParticleInitializationInfo _LightEmitterInfo;
+        private TextureEmitter _LightEmitter;
 
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
@@ -146,7 +149,6 @@ namespace BlackTournament.GameStates
             if (File.Exists(lightFile))
             {
                 _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
-                _Lightmap.View = _View;
                 _Lightmap.RenderEachFrame = true;
                 _Lightmap.Load(TextureLoader, lightFile);
                 Layer_Overlay.Add(_Lightmap);
@@ -181,6 +183,7 @@ namespace BlackTournament.GameStates
                 UseAlphaAsTTL = true
             };
             _TracerLinesEmitter = new LineEmitter(_Core, _TracerLinesInfo);
+            _ParticleEmitterHost.AddEmitter(_TracerLinesEmitter);
 
             // Electro Sparks Effect
             _LigtningInfo = new LightningInfo(_Core)
@@ -192,6 +195,7 @@ namespace BlackTournament.GameStates
                 UseAlphaAsTTL =true
             };
             _LigtningEmitter = new LightningEmitter(_Core, _LigtningInfo);
+            _ParticleEmitterHost.AddEmitter(_LigtningEmitter);
 
             // Pixel Sparks for ricochets and wall impacts
             _SparkInfo = new SparkInfo(_Core, 200, 10, null)
@@ -217,6 +221,7 @@ namespace BlackTournament.GameStates
             _ImpactEmitter = new EmitterComposition(_Core);
             _ImpactEmitter.Add(_SparkEmitter);
             _ImpactEmitter.Add(impactEmitter);
+            _ParticleEmitterHost.AddEmitter(_ImpactEmitter);
 
             // Orange/White Explosion
             var smokeTex = TextureLoader.Load(Files.Emitter_Smoke_Grey);
@@ -250,7 +255,9 @@ namespace BlackTournament.GameStates
             _ExplosionEmitter = new EmitterComposition(_Core);
             _ExplosionEmitter.Add(explosionSmokeEmitter);
             _ExplosionEmitter.Add(explosionWaveEmitter);
+            _ParticleEmitterHost.AddEmitter(_ExplosionEmitter);
 
+            // Grenade Smoke Trail
             var smokeTrailInfo = new SmokeInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 50)
             {
                 TTL = 25,
@@ -264,15 +271,22 @@ namespace BlackTournament.GameStates
                 UseAlphaAsTTL = true
             };
             _SmokeTrailEmitter = new SmokeTrailEmitter(_Core, smokeTrailInfo, -1);
+            _ParticleEmitterHost.AddEmitter(_SmokeTrailEmitter);
 
-            // Add to scene via host
-            var host = new ParticleEmitterHost(_Core);
-            host.AddEmitter(_TracerLinesEmitter);
-            host.AddEmitter(_LigtningEmitter);
-            host.AddEmitter(_ImpactEmitter);
-            host.AddEmitter(_ExplosionEmitter);
-            host.AddEmitter(_SmokeTrailEmitter);
-            Layer_Overlay.Add(host);
+            // LIGHTING
+            var lightTex = TextureLoader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
+            _LightEmitterInfo = new TextureParticleInitializationInfo(lightTex)
+            {
+                TTL = 25,
+                Origin = lightTex.Size.ToVector2f() / 2,
+                AlphaFade = -1,
+                UseAlphaAsTTL = true
+            };
+            _LightEmitter = new TextureEmitter(_Core, _LightEmitterInfo, BlendMode.Add);
+            // Add to scene
+            var lighthost = new ParticleEmitterHost(_Core);
+            lighthost.AddEmitter(_LightEmitter);
+            _Lightmap.Add(lighthost);
         }
 
         protected override void Update(float deltaT)
@@ -365,6 +379,10 @@ namespace BlackTournament.GameStates
                     orb.AdditionalTriggers = 1;
                     orb.AboutToBeTriggered += e => e.ParticleInfo.LigtningTarget = orb.Position + Create.Vector2fFromAngleLookup(_Core.Random.NextFloat(0, 360), WeaponData.HedgeshockSecundary.Length);
                     shockOrb.Add(orb);
+                    // Add light
+                    var light = new OrbLight(_Core, shockOrb, TextureLoader);
+                    _Lightmap.Add(light);
+                    // Add to scene
                     _EnitityLookup.Add(id, shockOrb);
                     Layer_Game.Add(shockOrb);
                     break;
@@ -395,7 +413,11 @@ namespace BlackTournament.GameStates
                     _ExplosionInfo.Scale = Create.Vector2f(size / 120);
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
-                break;
+                    // Impact Light
+                    _LightEmitterInfo.Scale = Create.Vector2f(0.9f);
+                    _LightEmitter.Position = position;
+                    _LightEmitter.Trigger();
+                    break;
 
                 case EffectType.WallImpact:
                     _SparkInfo.Update(source);
@@ -403,6 +425,10 @@ namespace BlackTournament.GameStates
                     _ImpactEmitter.Position = position;
                     _ImpactEmitter.Trigger();
                     if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
+                    // Impact Light
+                    _LightEmitterInfo.Scale = Create.Vector2f(0.1f);
+                    _LightEmitter.Position = position;
+                    _LightEmitter.Trigger();
                 break;
 
                 case EffectType.PlayerImpact:
@@ -487,6 +513,7 @@ namespace BlackTournament.GameStates
             var entity = _EnitityLookup[id];
             entity.Parent.Remove(entity);
             _EnitityLookup.Remove(id);
+            entity.Dispose();
         }
 
         public void UpdateEntity(int id, Vector2f pos, float rotation, bool visible) // add pickup type? currently not necessary

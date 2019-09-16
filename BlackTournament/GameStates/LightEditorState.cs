@@ -102,7 +102,6 @@ namespace BlackTournament.GameStates
 
             // Setup Lighting
             _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
-            _Lightmap.View = _View;
             _Lightmap.RenderEachFrame = true;
             var lightFile = $"Maps\\{_MapData.Name}.bcl";
             if (File.Exists(lightFile))
@@ -129,28 +128,27 @@ namespace BlackTournament.GameStates
 
         private void Inspector_InspectionItemChanged(object obj)
         {
+            _Selection.Visible = false;
+
             if (obj is IEntity e)
             {
                 _Selection.Visible = true;
                 _Selection.Position = e.Position;
                 _Selection.Origin = e.Origin.MultiplyBy(e.Scale);
-            }
-            else
-            {
-                _Selection.Visible = false;
-            }
+                _Selection.Size = Create.Vector2f(25); // backup default value to show there is "something"
 
-            switch (obj)
-            {
-                case Graphic g:
-                    _Selection.Size = g.TextureRect.Size().ToVector2f().MultiplyBy(g.Scale);
-                break;
-                case Rectangle r:
-                    _Selection.Size = r.Size;
-                break;
-                case Circle c:
-                    _Selection.Size = Create.Vector2f(c.Radius * 2);
-                break;
+                switch (e)
+                {
+                    case Graphic g:
+                        _Selection.Size = g.TextureRect.Size().ToVector2f().MultiplyBy(g.Scale);
+                    break;
+                    case Rectangle r:
+                        _Selection.Size = r.Size;
+                    break;
+                    case Circle c:
+                        _Selection.Size = Create.Vector2f(c.Radius * 2);
+                    break;
+                }
             }
         }
 

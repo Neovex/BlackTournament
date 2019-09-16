@@ -17,6 +17,7 @@ using SFML.Window;
 using BlackTournament.Tmx;
 using BlackCoat.Collision.Shapes;
 using BlackCoat.Collision;
+using BlackCoat.Entities.Lights;
 
 namespace BlackTournament.GameStates
 {
@@ -44,19 +45,16 @@ namespace BlackTournament.GameStates
             //ShaderTest();
             //UiTest();
             //TextureTests();
-            CollisionTest();
+            //CollisionTest();
             //Particles();
+            PreRenderVSParticles();
             Log.Info("Nobody here but us chickens");
             return true;
         }
 
         protected override void Update(float deltaT)
         {
-            //_Ray.End.Position = Create.Vector2fFromAngle(_Ray.Start.Position.AngleTowards(_Core.Input.MousePosition), 1000).ToGlobal(_Ray.Start.Position);
-            _Test.Position = Input.DEFAULT.MousePosition;
-            var c = Layer_Overlay.GetAll<Polygon>().Any(p => p.CollidesWith(_Test.Position)) ? Color.Red : Color.Blue;
-            c.A = (byte)(byte.MaxValue * 0.7);
-            _Test.Color = c;
+
         }
 
         protected override void Destroy()
@@ -317,6 +315,42 @@ namespace BlackTournament.GameStates
             var emitter = new PixelEmitter(_Core, info);
             host.AddEmitter(emitter);
             emitter.Trigger();
+        }
+
+        private void PreRenderVSParticles()
+        {
+            var view = new View(new FloatRect(new Vector2f(), _Core.DeviceSize));
+
+            var rContainer = new PrerenderedContainer(_Core, new Vector2f(3840, 3584));
+            Layer_Game.Add(rContainer);
+            rContainer.RenderEachFrame = true;
+
+            //var lightTex = TextureLoader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
+            var lightTex = TextureLoader.Load("checker");
+            var info = new TextureParticleInitializationInfo(lightTex)
+            {
+                TTL = 5,
+                //Origin = lightTex.Size.ToVector2f() / 2,
+                //Scale = new Vector2f(0.2f, 0.2f)
+            };
+            var emitter = new TextureEmitter(_Core, info);
+            // Add to scene
+            var host = new ParticleEmitterHost(_Core);
+            host.AddEmitter(emitter);
+            rContainer.Add(host);
+            rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = Create.Vector2f(100) });
+            //Layer_Game.Add(host);
+
+            Input.DEFAULT.MouseButtonPressed += b =>
+            {
+                //view.Center += Create.Vector2f(5);
+                emitter.Position = Input.DEFAULT.MousePosition;
+                emitter.Trigger();
+                if(b== Mouse.Button.Middle)
+                {
+                    Layer_Game.View = view;
+                }
+            };
         }
     }
     class PixelInfo : PixelParticleInitializationInfo

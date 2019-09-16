@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-
 namespace BlackTournament
 {
     public static class Programm

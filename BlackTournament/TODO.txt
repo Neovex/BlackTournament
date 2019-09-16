@@ -1,4 +1,19 @@
-﻿server game logic
+﻿#finalize projectile (weapon) lighting
+complete map powerplant
+fix UI focusloss mouse VS gamepad
+find solution for comboboxes and other UI dialogs
+HUD!
+update playergraphics (animation?)
+death sounds (and effects)
+pickup sounds
+(complete map temple)
+(env sounds?)
+(consider UI Markup)
+(consider Particle Markup)
+
+
+
+server game logic
 # - static collisions
 # - dynamic collision (dyn to dyn)
 
@@ -27,11 +42,11 @@ UC create game data from parsed map data?
 add MD5 comparison against map tampering / versioning
 
 Notes on Lighting:
-	Pointlight
-		Position
-		Color
-		SIze
-		Flicker
+    Pointlight
+        Position
+        Color
+        SIze
+        Flicker
 
 
 

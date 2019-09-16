@@ -41,11 +41,11 @@ namespace BlackTournament.Entities
         public override void Update(float deltaT)
         {
             base.Update(deltaT);
-            if (_Player.Destroyed)
+            if (_Player.Disposed)
             {
                 // commit suicide
                 Parent.Remove(this);
-                Destroy(false);
+                Dispose();
             }
             else
             {

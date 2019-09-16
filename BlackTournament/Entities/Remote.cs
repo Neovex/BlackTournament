@@ -42,13 +42,17 @@ namespace BlackTournament.Entities
         /// </summary>
         public Vector2f GlobalPosition => Parent == null ? Position : (Position - Origin).ToGlobal(Parent.GlobalPosition);
 
-        public bool Destroyed { get; private set; }
+        public bool Disposed { get; private set; }
 
         public Remote(TEmitter emitter, float triggerFrequency, IEntity source = null)
         {
             _Emitter = emitter ?? throw new ArgumentNullException(nameof(emitter));
             _TriggerFrequency = triggerFrequency;
             Source = source;
+        }
+        ~Remote()
+        {
+            Dispose();
         }
 
         public void Draw()
@@ -76,7 +80,7 @@ namespace BlackTournament.Entities
 
         public void Dispose()
         {
-            Destroyed = true;
+            Disposed = true;
             _Emitter = null;
             Source = null;
         }
