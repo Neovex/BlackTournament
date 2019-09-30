@@ -5,6 +5,7 @@ namespace BlackTournament
 {
     public static class Programm
     {
+        [STAThread] // Required for the Light-Editors Save/Load dialog
         public static void Main(string[] args)
         {
             var blackTournament = new Game();

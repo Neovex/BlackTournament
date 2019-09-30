@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackCoat;
 using BlackCoat.Collision;
+using BlackCoat.Collision.Shapes;
 using BlackCoat.Entities;
 using BlackCoat.Entities.Lights;
 using BlackCoat.Entities.Shapes;
@@ -68,33 +69,7 @@ namespace BlackTournament.GameStates
                         Layer_BG.Add(mapLayer);
                         break;
 
-                    case ObjectLayer objectLayer: // MAP ENTITIES
-                        var objContainer = new Container(_Core);
-                        foreach (var obj in objectLayer.Objects)
-                        {
-                            IEntity entity = null;
-                            switch (obj)
-                            {
-                                case RotorInfo rotor:
-                                    Layer_BG.Add(entity = new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
-                                    {
-                                        Position = rotor.Position,
-                                        Origin = rotor.Origin
-                                    });
-                                    break;
-
-                                case AssetActorInfo actor:
-                                    var texture = TextureLoader.Load(actor.Asset);
-                                    Layer_BG.Add(entity = new Graphic(_Core, texture)
-                                    {
-                                        Position = actor.Position,
-                                        Origin = texture.Size.ToVector2f() / 2,
-                                        Scale = actor.Scale,
-                                    });
-                                    break;
-                            }
-                        }
-                        Layer_BG.Add(objContainer);
+                    case ObjectLayer objectLayer: // skipped
                         break;
                 }
             }
@@ -149,6 +124,14 @@ namespace BlackTournament.GameStates
                         _Selection.Size = Create.Vector2f(c.Radius * 2);
                     break;
                 }
+            }
+
+            // Move view to selected item
+            var viewRect = new RectangleCollisionShape(_Core.CollisionSystem, _View.Center - _View.Size / 2, _View.Size);
+            var selectionRect = new RectangleCollisionShape(_Core.CollisionSystem, _Selection.Position - _Selection.Origin, _Selection.Size);
+            if (!viewRect.CollidesWith(selectionRect))
+            {
+                _View.Center = selectionRect.Position + selectionRect.Size / 2;
             }
         }
 
