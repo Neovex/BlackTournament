@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="20" height="18" tilewidth="128" tileheight="128" infinite="0" nextlayerid="4" nextobjectid="1">
- <tileset firstgid="1" name="Industrial" tilewidth="128" tileheight="128" tilecount="119" columns="7">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="20" height="18" tilewidth="128" tileheight="128" infinite="0" nextlayerid="10" nextobjectid="58">
+ <tileset firstgid="1" name="IndustrialTiles" tilewidth="128" tileheight="128" tilecount="119" columns="7">
   <image source="../Assets/Textures/IndustrialTiles.png" width="896" height="2176"/>
  </tileset>
  <layer id="1" name="Floor" width="20" height="18" locked="1">
@@ -78,4 +78,164 @@
 0,0,0,0,0,0,0,0,116,0,0,0,0,0,0,0,0,73,0,0
 </data>
  </layer>
+ <objectgroup id="4" name="Collision" visible="0" locked="1">
+  <object id="1" type="Collision" x="4" y="5" width="1116" height="475"/>
+  <object id="5" type="Collision" x="2.66667" y="2088" width="462.667" height="210.667"/>
+  <object id="7" type="Collision" x="2.66667" y="476.667" width="92.6667" height="1614"/>
+  <object id="8" type="Collision" x="290" y="477.333" width="188" height="129.333"/>
+  <object id="9" type="Collision" x="288.667" y="1056" width="189" height="703"/>
+  <object id="10" type="Collision" x="477" y="1183.5" width="131.333" height="192.333"/>
+  <object id="11" type="Collision" x="464.667" y="2207.67" width="1104.67" height="92.3333"/>
+  <object id="12" type="Collision" x="1568.33" y="1951.67" width="191.333" height="348.667"/>
+  <object id="13" type="Collision" x="1758.91" y="2207.92" width="583.761" height="92.3333"/>
+  <object id="14" type="Collision" x="2341" y="2084.5" width="216.003" height="217"/>
+  <object id="15" type="Collision" x="1952.15" y="1055.11" width="604.488" height="315.667"/>
+  <object id="16" type="Collision" x="2469.42" y="1369.17" width="87.4887" height="717"/>
+  <object id="17" type="Collision" x="2464.59" y="253.167" width="92.322" height="803.5"/>
+  <object id="18" type="Collision" x="1568.09" y="7.16668" width="704.155" height="472.333"/>
+  <object id="19" type="Collision" x="1119.09" y="6.33335" width="451.322" height="87.8333"/>
+  <object id="20" type="Collision" x="800.922" y="1824.17" width="575.322" height="190.833"/>
+  <object id="21" type="Collision" x="1185.59" y="1695.33" width="190.822" height="129.833"/>
+  <object id="22" type="Collision" x="2271.42" y="209.167" width="194.322" height="142.333"/>
+  <object id="23" type="Collision" x="1440.76" y="1313.83" width="319.822" height="186.333"/>
+  <object id="24" type="Collision" x="1567.76" y="799.833" width="192.489" height="516"/>
+  <object id="25" type="Collision" x="1952.86" y="1696.79" width="191" height="191"/>
+  <object id="26" type="Collision" x="928.839" y="671.583" width="191" height="385.333"/>
+  <object id="27" type="Collision" x="800.756" y="1055.83" width="447.322" height="191"/>
+  <object id="28" type="Collision" x="1057.09" y="1245.83" width="191" height="257.333"/>
+  <object id="29" type="Collision" x="1118.59" y="671.833" width="129.322" height="191"/>
+ </objectgroup>
+ <objectgroup id="5" name="Killzones" locked="1">
+  <object id="30" name="Radiation Zone" type="Killzone" x="1097" y="70" width="486" height="393">
+   <properties>
+    <property name="Damage" type="float" value="1"/>
+    <property name="Effect" value="Environment"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Pickups" locked="1">
+  <object id="32" name="Thumper" type="Pickup" x="1191.33" y="930.333" width="58.3333" height="63">
+   <properties>
+    <property name="Item" value="Thumper"/>
+   </properties>
+  </object>
+  <object id="33" name="Titandrill" type="Pickup" x="2214.5" y="1953.42" width="59" height="64">
+   <properties>
+    <property name="Item" value="Titandrill"/>
+   </properties>
+  </object>
+  <object id="34" name="Hedgeshock" type="Pickup" x="2343.33" y="417.5" width="58.6667" height="64">
+   <properties>
+    <property name="Item" value="Hedgeshock"/>
+   </properties>
+  </object>
+  <object id="35" name="Big Shield" type="Pickup" x="1291.5" y="136.333" width="106" height="100">
+   <properties>
+    <property name="Item" value="BigShield"/>
+   </properties>
+  </object>
+  <object id="36" name="Health" type="Pickup" x="830" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="37" name="Shield" type="Pickup" x="178" y="1192" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="38" name="Hedgeshock" type="Pickup" x="166.667" y="546" width="58.6667" height="64">
+   <properties>
+    <property name="Item" value="Hedgeshock"/>
+   </properties>
+  </object>
+  <object id="39" name="Shield" type="Pickup" x="178" y="1392" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="40" name="Shield" type="Pickup" x="178" y="1292" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="41" name="Shield" type="Pickup" x="178" y="1492" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="42" name="Shield" type="Pickup" x="178" y="1592" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="43" name="Health" type="Pickup" x="930" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="44" name="Health" type="Pickup" x="1030" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="45" name="Health" type="Pickup" x="1130" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="46" name="Health" type="Pickup" x="1230" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="47" name="Health" type="Pickup" x="1330" y="2100" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="48" name="Shield" type="Pickup" x="2013.33" y="748.667" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="49" name="Shield" type="Pickup" x="2163.33" y="748.667" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="50" name="Shield" type="Pickup" x="2313.33" y="748.667" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Spawns" locked="1">
+  <object id="51" name="Spawn" type="Spawn" x="176.485" y="1969.7" width="28" height="28"/>
+  <object id="52" name="Spawn" type="Spawn" x="2356" y="1455.5" width="28" height="28"/>
+  <object id="53" name="Spawn" type="Spawn" x="2356.67" y="943.333" width="28" height="28"/>
+  <object id="54" name="Spawn" type="Spawn" x="564.333" y="560.667" width="28" height="28"/>
+ </objectgroup>
+ <objectgroup id="9" name="Actor" locked="1">
+  <object id="56" name="Rotating Light" type="Rotor" x="2048" y="1792" width="16" height="16">
+   <properties>
+    <property name="Asset" value="TorchCone"/>
+    <property name="OriginX" type="float" value="20"/>
+    <property name="OriginY" type="float" value="217"/>
+    <property name="Parent" value="Light"/>
+    <property name="Speed" type="float" value="50"/>
+    <property name="Tag" value="Tint;255;5;5"/>
+   </properties>
+  </object>
+  <object id="57" name="Rotating Light" type="Rotor" x="2048" y="1792" width="16" height="16" rotation="180">
+   <properties>
+    <property name="Asset" value="TorchCone"/>
+    <property name="OriginX" type="float" value="20"/>
+    <property name="OriginY" type="float" value="217"/>
+    <property name="Parent" value="Light"/>
+    <property name="Speed" type="float" value="50"/>
+    <property name="Tag" value="Tint;255;5;5"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

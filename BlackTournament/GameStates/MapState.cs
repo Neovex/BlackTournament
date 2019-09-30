@@ -61,7 +61,7 @@ namespace BlackTournament.GameStates
 
 
         public Vector2f ViewMovement { get; set; }
-        
+
 
         public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -82,7 +82,15 @@ namespace BlackTournament.GameStates
 
 
             // Setup Particle Host
-            Layer_Overlay.Add(_ParticleEmitterHost = new ParticleEmitterHost(_Core));
+            _ParticleEmitterHost = new ParticleEmitterHost(_Core);
+
+            // Setup Lighting
+            var lightFile = $"Maps\\{_MapData.Name}.bcl";
+            _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
+            _Lightmap.RenderEachFrame = true;
+            if (File.Exists(lightFile)) _Lightmap.Load(TextureLoader, lightFile);
+            else _Lightmap.Ambient = Color.White;
+            Layer_Overlay.Add(_Lightmap);
 
             // Setup Map
             _Core.ClearColor = _MapData.ClearColor;
@@ -102,61 +110,80 @@ namespace BlackTournament.GameStates
                             mapLayer.AddTile(i * 4, tileLayer.Tiles[i].Position, tileLayer.Tiles[i].TexCoords); // mayhaps find a better solution
                         }
                         Layer_BG.Add(mapLayer);
-                    break;
+                        break;
 
                     case ObjectLayer objectLayer: // MAP ENTITIES
-                        var objContainer = new Container(_Core);
                         foreach (var obj in objectLayer.Objects)
                         {
                             IEntity entity = null;
                             switch (obj)
                             {
                                 case RotorInfo rotor:
-                                    Layer_BG.Add(entity = new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
+                                    entity = new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
                                     {
                                         Position = rotor.Position,
-                                        Origin = rotor.Origin
-                                    });
-                                break;
+                                        Rotation = rotor.Rotation,
+                                        Origin = rotor.Origin,
+                                        Scale = rotor.Scale
+                                    };
+                                    break;
 
                                 case AssetActorInfo actor:
                                     var texture = TextureLoader.Load(actor.Asset);
-                                    Layer_BG.Add(entity = new Graphic(_Core, texture)
+                                    entity = new Graphic(_Core, texture)
                                     {
                                         Position = actor.Position,
+                                        Rotation = actor.Rotation,
                                         Origin = texture.Size.ToVector2f() / 2,
                                         Scale = actor.Scale,
-                                    });
-                                break;
-                            }
-                            switch (obj.Tag)
-                            {
-                                case "TorchEmitter":
-                                    var emitter = new TextureEmitter(_Core, new FireInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 25), BlendMode.Add);
-                                    emitter.Position = entity.Position;
-                                    emitter.Trigger();
-                                    _ParticleEmitterHost.AddEmitter(emitter);
+                                    };
                                     break;
                             }
+                            switch (obj.Parent)
+                            {
+                                case Parent.Layer_BG:
+                                    Layer_BG.Add(entity);
+                                    break;
+                                case Parent.Layer_Game:
+                                    Layer_Game.Add(entity);
+                                    break;
+                                case Parent.Layer_Overlay:
+                                    Layer_Overlay.Add(entity);
+                                    break;
+                                case Parent.Layer_Debug:
+                                    Layer_Debug.Add(entity);
+                                    break;
+                                case Parent.Light:
+                                    entity.BlendMode = BlendMode.Add;
+                                    _Lightmap.Add(entity);
+                                    break;
+                            }
+                            if (obj.Tag != null)
+                            {
+                                var tagData = obj.Tag?.Split(';');
+                                if (tagData.Length != 0)
+                                {
+                                    switch (tagData[0])
+                                    {
+                                        case "TorchEmitter":
+                                            var emitter = new TextureEmitter(_Core, new FireInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 25), BlendMode.Add);
+                                            emitter.Position = entity.Position;
+                                            emitter.Trigger();
+                                            _ParticleEmitterHost.AddEmitter(emitter);
+                                            break;
+                                        case "Tint":
+                                            entity.Color = new Color(byte.Parse(tagData[1]), byte.Parse(tagData[2]), byte.Parse(tagData[3]));
+                                            break;
+                                    }
+                                }
+                            }
                         }
-                        Layer_BG.Add(objContainer);
-                    break;
+                        break;
                 }
-            }
-
-            // Setup Lighting
-            var lightFile = $"Maps\\{_MapData.Name}.bcl";
-            if (File.Exists(lightFile))
-            {
-                _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
-                _Lightmap.RenderEachFrame = true;
-                _Lightmap.Load(TextureLoader, lightFile);
-                Layer_Overlay.Add(_Lightmap);
             }
 
             // Set camera to the center of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
-
 
             // Load Sounds
             _Sfx.LoadFromDirectory();
@@ -165,6 +192,7 @@ namespace BlackTournament.GameStates
 
             // Setup Special Effects
             SetupEmitters();
+            Layer_Overlay.Add(_ParticleEmitterHost);
 
             return true;
         }
@@ -188,11 +216,11 @@ namespace BlackTournament.GameStates
             // Electro Sparks Effect
             _LigtningInfo = new LightningInfo(_Core)
             {
-                TTL =25,
+                TTL = 25,
                 ParticlesPerSpawn = 10,
                 Color = Color.Cyan,
-                AlphaFade =-3,
-                UseAlphaAsTTL =true
+                AlphaFade = -3,
+                UseAlphaAsTTL = true
             };
             _LigtningEmitter = new LightningEmitter(_Core, _LigtningInfo);
             _ParticleEmitterHost.AddEmitter(_LigtningEmitter);
@@ -314,10 +342,8 @@ namespace BlackTournament.GameStates
             Layer_Game.Add(player);
             _EnitityLookup.Add(id, player);
 
-            if (_Lightmap != null) // add player lights
-            {
-                _Lightmap.AddCustomLight(new PlayerLight(_Core, player, TextureLoader));
-            }
+            // add player lights
+            _Lightmap.AddCustomLight(new PlayerLight(_Core, player, TextureLoader));
 
             if (isLocalPlayer) _LocalPlayer = player;
         }

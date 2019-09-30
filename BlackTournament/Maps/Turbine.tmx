@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="145">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="148">
  <tileset firstgid="1" name="IndustrialTiles" tilewidth="128" tileheight="128" tilecount="119" columns="7">
   <image source="../Assets/Textures/IndustrialTiles.png" width="896" height="2176"/>
  </tileset>
@@ -77,8 +77,8 @@
 113,114,114,114,114,114,114,114,114,114,114,115,0,0,0,0,0,0,0,113,114,114,114,114,114,114,114,114,114,115
 </data>
  </layer>
- <objectgroup id="3" name="Fans" locked="1">
-  <object id="114" type="Rotor" x="1408" y="1536" width="45.3333" height="46.3333">
+ <objectgroup id="3" name="Actor" locked="1">
+  <object id="114" name="Rotor" type="Rotor" x="1408" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -86,7 +86,7 @@
     <property name="Speed" type="float" value="250"/>
    </properties>
   </object>
-  <object id="116" type="Rotor" x="1664" y="1536" width="45.3333" height="46.3333">
+  <object id="116" name="Rotor" type="Rotor" x="1664" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -94,7 +94,7 @@
     <property name="Speed" type="float" value="-30"/>
    </properties>
   </object>
-  <object id="117" type="Rotor" x="1664" y="1792" width="45.3333" height="46.3333">
+  <object id="117" name="Rotor" type="Rotor" x="1664" y="1792" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -102,7 +102,7 @@
     <property name="Speed" type="float" value="600"/>
    </properties>
   </object>
-  <object id="118" type="Rotor" x="1408" y="1792" width="45.3333" height="46.3333">
+  <object id="118" name="Rotor" type="Rotor" x="1408" y="1792" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -110,7 +110,7 @@
     <property name="Speed" type="float" value="80"/>
    </properties>
   </object>
-  <object id="119" type="Rotor" x="2176" y="1536" width="45.3333" height="46.3333">
+  <object id="119" name="Rotor" type="Rotor" x="2176" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -118,7 +118,7 @@
     <property name="Speed" type="float" value="-366"/>
    </properties>
   </object>
-  <object id="120" type="Rotor" x="2432" y="1536" width="45.3333" height="46.3333">
+  <object id="120" name="Rotor" type="Rotor" x="2432" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -126,7 +126,7 @@
     <property name="Speed" type="float" value="-300"/>
    </properties>
   </object>
-  <object id="121" type="Rotor" x="2432" y="1792" width="45.3333" height="46.3333">
+  <object id="121" name="Rotor" type="Rotor" x="2432" y="1792" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -134,7 +134,7 @@
     <property name="Speed" type="float" value="120"/>
    </properties>
   </object>
-  <object id="122" type="Rotor" x="2176" y="1792" width="45.3333" height="46.3333">
+  <object id="122" name="Rotor" type="Rotor" x="2176" y="1792" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -142,7 +142,7 @@
     <property name="Speed" type="float" value="120"/>
    </properties>
   </object>
-  <object id="123" type="Rotor" x="1920" y="2048" width="45.3333" height="46.3333">
+  <object id="123" name="Rotor" type="Rotor" x="1920" y="2048" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -150,7 +150,7 @@
     <property name="Speed" type="float" value="222"/>
    </properties>
   </object>
-  <object id="124" type="Rotor" x="1408" y="2304" width="45.3333" height="46.3333">
+  <object id="124" name="Rotor" type="Rotor" x="1408" y="2304" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -158,7 +158,7 @@
     <property name="Speed" type="float" value="-40"/>
    </properties>
   </object>
-  <object id="125" type="Rotor" x="1664" y="2304" width="45.3333" height="46.3333">
+  <object id="125" name="Rotor" type="Rotor" x="1664" y="2304" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -166,7 +166,7 @@
     <property name="Speed" type="float" value="-344"/>
    </properties>
   </object>
-  <object id="126" type="Rotor" x="2176" y="2304" width="45.3333" height="46.3333">
+  <object id="126" name="Rotor" type="Rotor" x="2176" y="2304" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -174,7 +174,7 @@
     <property name="Speed" type="float" value="25"/>
    </properties>
   </object>
-  <object id="127" type="Rotor" x="2432" y="2304" width="45.3333" height="46.3333">
+  <object id="127" name="Rotor" type="Rotor" x="2432" y="2304" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -182,7 +182,7 @@
     <property name="Speed" type="float" value="55"/>
    </properties>
   </object>
-  <object id="128" type="Rotor" x="1408" y="2560" width="45.3333" height="46.3333">
+  <object id="128" name="Rotor" type="Rotor" x="1408" y="2560" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -190,7 +190,7 @@
     <property name="Speed" type="float" value="66"/>
    </properties>
   </object>
-  <object id="129" type="Rotor" x="1664" y="2560" width="45.3333" height="46.3333">
+  <object id="129" name="Rotor" type="Rotor" x="1664" y="2560" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -198,7 +198,7 @@
     <property name="Speed" type="float" value="850"/>
    </properties>
   </object>
-  <object id="130" type="Rotor" x="2176" y="2560" width="45.3333" height="46.3333">
+  <object id="130" name="Rotor" type="Rotor" x="2176" y="2560" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -206,7 +206,7 @@
     <property name="Speed" type="float" value="-222"/>
    </properties>
   </object>
-  <object id="131" type="Rotor" x="2432" y="2560" width="45.3333" height="46.3333">
+  <object id="131" name="Rotor" type="Rotor" x="2432" y="2560" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
     <property name="OriginX" type="float" value="128"/>
@@ -253,128 +253,128 @@
 </data>
  </layer>
  <objectgroup id="5" name="Pickups" locked="1">
-  <object id="42" type="Pickup" x="1854" y="1983" width="130" height="130">
+  <object id="42" name="Big Shield" type="Pickup" x="1854" y="1983" width="130" height="130">
    <properties>
     <property name="Item" value="BigShield"/>
    </properties>
   </object>
-  <object id="43" type="Pickup" x="1519" y="2417" width="28" height="28">
+  <object id="43" name="Health" type="Pickup" x="1519" y="2417" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="44" type="Pickup" x="2289" y="1651" width="28" height="28">
+  <object id="44" name="Health" type="Pickup" x="2289" y="1651" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="45" type="Pickup" x="1522" y="1648" width="28" height="28">
+  <object id="45" name="Shield" type="Pickup" x="1522" y="1648" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="46" type="Pickup" x="2290" y="2423" width="28" height="28">
+  <object id="46" name="Shield" type="Pickup" x="2290" y="2423" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="47" type="Pickup" x="2850" y="3482" width="64" height="64">
+  <object id="47" name="Hedgeshock" type="Pickup" x="2850" y="3482" width="64" height="64">
    <properties>
     <property name="Item" value="Hedgeshock"/>
    </properties>
   </object>
-  <object id="48" type="Pickup" x="164" y="3617" width="64" height="64">
+  <object id="48" name="Titandrill" type="Pickup" x="164" y="3617" width="64" height="64">
    <properties>
     <property name="Item" value="Titandrill"/>
    </properties>
   </object>
-  <object id="49" type="Pickup" x="1246" y="428" width="64" height="64">
+  <object id="49" name="Thumper" type="Pickup" x="1246" y="428" width="64" height="64">
    <properties>
     <property name="Item" value="Thumper"/>
    </properties>
   </object>
-  <object id="50" type="Pickup" x="2859" y="2462" width="28" height="28">
+  <object id="50" name="Shield" type="Pickup" x="2859" y="2462" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="51" type="Pickup" x="2859" y="2520" width="28" height="28">
+  <object id="51" name="Health" type="Pickup" x="2859" y="2520" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="52" type="Pickup" x="2859" y="2576" width="28" height="28">
+  <object id="52" name="Shield" type="Pickup" x="2859" y="2576" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="53" type="Pickup" x="2859" y="2635" width="28" height="28">
+  <object id="53" name="Health" type="Pickup" x="2859" y="2635" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="54" type="Pickup" x="240" y="716" width="28" height="28">
+  <object id="54" name="Shield" type="Pickup" x="240" y="716" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="55" type="Pickup" x="240" y="965" width="28" height="28">
+  <object id="55" name="Shield" type="Pickup" x="240" y="965" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="56" type="Pickup" x="240" y="1211" width="28" height="28">
+  <object id="56" name="Shield" type="Pickup" x="240" y="1211" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="57" type="Pickup" x="755" y="716" width="28" height="28">
+  <object id="57" name="Health" type="Pickup" x="755" y="716" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="58" type="Pickup" x="755" y="965" width="28" height="28">
+  <object id="58" name="Health" type="Pickup" x="755" y="965" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="59" type="Pickup" x="755" y="1211" width="28" height="28">
+  <object id="59" name="Health" type="Pickup" x="755" y="1211" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
-  <object id="60" type="Pickup" x="178" y="3047" width="28" height="28">
+  <object id="60" name="Shield" type="Pickup" x="178" y="3047" width="28" height="28">
    <properties>
     <property name="Item" value="SmallShield"/>
    </properties>
   </object>
-  <object id="61" type="Pickup" x="1334" y="3639" width="28" height="28">
+  <object id="61" name="Health" type="Pickup" x="1334" y="3639" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="145" name="Health" type="Pickup" x="3135" y="816" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="146" name="Health" type="Pickup" x="2995" y="690" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="147" name="Health" type="Pickup" x="3281" y="938" width="28" height="28">
    <properties>
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="6" name="Spawns" locked="1">
-  <object id="36" type="Spawn" x="3639" y="1269" width="28" height="28"/>
-  <object id="37" type="Spawn" x="3509" y="3118" width="28" height="28"/>
-  <object id="38" type="Spawn" x="946" y="3442" width="28" height="28"/>
-  <object id="40" type="Spawn" x="306" y="1591" width="28" height="28"/>
-  <object id="41" type="Spawn" x="559" y="302" width="28" height="28"/>
-  <object id="62" type="Pickup" x="3148" y="809" width="28" height="28">
-   <properties>
-    <property name="Item" value="SmallHealth"/>
-   </properties>
-  </object>
-  <object id="63" type="Pickup" x="3008" y="683" width="28" height="28">
-   <properties>
-    <property name="Item" value="SmallHealth"/>
-   </properties>
-  </object>
-  <object id="64" type="Pickup" x="3294" y="931" width="28" height="28">
-   <properties>
-    <property name="Item" value="SmallHealth"/>
-   </properties>
-  </object>
+  <object id="36" name="Spawn" type="Spawn" x="3639" y="1269" width="28" height="28"/>
+  <object id="37" name="Spawn" type="Spawn" x="3509" y="3118" width="28" height="28"/>
+  <object id="38" name="Spawn" type="Spawn" x="946" y="3442" width="28" height="28"/>
+  <object id="40" name="Spawn" type="Spawn" x="306" y="1591" width="28" height="28"/>
+  <object id="41" name="Spawn" type="Spawn" x="559" y="302" width="28" height="28"/>
  </objectgroup>
  <objectgroup id="7" name="Collision" visible="0" locked="1">
   <object id="66" type="Collision" x="925.879" y="541.576" width="836.485" height="838.909"/>
@@ -427,103 +427,103 @@
   <object id="113" type="Collision" x="3612.09" y="872.212" width="125.818" height="251.576"/>
  </objectgroup>
  <objectgroup id="8" name="Killzones" locked="1">
-  <object id="19" type="Killzone" x="264" y="3337" width="240" height="240">
+  <object id="19" name="Pit" type="Killzone" x="264" y="3337" width="240" height="240">
    <properties>
     <property name="Damage" type="float" value="999999999"/>
     <property name="Effect" value="Drop"/>
    </properties>
   </object>
-  <object id="20" type="Killzone" x="2190" y="121" width="248" height="250">
+  <object id="20" name="Pit" type="Killzone" x="2190" y="121" width="248" height="250">
    <properties>
     <property name="Damage" type="float" value="99999999"/>
     <property name="Effect" value="Drop"/>
    </properties>
   </object>
-  <object id="23" type="Killzone" x="1397.04" y="1416.86">
+  <object id="23" name="Fan" type="Killzone" x="1397.04" y="1416.86">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="-8.03704,15.1392 37.1481,17.2025 88.3333,51.2658 115.963,105.975 -8.03704,107.139"/>
   </object>
-  <object id="34" type="Killzone" x="2317" y="2445" width="230" height="230">
+  <object id="34" name="Fan" type="Killzone" x="2317" y="2445" width="230" height="230">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="132" type="Killzone" x="1378.68" y="1638.51">
+  <object id="132" name="Fan" type="Killzone" x="1378.68" y="1638.51">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="10.3235,2.4881 -37.1029,-23.6183 -66.5294,-62.2024 -79.1029,-104.092 -67.6765,-141.821 -37.25,-182.485 9.17647,-206.512"/>
   </object>
-  <object id="133" type="Killzone" x="2068" y="1525">
+  <object id="133" name="Fan" type="Killzone" x="2068" y="1525">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
   </object>
-  <object id="136" type="Killzone" x="2324" y="1525">
+  <object id="136" name="Fan" type="Killzone" x="2324" y="1525">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
   </object>
-  <object id="137" type="Killzone" x="1554" y="1784">
+  <object id="137" name="Fan" type="Killzone" x="1554" y="1784">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 9,-38 30,-71 68,-95 101,-104 102,-1"/>
   </object>
-  <object id="138" type="Killzone" x="1671" y="1903">
+  <object id="138" name="Fan" type="Killzone" x="1671" y="1903">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 -1,-106 105,-106 96,-63 68,-30 39,-11"/>
   </object>
-  <object id="139" type="Killzone" x="2185" y="1785">
+  <object id="139" name="Fan" type="Killzone" x="2185" y="1785">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 1,-105 39,-95 73,-67 100,-26 103,-2"/>
   </object>
-  <object id="140" type="Killzone" x="1556" y="2295">
+  <object id="140" name="Fan" type="Killzone" x="1556" y="2295">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 24.9691,-54.5 62.9383,-87 113.019,-99.1058 163.099,-84.2115 193.049,-48.5 218,-1.78846"/>
   </object>
-  <object id="141" type="Killzone" x="1399" y="2567">
+  <object id="141" name="Fan" type="Killzone" x="1399" y="2567">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 2,106 -47,87 -83,54 -104,-1"/>
   </object>
-  <object id="142" type="Killzone" x="1669.7" y="2568.96">
+  <object id="142" name="Fan" type="Killzone" x="1669.7" y="2568.96">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 2.30189,102.037 -54.0943,83.7477 -95.5283,51.9813 -119.698,-0.962617"/>
   </object>
-  <object id="143" type="Killzone" x="1672" y="2447">
+  <object id="143" name="Fan" type="Killzone" x="1672" y="2447">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 43,16 80,48 101,94 99,140 80,183 42,214 -3,227"/>
   </object>
-  <object id="144" type="Killzone" x="2066" y="2552">
+  <object id="144" name="Fan" type="Killzone" x="2066" y="2552">
    <properties>
     <property name="Damage" value="9999999"/>
     <property name="Effect" value="Gore"/>
