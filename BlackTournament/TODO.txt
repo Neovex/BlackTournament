@@ -4,9 +4,15 @@ complete map powerplant
 -# lights
 -- check radiation zone damage (postponed until HUD ready)
 #fix net message crash when switching maps (somethings not properly disposed!)
-fix UI focusloss mouse VS gamepad
-find solution for comboboxes and other UI dialogs -> screen filling overlay with auto close - this is the space for all dialog-like interfaces
+#fix UI focusloss mouse VS gamepad
+#fix UI broken keyboard/UI input
+#find solution for comboboxes and other UI dialogs -> screen filling overlay with auto close - this is the space for all dialog-like interfaces
+#replace main menue->host->map textbox with dynamically filled combo-box
+rename states to scenes
 HUD!
+-- create template
+-# create weapon icons
+fix connecting to invalid server causing crash instead of proper message
 update playergraphics (animation?)
 death sounds (and effects)
 pickup sounds

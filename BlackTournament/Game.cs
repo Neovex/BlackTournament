@@ -12,7 +12,7 @@ using BlackTournament.Controller;
 using BlackTournament.Systems;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
-
+using BlackTournament.GameStates;
 
 namespace BlackTournament
 {
@@ -95,8 +95,7 @@ namespace BlackTournament
                     {
                         //TestController.Activate();
                         MenuController.Activate();
-
-                        //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core))); // TODO create global music controller
+                        //Core.StateManager.ChangeState(new BlackCoatIntro(Core, new TournamentIntro(Core, MenuController))); // TODO : create global music controller?
                     }
                     else
                     {

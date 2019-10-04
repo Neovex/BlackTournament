@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using BlackTournament.GameStates;
 using BlackTournament.Net;
@@ -23,7 +23,14 @@ namespace BlackTournament.Controller
         public void Activate(String message = null)
         {
             _Message = message;
-            Activate(_State = new MainMenu(_Game.Core));
+
+            // Load available Maps
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Maps");
+            var maps = Directory.EnumerateFiles(path, "*.tmx").
+                       Select(f => Path.GetFileNameWithoutExtension(f)).
+                       ToArray();
+
+            Activate(_State = new MainMenu(_Game.Core, maps));
         }
 
         protected override void StateLoadingFailed()

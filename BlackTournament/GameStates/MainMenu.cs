@@ -27,9 +27,10 @@ namespace BlackTournament.GameStates
 
         // System
         private ServerInfo _SelectedServer;
+        private string[] _AvailableMaps;
 
         // Audio
-        private Music music;
+        private Music _BgMusic;
         private SfxManager _Sfx;
         // BG
         private Graphic _Background;
@@ -78,18 +79,19 @@ namespace BlackTournament.GameStates
 
 
         // CTOR
-        public MainMenu(Core core):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public MainMenu(Core core, string[] maps):base(core, nameof(MainMenu), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
+            _AvailableMaps = maps;
         }
 
 
         protected override bool Load()
         {
             // Music
-            music = MusicLoader.Load(Files.MENUE_MUSIC.Skip(_Core.Random.Next(Files.MENUE_MUSIC.Count)).First());
-            music.Volume = Settings.Default.MusikVolume;
-            music.Loop = true; // TODO : consider music manager 4 looping play-lists etc
-            //music.Play();
+            _BgMusic = MusicLoader.Load(Files.MENUE_MUSIC.Skip(_Core.Random.Next(Files.MENUE_MUSIC.Count)).First());
+            _BgMusic.Volume = Settings.Default.MusikVolume;
+            _BgMusic.Loop = true; // TODO : consider music manager 4 looping play-lists etc
+            //_BgMusic.Play(); // FIXME
 
             // Sfx
             _Sfx = new SfxManager(SfxLoader);
@@ -160,9 +162,10 @@ namespace BlackTournament.GameStates
                                         new Label(_Core, "Map", 16, Game.DefaultFont),
                                         _HostMapNameTempTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
                                         {
-                                            Text = "TODO Combobox",             // TODO : Combobox
+                                            Text = "Choose Map",
                                             Margin = new FloatRect(0,0,0,15),
                                             Padding = new FloatRect(5,5,0,0),
+                                            InitInEditChanged = OpenMapCombobox
                                         },
                                         new Label(_Core, "Server Name", 16, Game.DefaultFont),
                                         _HostServerNameTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
@@ -416,7 +419,7 @@ namespace BlackTournament.GameStates
             if (button == _HostHostButton) StartHosting.Invoke(_HostMapNameTempTextBox.Text, _HostServerNameTextBox.Text, Int32.Parse(_HostPortTextBox.Text));
             if (button == _CreditsButton) OpenCredits(true);
             if (button == _CreditsBackButton) OpenCredits(false);
-            if (button == _ExitButton) _Core.Exit("Exit by menu");
+            if (button == _ExitButton) _Core.Exit(nameof(MainMenu));
             // Server Browser
             if (button == _BrowseBackButton) OpenServerBrowser(false);
             if (button == _BrowseRefreshButton) ServerBrowserRefresh.Invoke();
@@ -436,6 +439,11 @@ namespace BlackTournament.GameStates
         {
             _MainUIContent.Visible = !open;
             _HostDialog.Visible = open;
+        }
+
+        private void OpenMapCombobox(TextBox sender)
+        {
+            if(sender.InEdit) sender.ShowDialog(Layer_Overlay, new ComboBoxDialog(_Core, sender, _AvailableMaps));
         }
 
         private void OpenCredits(bool open)

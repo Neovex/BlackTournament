@@ -18,6 +18,7 @@ using BlackTournament.Tmx;
 using BlackCoat.Collision.Shapes;
 using BlackCoat.Collision;
 using BlackCoat.Entities.Lights;
+using BlackTournament.UI;
 
 namespace BlackTournament.GameStates
 {
@@ -43,11 +44,11 @@ namespace BlackTournament.GameStates
         {
             //IntersectionTest();
             //ShaderTest();
-            //UiTest();
+            UiTests();
             //TextureTests();
             //CollisionTest();
             //Particles();
-            PreRenderVSParticles();
+            //PreRenderVSParticles();
             Log.Info("Nobody here but us chickens");
             return true;
         }
@@ -163,7 +164,7 @@ namespace BlackTournament.GameStates
             };
         }
 
-        private void UiTest()
+        private void UiTests()
         {
             var labels = new List<Label>();
             for (int i = 0; i < 10; i++)
@@ -177,6 +178,7 @@ namespace BlackTournament.GameStates
 
             var container = new UIContainer(_Core)
             {
+                //DialogContainer = Layer_Overlay,
                 Input = new UIInput(_Core.Input, true),
                 BackgroundColor = new Color(100, 100, 100),
                 BackgroundAlpha = 1,
@@ -187,14 +189,14 @@ namespace BlackTournament.GameStates
                         BackgroundAlpha = 0.4f,
                         Init = labels.Take(1)
                     },
-                    
+
                     new OffsetContainer(_Core)
                     {
                         BackgroundAlpha = 0.4f,
                         Position = new Vector2f(200, 200),
                         Init = labels.Skip(1).Take(3)
                     },
-                    
+
                     new Canvas(_Core, new Vector2f(20, 20))
                     {
                         BackgroundAlpha = 0.4f,
@@ -217,15 +219,69 @@ namespace BlackTournament.GameStates
                     {
                         Position = new Vector2f(50,150),
                         Padding = new FloatRect(5,5,5,5),
-                        Font = Game.DefaultFont
-                        
+                        MinSize = new Vector2f(150,20),
+                        Font = Game.DefaultFont,
+                        InitInEditChanged = TextboxEditChanged
                     }
                 }
             };
             Layer_Game.Add(container);
 
-
             OpenInspector();
+        }
+
+        private void TextboxEditChanged(TextBox sender)
+        {
+            if (!sender.InEdit) return;
+
+            var d = new ComboBoxDialog(_Core, sender, new[] { "Banana", "Apple", "Dog", "Whatever" });
+            /*
+            var c = new OffsetContainer(_Core, false)
+            {
+                Position = sender.GlobalPosition + new Vector2f(0, sender.OuterSize.Y),
+                Offset = 10,
+                Init = new UIComponent[]
+                {
+                    new Button(_Core, new Vector2f(100, 20))
+                    {
+                        BackgroundColor = Color.Yellow,
+                        InitReleased = ButtonClick,
+                        Tag = sender,
+                        Init=new UIComponent[]
+                        {
+                            new Label(_Core, "Banana")
+                        }
+                    },
+                    new Button(_Core, new Vector2f(100, 20))
+                    {
+                        BackgroundColor = Color.Red,
+                        InitReleased = ButtonClick,
+                        Tag = sender,
+                        Init=new UIComponent[]
+                        {
+                            new Label(_Core, "Apple")
+                        }
+                    },
+                    new Button(_Core, new Vector2f(100, 20))
+                    {
+                        BackgroundColor = Color.Green,
+                        InitReleased = ButtonClick,
+                        Tag = sender,
+                        Init=new UIComponent[]
+                        {
+                            new Label(_Core, "Onion")
+                        }
+                    }
+                }
+            };*/
+            
+            sender.ShowDialog(Layer_Overlay, d);
+        }
+
+        private void ButtonClick(Button b)
+        {
+            (b.Tag as TextBox).Text = b.GetFirst<Label>().Text;
+            b.CloseDialog();
         }
 
         private void TextureTests()

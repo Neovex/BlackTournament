@@ -2,11 +2,14 @@
 using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.Entities;
+using BlackTournament.Controller;
 
 namespace BlackTournament.GameStates
 {
     public class TournamentIntro : Gamestate
     {
+        private MenuController _MenuController;
+
         private float _Counter;
         private Graphic _BG;
         private Graphic _Title;
@@ -15,8 +18,9 @@ namespace BlackTournament.GameStates
         private Graphic _CenterT;
 
 
-        public TournamentIntro(Core core) : base(core, nameof(TournamentIntro), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public TournamentIntro(Core core, MenuController menuController) : base(core, nameof(TournamentIntro), Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
+            _MenuController = menuController;
         }
 
 
@@ -56,7 +60,7 @@ namespace BlackTournament.GameStates
             HandleDeviceResized(_Core.DeviceSize);
 
             // Animation
-            _Core.AnimationManager.Wait(_Core.Random.NextFloat(4, 6), () => _Core.StateManager.ChangeState(new MainMenu(_Core)));
+            _Core.AnimationManager.Wait(_Core.Random.NextFloat(4, 6), () => _MenuController.Activate());
             return true;
         }
 

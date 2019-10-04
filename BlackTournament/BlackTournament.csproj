@@ -127,6 +127,7 @@
     <Compile Include="Tmx\Tile.cs" />
     <Compile Include="Tmx\TmxMapper.cs" />
     <Compile Include="UI\BigButton.cs" />
+    <Compile Include="UI\ComboBoxDialog.cs" />
     <Compile Include="UI\ServerListItem.cs" />
     <Compile Include="WeaponData.cs" />
   </ItemGroup>
