@@ -8,6 +8,7 @@ complete map powerplant
 #fix UI broken keyboard/UI input
 #find solution for comboboxes and other UI dialogs -> screen filling overlay with auto close - this is the space for all dialog-like interfaces
 #replace main menue->host->map textbox with dynamically filled combo-box
+#remove map temple from compile
 rename states to scenes
 HUD!
 -- create template
