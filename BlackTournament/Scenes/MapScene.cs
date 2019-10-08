@@ -20,9 +20,9 @@ using BlackTournament.Particles;
 using BlackCoat.Collision.Shapes;
 using BlackCoat.Properties;
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    class MapState : Gamestate
+    class MapScene : Scene
     {
         // Rendering
         private View _View;
@@ -63,7 +63,7 @@ namespace BlackTournament.GameStates
         public Vector2f ViewMovement { get; set; }
 
 
-        public MapState(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public MapScene(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
             _Sfx = new SfxManager(SfxLoader);

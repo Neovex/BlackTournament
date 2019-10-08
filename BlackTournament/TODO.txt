@@ -9,12 +9,13 @@ complete map powerplant
 #find solution for comboboxes and other UI dialogs -> screen filling overlay with auto close - this is the space for all dialog-like interfaces
 #replace main menue->host->map textbox with dynamically filled combo-box
 #remove map temple from compile
-rename states to scenes
+#rename states to scenes
 HUD!
 -- create template
 -# create weapon icons
 fix connecting to invalid server causing crash instead of proper message
 update playergraphics (animation?)
+damage sounds (and effects)
 death sounds (and effects)
 pickup sounds
 (complete map temple)
@@ -35,7 +36,7 @@ X - static collisions (dyn to stat where dyn is owned by local)
 # key(input) to enum(Action) mapping
 
 
-idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuos animations - gibts die nicht schon?
+idee: ein quasi rollensystem mittels actions realisieren - ähnlich continuous animations - gibts die nicht schon?
 X idee: controller durch rollen ersetzen die am jeweiligen state hängen
 
 

@@ -6,52 +6,52 @@ namespace BlackTournament.Controller
     public abstract class ControllerBase
     {
         protected Game _Game;
-        private Gamestate _State;
+        private Scene _Scene;
 
         public ControllerBase(Game game)
         {
             _Game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
-        protected virtual void Activate(Gamestate state)
+        protected virtual void Activate(Scene scene)
         {
-            _State = state ?? throw new ArgumentNullException(nameof(state));
+            _Scene = scene ?? throw new ArgumentNullException(nameof(scene));
             AttachEvents();
-            _Game.Core.StateManager.ChangeState(_State);
+            _Game.Core.SceneManager.ChangeScene(_Scene);
         }
 
-        private void StateLoadingFailedInternal()
+        private void SceneLoadingFailedInternal()
         {
             DetachEvents();
-            StateLoadingFailed();
-            _State = null;
+            SceneLoadingFailed();
+            _Scene = null;
         }
 
-        private void ReleaseStateInternal()
+        private void ReleaseSceneInternal()
         {
             DetachEvents();
-            StateReleased();
-            _State = null;
+            SceneReleased();
+            _Scene = null;
         }
 
 
-        protected abstract void StateReady();
-        protected abstract void StateLoadingFailed();
-        protected abstract void StateReleased();
+        protected abstract void SceneReady();
+        protected abstract void SceneLoadingFailed();
+        protected abstract void SceneReleased();
 
 
         private void AttachEvents()
         {
-            _State.Loaded += StateReady;
-            _State.LoadingFailed += StateLoadingFailedInternal;
-            _State.OnDestroy += ReleaseStateInternal;
+            _Scene.Loaded += SceneReady;
+            _Scene.LoadingFailed += SceneLoadingFailedInternal;
+            _Scene.OnDestroy += ReleaseSceneInternal;
         }
 
         private void DetachEvents()
         {
-            _State.Loaded -= StateReady;
-            _State.LoadingFailed -= StateLoadingFailedInternal;
-            _State.OnDestroy -= ReleaseStateInternal;
+            _Scene.Loaded -= SceneReady;
+            _Scene.LoadingFailed -= SceneLoadingFailedInternal;
+            _Scene.OnDestroy -= ReleaseSceneInternal;
         }
     }
 }

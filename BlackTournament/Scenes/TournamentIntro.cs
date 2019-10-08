@@ -4,9 +4,9 @@ using BlackCoat;
 using BlackCoat.Entities;
 using BlackTournament.Controller;
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    public class TournamentIntro : Gamestate
+    public class TournamentIntro : Scene
     {
         private MenuController _MenuController;
 

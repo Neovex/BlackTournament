@@ -3,23 +3,6 @@
   <Comment CommentText="BLACK TOURNAMENT NETWORK INTERFACE">
     <Position X="7.144" Y="0.5" Height="0.291" Width="2.765" />
   </Comment>
-  <Class Name="BlackTournament.GameStates.MapState" Collapsed="true">
-    <Position X="0.5" Y="11.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EASGkAGAggEAAIGEACKAAAECgABACAQCAAAAKAAAICA=</HashCode>
-      <FileName>GameStates\MapState.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_MapData" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="BlackTournament.GameStates.ConnectState" Collapsed="true">
-    <Position X="2.75" Y="11.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAiAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>GameStates\ConnectState.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BlackTournament.Game" Collapsed="true">
     <Position X="7" Y="10" Width="2.75" />
     <AssociationLine Name="_Server" Type="BlackTournament.Net.BlackTournamentServer" FixedFromPoint="true" FixedToPoint="true">
@@ -61,7 +44,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>QKQGAAAABAQogAAAAAAgAAAAAgAAAEAAQAQAIAIBQAI=</HashCode>
+      <HashCode>QKQGAAAABiQIgAAAAAAgAIAAggAACEAAQAQAIAIBQAI=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -118,7 +101,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AQQAAAEQ0AAAYAAAACUCEAAASRAsDEEAACCAAwgABAA=</HashCode>
+      <HashCode>AQQAAAEQ0AAAYAAAACUCEAAISRAsDEEAACCAAwgABAA=</HashCode>
       <FileName>Net\BlackTournamentClient.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -140,7 +123,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAEAUSAAAAAAACACAAAASQIAEAAAAAIIABAAAAA=</HashCode>
+      <HashCode>AAQAAAEAUSAAAAAAACACEAAASQIAEAAAAAIIAFAAAAA=</HashCode>
       <FileName>Net\BlackTournamentServer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -157,12 +140,12 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAQICAAAAgAgDAAAgAAAAAQFKAAlEgAAAggCAEARA=</HashCode>
+      <HashCode>AAAAUACAAAAgAADAAAgEAAAAwFCAAlEgEAAggAAEARA=</HashCode>
       <FileName>Controller\MapController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_Client" />
-      <Field Name="_State" />
+      <Field Name="_Scene" />
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Controller.ConnectController" Collapsed="true">
@@ -176,12 +159,12 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAIAAAAAAAgBAAAAAAAAAAgIAAEAIAIAAACAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAABAAAAEAAAAggAAAEAIUIAAAAAAIAA=</HashCode>
       <FileName>Controller\ConnectController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_Client" />
-      <Field Name="_State" />
+      <Field Name="_Scene" />
     </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Net.Data.GameLogic" Collapsed="true">
@@ -319,7 +302,7 @@
   <Class Name="BlackTournament.Tmx.TmxMapper" Collapsed="true">
     <Position X="0.5" Y="12.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEABoAAAgAAAgAGAAACAAEQCMAIAAEgAAgAAEAAEEAI=</HashCode>
+      <HashCode>AAABoAAAAABAgAGAAACAAEQCMAIAAEgEAgAAEAAEEAI=</HashCode>
       <FileName>Tmx\TmxMapper.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -415,6 +398,20 @@
     <ShowAsCollectionAssociation>
       <Field Name="_ConnectedClients" />
     </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Scenes.ConnectScene" Collapsed="true">
+    <Position X="2.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAiAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scenes\ConnectScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Scenes.MapScene" Collapsed="true">
+    <Position X="0.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EASHkAGAggEAAIGEAGKAAAECgABACEQSAAAAKAAAICA=</HashCode>
+      <FileName>Scenes\MapScene.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Enum Name="BlackTournament.Net.Data.PickupType" Collapsed="true">
     <Position X="3.75" Y="4" Width="1.5" />

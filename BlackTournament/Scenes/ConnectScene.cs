@@ -7,14 +7,14 @@ using BlackCoat;
 using BlackTournament.Entities;
 
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    class ConnectState:Gamestate
+    class ConnectScene:Scene
     {
         private GameText _Text;
         private string _Host;
 
-        public ConnectState(Core core, String host) : base(core)
+        public ConnectScene(Core core, String host) : base(core)
         {
             _Host = host;
         }

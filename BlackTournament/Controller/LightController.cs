@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlackTournament.GameStates;
+using BlackTournament.Scenes;
 
 namespace BlackTournament.Controller
 {
@@ -15,20 +15,20 @@ namespace BlackTournament.Controller
 
         internal void Activate(string map)
         {
-            Activate(new LightEditorState(_Game, map));
+            Activate(new LightEditor(_Game, map));
         }
 
-        protected override void StateLoadingFailed()
+        protected override void SceneLoadingFailed()
         {
             Log.Error("");
         }
 
-        protected override void StateReady()
+        protected override void SceneReady()
         {
             Log.Debug("");
         }
 
-        protected override void StateReleased()
+        protected override void SceneReleased()
         {
         }
     }

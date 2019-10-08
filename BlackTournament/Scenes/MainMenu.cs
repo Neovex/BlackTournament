@@ -15,9 +15,9 @@ using BlackTournament.UI;
 using BlackTournament.Properties;
 using BlackTournament.Net.Data;
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    class MainMenu:Gamestate
+    class MainMenu:Scene
     {
         public event Action ServerBrowserOpen = () => { };
         public event Action ServerBrowserRefresh = () => { };

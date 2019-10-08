@@ -17,9 +17,9 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    class LightEditorState: Gamestate
+    class LightEditor: Scene
     {
         private View _View;
         private TmxMapper _MapData;
@@ -27,7 +27,7 @@ namespace BlackTournament.GameStates
         private IPropertyInspector _Inspector;
         private Rectangle _Selection;
 
-        public LightEditorState(Game game, string map) : base(game.Core, $"Light Editor: {map}", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public LightEditor(Game game, string map) : base(game.Core, $"Light Editor: {map}", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _MapData = new TmxMapper(() => 0);
             if (!_MapData.Load(map, _Core.CollisionSystem)) throw new ArgumentException(map);

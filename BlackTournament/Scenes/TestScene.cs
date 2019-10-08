@@ -20,9 +20,9 @@ using BlackCoat.Collision;
 using BlackCoat.Entities.Lights;
 using BlackTournament.UI;
 
-namespace BlackTournament.GameStates
+namespace BlackTournament.Scenes
 {
-    class TestState : Gamestate
+    class TestScene : Scene
     {
         private Game _Game;
         private Shader _Shader;
@@ -35,7 +35,7 @@ namespace BlackTournament.GameStates
         private Rectangle _Rect;
         private IEntity _Test;
 
-        public TestState(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public TestScene(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _Game = game;
         }

@@ -6,7 +6,7 @@ using SFML.System;
 using BlackCoat;
 using BlackCoat.Network;
 
-using BlackTournament.GameStates;
+using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Tmx;
 using BlackTournament.Net.Data;
@@ -17,7 +17,7 @@ namespace BlackTournament.Controller
     public class MapController : ControllerBase
     {
         private BlackTournamentClient _Client;
-        private MapState _State;
+        private MapScene _Scene;
 
         private TmxMapper _MapData;
         private List<ClientPlayer> _Players;
@@ -32,7 +32,7 @@ namespace BlackTournament.Controller
             _Players = new List<ClientPlayer>();
         }
 
-        protected override void StateReady()
+        protected override void SceneReady()
         {
             foreach (var player in _Client.Players)
             {
@@ -41,33 +41,33 @@ namespace BlackTournament.Controller
 
             foreach(var pickup in _Client.Pickups)
             {
-                _State.CreatePickup(pickup.Id, pickup.Type, pickup.Position, pickup.Active);
+                _Scene.CreatePickup(pickup.Id, pickup.Type, pickup.Position, pickup.Active);
             }
             AttachEvents();
         }
 
-        protected override void StateLoadingFailed()
+        protected override void SceneLoadingFailed()
         {
-            StateReleased(); // add better error handling?
+            SceneReleased(); // add better error handling?
         }
 
-        protected override void StateReleased()
+        protected override void SceneReleased()
         {
             DetachEvents();
             _Client = null;
-            _State = null;
+            _Scene = null;
         }
 
 
         public void Activate(BlackTournamentClient client)
         {
-            if (_Client != null || _State != null) throw new InvalidStateException();
+            if (_Client != null || _Scene != null) throw new InvalidStateException();
 
             // Init
             _Client = client ?? throw new ArgumentNullException(nameof(client));
             if (_MapData.Load(_Client.MapName, _Game.Core.CollisionSystem))
             {
-                Activate(_State = new MapState(_Game.Core, _MapData));
+                Activate(_Scene = new MapScene(_Game.Core, _MapData));
             }
             else
             {
@@ -123,7 +123,7 @@ namespace BlackTournament.Controller
 
         private void HandleInput(GameAction action, bool activate)
         {
-            var move = _State.ViewMovement;
+            var move = _Scene.ViewMovement;
             switch (action)
             {
                 case GameAction.Confirm:
@@ -149,7 +149,7 @@ namespace BlackTournament.Controller
                     break;
             }
             // Move view only when player is dead
-            _State.ViewMovement = LocalPlayer.IsAlive ? new Vector2f() : move;
+            _Scene.ViewMovement = LocalPlayer.IsAlive ? new Vector2f() : move;
 
             // Hand input to the server 4 processing game-logic
             _Client.ProcessGameAction(action, activate);
@@ -169,7 +169,7 @@ namespace BlackTournament.Controller
 
         private void HandlePickupStateChanged(Pickup pickup)
         {
-            _State.UpdateEntity(pickup.Id, pickup.Position, 0, pickup.Active);
+            _Scene.UpdateEntity(pickup.Id, pickup.Position, 0, pickup.Active);
         }
 
         private void HandleServerMapChange()
@@ -186,20 +186,20 @@ namespace BlackTournament.Controller
         {
             foreach (var player in _Client.Players)
             {
-                _State.UpdateEntity(player.Id, player.Position, player.Rotation, player.IsAlive);
+                _Scene.UpdateEntity(player.Id, player.Position, player.Rotation, player.IsAlive);
             }
 
-            _State.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
-            if (LocalPlayer.IsAlive) _State.FocusPlayer(); // move camera to player
+            _Scene.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
+            if (LocalPlayer.IsAlive) _Scene.FocusPlayer(); // move camera to player
 
             foreach (var shot in _Client.Shots)
             {
-                _State.UpdateEntity(shot.Id, shot.Position, shot.Direction, true);
+                _Scene.UpdateEntity(shot.Id, shot.Position, shot.Direction, true);
             }
 
             foreach (var efx in _Client.Effects)
             {
-                _State.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Size);
+                _Scene.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Size);
             }
         }
 
@@ -207,31 +207,31 @@ namespace BlackTournament.Controller
         {
             _Players.Add(player);
             player.Fragged += HandlePlayerFragged;
-            _State.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
+            _Scene.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
         }
 
         private void HandleUserLeft(ClientPlayer player)
         {
             _Players.Remove(player);
             player.Fragged -= HandlePlayerFragged;
-            _State.DestroyEntity(player.Id);
+            _Scene.DestroyEntity(player.Id);
         }
 
         private void HandleShotFired(Shot shot)
         {
-            _State.CreateProjectile(shot.Id, shot.SourceWeapon, shot.Position, shot.Direction, shot.Primary);
+            _Scene.CreateProjectile(shot.Id, shot.SourceWeapon, shot.Position, shot.Direction, shot.Primary);
         }
 
         private void HandleShotRemoved(Shot shot)
         {
-            _State.DestroyEntity(shot.Id);
+            _Scene.DestroyEntity(shot.Id);
         }
 
         private void Input_MouseMoved(Vector2f mousePosition)
         {
             _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).AngleTowards(mousePosition) - 2;
             _Client.PlayerRotation = MathHelper.ValidateAngle(_Client.PlayerRotation);
-            _State.RotatePlayer(_Client.PlayerRotation); // update state
+            _Scene.RotatePlayer(_Client.PlayerRotation); // update state
         }
 
         private void ExitToMenue() // TODO attach to proper input - and or view event

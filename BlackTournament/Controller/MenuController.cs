@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using BlackTournament.GameStates;
+using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
 using BlackTournament.Properties;
@@ -13,7 +13,7 @@ namespace BlackTournament.Controller
     public class MenuController : ControllerBase
     {
         private String _Message;
-        private MainMenu _State;
+        private MainMenu _Scene;
         private NetworkManagementClient _NetworkManagementClient;
 
         public MenuController(Game game) : base(game)
@@ -30,29 +30,29 @@ namespace BlackTournament.Controller
                        Select(f => Path.GetFileNameWithoutExtension(f)).
                        ToArray();
 
-            Activate(_State = new MainMenu(_Game.Core, maps));
+            Activate(_Scene = new MainMenu(_Game.Core, maps));
         }
 
-        protected override void StateLoadingFailed()
+        protected override void SceneLoadingFailed()
         {
             throw new Exception("FUBAR");
         }
 
-        protected override void StateReady()
+        protected override void SceneReady()
         {
-            if (!String.IsNullOrWhiteSpace(_Message)) _State.DisplayPopupMessage(_Message);
-            _State.ServerBrowserOpen += HandleStateServerBrowserOpen;
-            _State.ServerBrowserRefresh += HandleStateServerBrowserRefresh;
-            _State.JoinServer += _Game.Connect;
-            _State.StartHosting += HandleStateStartHosting;
-            _State.DirectConnect += _Game.Connect;
+            if (!String.IsNullOrWhiteSpace(_Message)) _Scene.DisplayPopupMessage(_Message);
+            _Scene.ServerBrowserOpen += HandleSceneServerBrowserOpen;
+            _Scene.ServerBrowserRefresh += HandleSceneServerBrowserRefresh;
+            _Scene.JoinServer += _Game.Connect;
+            _Scene.StartHosting += HandleSceneStartHosting;
+            _Scene.DirectConnect += _Game.Connect;
         }
 
         private void HandleLanServersUpdated()
         {
             var l = _NetworkManagementClient.LanServers.ToArray();
             Log.Debug("Refreshing server list with", l.Length, "Servers");
-            _State.UpdateServerList(l);
+            _Scene.UpdateServerList(l);
         }
 
         private void HandleWanServersUpdated()
@@ -61,7 +61,7 @@ namespace BlackTournament.Controller
             throw new NotImplementedException();
         }
 
-        private void HandleStateServerBrowserOpen()
+        private void HandleSceneServerBrowserOpen()
         {
             _NetworkManagementClient = new NetworkManagementClient();
             _NetworkManagementClient.LanServersUpdated += HandleLanServersUpdated;
@@ -71,7 +71,7 @@ namespace BlackTournament.Controller
 
             _Game.Core.OnUpdate += HandleCoreUpdate;
 
-            _State.OpenServerBrowser(true);
+            _Scene.OpenServerBrowser(true);
         }
 
         private void HandleCoreUpdate(float deltaT)
@@ -79,20 +79,20 @@ namespace BlackTournament.Controller
             _NetworkManagementClient.ProcessMessages();
         }
 
-        private void HandleStateServerBrowserRefresh()
+        private void HandleSceneServerBrowserRefresh()
         {
             _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT, false);
         }
 
-        private void HandleStateStartHosting(string mapName, string serverName, int port)
+        private void HandleSceneStartHosting(string mapName, string serverName, int port)
         {
             var name = String.IsNullOrWhiteSpace(serverName) ? $"{Settings.Default.PlayerName}'s Server" : serverName;
 
             if (_Game.Host(port, mapName, name)) _Game.Connect(Net.Net.DEFAULT_HOST, port);
-            else _State.DisplayPopupMessage($"Failed to host {mapName} on {Net.Net.DEFAULT_HOST}:{port}. Is the map and port valid?");
+            else _Scene.DisplayPopupMessage($"Failed to host {mapName} on {Net.Net.DEFAULT_HOST}:{port}. Is the map and port valid?");
         }
 
-        protected override void StateReleased()
+        protected override void SceneReleased()
         {
             if (_NetworkManagementClient != null)
             {
@@ -104,12 +104,12 @@ namespace BlackTournament.Controller
                 _Game.Core.OnUpdate -= HandleCoreUpdate;
             }
 
-            _State.ServerBrowserOpen -= HandleStateServerBrowserOpen;
-            _State.ServerBrowserRefresh -= HandleStateServerBrowserRefresh;
-            _State.JoinServer -= _Game.Connect;
-            _State.StartHosting -= HandleStateStartHosting;
-            _State.DirectConnect -= _Game.Connect;
-            _State = null;
+            _Scene.ServerBrowserOpen -= HandleSceneServerBrowserOpen;
+            _Scene.ServerBrowserRefresh -= HandleSceneServerBrowserRefresh;
+            _Scene.JoinServer -= _Game.Connect;
+            _Scene.StartHosting -= HandleSceneStartHosting;
+            _Scene.DirectConnect -= _Game.Connect;
+            _Scene = null;
         }
     }
 }

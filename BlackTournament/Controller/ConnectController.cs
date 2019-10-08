@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlackTournament.GameStates;
+using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
 using BlackTournament.Properties;
@@ -13,7 +13,7 @@ namespace BlackTournament.Controller
     public class ConnectController : ControllerBase
     {
         private BlackTournamentClient _Client;
-        private ConnectState _State;
+        private ConnectScene _Scene;
 
         private ServerInfo _ServerInfo;
         private (String Host, Int32 Port) _AltServerInfo;
@@ -26,28 +26,28 @@ namespace BlackTournament.Controller
 
         public void Activate(BlackTournamentClient client, String host, Int32 port)
         {
-            if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
+            if (_Client != null || _Scene != null) throw new Exception("Invalid Controller State");
             _Client = client;
             if (String.IsNullOrWhiteSpace(host)) throw new ArgumentNullException(nameof(host));
             _AltServerInfo.Host = host;
             _AltServerInfo.Port = port;
 
-            // Build and switch to Connect State
-            Activate(_State = new ConnectState(_Game.Core, host));
+            // Create then switch to Connect Scene
+            Activate(_Scene = new ConnectScene(_Game.Core, host));
         }
 
         public void Activate(BlackTournamentClient client, ServerInfo host)
         {
-            if (_Client != null || _State != null) throw new Exception("Invalid Controller State");
+            if (_Client != null || _Scene != null) throw new Exception("Invalid Controller State");
             _Client = client;
             _ServerInfo = host ?? throw new ArgumentNullException(nameof(host));
 
-            // Build and switch to Connect State
+            // Create then switch to Connect Scene
             var displayName = String.IsNullOrWhiteSpace(_ServerInfo.Name) ? host.EndPoint.ToString() : _ServerInfo.Name;
-            Activate(_State = new ConnectState(_Game.Core, displayName));
+            Activate(_Scene = new ConnectScene(_Game.Core, displayName));
         }
 
-        protected override void StateReady()
+        protected override void SceneReady()
         {
             // Connect to Host
             _Client.ChangeLevelReceived += LevelReady;
@@ -57,16 +57,16 @@ namespace BlackTournament.Controller
             else connected = _Client.Connect(_AltServerInfo.Host, _AltServerInfo.Port);
             if (!connected) _Game.MenuController.Activate(_Client.LastError);
         }
-        protected override void StateLoadingFailed()
+        protected override void SceneLoadingFailed()
         {
-            StateReleased();
+            SceneReleased();
         }
-        protected override void StateReleased()
+        protected override void SceneReleased()
         {
             _Client.ChangeLevelReceived -= LevelReady;
             _Client.OnDisconnect -= ConnectionFailed;
             _Client = null;
-            _State = null;
+            _Scene = null;
         }
 
         private void LevelReady()

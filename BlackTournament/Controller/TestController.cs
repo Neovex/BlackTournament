@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlackCoat;
-using BlackTournament.GameStates;
+using BlackTournament.Scenes;
 
 namespace BlackTournament.Controller
 {
@@ -16,20 +16,20 @@ namespace BlackTournament.Controller
 
         internal void Activate()
         {
-            Activate(new TestState(_Game));
+            Activate(new TestScene(_Game));
         }
 
-        protected override void StateLoadingFailed()
+        protected override void SceneLoadingFailed()
         {
             Log.Error("");
         }
 
-        protected override void StateReady()
+        protected override void SceneReady()
         {
             Log.Debug("");
         }
 
-        protected override void StateReleased()
+        protected override void SceneReleased()
         {
         }
     }
