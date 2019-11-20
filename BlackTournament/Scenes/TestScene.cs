@@ -190,7 +190,7 @@ namespace BlackTournament.Scenes
                         Init = labels.Take(1)
                     },
 
-                    new OffsetContainer(_Core)
+                    new OffsetContainer(_Core, true)
                     {
                         BackgroundAlpha = 0.4f,
                         Position = new Vector2f(200, 200),

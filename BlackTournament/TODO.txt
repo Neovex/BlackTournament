@@ -11,13 +11,16 @@ complete map powerplant
 #remove map temple from compile
 #rename states to scenes
 HUD!
--- create template
+-# create template
 -# create weapon icons
-fix connecting to invalid server causing crash instead of proper message
+-# create HUD specific assets
+- add
+- attach
+fix: connecting to invalid server causing crash instead of proper message
 update playergraphics (animation?)
-damage sounds (and effects)
-death sounds (and effects)
-pickup sounds
+add damage sounds (and effects)
+add death sounds (and effects)
+add pickup sounds
 (complete map temple)
 (env sounds?)
 (consider UI Markup)

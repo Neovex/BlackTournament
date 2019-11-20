@@ -52,6 +52,21 @@ namespace BlackTournament
         public const String Menue_Panel = "menue_panel";
         public const String Menue_Title = "menue_title";
 
+        // HUD
+        public const String HUD_TopBg = "HUDTopBg";
+        public const String HUD_Drake_Outline = "HUDDrake_Outline";
+        public const String HUD_Drake_White = "HUDDrake_White";
+        public const String HUD_Health = "HUDHealth";
+        public const String HUD_Hedgeshock_Outline = "HUDHedgeshock_Outline";
+        public const String HUD_Hedgeshock_White = "HUDHedgeshock_White";
+        public const String HUD_ShieldActive = "HUDShieldActive";
+        public const String HUD_ShieldInactive = "HUDShieldInactive";
+        public const String HUD_Skull = "HUDSkull";
+        public const String HUD_Thumper_Outline = "HUDThumper_Outline";
+        public const String HUD_Thumper_White = "HUDThumper_White";
+        public const String HUD_Titandrill_Outline = "HUDTitandrill_Outline";
+        public const String HUD_Titandrill_White = "HUDTitandrill_White";
+
         // MISC
         public const String Misc_Torch = "Torch";
         public const String Misc_TorchCone = "TorchCone";

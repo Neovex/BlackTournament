@@ -58,6 +58,7 @@ namespace BlackTournament.Scenes
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
+        private HUD _HUD;
 
 
         public Vector2f ViewMovement { get; set; }
@@ -193,6 +194,11 @@ namespace BlackTournament.Scenes
             // Setup Special Effects
             SetupEmitters();
             Layer_Overlay.Add(_ParticleEmitterHost);
+
+            // HUD
+            _HUD = new HUD(_Core, TextureLoader);
+            _HUD.View = null;
+            Layer_Overlay.Add(_HUD);
 
             return true;
         }
