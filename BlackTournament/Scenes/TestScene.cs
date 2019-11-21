@@ -83,7 +83,7 @@ namespace BlackTournament.Scenes
             _Rect = new Rectangle(_Core)
             {
                 Position = new Vector2f(450, 100),
-                Size = Create.Vector2f(200),
+                Size = 200.ToVector2f(),
                 Color = Color.Yellow,
                 Alpha = 0.3f
             };
@@ -394,7 +394,7 @@ namespace BlackTournament.Scenes
             var host = new ParticleEmitterHost(_Core);
             host.AddEmitter(emitter);
             rContainer.Add(host);
-            rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = Create.Vector2f(100) });
+            rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = 100.ToVector2f() });
             //Layer_Game.Add(host);
 
             Input.DEFAULT.MouseButtonPressed += b =>

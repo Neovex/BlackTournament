@@ -25,7 +25,7 @@ namespace BlackTournament.Entities
             {
                 BlendMode = BlendMode.Add,
                 Origin = tex.Size.ToVector2f() / 2,
-                Scale = Create.Vector2f(0.8f),
+                Scale = 0.8f.ToVector2f(),
                 Alpha = 0.8f
             });
 

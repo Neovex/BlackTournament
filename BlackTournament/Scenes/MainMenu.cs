@@ -105,7 +105,7 @@ namespace BlackTournament.Scenes
                 // BG Lighting
                 _Lighting = new PrerenderedContainer(_Core) { BlendMode = BlendMode.Multiply, ClearColor = Color.Black, RenderEachFrame = true }
             );
-            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = Create.Vector2f(100) });
+            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = 100.ToVector2f() });
             _Lighting.Add(_AmbientLight = new Rectangle(_Core, Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
 
             // UI
@@ -326,7 +326,7 @@ namespace BlackTournament.Scenes
                                         new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = Create.Vector2f(10),
+                                            Position = 10.ToVector2f(),
                                             TextColor = new Color(0,100,255)
                                         }
                                     }
@@ -364,7 +364,7 @@ namespace BlackTournament.Scenes
                                         _MessageBoxLabel = new Label(_Core, "Message", font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = Create.Vector2f(10),
+                                            Position = 10.ToVector2f(),
                                             TextColor = new Color(0,100,255),
                                             Padding = new FloatRect(10,40,10,10)
                                         }
@@ -397,9 +397,9 @@ namespace BlackTournament.Scenes
                 _Logo = new Graphic(_Core, TextureLoader.Load(Files.Menue_Logo))
                 {
                     Origin = new Vector2f(345, 355),
-                    Scale = Create.Vector2f(0.25f)
+                    Scale = 0.25.ToVector2f()
                 }
-            );
+            ); ;
 
             // System
             _Core.DeviceResized += HandleCoreDeviceResized;
@@ -491,12 +491,13 @@ namespace BlackTournament.Scenes
             _ServerBrowser.Position = new Vector2f(size.X/2,size.Y *0.6f) - _ServerBrowser.OuterSize / 2;
             _Credits.Position = _ServerBrowser.Position;
 
-            _Title.Scale = Create.Vector2f(Math.Min(Math.Min(1, size.X / _Title.TextureRect.Width),
-                                                    Math.Min(1, _MainUI.Position.Y / _Title.TextureRect.Height)));
+            var scale = Math.Min(Math.Min(1, size.X / _Title.TextureRect.Width),
+                                 Math.Min(1, _MainUI.Position.Y / _Title.TextureRect.Height));
+            _Title.Scale = scale.ToVector2f();
             _Title.Position = new Vector2f(size.X / 2 - _Title.TextureRect.Width * _Title.Scale.X / 2, _MainUI.Position.Y / 2 - _Title.TextureRect.Height * _Title.Scale.Y / 2);
             _Glow.Scale = new Vector2f(1, _MainUI.Position.Y / _Glow.TextureRect.Height * -1.5f);
             _Glow.Position = new Vector2f(size.X / 2 - _Glow.TextureRect.Width / 2, _Glow.TextureRect.Height * -_Glow.Scale.Y);
-            _Logo.Position = size - Create.Vector2f(150);
+            _Logo.Position = size - 150.ToVector2f();
         }
 
         internal void DisplayPopupMessage(string message)
@@ -544,7 +545,7 @@ namespace BlackTournament.Scenes
             if (Destroyed) return;
             _Shots = _Core.Random.Next(6, 12);
             _EffectLight.Rotation = _Core.Random.NextFloat(0, 360);
-            _EffectLight.Scale = Create.Vector2f(_Core.Random.NextFloat(8.5f, 14.4f));
+            _EffectLight.Scale = _Core.Random.NextFloat(8.5f, 14.4f).ToVector2f();
             _EffectLight.Position = new Vector2f(_Core.DeviceSize.X * _Core.Random.Next(2), _Core.DeviceSize.Y * _Core.Random.Next(2));
             PlayShotAnimation();
         }

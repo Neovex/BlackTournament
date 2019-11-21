@@ -110,7 +110,7 @@ namespace BlackTournament.Scenes
                 _Selection.Visible = true;
                 _Selection.Position = e.Position;
                 _Selection.Origin = e.Origin.MultiplyBy(e.Scale);
-                _Selection.Size = Create.Vector2f(25); // backup default value to show there is "something"
+                _Selection.Size = 25.ToVector2f(); // backup default value to show there is "something"
 
                 switch (e)
                 {
@@ -121,8 +121,8 @@ namespace BlackTournament.Scenes
                         _Selection.Size = r.Size;
                     break;
                     case Circle c:
-                        _Selection.Size = Create.Vector2f(c.Radius * 2);
-                    break;
+                        _Selection.Size = (c.Radius * 2).ToVector2f();
+                        break;
                 }
             }
 
