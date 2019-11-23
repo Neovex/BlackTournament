@@ -15,18 +15,6 @@ namespace BlackTournament.Net.Data
 
         public event Action<ClientPlayer> Fragged = p => { };
 
-        public override Vector2f Position
-        {
-            get { return base.Position; }
-            protected set { base.Position = value; }
-        }
-
-        public override float Rotation
-        {
-            get { return base.Rotation; }
-            protected set { base.Rotation = value; }
-        }
-
         public override float Health
         {
             get { return base.Health; }
@@ -35,18 +23,6 @@ namespace BlackTournament.Net.Data
                 base.Health = value;
                 if (Health < 1) Fragged.Invoke(this);
             }
-        }
-
-        public override float Shield
-        {
-            get { return base.Shield; }
-            protected set { base.Shield = value; }
-        }
-
-        public override int Score
-        {
-            get { return base.Score; }
-            protected set { base.Score = value; }
         }
 
         public override PickupType CurrentWeaponType

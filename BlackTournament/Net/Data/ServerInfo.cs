@@ -17,7 +17,7 @@ namespace BlackTournament.Net.Data
         public int CurrentPlayers { get; set; }
         public int MaxPlayers { get; private set; }
         public int Ping { get; set; }
-        public Boolean HasPassword { get; set; }
+        //public Boolean HasPassword { get; set; }
 
 
         public ServerInfo(string serverName, string map, int maxPlayers = 8) : base(0)
@@ -38,7 +38,7 @@ namespace BlackTournament.Net.Data
             m.Write(CurrentPlayers);
             m.Write(MaxPlayers);
             m.Write(Ping);
-            m.Write(HasPassword);
+            //m.Write(HasPassword);
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -50,7 +50,7 @@ namespace BlackTournament.Net.Data
             CurrentPlayers = m.ReadInt32();
             MaxPlayers = m.ReadInt32();
             Ping = m.ReadInt32();
-            HasPassword = m.ReadBoolean();
+            //HasPassword = m.ReadBoolean();
         }
     }
 }

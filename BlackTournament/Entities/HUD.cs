@@ -8,6 +8,7 @@ using BlackCoat;
 using BlackCoat.UI;
 using BlackCoat.Entities;
 using SFML.Graphics;
+using BlackTournament.Net.Data;
 
 namespace BlackTournament.Entities
 {
@@ -35,12 +36,21 @@ namespace BlackTournament.Entities
         public override View View { get => null; set => base.View = value; } // Disable view inheritance
 
 
+        private AlignedContainer _PlayerInfo;
+        private AlignedContainer _Weapons;
         private Label _ScoreLabel;
         private Label _TimeLabel;
         private Label _RankLabel;
         private Label _TotalLabel;
         private Label _HealthLabel;
         private Label _ShieldLabel;
+        private UIGraphic _ShieldActive;
+        private UIGraphic _ShieldInactive;
+        private WeaponIcon _Drake;
+        private WeaponIcon _Hedge;
+        private WeaponIcon _Thump;
+        private WeaponIcon _Titan;
+
 
         public HUD(Core core, TextureLoader texLoader) : base(core, core?.DeviceSize)
         {
@@ -48,7 +58,7 @@ namespace BlackTournament.Entities
             // Score and Time
             var snt = new AlignedContainer(_Core, Alignment.CenterTop,
                     new UIGraphic(_Core, texLoader.Load(Files.HUD_TopBg)) { Name = "TOP BG" },
-                    new OffsetContainer(_Core, true,
+                    new OffsetContainer(_Core, Orientation.Horizontal, 10,
                             _ScoreLabel = new Label(_Core, "0", 40, Game.DefaultFont)
                             {
                                 Name = "Score",
@@ -58,8 +68,7 @@ namespace BlackTournament.Entities
                             new UIGraphic(_Core, texLoader.Load(Files.HUD_Skull)) { Name = "Skull" }
                         )
                     {
-                        Position = (16, 0),
-                        Offset = 10
+                        Position = (16, 0)
                     },
                     new AlignedContainer(_Core, Alignment.CenterTop, _TimeLabel = new Label(_Core, "TIME", 20, Game.DefaultFont)
                     {
@@ -81,12 +90,12 @@ namespace BlackTournament.Entities
                         )
             )
             {
-                Name = "TOP"
+                Name = "Game"
             };
             Add(snt);
 
             // Health and Shield
-            var hns = new AlignedContainer(_Core, Alignment.CenterBottom,
+            _PlayerInfo = new AlignedContainer(_Core, Alignment.CenterBottom,
                 new Canvas(_Core, (200, 36),
                     new UIGraphic(_Core, texLoader.Load(Files.HUD_Health))
                     {
@@ -105,36 +114,81 @@ namespace BlackTournament.Entities
                         }
                     )
                     {
-                        Name = "Shield Label",
-                        Margin = (0,7,45,0)
+                        Margin = (0, 7, 45, 0)
                     },
-                    new UIGraphic(_Core, texLoader.Load(Files.HUD_ShieldActive))
+                    _ShieldActive = new UIGraphic(_Core, texLoader.Load(Files.HUD_ShieldActive))
                     {
                         Name = "Shield Active Icon",
-                        Position = (165, 1)
+                        Position = (165, 1),
+                        Visible = false
+                    },
+                    _ShieldInactive = new UIGraphic(_Core, texLoader.Load(Files.HUD_ShieldInactive))
+                    {
+                        Name = "Shield Inactive Icon",
+                        Position = _ShieldActive.Position,
+                        Visible = true
                     }
                 )
             )
             {
-                Name = "STAT",
+                Name = "Player",
                 BackgroundColor = Color.Black,
                 BackgroundAlpha = 0.35f,
                 Margin = (0, 0, 0, 60)
             };
-            Add(hns);
-            // CH
-            
+            Add(_PlayerInfo);
+
+            _Weapons = new AlignedContainer(_Core, Alignment.CenterBottom,
+                new OffsetContainer(_Core, Orientation.Horizontal, 20,
+                    _Drake = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Drake_White), texLoader.Load(Files.HUD_Drake_Outline)),
+                    _Hedge = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Hedgeshock_White), texLoader.Load(Files.HUD_Hedgeshock_Outline)),
+                    _Thump = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Thumper_White), texLoader.Load(Files.HUD_Thumper_Outline)),
+                    _Titan = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Titandrill_White), texLoader.Load(Files.HUD_Titandrill_Outline))
+                )
+            )
+            {
+                Name = "Weapons",
+                Margin = (0, 0, 0, 12)
+            };
+            Add(_Weapons);
+
             // Listen to Size Changes
             _Core.DeviceResized += Resize;
         }
 
-
-
+        public void SetPlayerInfoVisibility(bool v)
+        {
+            _PlayerInfo.Visible = v;
+            _Weapons.Visible = v;
+        }
 
         protected override void Destroy(bool disposing)
         {
             _Core.DeviceResized -= Resize;
             base.Destroy(disposing);
+        }
+
+        internal void SetPlayerWeapon(PickupType weapon)
+        {
+            _Drake.Active = false;
+            _Hedge.Active = false;
+            _Thump.Active = false;
+            _Titan.Active = false;
+            switch (weapon)
+            {
+                case PickupType.Hedgeshock:
+                    _Hedge.Active = true;
+                    break;
+                case PickupType.Thumper:
+                    _Thump.Active = true;
+                    break;
+                case PickupType.Titandrill:
+                    _Titan.Active = true;
+                    break;
+                default:
+                    _Drake.Active = true;
+                    break;
+            }
         }
     }
 }

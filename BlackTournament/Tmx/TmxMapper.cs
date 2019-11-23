@@ -24,7 +24,7 @@ namespace BlackTournament.Tmx
         private TmxMap _MapData;
         private Dictionary<String, int> _TextureColumnLookup;
         private List<Layer> _Layers;
-        private List<Pickup> _Pickups;
+        private List<PickupInfo> _Pickups;
         private List<Vector2f> _SpawnPoints;
         private List<CollisionShape> _WallCollider;
         private List<Killzone> _Killzones;
@@ -36,17 +36,14 @@ namespace BlackTournament.Tmx
         public Vector2i TileSize { get; internal set; }
 
         public IEnumerable<Layer> Layers => _Layers;
-        public IEnumerable<Pickup> Pickups => _Pickups;
+        public IEnumerable<PickupInfo> Pickups => _Pickups;
         public IEnumerable<Vector2f> SpawnPoints => _SpawnPoints;
         public IEnumerable<CollisionShape> WallCollider => _WallCollider;
         public IEnumerable<Killzone> Killzones => _Killzones;
 
-        private Func<int> IdProvider { get; }
 
-
-        public TmxMapper(Func<int> idProvider)
+        public TmxMapper()
         {
-            IdProvider = idProvider ?? throw new ArgumentNullException(nameof(idProvider));
         }
 
 
@@ -65,7 +62,7 @@ namespace BlackTournament.Tmx
 
                 // Prepare Layers
                 _Layers = new List<Layer>();
-                _Pickups = new List<Pickup>();
+                _Pickups = new List<PickupInfo>();
                 _SpawnPoints = new List<Vector2f>();
                 _WallCollider = new List<CollisionShape>();
                 _Killzones = new List<Killzone>();
@@ -99,7 +96,7 @@ namespace BlackTournament.Tmx
                                 switch (obj.Type)
                                 {
                                     case "Pickup":
-                                        _Pickups.Add(ParsePickup(cSys, obj));
+                                        _Pickups.Add(new PickupInfo(obj));
                                         break;
 
                                     case "Spawn":
@@ -146,20 +143,6 @@ namespace BlackTournament.Tmx
                 Log.Error(e);
             }
             return false;
-        }
-
-        private Pickup ParsePickup(CollisionSystem cSys, TmxObject obj)
-        {
-            if (!Enum.TryParse<PickupType>(ReadTmxObjectProperty(obj.Properties, "Item"), out PickupType type))
-            {
-                Log.Warning("Invalid Pickup entry skipped");
-                return null;
-            }
-            if (!Int32.TryParse(ReadTmxObjectProperty(obj.Properties, "Amount"), out int amount)) amount = 1;
-            if (!Single.TryParse(ReadTmxObjectProperty(obj.Properties, "RespawnTime"), out float respawnTime)) respawnTime = 1;
-            var position = new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2;
-
-            return new Pickup(IdProvider(), position, type, amount, respawnTime, cSys);
         }
 
         private CollisionShape ParseCollisionShape(CollisionSystem cSys, TmxObject obj)

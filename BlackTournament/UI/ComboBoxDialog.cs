@@ -20,7 +20,7 @@ namespace BlackTournament.UI
 
         public Color HighlightColor { get; set; }
 
-        public ComboBoxDialog(Core core, TextBox target, IEnumerable<String> items) : base(core, false)
+        public ComboBoxDialog(Core core, TextBox target, IEnumerable<String> items) : base(core, Orientation.Vertical)
         {
             _Target = target;
 

@@ -14,7 +14,6 @@
         // Client Only
         Init,
         Update,
-        Pickup,
 
         // Server Only
         ProcessGameAction,

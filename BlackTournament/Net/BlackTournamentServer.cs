@@ -21,7 +21,7 @@ namespace BlackTournament.Net
         public override int AdminId => NetIdProvider.ADMIN_ID;
         public override int NextClientId => NetIdProvider.NEXT_ID;
 
-        public ServerInfo Info { get; set; }
+        public ServerInfo Info { get; private set; }
 
 
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
@@ -35,19 +35,16 @@ namespace BlackTournament.Net
 
         public bool HostGame(int port, ServerInfo info)
         {
-            if (info == null) throw new ArgumentNullException(nameof(info));
-            Log.Debug("Trying to host", info.Name, "on", port);
-            var map = LoadMapFromMapname(info.Map);
+            Info = info ?? throw new ArgumentNullException(nameof(info));
+            Log.Debug("Trying to host", Info.Name, "on", port);
+            var map = LoadMapFromMapname(Info.Map);
             if (map == null)
             {
-                LastError = $"Failed to host {info.Map} on {port} reason: unknown map";
+                LastError = $"Failed to host {Info.Map} on {port} reason: unknown map";//$?
                 Log.Error(LastError);
-                return false;
             }
-
-            if (Host(info.Name, port))
+            else if (Host(Info.Name, port))
             {
-                Info = info;
                 Log.Debug("Host active");
                 ChangeLevel(map);
                 return true;
@@ -57,21 +54,16 @@ namespace BlackTournament.Net
 
         private TmxMapper LoadMapFromMapname(string mapName)
         {
-            var mapper = new TmxMapper(() => NextClientId);
+            var mapper = new TmxMapper();
             if (mapper.Load(mapName, _Core.CollisionSystem)) return mapper;
-            LastError = $"Failed to load level {mapName}";
+            LastError = $"Failed to load level {mapName}";//$?
             Log.Warning(LastError);
             return null;
         }
 
         private void ChangeLevel(TmxMapper map)
         {
-            if (_Logic != null) _Logic.PlayerGotPickup -= SendPlayerPickup;
-
             _Logic = new GameLogic(_Core, map);
-            _Logic.PlayerGotPickup += SendPlayerPickup;
-
-            Info.Map = map.Name;
 
             // Add users
             foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
@@ -100,6 +92,7 @@ namespace BlackTournament.Net
 
         protected override void UserConnected(ServerUser<NetConnection> user)
         {
+            Info.CurrentPlayers++;
             _Logic.AddPlayer(user);
             Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
             Send(user.Connection, NetMessage.Init, m => _Logic.Serialize(m, true));
@@ -107,10 +100,15 @@ namespace BlackTournament.Net
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)
         {
+            Info.CurrentPlayers--;
             _Logic.RemovePlayer(user);
         }
 
         // INCOMMING
+        protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
+        {
+            Info.Serialize(msg); // respond with server info
+        }
         protected override void ProcessIncommingData(NetMessage subType, NetIncomingMessage msg)
         {
             switch (subType)
@@ -136,20 +134,8 @@ namespace BlackTournament.Net
                     break;
             }
         }
-        protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
-        {
-            Info.Serialize(msg); // respond with server info
-        }
 
-
-        // OUTGOING
-        private void SendPlayerPickup(ServerUser<NetConnection> user, PickupType pickup)
-        {
-            Send(user.Connection, NetMessage.Pickup, m => m.Write((int)pickup));
-        }
-
-
-        // MAPPED HANDLERS
+        // MESSAGE HANDLERS
         private void SendMessage(int id, string message)
         {
             Broadcast(NetMessage.TextMessage, m =>
@@ -165,8 +151,6 @@ namespace BlackTournament.Net
             {
                 StopServer(String.Empty);
                 Info = null;
-                // TODO : check if dropped players will be removed by other events or if this needs to be done here manually
-                _Logic.PlayerGotPickup -= SendPlayerPickup;
                 _Logic = null;
             }
         }

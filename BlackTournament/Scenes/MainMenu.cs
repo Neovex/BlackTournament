@@ -124,7 +124,7 @@ namespace BlackTournament.Scenes
                         {
                             Init = new UIComponent[]
                             {
-                                new OffsetContainer(_Core, false)
+                                new OffsetContainer(_Core, Orientation.Vertical)
                                 {
                                     Offset = 25,
                                     Init = new UIComponent[]
@@ -154,7 +154,7 @@ namespace BlackTournament.Scenes
                             Visible = false,
                             Init = new UIComponent[]
                             {
-                                new OffsetContainer(_Core, false)
+                                new OffsetContainer(_Core, Orientation.Vertical)
                                 {
                                     Offset = 8,
                                     Init = new UIComponent[]
@@ -216,13 +216,13 @@ namespace BlackTournament.Scenes
                             Texture=TextureLoader.Load(Files.Menue_Bg2, true),
                             Init = new UIComponent[]
                             {
-                                new DistributionContainer(_Core, false)
+                                new DistributionContainer(_Core, Orientation.Vertical)
                                 {
                                     DockX = true,
                                     Margin = new FloatRect(10,10,10,10),
                                     Init = new UIComponent[]
                                     {
-                                        new DistributionContainer(_Core,true)
+                                        new DistributionContainer(_Core, Orientation.Horizontal)
                                         {
                                             Init = new UIComponent[]
                                             {
@@ -244,13 +244,13 @@ namespace BlackTournament.Scenes
                                             BackgroundAlpha = 0.03f,
                                             Init = new UIComponent[]
                                             {
-                                                _ServerList = new OffsetContainer(_Core, false)
+                                                _ServerList = new OffsetContainer(_Core, Orientation.Vertical)
                                                 {
                                                     DockX = true
                                                 }
                                             }
                                         },
-                                        new DistributionContainer(_Core,true)
+                                        new DistributionContainer(_Core, Orientation.Horizontal)
                                         {
                                             Init = new UIComponent[]
                                             {
@@ -272,7 +272,7 @@ namespace BlackTournament.Scenes
                                     Visible = false,
                                     Init = new UIComponent[]
                                     {
-                                        new OffsetContainer(_Core, false)
+                                        new OffsetContainer(_Core, Orientation.Vertical)
                                         {
                                             Offset = 8,
                                             Init = new UIComponent[]

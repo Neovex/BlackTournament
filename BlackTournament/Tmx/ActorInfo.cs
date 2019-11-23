@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlackTournament.Net.Data;
 using SFML.System;
 using TiledSharp;
 
@@ -34,6 +35,27 @@ namespace BlackTournament.Tmx
             Rotation = (float)obj.Rotation;
             Parent = (Parent)Enum.Parse(typeof(Parent), TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Parent), Parent.Layer_BG.ToString()), true);
             Tag = TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Tag));
+        }
+    }
+
+    class PickupInfo : ActorInfo
+    {
+        public PickupType Item { get; set; }
+        public int Amount { get; set; }
+        public float RespawnTime { get; set; }
+
+        public PickupInfo(TmxObject obj) : base(obj)
+        {
+            var pickupString = TmxMapper.ReadTmxObjectProperty(obj.Properties, "Item");
+            if (!Enum.TryParse<PickupType>(pickupString, true, out PickupType type))
+            {
+                Log.Warning("Invalid Pickup entry skipped", pickupString);
+                type = PickupType.NULL;
+            }
+            Item = type;
+            Amount = Int32.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Amount), 1), _Culture);
+            RespawnTime = Single.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(RespawnTime), 1), _Culture);
+            Position += new Vector2f((float)obj.Width, (float)obj.Height) / 2;
         }
     }
 

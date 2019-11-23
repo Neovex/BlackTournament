@@ -23,11 +23,11 @@ namespace BlackTournament.Net.Data
         private List<ServerPlayer> _Players;
         private List<Shot> _Shots;
         private List<Effect> _Effects;
-
-        public event Action<ServerUser<NetConnection>, PickupType> PlayerGotPickup = (u, p) => { };
+        private IEnumerable<Pickup> _Pickups; 
 
 
         public string MapName { get { return _Map.Name; } }
+        public int CurrentPlayers => _Players.Count;
 
 
         public GameLogic(Core core, TmxMapper map)
@@ -38,6 +38,7 @@ namespace BlackTournament.Net.Data
             _Players = new List<ServerPlayer>();
             _Shots = new List<Shot>();
             _Effects = new List<Effect>();
+            _Pickups = _Map.Pickups.Select(p => new Pickup(NetIdProvider.NEXT_ID, p.Position, p.Item, p.Amount, p.RespawnTime, _Core.CollisionSystem)).ToArray();
         }
 
 
@@ -151,7 +152,7 @@ namespace BlackTournament.Net.Data
             }
 
             // Pickups
-            var dirtyPickups = _Map.Pickups.Where(p => p.IsDirty || forceFullUpdate).ToArray();
+            var dirtyPickups = _Pickups.Where(p => p.IsDirty || forceFullUpdate).ToArray();
             msg.Write(dirtyPickups.Length);
             foreach (var pickup in dirtyPickups)
             {
@@ -178,7 +179,7 @@ namespace BlackTournament.Net.Data
         public void Update(float deltaT)
         {
             // Update Pickups
-            foreach (var pickup in _Map.Pickups)
+            foreach (var pickup in _Pickups)
             {
                 pickup.Update(deltaT);
             }
@@ -225,7 +226,7 @@ namespace BlackTournament.Net.Data
                             player.Collision.Position = player.Position;
                         }
                     }
-                    foreach (var pickup in _Map.Pickups) // Pickups
+                    foreach (var pickup in _Pickups) // Pickups
                     {
                         if (pickup.Active && player.Collision.CollidesWith(pickup.Collision))
                         {

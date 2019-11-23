@@ -58,10 +58,10 @@ namespace BlackTournament.Scenes
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
-        private HUD _HUD;
 
 
         public Vector2f ViewMovement { get; set; }
+        public HUD HUD { get; private set; }
 
 
         public MapScene(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
@@ -183,8 +183,8 @@ namespace BlackTournament.Scenes
                 }
             }
 
-            // Set camera to the center of the map
-            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Type == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add center pos to mapdata
+            // Set camera to a nice spot of the map
+            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Item == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add camera start pos to mapdata
 
             // Load Sounds
             _Sfx.LoadFromDirectory();
@@ -196,9 +196,7 @@ namespace BlackTournament.Scenes
             Layer_Overlay.Add(_ParticleEmitterHost);
 
             // HUD
-            _HUD = new HUD(_Core, TextureLoader);
-            _HUD.View = null;
-            Layer_Overlay.Add(_HUD);
+            Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader));
 
             return true;
         }

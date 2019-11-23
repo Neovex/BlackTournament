@@ -1,26 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BlackTournament.Tmx.Layer">
-    <Position X="7.5" Y="1.5" Width="1.5" />
+    <Position X="7.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Tmx\Layer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Tmx.TmxMapper">
-    <Position X="3.5" Y="0.5" Width="2" />
+    <Position X="3.5" Y="1.5" Width="2" />
+    <AssociationLine Name="Pickups" Type="BlackTournament.Tmx.PickupInfo" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.438" Y="5.814" />
+        <Point X="4.438" Y="8.477" />
+        <Point X="13.562" Y="8.477" />
+        <Point X="13.562" Y="5.627" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAABoAAAAABAgAGAAACAAEQCMAIAAEgEAgAAEAAEEAI=</HashCode>
+      <HashCode>AAABoAAAAABAgAGAAAAAAEQCMAIAAEgEAgAAEAAEAAI=</HashCode>
       <FileName>Tmx\TmxMapper.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_MapData" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Field Name="_Layers" />
-      <Property Name="Pickups" />
       <Property Name="WallCollider" />
       <Property Name="Killzones" />
+      <Property Name="Pickups" />
+      <Property Name="SpawnPoints" />
+      <Property Name="Layers" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackCoat.Collision.Shapes.CollisionShape" Collapsed="true">
@@ -29,26 +38,22 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TiledSharp.TmxMap" Collapsed="true">
-    <Position X="7.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="BlackTournament.Net.Data.Pickup">
-    <Position X="0.5" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>ADQAAAAIAMAAAAAgAAAQAADAAABAAAAgAQAAAAAAAAA=</HashCode>
-      <FileName>Net\Data\Pickup.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BlackTournament.Tmx.Killzone">
-    <Position X="0.5" Y="1.5" Width="1.5" />
+    <Position X="0.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAgAAAAAAAAAAAAAAAgAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAACAAAgAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tmx\Killzone.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CollisionShape" />
+    </ShowAsAssociation>
     <Lollipop Position="1.156" />
   </Class>
   <Class Name="BlackTournament.Tmx.TileLayer">
-    <Position X="6.25" Y="3.5" Width="1.5" />
+    <Position X="6.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAAA=</HashCode>
       <FileName>Tmx\Layer.cs</FileName>
@@ -57,8 +62,8 @@
       <Property Name="Tiles" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="BlackTournament.Tmx.ObjectLayer" Collapsed="true">
-    <Position X="8.75" Y="3.5" Width="1.5" />
+  <Class Name="BlackTournament.Tmx.ObjectLayer">
+    <Position X="8.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
       <FileName>Tmx\Layer.cs</FileName>
@@ -68,32 +73,68 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackTournament.Tmx.ActorInfo">
-    <Position X="8.75" Y="4.75" Width="1.5" />
+    <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAIAgAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tmx\ActorInfo.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="BlackTournament.Tmx.AssetActorInfo">
-    <Position X="8.75" Y="6.75" Width="1.5" />
+    <Position X="10.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Tmx\ActorInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Tmx.RotorInfo">
-    <Position X="8.75" Y="8.75" Width="1.5" />
+    <Position X="10.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>Tmx\ActorInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="BlackTournament.Tmx.PickupInfo">
+    <Position X="12.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\ActorInfo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Item" />
+    </ShowAsAssociation>
+  </Class>
   <Struct Name="BlackTournament.Tmx.Tile">
-    <Position X="6.25" Y="5.25" Width="1.5" />
+    <Position X="6.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tmx\Tile.cs</FileName>
     </TypeIdentifier>
   </Struct>
+  <Struct Name="SFML.System.Vector2f" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Interface Name="BlackCoat.Collision.ICollisionShape" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Enum Name="BlackTournament.Tmx.Parent">
+    <Position X="15" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EgAAAAAAAAACAAAAAAAAAggAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tmx\ActorInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BlackTournament.Net.Data.PickupType">
+    <Position X="15" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAIAQABAAAAAIAIA=</HashCode>
+      <FileName>Net\Data\PickupType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

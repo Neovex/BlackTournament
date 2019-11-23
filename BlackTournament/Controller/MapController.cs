@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 
 using SFML.System;
-
 using BlackCoat;
-using BlackCoat.Network;
 
 using BlackTournament.Scenes;
 using BlackTournament.Net;
@@ -19,17 +17,29 @@ namespace BlackTournament.Controller
         private BlackTournamentClient _Client;
         private MapScene _Scene;
 
-        private TmxMapper _MapData;
-        private List<ClientPlayer> _Players;
 
-
-        internal ClientPlayer LocalPlayer { get { return _Client.Player; } }
+        private ClientPlayer LocalPlayer { get { return _Client.Player; } }
 
 
         public MapController(Game game) : base(game)
         {
-            _MapData = new TmxMapper(() => NetIdProvider.NEXT_ID);
-            _Players = new List<ClientPlayer>();
+        }
+
+        public void Activate(BlackTournamentClient client)
+        {
+            if (_Client != null || _Scene != null) throw new InvalidStateException();
+            _Client = client ?? throw new ArgumentNullException(nameof(client));
+
+            var map = new TmxMapper();
+            if (map.Load(_Client.MapName, _Game.Core.CollisionSystem))
+            {
+                base.Activate(_Scene = new MapScene(_Game.Core, map));
+            }
+            else
+            {
+                _Client.Disconnect();
+                _Game.MenuController.Activate($"Failed to initialize map {_Client.MapName}");//$
+            }
         }
 
         protected override void SceneReady()
@@ -48,7 +58,7 @@ namespace BlackTournament.Controller
 
         protected override void SceneLoadingFailed()
         {
-            SceneReleased(); // add better error handling?
+            _Game.MenuController.Activate($"Failed to load map {_Client.MapName}");//$
         }
 
         protected override void SceneReleased()
@@ -58,23 +68,6 @@ namespace BlackTournament.Controller
             _Scene = null;
         }
 
-
-        public void Activate(BlackTournamentClient client)
-        {
-            if (_Client != null || _Scene != null) throw new InvalidStateException();
-
-            // Init
-            _Client = client ?? throw new ArgumentNullException(nameof(client));
-            if (_MapData.Load(_Client.MapName, _Game.Core.CollisionSystem))
-            {
-                Activate(_Scene = new MapScene(_Game.Core, _MapData));
-            }
-            else
-            {
-                _Client.Disconnect();
-                _Game.MenuController.Activate($"Failed to load map {_Client.MapName}");//$
-            }
-        }
 
         private void AttachEvents()
         {
@@ -149,7 +142,7 @@ namespace BlackTournament.Controller
                     break;
             }
             // Move view only when player is dead
-            _Scene.ViewMovement = LocalPlayer.IsAlive ? new Vector2f() : move;
+            _Scene.ViewMovement = LocalPlayer.IsAlive ? default(Vector2f) : move;
 
             // Hand input to the server 4 processing game-logic
             _Client.ProcessGameAction(action, activate);
@@ -189,8 +182,14 @@ namespace BlackTournament.Controller
                 _Scene.UpdateEntity(player.Id, player.Position, player.Rotation, player.IsAlive);
             }
 
-            _Scene.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
             if (LocalPlayer.IsAlive) _Scene.FocusPlayer(); // move camera to player
+            // Update Player
+            _Scene.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
+            _Scene.HUD.SetPlayerInfoVisibility(LocalPlayer.IsAlive);
+            _Scene.HUD.SetPlayerWeapon(LocalPlayer.CurrentWeaponType);
+            _Scene.HUD.Health = (int)LocalPlayer.Health;
+            _Scene.HUD.Shield = (int)LocalPlayer.Shield;
+            
 
             foreach (var shot in _Client.Shots)
             {
@@ -205,14 +204,12 @@ namespace BlackTournament.Controller
 
         private void HandleUserJoined(ClientPlayer player)
         {
-            _Players.Add(player);
             player.Fragged += HandlePlayerFragged;
             _Scene.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
         }
 
         private void HandleUserLeft(ClientPlayer player)
         {
-            _Players.Remove(player);
             player.Fragged -= HandlePlayerFragged;
             _Scene.DestroyEntity(player.Id);
         }
@@ -231,7 +228,7 @@ namespace BlackTournament.Controller
         {
             _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).AngleTowards(mousePosition) - 2;
             _Client.PlayerRotation = MathHelper.ValidateAngle(_Client.PlayerRotation);
-            _Scene.RotatePlayer(_Client.PlayerRotation); // update state
+            _Scene.RotatePlayer(_Client.PlayerRotation); // update scene
         }
 
         private void ExitToMenue() // TODO attach to proper input - and or view event

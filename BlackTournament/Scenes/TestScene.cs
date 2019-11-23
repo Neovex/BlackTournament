@@ -190,7 +190,7 @@ namespace BlackTournament.Scenes
                         Init = labels.Take(1)
                     },
 
-                    new OffsetContainer(_Core, true)
+                    new OffsetContainer(_Core, Orientation.Horizontal)
                     {
                         BackgroundAlpha = 0.4f,
                         Position = new Vector2f(200, 200),
@@ -206,7 +206,7 @@ namespace BlackTournament.Scenes
                         Init = new UIComponent[]
                         {
                             labels.Skip(4).First(),
-                            new DistributionContainer(_Core, true)
+                            new DistributionContainer(_Core, Orientation.Horizontal)
                             {
                                 BackgroundAlpha = 0.4f,
                                 Position = new Vector2f(100, 100),

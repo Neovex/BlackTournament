@@ -22,7 +22,7 @@ namespace BlackTournament.UI
         public Action<ServerListItem> InitChecked { set => Checked += value; }
 
 
-        public ServerListItem(Core core, SfxManager sfx, ServerInfo serverInfo) : base(core)
+        public ServerListItem(Core core, SfxManager sfx, ServerInfo serverInfo) : base(core, Orientation.Horizontal)
         {
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             ServerInfo = serverInfo;

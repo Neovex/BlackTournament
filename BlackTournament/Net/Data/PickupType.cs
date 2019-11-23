@@ -2,6 +2,8 @@
 {
     public enum PickupType
     {
+        NULL,
+
         SmallHealth,
         BigHealth,
         SmallShield,

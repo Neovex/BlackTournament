@@ -29,7 +29,7 @@ namespace BlackTournament.Scenes
 
         public LightEditor(Game game, string map) : base(game.Core, $"Light Editor: {map}", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
-            _MapData = new TmxMapper(() => 0);
+            _MapData = new TmxMapper();
             if (!_MapData.Load(map, _Core.CollisionSystem)) throw new ArgumentException(map);
         }
 
