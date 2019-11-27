@@ -70,7 +70,7 @@ namespace BlackTournament.Net.Data
         {
             var effect = new Effect(NetIdProvider.NEXT_ID, EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
 
-            var weaponData = primaryFire ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
+            var weaponData = WeaponData.Get(player.CurrentWeaponType, primaryFire);
             switch (weaponData.ProjectileGeometry)
             {
                 case Geometry.Point:
@@ -251,10 +251,10 @@ namespace BlackTournament.Net.Data
         {
             // inaccuracy modification
             var rotation = player.Rotation;
-            var weapon = primary ? player.Weapon.PrimaryWeapon : player.Weapon.SecundaryWeapon;
-            if (weapon.Inaccuracy != 0)
+            var weaponData = WeaponData.Get(player.CurrentWeaponType, primary);
+            if (weaponData.Inaccuracy != 0)
             {
-                rotation += _Core.Random.NextFloat(-weapon.Inaccuracy, weapon.Inaccuracy);
+                rotation += _Core.Random.NextFloat(-weaponData.Inaccuracy, weaponData.Inaccuracy);
                 rotation = MathHelper.ValidateAngle(rotation);
             }
 
@@ -264,7 +264,7 @@ namespace BlackTournament.Net.Data
                                                                                .OrderBy(p => p.ToLocal(player.WeaponSpawn).LengthSquared())
                                                                                .ToArray();
 
-            var length = weapon.Length;
+            var length = weaponData.Length;
             if (wallIintersectionPoints.Length != 0)
             {
                 if (!primary && player.CurrentWeaponType == PickupType.Titandrill) // titan drills secondary fire penetrates walls!
@@ -304,7 +304,7 @@ namespace BlackTournament.Net.Data
                 // add impacts
                 _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
-                pi.Player.DamagePlayer(weapon.Damage);
+                pi.Player.DamagePlayer(weaponData.Damage);
             }
 
             // update weapon effect

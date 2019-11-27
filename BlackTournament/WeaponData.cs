@@ -25,21 +25,19 @@ namespace BlackTournament
         public static readonly WeaponData TitandrillSecundary = new WeaponData(99, 0, 2, 2, _INF, 0, 0, Geometry.Line);
 
 
-        public static Weapon CreateWeaponFrom(PickupType pickup)
+        public static WeaponData Get(PickupType type, bool primary)
         {
-            switch (pickup)
+            switch (type)
             {
-                case PickupType.Drake:      return new Weapon(DrakePrimary, DrakeSecundary);
-                case PickupType.Hedgeshock: return new Weapon(HedgeshockPrimary, HedgeshockSecundary);
-                case PickupType.Thumper:    return new Weapon(ThumperPrimary, ThumperSecundary);
-                case PickupType.Titandrill: return new Weapon(TitandrillPrimary, TitandrillSecundary);
+                case PickupType.Drake: return primary ? DrakePrimary : DrakeSecundary;
+                case PickupType.Hedgeshock: return primary ? HedgeshockPrimary : HedgeshockSecundary;
+                case PickupType.Thumper: return primary ? ThumperPrimary : ThumperSecundary;
+                case PickupType.Titandrill: return primary ? TitandrillPrimary : TitandrillSecundary;
             }
             var msg = "Invalid weapon request";
             Log.Fatal(msg);
             throw new Exception(msg);
         }
-
-
 
         // Weapon Stats
         public float Damage { get; }

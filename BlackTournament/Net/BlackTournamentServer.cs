@@ -87,6 +87,12 @@ namespace BlackTournament.Net
             {
                 _UpdateImpulse = 0;
                 Broadcast(NetMessage.Update, m => _Logic.Serialize(m, false), NetDeliveryMethod.UnreliableSequenced);
+                /* Check: to save traffic we could not send weapon info to all players
+                foreach (var user in ConnectedUsers)
+                {
+                   Send(user.Connection, NetMessage.UpdatePlayer, m => _Logic.SerializePlayer(m, user.Id), NetDeliveryMethod.UnreliableSequenced); 
+                }
+                */
             }
         }
 
@@ -114,7 +120,7 @@ namespace BlackTournament.Net
             switch (subType)
             {
                 case NetMessage.TextMessage:
-                    SendMessage(msg.ReadInt32(), msg.ReadString());
+                    BroadcastTextMessage(msg.ReadInt32(), msg.ReadString());
                     break;
 
                 case NetMessage.ChangeLevel:
@@ -136,7 +142,7 @@ namespace BlackTournament.Net
         }
 
         // MESSAGE HANDLERS
-        private void SendMessage(int id, string message)
+        private void BroadcastTextMessage(int id, string message)
         {
             Broadcast(NetMessage.TextMessage, m =>
             {
@@ -149,9 +155,19 @@ namespace BlackTournament.Net
         {
             if (IsAdmin(id))
             {
-                StopServer(String.Empty);
+                StopServer("Server stopped by admin");
                 Info = null;
                 _Logic = null;
+            }
+            else
+            {
+                var message = $"Blocked stop server command from {id}: {_ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias ?? null}";
+                Log.Warning(message);
+                Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
+                {
+                    m.Write(NetIdProvider.SERVER_ID);
+                    m.Write(message);
+                });
             }
         }
 
@@ -161,10 +177,26 @@ namespace BlackTournament.Net
             {
                 var map = LoadMapFromMapname(mapName);
                 if (map != null) ChangeLevel(map);
+                else
+                {
+                    LastError = $"Could comply to admin command: change level {mapName}";
+                    Log.Error(LastError);
+                    Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
+                    {
+                        m.Write(NetIdProvider.SERVER_ID);
+                        m.Write(LastError);
+                    });
+                }
             }
             else
             {
-                Log.Warning("Blocked change level request from", id, _ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias, "to level", mapName);
+                var message = $"Blocked change level command from {id}: {_ConnectedClients.FirstOrDefault(c => c.Id == id)?.Alias ?? null} to level {mapName}";
+                Log.Warning(message);
+                Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
+                {
+                    m.Write(NetIdProvider.SERVER_ID);
+                    m.Write(message);
+                });
             }
         }
     }

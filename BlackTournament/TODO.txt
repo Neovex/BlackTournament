@@ -14,8 +14,9 @@ HUD!
 -# create template
 -# create weapon icons
 -# create HUD specific assets
-- add
-- attach
+-# add
+-# attach
+fix weapon change bug + duplcate wapeon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension

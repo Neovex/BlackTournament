@@ -565,6 +565,12 @@ namespace BlackTournament.Scenes
             //_View.Rotation = -_Player.Rotation; // cool effect - see later if this can be used (with game-pads maybe)
         }
 
+        internal void ShowMessage(string message, bool isSystemMessage)
+        {
+            // TODO
+            Log.Debug("TODO: HandleTextMessage", message, isSystemMessage);
+        }
+
         public override string ToString()
         {
             return $"Map: \"{Name}\"";

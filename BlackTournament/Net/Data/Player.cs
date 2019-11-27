@@ -91,9 +91,10 @@ namespace BlackTournament.Net.Data
             m.Write(Position.X);
             m.Write(Position.Y);
             m.Write(Rotation);
-            m.Write((int)Health); // send Health & shield as int - the float values are only important for the server anyway
-            m.Write((int)Shield);
             m.Write(Score);
+
+            m.Write((int)Health); // send Health & Shield as int - the float values are important only for the server anyway
+            m.Write((int)Shield);
             m.Write((int)CurrentWeaponType);
         }
 
@@ -101,9 +102,10 @@ namespace BlackTournament.Net.Data
         {
             Position = new Vector2f(m.ReadSingle(), m.ReadSingle());
             Rotation = m.ReadSingle();
+            Score = m.ReadInt32();
+
             Health = m.ReadInt32();
             Shield = m.ReadInt32();
-            Score = m.ReadInt32();
             CurrentWeaponType = (PickupType)m.ReadInt32();
         }
     }

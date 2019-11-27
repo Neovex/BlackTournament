@@ -8,39 +8,38 @@ using SFML.System;
 
 namespace BlackTournament.Net.Data
 {
-    public class ClientPlayer : Player // TODO : remove unnecessary overrides when base game is stable
+    public class ClientPlayer : Player
     {
         public String Alias { get; set; }
         public Boolean IsAlive => Health > 0;
-
-        public event Action<ClientPlayer> Fragged = p => { };
-
-        public override float Health
-        {
-            get { return base.Health; }
-            protected set
-            {
-                base.Health = value;
-                if (Health < 1) Fragged.Invoke(this);
-            }
-        }
+        public Dictionary<PickupType, Weapon> Weapons { get; }
 
         public override PickupType CurrentWeaponType
         {
             get { return base.CurrentWeaponType; }
             protected set
             {
-                if(CurrentWeaponType != value) Log.Debug(CurrentWeaponType);
+                if(CurrentWeaponType != value) Log.Debug(CurrentWeaponType); // TODO : clean when these strange assignments have been analyzed
                 base.CurrentWeaponType = value;
             }
         }
 
         public ClientPlayer(int id) : base(id)
         {
+            Weapons = new Dictionary<PickupType, Weapon>();
         }
 
-        public ClientPlayer(int id, NetIncomingMessage m) : base(id, m)
+        public override void Deserialize(NetIncomingMessage m)
         {
+            base.Deserialize(m);
+            var ownedWeapons = m.ReadInt32();
+            if (ownedWeapons < Weapons.Count) Weapons.Clear();
+            for (int i = 0; i < ownedWeapons; i++)
+            {
+                var type = (PickupType)m.ReadInt32();
+                if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
+                Weapons[type].Deserialize(m);
+            }
         }
     }
 }

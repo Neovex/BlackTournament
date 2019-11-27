@@ -73,6 +73,7 @@
     <Compile Include="Entities\GameText.cs" />
     <Compile Include="Entities\RotatingGraphic.cs" />
     <Compile Include="Entities\WeaponIcon.cs" />
+    <Compile Include="Net\Data\ServerWeapon.cs" />
     <Compile Include="Scenes\LightEditor.cs" />
     <Compile Include="Net\NetMessage.cs" />
     <Compile Include="Net\NetworkManagementClient.cs" />

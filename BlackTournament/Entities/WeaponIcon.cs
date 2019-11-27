@@ -6,33 +6,13 @@ namespace BlackTournament.Entities
 {
     class WeaponIcon : UIContainer
     {
-        private bool _Active;
-        private int _Primary;
-        private int _Secundary;
         private UIGraphic _Icon;
         private Label _Label;
 
 
-        public bool Active
-        {
-            get => _Active;
-            set { _Active = value; UpdateBackground(); }
-        }
-        public int Primary
-        {
-            get => _Primary;
-            set { _Primary = value; UpdateLabel(); }
-        }
-        public int Secundary
-        {
-            get => _Secundary;
-            set { _Secundary = value; UpdateLabel(); }
-        }
-
-
         public WeaponIcon(Core core, Texture icon, Texture outline) : base(core)
         {
-            _Background.OutlineThickness = 1;
+            _Background.OutlineThickness = 0;
             _Background.OutlineColor = new Color(255, 255, 0, 150);
             
             BackgroundColor = Color.Black;
@@ -59,15 +39,11 @@ namespace BlackTournament.Entities
             InvokeSizeChanged();
         }
 
-
-        private void UpdateBackground()
+        public void UpdateIcon(bool active, int primary, int secundary)
         {
-            _Background.OutlineThickness = Active ? 1 : 0;
-            _Icon.Visible = Active;
-        }
-        private void UpdateLabel()
-        {
-            _Label.Text = $"{_Primary}-{_Secundary}";
+            _Background.OutlineThickness = active ? 1 : 0;
+            _Icon.Visible = primary + secundary != 0;
+            _Label.Text = $"{primary}-{secundary}";
         }
     }
 }

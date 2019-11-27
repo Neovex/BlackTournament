@@ -23,6 +23,7 @@ namespace BlackTournament.Net
         public float PlayerRotation { get; set; }
 
 
+        public int PlayerCount => _PlayerLookup.Count;
         public IEnumerable<ClientPlayer> Players => _PlayerLookup.Values;
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
@@ -49,6 +50,10 @@ namespace BlackTournament.Net
 
         public BlackTournamentClient(String userName):base(Game.ID, userName, Net.COMMANDS)
         {
+            _PlayerLookup = new Dictionary<int, ClientPlayer>();
+            _PickupLookup = new Dictionary<int, Pickup>();
+            _ShotLookup = new Dictionary<int, Shot>();
+            _Effects = new List<Effect>();
         }
 
 
@@ -152,12 +157,7 @@ namespace BlackTournament.Net
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                var newPlayer = new ClientPlayer(msg.ReadInt32(), msg);
-                if (newPlayer.Id != Id)
-                {
-                    newPlayer.Alias = GetAlias(newPlayer.Id);
-                    _PlayerLookup.Add(newPlayer.Id, newPlayer);
-                }
+                _PlayerLookup[msg.ReadInt32()].Deserialize(msg);
             }
 
             // Pickups
@@ -193,21 +193,7 @@ namespace BlackTournament.Net
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                var id = msg.ReadInt32();
-                if(_PlayerLookup.TryGetValue(id, out ClientPlayer player))
-                {
-                    player.Deserialize(msg);
-                }
-                else
-                {
-                    // A new player has joined
-                    var newPlayer = new ClientPlayer(id, msg)
-                    {
-                        Alias = GetAlias(id)
-                    };
-                    _PlayerLookup.Add(id, newPlayer);
-                    UserJoined.Invoke(newPlayer);
-                }
+                _PlayerLookup[msg.ReadInt32()].Deserialize(msg);
             }
 
             // Pickups
@@ -253,44 +239,41 @@ namespace BlackTournament.Net
             UpdateReceived.Invoke();
         }
 
-        protected override void UserConnected(NetUser user)
+        protected override void ConnectionValidated(int id, string alias) // We successfully connected to a server
         {
-            // Called from server when another user has connected to the current server
-            // override is intentionally empty - user adding is handled in ServerUpdate(msg);
+            Player = new ClientPlayer(id) { Alias = alias };
+            _PlayerLookup.Add(id, Player);
+            OnConnect.Invoke();
         }
 
-        protected override void UserDisconnected(NetUser user)
+        protected override void Disconnected() // We got disconnected from the server
+        {
+            OnDisconnect.Invoke();
+            _PlayerLookup.Clear();
+            _PickupLookup.Clear();
+            _ShotLookup.Clear();
+            _Effects.Clear();
+        }
+
+        protected override void UserConnected(NetUser user) // Another user connected to the server we are connected to
+        {
+            var newPlayer = new ClientPlayer(user.Id)
+            {
+                Alias = user.Alias
+            };
+            _PlayerLookup.Add(user.Id, newPlayer);
+            UserJoined.Invoke(newPlayer);
+        }
+
+        protected override void UserDisconnected(NetUser user) // Someone disconnected from the server we are connected to
         {
             UserLeft.Invoke(_PlayerLookup[user.Id]);
             _PlayerLookup.Remove(user.Id);
         }
 
-        protected override void ConnectionValidated(int id, string alias)
-        {
-            Player = new ClientPlayer(id) { Alias = alias };
-            _PlayerLookup = new Dictionary<int, ClientPlayer>();
-            _PlayerLookup.Add(id, Player);
-
-            _PickupLookup = new Dictionary<int, Pickup>();
-            _ShotLookup = new Dictionary<int, Shot>();
-            _Effects = new List<Effect>();
-
-            OnConnect.Invoke();
-        }
-
-        protected override void Connected()
-        {
-            // Not used. A connection is communicated only after validation. See ConnectionValidated(int id, string alias)
-        }
-        protected override void Disconnected()
-        {
-            base.Disconnected();
-            OnDisconnect.Invoke();
-        }
-
         protected override void DiscoveryResponseReceived(NetIncomingMessage msg)
         {
-            // Not used.
+            // A game client does not handle network discovery
         }
     }
 }

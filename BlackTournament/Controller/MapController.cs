@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using SFML.System;
@@ -75,10 +76,9 @@ namespace BlackTournament.Controller
             // _Client.ConnectionEstablished not required - connection already established when entering map state
             _Client.OnDisconnect += HandleConnectionLost;
             // Game Events
-            //_Client.Player.Fragged += HandlePlayerFragged; Added by _manual_ invocation of player joined
             _Client.ChangeLevelReceived += HandleServerMapChange;
             _Client.MessageReceived += HandleTextMessage;
-            _Client.UpdateReceived += UpdateReceived;
+            _Client.UpdateReceived += HandleUpdateReceived;
             _Client.UserJoined += HandleUserJoined;
             _Client.UserLeft += HandleUserLeft;
             _Client.ShotFired += HandleShotFired;
@@ -97,10 +97,9 @@ namespace BlackTournament.Controller
             // Connection Events
             _Client.OnDisconnect -= HandleConnectionLost;
             // Game Events
-            _Client.Player.Fragged -= HandlePlayerFragged; // See also notes under AttachEvents
             _Client.ChangeLevelReceived -= HandleServerMapChange;
             _Client.MessageReceived -= HandleTextMessage;
-            _Client.UpdateReceived -= UpdateReceived;
+            _Client.UpdateReceived -= HandleUpdateReceived;
             _Client.UserJoined -= HandleUserJoined;
             _Client.UserLeft -= HandleUserLeft;
             _Client.ShotFired -= HandleShotFired;
@@ -148,18 +147,6 @@ namespace BlackTournament.Controller
             _Client.ProcessGameAction(action, activate);
         }
 
-        private void HandlePlayerFragged(ClientPlayer player)
-        {
-            if(player == LocalPlayer)
-            {
-                // dang! we got fragged
-            }
-            else
-            {
-                // another one bites the dust, uh yeah
-            }
-        }
-
         private void HandlePickupStateChanged(Pickup pickup)
         {
             _Scene.UpdateEntity(pickup.Id, pickup.Position, 0, pickup.Active);
@@ -172,10 +159,10 @@ namespace BlackTournament.Controller
 
         private void HandleTextMessage(ClientPlayer player, string msg)
         {
-            Log.Debug("TODO: HandleTextMessage", msg);
+            _Scene.ShowMessage($"{player.Alias}: {msg}", false);
         }
 
-        private void UpdateReceived()
+        private void HandleUpdateReceived()
         {
             foreach (var player in _Client.Players)
             {
@@ -185,11 +172,6 @@ namespace BlackTournament.Controller
             if (LocalPlayer.IsAlive) _Scene.FocusPlayer(); // move camera to player
             // Update Player
             _Scene.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
-            _Scene.HUD.SetPlayerInfoVisibility(LocalPlayer.IsAlive);
-            _Scene.HUD.SetPlayerWeapon(LocalPlayer.CurrentWeaponType);
-            _Scene.HUD.Health = (int)LocalPlayer.Health;
-            _Scene.HUD.Shield = (int)LocalPlayer.Shield;
-            
 
             foreach (var shot in _Client.Shots)
             {
@@ -200,18 +182,27 @@ namespace BlackTournament.Controller
             {
                 _Scene.CreateEffect(efx.EffectType, efx.Position, efx.Rotation, efx.Source, efx.Primary, efx.Size);
             }
+
+            // HUD
+            _Scene.HUD.Alive = LocalPlayer.IsAlive;
+            _Scene.HUD.Score = LocalPlayer.Score;
+            _Scene.HUD.Rank = _Client.Players.GroupBy(p => p.Score).TakeWhile(g => !g.Contains(LocalPlayer)).Count() + 1;
+            _Scene.HUD.TotalPlayers = _Client.PlayerCount;
+            _Scene.HUD.Health = (int)LocalPlayer.Health;
+            _Scene.HUD.Shield = (int)LocalPlayer.Shield;
+            _Scene.HUD.SetPlayerWeapons(LocalPlayer.CurrentWeaponType, LocalPlayer.Weapons.Values.AsEnumerable());
         }
 
         private void HandleUserJoined(ClientPlayer player)
         {
-            player.Fragged += HandlePlayerFragged;
             _Scene.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
+            _Scene.ShowMessage($"{player.Alias}: has entered the game", true);//$
         }
 
         private void HandleUserLeft(ClientPlayer player)
         {
-            player.Fragged -= HandlePlayerFragged;
             _Scene.DestroyEntity(player.Id);
+            _Scene.ShowMessage($"{player.Alias}: has left the game", true);//$
         }
 
         private void HandleShotFired(Shot shot)

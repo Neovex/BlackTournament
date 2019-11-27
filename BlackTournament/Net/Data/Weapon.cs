@@ -3,78 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lidgren.Network;
 
 namespace BlackTournament.Net.Data
 {
-    class Weapon
+    public class Weapon
     {
-        private bool _Primary;
-        private bool _Triggered;
 
-        // Working Values
-        private float _PrimaryFireRate;
-        private int _PrimaryAmmo;
-        private float _SecundaryFireRate;
-        private int _SecundaryAmmo;
-
-        // Weapon Data
-        public WeaponData PrimaryWeapon { get; }
-        public WeaponData SecundaryWeapon { get; }
+        public PickupType WeaponType { get; }
+        public int PrimaryAmmo { get; protected set; }
+        public int SecundaryAmmo { get; protected set; }
+        public bool Empty => PrimaryAmmo + SecundaryAmmo == 0;
 
 
-
-        public event Action<Boolean> ShotFired = p => { };
-
-
-        public Weapon(WeaponData primaryWeapon, WeaponData secundaryWeapon)
+        public Weapon(PickupType weaponType)
         {
-            // Store Weapon Data
-            PrimaryWeapon = primaryWeapon;
-            SecundaryWeapon = secundaryWeapon;
-
-            // Init Munitions
-            _PrimaryAmmo = PrimaryWeapon.Ammunition;
-            _SecundaryAmmo = SecundaryWeapon.Ammunition;
+            WeaponType = weaponType;
         }
 
-        public void Fire(bool primary)
+        public void Serialize(NetOutgoingMessage m)
         {
-            if (_Triggered) Release();
-
-            _Primary = primary;
-            _Triggered = true;
-        }
-        public void Release()
-        {
-            _Triggered = false;
+            m.Write(PrimaryAmmo);
+            m.Write(SecundaryAmmo);
         }
 
-        public void Update(float deltaT)
+        public void Deserialize(NetIncomingMessage m)
         {
-            _PrimaryFireRate -= deltaT;
-            _SecundaryFireRate -= deltaT;
-
-            if (_Triggered)
-            {
-                if (_Primary)
-                {
-                    if (_PrimaryFireRate <= 0 && _PrimaryAmmo > 0)
-                    {
-                        _PrimaryFireRate = PrimaryWeapon.FireRate;
-                        _PrimaryAmmo--;
-                        ShotFired.Invoke(_Primary);
-                    }
-                }
-                else
-                {
-                    if (_SecundaryFireRate <= 0 && _SecundaryAmmo > 0)
-                    {
-                        _SecundaryFireRate = SecundaryWeapon.FireRate;
-                        _SecundaryAmmo--;
-                        ShotFired.Invoke(_Primary);
-                    }
-                }
-            }
+            PrimaryAmmo = m.ReadInt32();
+            SecundaryAmmo = m.ReadInt32();
         }
     }
 }

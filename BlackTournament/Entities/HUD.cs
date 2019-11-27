@@ -14,28 +14,53 @@ namespace BlackTournament.Entities
 {
     class HUD : Canvas
     {
+        private readonly static Color _GOLD = new Color(255, 215, 0);
+
         // Game
-        public int Kills { get; set; }
-        public int Rank { get; set; }
-        public int TotalPlayers { get; set; }
-        public TimeSpan Time { get; set; }
+        public int Score { set => _ScoreLabel.Text = value.ToString(); }
+        public int Rank
+        {
+            set
+            {
+                _RankLabel.Text = value.ToString();
+                _RankLabel.TextColor = value == 1 ? _GOLD : Color.White;
+            }
+        }
+        public int TotalPlayers { set => _TotalLabel.Text = $"-{value}"; }
+        public TimeSpan Time { set => _TimeLabel.Text = value.ToString(); }
 
         // Player
-        public int Health { get; set; }
-        public int Shield { get; set; }
-
-        // Weapons
-        public int DrakeSecondary { get; set; }
-        public int TitanPrimary { get; set; }
-        public int TitanSecundary { get; set; }
-        public int HedgePrimary { get; set; }
-        public int HedgeSecundary { get; set; }
-        public int ThumperPrimary { get; set; }
-        public int ThumperSecundary { get; set; }
+        public int Health
+        {
+            set
+            {
+                _HealthLabel.Text = value.ToString();
+                _HealthLabel.TextColor = value < 20 ? Color.Red : Color.White;
+            }
+        }
+        public int Shield
+        {
+            set
+            {
+                _ShieldInactive.Visible = value == 0;
+                _ShieldActive.Visible = !_ShieldInactive.Visible;
+                _ShieldLabel.Text = value.ToString();
+                _ShieldLabel.TextColor = value < 20 && value != 0 ? Color.Red : Color.White;
+            }
+        }
+        public bool Alive
+        {
+            set
+            {
+                _PlayerInfo.Visible = value;
+                _Weapons.Visible = value;
+            }
+        }
 
         public override View View { get => null; set => base.View = value; } // Disable view inheritance
 
 
+        private Dictionary<PickupType, WeaponIcon> _WeaponLookup;
         private AlignedContainer _PlayerInfo;
         private AlignedContainer _Weapons;
         private Label _ScoreLabel;
@@ -46,10 +71,6 @@ namespace BlackTournament.Entities
         private Label _ShieldLabel;
         private UIGraphic _ShieldActive;
         private UIGraphic _ShieldInactive;
-        private WeaponIcon _Drake;
-        private WeaponIcon _Hedge;
-        private WeaponIcon _Thump;
-        private WeaponIcon _Titan;
 
 
         public HUD(Core core, TextureLoader texLoader) : base(core, core?.DeviceSize)
@@ -138,13 +159,14 @@ namespace BlackTournament.Entities
             };
             Add(_PlayerInfo);
 
+            // Weapons
+            var drake = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Drake_White), texLoader.Load(Files.HUD_Drake_Outline));
+            var hedge = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Hedgeshock_White), texLoader.Load(Files.HUD_Hedgeshock_Outline));
+            var thump = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Thumper_White), texLoader.Load(Files.HUD_Thumper_Outline));
+            var titan = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Titandrill_White), texLoader.Load(Files.HUD_Titandrill_Outline));
+
             _Weapons = new AlignedContainer(_Core, Alignment.CenterBottom,
-                new OffsetContainer(_Core, Orientation.Horizontal, 20,
-                    _Drake = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Drake_White), texLoader.Load(Files.HUD_Drake_Outline)),
-                    _Hedge = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Hedgeshock_White), texLoader.Load(Files.HUD_Hedgeshock_Outline)),
-                    _Thump = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Thumper_White), texLoader.Load(Files.HUD_Thumper_Outline)),
-                    _Titan = new WeaponIcon(_Core, texLoader.Load(Files.HUD_Titandrill_White), texLoader.Load(Files.HUD_Titandrill_Outline))
-                )
+                new OffsetContainer(_Core, Orientation.Horizontal, 20, drake, hedge, thump, titan)
             )
             {
                 Name = "Weapons",
@@ -152,43 +174,34 @@ namespace BlackTournament.Entities
             };
             Add(_Weapons);
 
+            _WeaponLookup = new Dictionary<PickupType, WeaponIcon>()
+            {
+                { PickupType.Drake, drake },
+                { PickupType.Hedgeshock, hedge },
+                { PickupType.Thumper, thump },
+                { PickupType.Titandrill, titan }
+            };
+
             // Listen to Size Changes
             _Core.DeviceResized += Resize;
         }
 
-        public void SetPlayerInfoVisibility(bool v)
+        internal void SetPlayerWeapons(PickupType currentWeapon, IEnumerable<Weapon> weapons)
         {
-            _PlayerInfo.Visible = v;
-            _Weapons.Visible = v;
+            foreach (var weaponIcon in _WeaponLookup.Values)
+            {
+                weaponIcon.UpdateIcon(false, 0, 0);
+            }
+            foreach (var weaponData in weapons)
+            {
+                _WeaponLookup[weaponData.WeaponType].UpdateIcon(weaponData.WeaponType == currentWeapon, weaponData.PrimaryAmmo, weaponData.SecundaryAmmo);
+            }
         }
 
         protected override void Destroy(bool disposing)
         {
             _Core.DeviceResized -= Resize;
             base.Destroy(disposing);
-        }
-
-        internal void SetPlayerWeapon(PickupType weapon)
-        {
-            _Drake.Active = false;
-            _Hedge.Active = false;
-            _Thump.Active = false;
-            _Titan.Active = false;
-            switch (weapon)
-            {
-                case PickupType.Hedgeshock:
-                    _Hedge.Active = true;
-                    break;
-                case PickupType.Thumper:
-                    _Thump.Active = true;
-                    break;
-                case PickupType.Titandrill:
-                    _Titan.Active = true;
-                    break;
-                default:
-                    _Drake.Active = true;
-                    break;
-            }
         }
     }
 }

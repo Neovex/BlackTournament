@@ -24,8 +24,7 @@ namespace BlackTournament.Net.Data
         public Boolean Dead { get; set; }
         public Single RespawnTimeout { get; private set; }
         public CircleCollisionShape Collision { get; private set; }
-        public Dictionary<PickupType,Weapon> Weapons { get; private set; }
-        public Weapon Weapon => Weapons[CurrentWeaponType];
+        public Dictionary<PickupType,ServerWeapon> Weapons { get; private set; }
         public Vector2f WeaponSpawn => Position + Create.Vector2fFromAngle(Rotation + 16, 35);
 
 
@@ -38,7 +37,7 @@ namespace BlackTournament.Net.Data
             Input = new HashSet<GameAction>();
             Dead = true;
             Collision = new CircleCollisionShape(collisionSystem, Position, _COLLISION_RADIUS);
-            Weapons = new Dictionary<PickupType, Weapon>();
+            Weapons = new Dictionary<PickupType, ServerWeapon>();
             GivePickup(PickupType.Drake); // Initial Weapon
         }
 
@@ -55,22 +54,23 @@ namespace BlackTournament.Net.Data
         public void DamagePlayer(float damage)
         {
             if (Dead) return;
-            Shield -= damage;
+
+
+            Shield -= damage * 0.7f;
             if (Shield < 0)
             {
                 Health += Shield;
                 Shield = 0;
             }
+            Health -= damage * 0.3f;
             if (Health <= 0) Fragg();
         }
         public void Fragg()
         {
-            Weapon.Release();
+            Weapons[CurrentWeaponType].Release();
             Dead = true;
             Health = Shield = 0;
             RespawnTimeout = _DEFAULT_RESPAWN_TIME;
-
-            // mayhaps add K/D stuff here
         }
 
         public void Update(float deltaT)
@@ -98,7 +98,7 @@ namespace BlackTournament.Net.Data
             }
             Collision.Position += new Vector2f(x, y);
 
-            Weapon.Update(deltaT);
+            Weapons[CurrentWeaponType].Update(deltaT);
         }
 
         public void ShootPrimary(bool activate)
@@ -112,8 +112,8 @@ namespace BlackTournament.Net.Data
         private void Shoot(bool activate, bool primary)
         {
             if (Dead) return;
-            if (activate) Weapon.Fire(primary);
-            else Weapon.Release();
+            if (activate) Weapons[CurrentWeaponType].Fire(primary);
+            else Weapons[CurrentWeaponType].Release();
         }
 
         public void Respawn(Vector2f spawnPosition)
@@ -136,7 +136,7 @@ namespace BlackTournament.Net.Data
         public void SwitchWeapon(int direction)
         {
             if (Dead) return;
-            Weapon.Release();
+            Weapons[CurrentWeaponType].Release();
 
             var index = OwnedWeapons.IndexOf(CurrentWeaponType) + direction;
             if (index < 0) index = OwnedWeapons.Count - 1;
@@ -148,25 +148,25 @@ namespace BlackTournament.Net.Data
             switch (pickup)
             {
                 case PickupType.SmallHealth:
-                    Health += 15;
+                    Health += 2;
                     break;
                 case PickupType.BigHealth:
-                    Health += 40;
+                    Health += 50;
                     break;
                 case PickupType.SmallShield:
-                    Shield += 15;
+                    Shield += 2;
                     break;
                 case PickupType.BigShield:
-                    Shield += 40;
+                    Shield += 50;
                     break;
                 case PickupType.Drake:
                 case PickupType.Hedgeshock:
                 case PickupType.Thumper:
                 case PickupType.Titandrill:
                     CurrentWeaponType = pickup;
-                    if(Weapons.ContainsKey(pickup)) Weapons[pickup].ShotFired -= HandleWeaponFired;
-                    Weapons[pickup] = WeaponData.CreateWeaponFrom(pickup);
-                    Weapon.ShotFired += HandleWeaponFired;
+                    if(Weapons.ContainsKey(CurrentWeaponType)) Weapons[CurrentWeaponType].ShotFired -= HandleWeaponFired;
+                    Weapons[CurrentWeaponType] = new ServerWeapon(CurrentWeaponType);
+                    Weapons[CurrentWeaponType].ShotFired += HandleWeaponFired;
                     break;
             }
 
@@ -177,6 +177,23 @@ namespace BlackTournament.Net.Data
         private void HandleWeaponFired(bool primary)
         {
             ShotFired.Invoke(this, primary);
+            if (Weapons[CurrentWeaponType].Empty)
+            {
+                Weapons[CurrentWeaponType].Release();
+                var next = Weapons.Values.FirstOrDefault(w => !w.Empty); // check collision with Owned Weapon Problem
+                if (next != null) CurrentWeaponType = next.WeaponType;
+            }
+        }
+
+        protected override void SerializeInternal(NetOutgoingMessage m)
+        {
+            base.SerializeInternal(m);
+            m.Write(OwnedWeapons.Count);
+            foreach (var weaponType in OwnedWeapons)
+            {
+                m.Write((int)weaponType);
+                Weapons[weaponType].Serialize(m);
+            }
         }
     }
 }
