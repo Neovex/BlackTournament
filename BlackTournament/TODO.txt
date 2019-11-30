@@ -16,7 +16,8 @@ HUD!
 -# create HUD specific assets
 -# add
 -# attach
-fix weapon change bug + duplcate wapeon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
+#fix weapon change bug + duplcate wapeon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
+important! add meta game logic & game time?
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension

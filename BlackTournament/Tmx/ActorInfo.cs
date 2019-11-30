@@ -53,7 +53,7 @@ namespace BlackTournament.Tmx
                 type = PickupType.NULL;
             }
             Item = type;
-            Amount = Int32.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Amount), 1), _Culture);
+            Amount = Int32.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Amount), 0), _Culture);
             RespawnTime = Single.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(RespawnTime), 1), _Culture);
             Position += new Vector2f((float)obj.Width, (float)obj.Height) / 2;
         }

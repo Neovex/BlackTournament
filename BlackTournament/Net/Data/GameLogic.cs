@@ -60,8 +60,8 @@ namespace BlackTournament.Net.Data
 
         private void Spawn(ServerPlayer player)
         {
-            var spawnPoint = _Players.All(p => p.Dead) ? _Map.SpawnPoints.OrderBy(p=> _Core.Random.Next()).First()
-                : _Map.SpawnPoints.OrderByDescending(sp => _Players.Where(p => !p.Dead).Min(p => p.Position.DistanceBetweenSquared(sp))).First();
+            var spawnPoint = _Players.All(p => !p.IsAlive) ? _Map.SpawnPoints.OrderBy(p=> _Core.Random.Next()).First()
+                : _Map.SpawnPoints.OrderByDescending(sp => _Players.Where(p => p.IsAlive).Min(p => p.Position.DistanceBetweenSquared(sp))).First();
 
             player.Respawn(spawnPoint);
         }
@@ -115,14 +115,8 @@ namespace BlackTournament.Net.Data
                     else player.Input.Remove(action);
                     break;
                 case GameAction.ShootPrimary:
-                    if (player.Dead)
-                    {
-                        if (player.RespawnTimeout <= 0) Spawn(player);
-                    }
-                    else
-                    {
-                        player.ShootPrimary(activate);
-                    }
+                    if (player.IsAlive) player.ShootPrimary(activate);
+                    else if (player.RespawnTimeout <= 0) Spawn(player);
                     break;
                 case GameAction.ShootSecundary:
                     player.ShootSecundary(activate);
@@ -198,7 +192,7 @@ namespace BlackTournament.Net.Data
                 player.Update(deltaT);
 
                 // Handle Collisions
-                if (!player.Dead)
+                if (player.IsAlive)
                 {
                     foreach (var wall in _Map.WallCollider) // Walls
                     {
@@ -220,7 +214,7 @@ namespace BlackTournament.Net.Data
                     }
                     foreach (var otherPlayer in _Players) // Players
                     {
-                        if (!otherPlayer.Dead && otherPlayer != player
+                        if (otherPlayer.IsAlive && otherPlayer != player
                             && player.Collision.CollidesWith(otherPlayer.Collision))
                         {
                             player.Collision.Position = player.Position;
@@ -239,7 +233,10 @@ namespace BlackTournament.Net.Data
                         if (killzone.CollisionShape.CollidesWith(player.Position))
                         {
                             player.DamagePlayer(killzone.Damage * deltaT);
-                            if (player.Dead) _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
+                            if (!player.IsAlive)
+                            {
+                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
+                            }
                         }
                     }
                 }
@@ -289,7 +286,7 @@ namespace BlackTournament.Net.Data
             }
 
             // find all player intersections
-            var affectedPlayers = _Players.Where(p => !p.Dead && p != player)
+            var affectedPlayers = _Players.Where(p => p.IsAlive && p != player)
                                           .Select(p => new
                                           {
                                               Player = p,
@@ -365,14 +362,14 @@ namespace BlackTournament.Net.Data
                 }
             }
 
-            var player = _Players.FirstOrDefault(p => !p.Dead && (shot.Collision == null ? p.Collision.CollidesWith(shot.Position) : p.Collision.CollidesWith(shot.Collision)));
+            var player = _Players.FirstOrDefault(p => p.IsAlive && (shot.Collision == null ? p.Collision.CollidesWith(shot.Position) : p.Collision.CollidesWith(shot.Collision)));
             if(player != null)
             {
                 if (shot.IsExplosive)
                 {
-                    // go boom
+                    // go boom!
                     CheckExplosion(shot);
-                    // remove shot
+                    // then remove shot
                     shot.Destroy();
                 }
                 else
@@ -406,7 +403,7 @@ namespace BlackTournament.Net.Data
             // Distribute Damage
             foreach (var player in _Players)
             {
-                if (!player.Dead)
+                if (player.IsAlive)
                 {
                     var distance = (float)player.Position.DistanceBetween(shot.Position);
                     if (distance <= shot.BlastRadius)

@@ -63,26 +63,22 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        private PickupType _CurrentWeapon;
+        private PickupType _CurrentWeaponType;
         public virtual PickupType CurrentWeaponType
         {
-            get { return _CurrentWeapon; }
+            get { return _CurrentWeaponType; }
             protected set
             {
-                if (!OwnedWeapons.Contains(value)) OwnedWeapons.Add(value);
-                _CurrentWeapon = value;
+                _CurrentWeaponType = value;
                 IsDirty = true;
             }
         }
+        public Boolean IsAlive => Health > 0;
 
-        public List<PickupType> OwnedWeapons { get; private set; } = new List<PickupType>();
+        public Dictionary<PickupType, Weapon> Weapons { get; } = new Dictionary<PickupType, Weapon>();
 
 
-        public Player(int id) : base(id) // Server CTOR
-        {
-            CurrentWeaponType = PickupType.Drake;
-        }
-        public Player(int id, NetIncomingMessage m) : base(id, m) // Client CTOR (data will be automatically deserialized)
+        public Player(int id) : base(id)
         {
         }
 
@@ -96,6 +92,13 @@ namespace BlackTournament.Net.Data
             m.Write((int)Health); // send Health & Shield as int - the float values are important only for the server anyway
             m.Write((int)Shield);
             m.Write((int)CurrentWeaponType);
+
+            m.Write(Weapons.Count);
+            foreach (var weapon in Weapons.Values)
+            {
+                m.Write((int)weapon.WeaponType);
+                weapon.Serialize(m);
+            }
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -107,6 +110,15 @@ namespace BlackTournament.Net.Data
             Health = m.ReadInt32();
             Shield = m.ReadInt32();
             CurrentWeaponType = (PickupType)m.ReadInt32();
+
+            var ownedWeapons = m.ReadInt32();
+            if (ownedWeapons < Weapons.Count) Weapons.Clear();
+            for (int i = 0; i < ownedWeapons; i++)
+            {
+                var type = (PickupType)m.ReadInt32();
+                if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
+                Weapons[type].Deserialize(m);
+            }
         }
     }
 }

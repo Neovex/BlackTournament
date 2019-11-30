@@ -16,7 +16,7 @@ namespace BlackTournament
         public static readonly WeaponData DrakeSecundary = new WeaponData(35, 80, 2, 0.7f, 0, 700, 1.5f, Geometry.Point);
 
         public static readonly WeaponData HedgeshockPrimary = new WeaponData(10, 0, 180, 0.05f, 400, 0, 0, Geometry.Line, 15);
-        public static readonly WeaponData HedgeshockSecundary = new WeaponData(1, 0, 4, 0.75f, 40, 600, 2.5f, Geometry.Circle); // check penetration damage
+        public static readonly WeaponData HedgeshockSecundary = new WeaponData(20, 0, 4, 0.75f, 40, 600, 2.5f, Geometry.Circle); // check penetration damage
 
         public static readonly WeaponData ThumperPrimary = new WeaponData(DrakeSecundary.Damage, DrakeSecundary.BlastRadius, 10, 0.6f, DrakeSecundary.Length, DrakeSecundary.Speed, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
         public static readonly WeaponData ThumperSecundary = new WeaponData(DrakeSecundary.Damage*0.8f, DrakeSecundary.BlastRadius*0.8f, 4, 0.9f, DrakeSecundary.Length, DrakeSecundary.Speed * 1.2f, DrakeSecundary.TTL, DrakeSecundary.ProjectileGeometry);
@@ -37,6 +37,28 @@ namespace BlackTournament
             var msg = "Invalid weapon request";
             Log.Fatal(msg);
             throw new Exception(msg);
+        }
+        public static int IndexOf(PickupType type)
+        {
+            switch (type)
+            {
+                case PickupType.Drake: return 0;
+                case PickupType.Hedgeshock: return 1;
+                case PickupType.Thumper: return 2;
+                case PickupType.Titandrill: return 3;
+            }
+            return -1;
+        }
+        public static PickupType GetTypeByIndex(int index)
+        {
+            switch (index % 4)
+            {
+                case 0: return PickupType.Drake;
+                case 1: return PickupType.Hedgeshock;
+                case 2: return PickupType.Thumper;
+                case 3: return PickupType.Titandrill;
+            }
+            return PickupType.NULL;
         }
 
         // Weapon Stats

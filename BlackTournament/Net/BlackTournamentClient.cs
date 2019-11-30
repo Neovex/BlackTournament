@@ -241,7 +241,7 @@ namespace BlackTournament.Net
 
         protected override void ConnectionValidated(int id, string alias) // We successfully connected to a server
         {
-            Player = new ClientPlayer(id) { Alias = alias };
+            Player = new ClientPlayer(id, alias);
             _PlayerLookup.Add(id, Player);
             OnConnect.Invoke();
         }
@@ -257,10 +257,7 @@ namespace BlackTournament.Net
 
         protected override void UserConnected(NetUser user) // Another user connected to the server we are connected to
         {
-            var newPlayer = new ClientPlayer(user.Id)
-            {
-                Alias = user.Alias
-            };
+            var newPlayer = new ClientPlayer(user.Id, user.Alias);
             _PlayerLookup.Add(user.Id, newPlayer);
             UserJoined.Invoke(newPlayer);
         }
