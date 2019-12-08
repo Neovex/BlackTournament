@@ -157,9 +157,9 @@ namespace BlackTournament.Controller
             Log.Debug("TODO: HandleServerMapChange");
         }
 
-        private void HandleTextMessage(ClientPlayer player, string msg)
+        private void HandleTextMessage(bool isSystemMessage, string msg)
         {
-            _Scene.ShowMessage($"{player.Alias}: {msg}", false);
+            _Scene.HUD.ShowMessage(isSystemMessage, msg);
         }
 
         private void HandleUpdateReceived()
@@ -197,13 +197,13 @@ namespace BlackTournament.Controller
         private void HandleUserJoined(ClientPlayer player)
         {
             _Scene.CreatePlayer(player.Id, player.Id == LocalPlayer.Id);
-            _Scene.ShowMessage($"{player.Alias}: has entered the game", true);//$
+            _Scene.HUD.ShowMessage(true, $"{player.Alias} has entered the game");
         }
 
         private void HandleUserLeft(ClientPlayer player)
         {
             _Scene.DestroyEntity(player.Id);
-            _Scene.ShowMessage($"{player.Alias}: has left the game", true);//$
+            _Scene.HUD.ShowMessage(true, $"{player.Alias} has left the game");
         }
 
         private void HandleShotFired(Shot shot)

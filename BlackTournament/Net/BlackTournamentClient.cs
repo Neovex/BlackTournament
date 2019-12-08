@@ -29,7 +29,6 @@ namespace BlackTournament.Net
         public IEnumerable<Pickup> Pickups => _PickupLookup.Values;
         public IEnumerable<Shot> Shots => _ShotLookup.Values;
         public IEnumerable<Effect> Effects => _Effects;
-        public override Int32 AdminId => NetIdProvider.ADMIN_ID;
 
 
         // Connection Events
@@ -43,7 +42,7 @@ namespace BlackTournament.Net
         public event Action<Shot> ShotFired = u => { };
         public event Action<Shot> ShotRemoved = u => { };
 
-        public event Action<ClientPlayer, String> MessageReceived = (u, m) => { };
+        public event Action<Boolean, String> MessageReceived = (u, m) => { };
         public event Action ChangeLevelReceived = () => { };
         public event Action UpdateReceived = () => { };
 
@@ -140,10 +139,11 @@ namespace BlackTournament.Net
 
         private void TextMessage(NetIncomingMessage msg)
         {
-            var player = _PlayerLookup[msg.ReadInt32()];
-            var txt = msg.ReadString();
-            Log.Info(player.Alias, txt);
-            MessageReceived(player, txt);
+            var id = msg.ReadInt32();
+            var message = msg.ReadString();
+            _PlayerLookup.TryGetValue(id, out ClientPlayer player);
+            if (player != null) message = $"{player.Alias}: {message}";
+            MessageReceived(id == ServerId, message);
         }
 
         private void ChangeLevel(NetIncomingMessage msg)

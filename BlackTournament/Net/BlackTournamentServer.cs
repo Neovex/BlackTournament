@@ -18,9 +18,6 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
-        public override int AdminId => NetIdProvider.ADMIN_ID;
-        public override int NextClientId => NetIdProvider.NEXT_ID;
-
         public ServerInfo Info { get; private set; }
 
 
@@ -32,6 +29,7 @@ namespace BlackTournament.Net
 
         // CONTROL
         private bool IsAdmin(int id) => id == AdminId;
+        protected override string ValidateName(string name) => name == "System" ? "Banana" + _Core.Random.Next() : base.ValidateName(name);
 
         public bool HostGame(int port, ServerInfo info)
         {
@@ -40,7 +38,7 @@ namespace BlackTournament.Net
             var map = LoadMapFromMapname(Info.Map);
             if (map == null)
             {
-                LastError = $"Failed to host {Info.Map} on {port} reason: unknown map";//$?
+                LastError = $"Failed to host {Info.Map} on {port} reason: unknown map";
                 Log.Error(LastError);
             }
             else if (Host(Info.Name, port))
@@ -56,14 +54,17 @@ namespace BlackTournament.Net
         {
             var mapper = new TmxMapper();
             if (mapper.Load(mapName, _Core.CollisionSystem)) return mapper;
-            LastError = $"Failed to load level {mapName}";//$?
+            LastError = $"Failed to load level {mapName}";
             Log.Warning(LastError);
             return null;
         }
 
         private void ChangeLevel(TmxMapper map)
         {
+            // Init Game Logic
+            if(_Logic != null) _Logic.GameMessage -= HandleGameLogicMessage;
             _Logic = new GameLogic(_Core, map);
+            _Logic.GameMessage += HandleGameLogicMessage;
 
             // Add users
             foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
@@ -99,6 +100,10 @@ namespace BlackTournament.Net
             {
                 StopServer("Match Complete");
             }
+        }
+        private void HandleGameLogicMessage(string msg)
+        {
+            BroadcastTextMessage(ServerId, msg);
         }
 
         protected override void UserConnected(ServerUser<NetConnection> user)
@@ -162,6 +167,7 @@ namespace BlackTournament.Net
             {
                 StopServer("Server stopped by admin");
                 Info = null;
+                _Logic.GameMessage -= HandleGameLogicMessage;
                 _Logic = null;
             }
             else
@@ -170,7 +176,7 @@ namespace BlackTournament.Net
                 Log.Warning(message);
                 Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
                 {
-                    m.Write(NetIdProvider.SERVER_ID);
+                    m.Write(ServerId);
                     m.Write(message);
                 });
             }
@@ -188,7 +194,7 @@ namespace BlackTournament.Net
                     Log.Error(LastError);
                     Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
                     {
-                        m.Write(NetIdProvider.SERVER_ID);
+                        m.Write(ServerId);
                         m.Write(LastError);
                     });
                 }
@@ -199,7 +205,7 @@ namespace BlackTournament.Net
                 Log.Warning(message);
                 Send(_ConnectedClients.First(c => c.Id == AdminId).Connection, NetMessage.TextMessage, m =>
                 {
-                    m.Write(NetIdProvider.SERVER_ID);
+                    m.Write(ServerId);
                     m.Write(message);
                 });
             }

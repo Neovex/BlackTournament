@@ -51,8 +51,6 @@ namespace BlackTournament.Net.Data
         public void DamagePlayer(float damage)
         {
             if (!IsAlive) return;
-
-
             Shield -= damage * 0.7f;
             if (Shield < 0)
             {

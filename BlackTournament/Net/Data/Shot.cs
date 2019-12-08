@@ -12,43 +12,59 @@ namespace BlackTournament.Net.Data
 {
     public class Shot : NetEntityBase
     {
-        private Vector2f _MovementVector;
-        private Action<Vector2f> _UpdatePosition;
         private float _Direction;
+        private Vector2f _MovementVector;
+        private readonly Action<Vector2f> _UpdatePosition;
 
-        public float Speed { get; private set; }
-        public float Damage { get; private set; }
-        public float BlastRadius { get; private set; }
-        public float TTL { get; private set; }
-        public bool Alive => TTL > 0;
+
+        public Vector2f Position { get; private set; }
+        public float Direction
+        {
+            get => _Direction;
+            set 
+            {
+                _Direction = value;
+                _MovementVector = Create.Vector2fFromAngle(value);
+            }
+        }
 
         public PickupType SourceWeapon { get; private set; }
         public bool Primary { get; private set; }
+        public int Owner { get; }
 
-        public Vector2f Position { get; private set; }
-        public Vector2f LastPosition { get; private set; }
-        public float Direction { get => _Direction; set { _Direction = value; _MovementVector = Create.Vector2fFromAngle(value); } }
+        public float Speed { get; }
+        public float Damage { get; }
+        public float BlastRadius { get;}
+        
+        public float TTL { get; private set; }
+
         public ICollisionShape Collision { get; }
 
+        public bool Alive => TTL > 0;
         public bool IsExplosive => BlastRadius != 0;
         public bool IsBouncy => !Primary && (SourceWeapon == PickupType.Thumper || SourceWeapon == PickupType.Hedgeshock);
         public bool IsPenetrating => !Primary && SourceWeapon == PickupType.Hedgeshock;
         public bool Exploded { get; set; }
 
-        public Shot(int id, float direction, float speed, float damage, float blastRadius, float ttl, PickupType sourceWeapon, bool primary, Vector2f position, Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
+
+        public Shot(int id,
+                    Vector2f weaponSpawn, float orientation, PickupType weapon, bool primary, int owner,
+                    float speed, float damage, float blastRadius, float ttl, 
+                    Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
         {
-            _UpdatePosition = updatePosition;
+            Position = weaponSpawn;
+            Direction = orientation;
+
+            SourceWeapon = weapon;
+            Primary = primary;
+            Owner = owner;
 
             Speed = speed;
             Damage = damage;
             BlastRadius = blastRadius;
             TTL = ttl;
 
-            SourceWeapon = sourceWeapon;
-            Primary = primary;
-
-            Position = position;
-            Direction = direction;
+            _UpdatePosition = updatePosition;
             Collision = collision;
         }
 
@@ -59,7 +75,6 @@ namespace BlackTournament.Net.Data
         public void Update(float deltaT)
         {
             TTL -= deltaT;
-            LastPosition = Position;
             Position += _MovementVector * Speed * deltaT;
             _UpdatePosition?.Invoke(Position); // To update collision shape position.
         }
@@ -86,12 +101,6 @@ namespace BlackTournament.Net.Data
             m.Write((int)SourceWeapon);
             m.Write(Primary);
             m.Write(TTL);
-        }
-
-        internal void Reset()
-        {
-            Position = LastPosition;
-            _UpdatePosition?.Invoke(Position); // To update collision shape position.
         }
     }
 }

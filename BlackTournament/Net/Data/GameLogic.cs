@@ -31,6 +31,9 @@ namespace BlackTournament.Net.Data
         public int CurrentPlayers => _Players.Count;
 
 
+        public event Action<string> GameMessage = m => { };
+
+
         public GameLogic(Core core, TmxMapper map) : base(core)
         {
             MatchCicle = MatchCicle.None;
@@ -76,11 +79,13 @@ namespace BlackTournament.Net.Data
             {
                 case Geometry.Point:
                     // Spawn Shot
-                    var s = new Shot(NetIdProvider.NEXT_ID, player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn);
+                    var s = new Shot(NetIdProvider.NEXT_ID, 
+                                    player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
+                                    weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
-                case Geometry.Line: // Ray caster
+                case Geometry.Line: // Ray caster - instant effect
                     // Check Intersections, Occlusion etc. +
                     // Perform data adjustments (remove health etc.) +
                     // Spawn impact effects
@@ -89,7 +94,10 @@ namespace BlackTournament.Net.Data
                 case Geometry.Circle:
                     // Spawn Shot
                     var circ = new CircleCollisionShape(_Core.CollisionSystem, player.WeaponSpawn, weaponData.Length);
-                    s = new Shot(NetIdProvider.NEXT_ID, player.Rotation, weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL, player.CurrentWeaponType, primaryFire, player.WeaponSpawn, p => circ.Position = p, circ);
+                    s = new Shot(NetIdProvider.NEXT_ID,
+                                 player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
+                                 weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL,
+                                 p => circ.Position = p, circ);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
@@ -242,6 +250,18 @@ namespace BlackTournament.Net.Data
                             if (!player.IsAlive)
                             {
                                 _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
+                                switch (killzone.Effect)
+                                {
+                                    case EffectType.Drop:
+                                        GameMessage.Invoke($"{player.User.Alias} went into the abyss.");
+                                        break;
+                                    case EffectType.Gore:
+                                        GameMessage.Invoke($"{player.User.Alias} got shredded.");
+                                        break;
+                                    default:
+                                        GameMessage.Invoke($"{player.User.Alias} was in the wrong place.");
+                                        break;
+                                }
                             }
                         }
                     }
@@ -259,14 +279,17 @@ namespace BlackTournament.Net.Data
                 {
                     case MatchCicle.None:
                         MatchCicle = MatchCicle.Warmup;
+                        GameMessage.Invoke("Get ready!");
                         break;
                     case MatchCicle.Warmup:
                         MatchCicle = MatchCicle.Game;
                         _Players.ForEach(Spawn);
+                        GameMessage.Invoke("FIGHT!");
                         break;
                     case MatchCicle.Game:
                         MatchCicle = MatchCicle.Cooldown;
                         _Players.ForEach(p => p.Fragg());
+                        GameMessage.Invoke($"Match Complete. The winner is: {_Players.OrderBy(p => p.Score).First().User.Alias}");
                         break;
                     case MatchCicle.Cooldown:
                         MatchCicle = MatchCicle.Complete;
@@ -334,6 +357,10 @@ namespace BlackTournament.Net.Data
                 _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
                 pi.Player.DamagePlayer(weaponData.Damage);
+                if (!pi.Player.IsAlive)
+                {
+                    GameMessage.Invoke($"{pi.Player.User.Alias} was on the wrong end of {player.User.Alias}'s gun.");
+                }
             }
 
             // update weapon effect
@@ -420,6 +447,13 @@ namespace BlackTournament.Net.Data
                         // remove shot
                         shot.Destroy();
                     }
+                    if (!player.IsAlive)
+                    {
+                        if (player.Id == shot.Owner)
+                            GameMessage.Invoke($"{player.User.Alias} committed sudoku");
+                        else
+                            GameMessage.Invoke($"{player.User.Alias} was fragged by {_PlayerLookup[shot.Owner].User.Alias}");
+                    }
                 }
             }
         }
@@ -443,6 +477,14 @@ namespace BlackTournament.Net.Data
                         player.DamagePlayer(Math.Max(shot.Damage / 3, shot.Damage * (1 - (distance / shot.BlastRadius)))); // Todo : check damage falloff
                         // Add impact
                         _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Position.AngleTowards(player.Position), shot.SourceWeapon, shot.Primary));
+
+                        if (!player.IsAlive)
+                        {
+                            if (player.Id == shot.Owner)
+                                GameMessage.Invoke($"{player.User.Alias} checked his explosives too thoroughly");
+                            else
+                                GameMessage.Invoke($"{player.User.Alias} was evenly distributed by {_PlayerLookup[shot.Owner].User.Alias}");
+                        }
                     }
                 }
             }

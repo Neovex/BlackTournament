@@ -18,6 +18,7 @@ HUD!
 -# attach
 #fix weapon change bug + duplicate weapon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
 #add meta game logic & game time
+add game & chat messages
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension

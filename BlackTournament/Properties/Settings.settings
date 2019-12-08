@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="PlayerName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">KillAz</Value>
+      <Value Profile="(Default)">Player</Value>
     </Setting>
     <Setting Name="MusikVolume" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50</Value>

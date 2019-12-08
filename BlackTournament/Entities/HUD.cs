@@ -198,6 +198,12 @@ namespace BlackTournament.Entities
             }
         }
 
+        internal void ShowMessage(bool isSystemMessage, string message)
+        {
+            // TODO
+            Log.Debug("TODO: Display:", message, isSystemMessage);
+        }
+
         protected override void Destroy(bool disposing)
         {
             _Core.DeviceResized -= Resize;
