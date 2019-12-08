@@ -18,6 +18,7 @@ namespace BlackTournament.Net
         private Single _UpdateImpulse;
 
 
+        public float GameTime { get; private set; }
         public String MapName { get; private set; }
         public ClientPlayer Player { get; private set; }
         public float PlayerRotation { get; set; }
@@ -153,6 +154,9 @@ namespace BlackTournament.Net
 
         private void ServerInit(NetIncomingMessage msg)
         {
+            // Time
+            GameTime = msg.ReadSingle();
+
             // Add Players
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
@@ -186,6 +190,9 @@ namespace BlackTournament.Net
 
         private void ServerUpdate(NetIncomingMessage msg)
         {
+            // Time
+            GameTime = msg.ReadSingle();
+
             // Effect data are pure spawn info packets and exist only for a single frame hence need to be removed 
             _Effects.Clear();
 

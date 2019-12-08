@@ -94,6 +94,11 @@ namespace BlackTournament.Net
                 }
                 */
             }
+
+            if (_Logic.MatchCicle == MatchCicle.Complete)
+            {
+                StopServer("Match Complete");
+            }
         }
 
         protected override void UserConnected(ServerUser<NetConnection> user)

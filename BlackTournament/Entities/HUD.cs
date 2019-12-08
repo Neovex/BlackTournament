@@ -27,7 +27,7 @@ namespace BlackTournament.Entities
             }
         }
         public int TotalPlayers { set => _TotalLabel.Text = $"-{value}"; }
-        public TimeSpan Time { set => _TimeLabel.Text = value.ToString(); }
+        public TimeSpan Time { set => _TimeLabel.Text = value.ToString("mm\\:ss"); }
 
         // Player
         public int Health

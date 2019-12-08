@@ -15,24 +15,25 @@ using BlackCoat.Network;
 
 namespace BlackTournament.Net.Data
 {
-    class GameLogic
+    class GameLogic : BlackCoatBase
     {
-        private Core _Core;
+        private float _GameTime;
         private TmxMapper _Map;
-        private Dictionary<Int32, ServerPlayer> _PlayerLookup;
+        private Dictionary<int, ServerPlayer> _PlayerLookup;
         private List<ServerPlayer> _Players;
         private List<Shot> _Shots;
         private List<Effect> _Effects;
-        private IEnumerable<Pickup> _Pickups; 
+        private IEnumerable<Pickup> _Pickups;
 
 
-        public string MapName { get { return _Map.Name; } }
+        public MatchCicle MatchCicle { get; private set; }
+        public string MapName => _Map.Name;
         public int CurrentPlayers => _Players.Count;
 
 
-        public GameLogic(Core core, TmxMapper map)
+        public GameLogic(Core core, TmxMapper map) : base(core)
         {
-            _Core = core ?? throw new ArgumentNullException(nameof(core));
+            MatchCicle = MatchCicle.None;
             _Map = map ?? throw new ArgumentNullException(nameof(map));
             _PlayerLookup = new Dictionary<int, ServerPlayer>();
             _Players = new List<ServerPlayer>();
@@ -116,7 +117,7 @@ namespace BlackTournament.Net.Data
                     break;
                 case GameAction.ShootPrimary:
                     if (player.IsAlive) player.ShootPrimary(activate);
-                    else if (player.RespawnTimeout <= 0) Spawn(player);
+                    else if (MatchCicle == MatchCicle.Game && player.RespawnTimeout <= 0) Spawn(player);
                     break;
                 case GameAction.ShootSecundary:
                     player.ShootSecundary(activate);
@@ -137,6 +138,9 @@ namespace BlackTournament.Net.Data
 
         public void Serialize(NetOutgoingMessage msg, bool forceFullUpdate)
         {
+            // Time
+            msg.Write(_GameTime);
+
             // Players
             var dirtyPlayers = _Players.Where(p => p.IsDirty || forceFullUpdate).ToArray();
             msg.Write(dirtyPlayers.Length);
@@ -172,6 +176,8 @@ namespace BlackTournament.Net.Data
 
         public void Update(float deltaT)
         {
+            UpdateTimer(deltaT);
+
             // Update Pickups
             foreach (var pickup in _Pickups)
             {
@@ -241,6 +247,32 @@ namespace BlackTournament.Net.Data
                     }
                 }
                 player.Move(player.Collision.Position);
+            }
+        }
+
+        private void UpdateTimer(float deltaT)
+        {
+            _GameTime -= deltaT;
+            if (_GameTime <= 0)
+            {
+                switch (MatchCicle)
+                {
+                    case MatchCicle.None:
+                        MatchCicle = MatchCicle.Warmup;
+                        break;
+                    case MatchCicle.Warmup:
+                        MatchCicle = MatchCicle.Game;
+                        _Players.ForEach(Spawn);
+                        break;
+                    case MatchCicle.Game:
+                        MatchCicle = MatchCicle.Cooldown;
+                        _Players.ForEach(p => p.Fragg());
+                        break;
+                    case MatchCicle.Cooldown:
+                        MatchCicle = MatchCicle.Complete;
+                        break;
+                }
+                _GameTime = (float)MatchCicle;
             }
         }
 
@@ -415,5 +447,14 @@ namespace BlackTournament.Net.Data
                 }
             }
         }
+    }
+
+    enum MatchCicle
+    {
+        None = 0,
+        Warmup = 10,
+        Game = 600,
+        Cooldown = 30,
+        Complete = -1
     }
 }

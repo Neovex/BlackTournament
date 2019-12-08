@@ -16,13 +16,14 @@ HUD!
 -# create HUD specific assets
 -# add
 -# attach
-#fix weapon change bug + duplcate wapeon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
-important! add meta game logic & game time?
+#fix weapon change bug + duplicate weapon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
+#add meta game logic & game time
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension
 fix: inspector shows main menue state when loaded into a 2nd map
 fix: connecting to invalid server causing crash instead of proper message
+todo: add player overview
 update playergraphics (animation?)
 add damage sounds (and effects)
 add death sounds (and effects)

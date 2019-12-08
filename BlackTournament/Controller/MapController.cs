@@ -186,6 +186,7 @@ namespace BlackTournament.Controller
             // HUD
             _Scene.HUD.Alive = LocalPlayer.IsAlive;
             _Scene.HUD.Score = LocalPlayer.Score;
+            _Scene.HUD.Time = TimeSpan.FromSeconds(_Client.GameTime);
             _Scene.HUD.Rank = _Client.Players.GroupBy(p => p.Score).TakeWhile(g => !g.Contains(LocalPlayer)).Count() + 1;
             _Scene.HUD.TotalPlayers = _Client.PlayerCount;
             _Scene.HUD.Health = (int)LocalPlayer.Health;

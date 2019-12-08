@@ -72,7 +72,7 @@ namespace BlackTournament.UI
         {
             _Sfx.Play(Files.Sfx_Select);
             Texture = _Loader.Load(Files.Menue_Button, false, true);
-            _Core.AnimationManager.Wait(0.6f, base.InvokeReleased);
+            _Core.AnimationManager.Wait(0.3f, base.InvokeReleased);
         }
         protected override void InvokeEnabledChanged()
         {
