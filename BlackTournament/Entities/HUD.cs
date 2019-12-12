@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using SFML.System;
 using BlackCoat;
 using BlackCoat.UI;
-using BlackCoat.Entities;
+using BlackCoat.Animation;
 using SFML.Graphics;
+
 using BlackTournament.Net.Data;
 
 namespace BlackTournament.Entities
@@ -58,6 +59,7 @@ namespace BlackTournament.Entities
         }
 
         public override View View { get => null; set => base.View = value; } // Disable view inheritance
+        public String ChatMessage => _ChatInputTextBox.Text;
 
 
         private Dictionary<PickupType, WeaponIcon> _WeaponLookup;
@@ -71,10 +73,13 @@ namespace BlackTournament.Entities
         private Label _ShieldLabel;
         private UIGraphic _ShieldActive;
         private UIGraphic _ShieldInactive;
+        private OffsetContainer _ChatContainer;
+        private TextBox _ChatInputTextBox;
 
-
-        public HUD(Core core, TextureLoader texLoader) : base(core, core?.DeviceSize)
+        public HUD(Core core, TextureLoader texLoader, BlackCoat.Input input) : base(core, core?.DeviceSize)
         {
+            Input = new UIInput(input, true);
+
             // Build HUD
             // Score and Time
             var snt = new AlignedContainer(_Core, Alignment.CenterTop,
@@ -182,9 +187,30 @@ namespace BlackTournament.Entities
                 { PickupType.Titandrill, titan }
             };
 
+            // Message / Chat System
+            var chat = new AlignedContainer(_Core, Alignment.BottomLeft,
+                _ChatContainer = new OffsetContainer(_Core, Orientation.Vertical, 6)
+            )
+            {
+                Name = "Chat",
+                Margin = (20, 0, 0, 60)
+            };
+            _ChatInputTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
+            {
+                Name = "InputBox",
+                Padding = new FloatRect(5, 5, 0, 0),
+                TextColor = Color.White,
+                BackgroundColor = Color.Black,
+                BackgroundAlpha = 0.5f,
+                EditingTextColor = Color.White,
+                EditingBackgroundColor = new Color(0, 0, 0, 50)
+            };
+            Add(chat);
+
             // Listen to Size Changes
             _Core.DeviceResized += Resize;
         }
+
 
         internal void SetPlayerWeapons(PickupType currentWeapon, IEnumerable<Weapon> weapons)
         {
@@ -198,10 +224,55 @@ namespace BlackTournament.Entities
             }
         }
 
+        internal void EnableChat()
+        {
+            _ChatContainer.Add(_ChatInputTextBox);
+            _ChatInputTextBox.Text = String.Empty;
+            _ChatInputTextBox.GiveFocus();
+        }
+        internal void DisableChat()
+        {
+            if (_ChatContainer.Contains(_ChatInputTextBox))
+            {
+                _ChatContainer.Remove(_ChatInputTextBox);
+            }
+        }
+
         internal void ShowMessage(bool isSystemMessage, string message)
         {
-            // TODO
-            Log.Debug("TODO: Display:", message, isSystemMessage);
+            // Create Message Label
+            var msgLabel = new Label(_Core, message, 16, Game.DefaultFont)
+            {
+                Padding = new FloatRect(5, 5, 5, 5),
+                TextColor = Color.White,
+                BackgroundColor = Color.Black,
+                BackgroundAlpha = 0.5f
+            };
+            if (isSystemMessage)
+            {
+                msgLabel.Style = Text.Styles.Bold;
+                msgLabel.TextColor = Color.Red;
+            }
+            _ChatContainer.Add(msgLabel);
+
+            // Hard limit to prevent Spam
+            if (_ChatContainer.Count > 10)
+            {
+                _ChatContainer.GetFirst<Label>().Dispose();
+            }
+
+            // Soft Limit via fade out
+            _Core.AnimationManager.Run(1, 0, 8, v =>
+            {
+                if (!msgLabel.Disposed) msgLabel.Alpha = v;
+            }, msgLabel.Dispose, InterpolationType.InExpo);
+
+            // Handle Input Box
+            if (_ChatContainer.Contains(_ChatInputTextBox))
+            {
+                _ChatContainer.Remove(_ChatInputTextBox);
+                _ChatContainer.Add(_ChatInputTextBox);
+            }
         }
 
         protected override void Destroy(bool disposing)

@@ -7,9 +7,9 @@ using SFML.Graphics;
 
 using BlackCoat;
 
+using BlackTournament.Input;
 using BlackTournament.Properties;
 using BlackTournament.Controller;
-using BlackTournament.Systems;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
 using BlackTournament.Scenes;
@@ -37,7 +37,7 @@ namespace BlackTournament
 
 
         public Core Core { get; private set; }
-        public InputMapper InputMapper { get; private set; }
+        public InputMap InputMapper { get; private set; }
         public TestController TestController { get; private set; }
         public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
@@ -80,7 +80,8 @@ namespace BlackTournament
                     // Todo: test text blur issue (might need round)
 
                     // Init Input
-                    InputMapper = new InputMapper(Core.Input);
+                    var input = new BlackCoat.Input(Core);
+                    InputMapper = new InputMap(input);
 
                     // Init Game
                     TestController = new TestController(this);

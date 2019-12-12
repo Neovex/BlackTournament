@@ -9,7 +9,7 @@ using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Tmx;
 using BlackTournament.Net.Data;
-using BlackTournament.Systems;
+using BlackTournament.Input;
 
 namespace BlackTournament.Controller
 {
@@ -17,6 +17,7 @@ namespace BlackTournament.Controller
     {
         private BlackTournamentClient _Client;
         private MapScene _Scene;
+        private bool _InChat;
 
 
         private ClientPlayer LocalPlayer { get { return _Client.Player; } }
@@ -89,7 +90,8 @@ namespace BlackTournament.Controller
             }
             // System Events
             _Game.InputMapper.Input.MouseMoved += Input_MouseMoved;
-            _Game.InputMapper.Action += HandleInput;
+            _Game.InputMapper.MappedOperationInvoked += HandleInput;
+
         }
 
         private void DetachEvents()
@@ -110,19 +112,20 @@ namespace BlackTournament.Controller
             }
             // System Events
             _Game.InputMapper.Input.MouseMoved -= Input_MouseMoved;
-            _Game.InputMapper.Action -= HandleInput;
+            _Game.InputMapper.MappedOperationInvoked -= HandleInput;
         }
 
-        private void HandleInput(GameAction action, bool activate)
+        private void HandleInput(GameAction action, bool activate, bool fromMouse)
         {
             var move = _Scene.ViewMovement;
             switch (action)
             {
                 case GameAction.Confirm:
-                    // needed?
+                    if(activate) ToggleChat();
                     break;
                 case GameAction.Cancel:
-                    // open menu
+                    // close chat & open menu
+                    if (activate) _Scene.HUD.DisableChat();
                     break;
                 case GameAction.ShowStats:
                     // TODO
@@ -144,7 +147,24 @@ namespace BlackTournament.Controller
             _Scene.ViewMovement = LocalPlayer.IsAlive ? default(Vector2f) : move;
 
             // Hand input to the server 4 processing game-logic
-            _Client.ProcessGameAction(action, activate);
+            if (!_InChat)
+            {
+                _Client.ProcessGameAction(action, activate);
+            }
+        }
+
+        private void ToggleChat()
+        {
+            if (_InChat)
+            {
+                if (!String.IsNullOrWhiteSpace(_Scene.HUD.ChatMessage)) _Client.SendMessage(_Scene.HUD.ChatMessage);
+                _Scene.HUD.DisableChat();
+            }
+            else
+            {
+                _Scene.HUD.EnableChat();
+            }
+            _InChat = !_InChat;
         }
 
         private void HandlePickupStateChanged(Pickup pickup)

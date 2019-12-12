@@ -45,8 +45,8 @@ namespace BlackTournament.Scenes
             Layer_Overlay.View = _View;
 
             _Core.DeviceResized += UpdateViewOnDeviceResize;
-            _Core.Input.MouseButtonPressed += HandleMouseButtonPressed;
-            _Core.Input.KeyPressed += HandleKeyPressed;
+            Input.MouseButtonPressed += HandleMouseButtonPressed;
+            Input.KeyPressed += HandleKeyPressed;
 
 
             // Setup Map
@@ -139,7 +139,7 @@ namespace BlackTournament.Scenes
         {
             if (btn == Mouse.Button.Left)
             {
-                var globalMousePos = _Core.Input.MousePosition + _View.Center - _View.Size / 2;
+                var globalMousePos = Input.MousePosition + _View.Center - _View.Size / 2;
                 var target = _Lightmap.GetAll<Container>()
                             .SelectMany(c => c.GetAll<Graphic>())
                             .Where(g => g.CollisionShape.CollidesWith(globalMousePos))
@@ -161,23 +161,23 @@ namespace BlackTournament.Scenes
         protected override void Update(float deltaT)
         {
             var move = new Vector2f();
-            if (Input.DEFAULT.IsKeyDown(Keyboard.Key.W)) move.Y = -1;
-            else if (Input.DEFAULT.IsKeyDown(Keyboard.Key.S)) move.Y = 1;
-            if (Input.DEFAULT.IsKeyDown(Keyboard.Key.A)) move.X = -1;
-            else if (Input.DEFAULT.IsKeyDown(Keyboard.Key.D)) move.X = 1;
+            if (Input.IsKeyDown(Keyboard.Key.W)) move.Y = -1;
+            else if (Input.IsKeyDown(Keyboard.Key.S)) move.Y = 1;
+            if (Input.IsKeyDown(Keyboard.Key.A)) move.X = -1;
+            else if (Input.IsKeyDown(Keyboard.Key.D)) move.X = 1;
             _View.Center += move * 2000 * deltaT;
 
-            if (Input.DEFAULT.IsMButtonDown(Mouse.Button.Middle) && _Inspector.InspectionItem is IEntity entity)
+            if (Input.IsMButtonDown(Mouse.Button.Middle) && _Inspector.InspectionItem is IEntity entity)
             {
-                _Selection.Position = entity.Position = Input.DEFAULT.MousePosition + _View.Center - _View.Size / 2;
+                _Selection.Position = entity.Position = Input.MousePosition + _View.Center - _View.Size / 2;
             }
         }
 
         protected override void Destroy()
         {
             _Core.DeviceResized -= UpdateViewOnDeviceResize;
-            _Core.Input.MouseButtonPressed -= HandleMouseButtonPressed;
-            _Core.Input.KeyPressed -= HandleKeyPressed;
+            Input.MouseButtonPressed -= HandleMouseButtonPressed;
+            Input.KeyPressed -= HandleKeyPressed;
         }
     }
 }

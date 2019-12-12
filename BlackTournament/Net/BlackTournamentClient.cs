@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using BlackCoat.Network;
-using BlackTournament.Systems;
+using BlackTournament.Input;
 using BlackTournament.Net.Data;
-using System.Net;
 
 namespace BlackTournament.Net
 {

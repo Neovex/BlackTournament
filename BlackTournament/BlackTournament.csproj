@@ -122,8 +122,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Systems\GameAction.cs" />
-    <Compile Include="Systems\InputMapper.cs" />
+    <Compile Include="Input\GameAction.cs" />
+    <Compile Include="Input\InputMap.cs" />
     <Compile Include="Tmx\ActorInfo.cs" />
     <Compile Include="Tmx\Killzone.cs" />
     <Compile Include="Tmx\Layer.cs" />

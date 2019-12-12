@@ -196,7 +196,7 @@ namespace BlackTournament.Scenes
             Layer_Overlay.Add(_ParticleEmitterHost);
 
             // HUD
-            Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader));
+            Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader, Input));
 
             return true;
         }

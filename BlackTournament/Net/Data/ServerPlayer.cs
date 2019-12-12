@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BlackTournament.Systems;
-using Lidgren.Network;
+
 using SFML.System;
+using Lidgren.Network;
+
 using BlackCoat;
 using BlackCoat.Network;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
+
+using BlackTournament.Input;
+
 
 namespace BlackTournament.Net.Data
 {

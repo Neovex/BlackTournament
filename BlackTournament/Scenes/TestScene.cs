@@ -10,7 +10,7 @@ using BlackCoat.ParticleSystem;
 using BlackTournament.Particles;
 using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities;
-using BlackTournament.Systems;
+using BlackTournament.Input;
 using BlackCoat.Tools;
 using BlackCoat.UI;
 using SFML.Window;
@@ -92,7 +92,7 @@ namespace BlackTournament.Scenes
             _Line = new Line(_Core, _Circle.Position, _Circle.Position + Create.Vector2fFromAngle(_LineAngle, 230), Color.Blue);
             Layer_Game.Add(_Line);
 
-            _Core.Input.MouseButtonPressed += RayMouseButtonPressed;
+            Input.MouseButtonPressed += RayMouseButtonPressed;
         }
 
         private void RayMouseButtonPressed(Mouse.Button btn)
@@ -126,7 +126,7 @@ namespace BlackTournament.Scenes
             }
             else
             {
-                _Ray.Start.Position = _Core.Input.MousePosition;
+                _Ray.Start.Position = Input.MousePosition;
             }
         }
 
@@ -148,7 +148,7 @@ namespace BlackTournament.Scenes
             _BlurTest.RenderState = state;
             Layer_Game.Add(_BlurTest);
 
-            _Core.Input.KeyPressed += (k) =>
+            Input.KeyPressed += (k) =>
             {
                 if (k == Keyboard.Key.Up)
                 {
@@ -179,7 +179,7 @@ namespace BlackTournament.Scenes
             var container = new UIContainer(_Core)
             {
                 //DialogContainer = Layer_Overlay,
-                Input = new UIInput(_Core.Input, true),
+                Input = new UIInput(Input, true),
                 BackgroundColor = new Color(100, 100, 100),
                 BackgroundAlpha = 1,
                 Init = new UIComponent[]
@@ -355,7 +355,7 @@ namespace BlackTournament.Scenes
                 Radius = 50
             });
 
-            Input.DEFAULT.MouseButtonPressed += DEFAULT_MouseButtonPressed;
+            Input.MouseButtonPressed += DEFAULT_MouseButtonPressed;
         }
 
         private void DEFAULT_MouseButtonPressed(Mouse.Button obj)
@@ -397,10 +397,10 @@ namespace BlackTournament.Scenes
             rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = 100.ToVector2f() });
             //Layer_Game.Add(host);
 
-            Input.DEFAULT.MouseButtonPressed += b =>
+            Input.MouseButtonPressed += b =>
             {
                 //view.Center += Create.Vector2f(5);
-                emitter.Position = Input.DEFAULT.MousePosition;
+                emitter.Position = Input.MousePosition;
                 emitter.Trigger();
                 if(b== Mouse.Button.Middle)
                 {

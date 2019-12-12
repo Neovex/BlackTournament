@@ -117,7 +117,7 @@ namespace BlackTournament.Scenes
                 _MainUI = new Canvas(_Core, tex.Size.ToVector2f())
                 {
                     Texture = tex,
-                    Input = new UIInput(_Core.Input, true),
+                    Input = new UIInput(Input, true),
                     Init = new UIComponent[]
                     {
                         _MainUIContent = new AlignedContainer(_Core, Alignment.Center)
