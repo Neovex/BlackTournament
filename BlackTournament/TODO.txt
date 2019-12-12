@@ -19,7 +19,7 @@ HUD!
 #fix weapon change bug + duplicate weapon set tracking -> Player.OwnedWeapons VS ServerPlayer.Weapons VS ClientPlayer.???? check clean fix!
 #add meta game logic & game time
 #add game & chat messages
-consider clearing ui inputs on REMOVE not on ADD
+#consider clearing ui inputs on REMOVE not on ADD fixed via input inheritance
 add score window (tab)
 consider: update SFML to latest
 consider: removing Init from UI

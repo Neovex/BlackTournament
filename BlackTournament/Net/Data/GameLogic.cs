@@ -148,7 +148,7 @@ namespace BlackTournament.Net.Data
         public void Serialize(NetOutgoingMessage msg, bool forceFullUpdate)
         {
             // Time
-            msg.Write(_GameTime);
+            msg.Write(_GameTime + 1);
 
             // Players
             var dirtyPlayers = _Players.Where(p => p.IsDirty || forceFullUpdate).ToArray();

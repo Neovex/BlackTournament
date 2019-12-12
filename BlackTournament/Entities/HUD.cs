@@ -31,21 +31,23 @@ namespace BlackTournament.Entities
         public TimeSpan Time { set => _TimeLabel.Text = value.ToString("mm\\:ss"); }
 
         // Player
-        public int Health
+        public float Health
         {
             set
             {
-                _HealthLabel.Text = value.ToString();
+                if (value < 1 && value != 0) value = 1;
+                _HealthLabel.Text = value.ToString("0");
                 _HealthLabel.TextColor = value < 20 ? Color.Red : Color.White;
             }
         }
-        public int Shield
+        public float Shield
         {
             set
             {
+                if (value < 1 && value != 0) value = 1;
                 _ShieldInactive.Visible = value == 0;
                 _ShieldActive.Visible = !_ShieldInactive.Visible;
-                _ShieldLabel.Text = value.ToString();
+                _ShieldLabel.Text = value.ToString("0");
                 _ShieldLabel.TextColor = value < 20 && value != 0 ? Color.Red : Color.White;
             }
         }
@@ -78,8 +80,6 @@ namespace BlackTournament.Entities
 
         public HUD(Core core, TextureLoader texLoader, BlackCoat.Input input) : base(core, core?.DeviceSize)
         {
-            Input = new UIInput(input, true);
-
             // Build HUD
             // Score and Time
             var snt = new AlignedContainer(_Core, Alignment.CenterTop,
@@ -197,11 +197,12 @@ namespace BlackTournament.Entities
             };
             _ChatInputTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
             {
+                Input = new UIInput(input, true),
                 Name = "InputBox",
                 Padding = new FloatRect(5, 5, 0, 0),
-                TextColor = Color.White,
                 BackgroundColor = Color.Black,
                 BackgroundAlpha = 0.5f,
+                CaretColor = Color.White,
                 EditingTextColor = Color.White,
                 EditingBackgroundColor = new Color(0, 0, 0, 50)
             };

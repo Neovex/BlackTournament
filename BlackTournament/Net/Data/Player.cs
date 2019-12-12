@@ -89,8 +89,8 @@ namespace BlackTournament.Net.Data
             m.Write(Rotation);
             m.Write(Score);
 
-            m.Write((int)Health); // send Health & Shield as int - the float values are important only for the server anyway
-            m.Write((int)Shield);
+            m.Write(Health);
+            m.Write(Shield);
             m.Write((int)CurrentWeaponType);
 
             m.Write(Weapons.Count);
@@ -107,8 +107,8 @@ namespace BlackTournament.Net.Data
             Rotation = m.ReadSingle();
             Score = m.ReadInt32();
 
-            Health = m.ReadInt32();
-            Shield = m.ReadInt32();
+            Health = m.ReadSingle();
+            Shield = m.ReadSingle();
             CurrentWeaponType = (PickupType)m.ReadInt32();
 
             var ownedWeapons = m.ReadInt32();

@@ -209,8 +209,8 @@ namespace BlackTournament.Controller
             _Scene.HUD.Time = TimeSpan.FromSeconds(_Client.GameTime);
             _Scene.HUD.Rank = _Client.Players.GroupBy(p => p.Score).TakeWhile(g => !g.Contains(LocalPlayer)).Count() + 1;
             _Scene.HUD.TotalPlayers = _Client.PlayerCount;
-            _Scene.HUD.Health = (int)LocalPlayer.Health;
-            _Scene.HUD.Shield = (int)LocalPlayer.Shield;
+            _Scene.HUD.Health = LocalPlayer.Health;
+            _Scene.HUD.Shield = LocalPlayer.Shield;
             _Scene.HUD.SetPlayerWeapons(LocalPlayer.CurrentWeaponType, LocalPlayer.Weapons.Values.AsEnumerable());
         }
 
