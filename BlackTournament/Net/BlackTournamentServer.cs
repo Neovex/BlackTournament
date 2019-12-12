@@ -5,7 +5,7 @@ using Lidgren.Network;
 using BlackCoat;
 using BlackCoat.Network;
 using BlackTournament.Tmx;
-using BlackTournament.Input;
+using BlackTournament.InputMaps;
 using BlackTournament.Net.Data;
 
 namespace BlackTournament.Net

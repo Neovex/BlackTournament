@@ -10,7 +10,7 @@ using BlackCoat.Network;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 
-using BlackTournament.Input;
+using BlackTournament.InputMaps;
 using BlackTournament.Tmx;
 
 

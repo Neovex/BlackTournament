@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using BlackCoat.Network;
-using BlackTournament.Input;
+using BlackTournament.InputMaps;
 using BlackTournament.Net.Data;
 
 namespace BlackTournament.Net

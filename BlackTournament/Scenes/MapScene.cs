@@ -9,16 +9,16 @@ using SFML.Audio;
 
 using BlackCoat;
 using BlackCoat.Entities;
+using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities.Lights;
 using BlackCoat.ParticleSystem;
+using BlackCoat.Properties;
 
 using BlackTournament.Tmx;
 using BlackTournament.Entities;
-using BlackCoat.Entities.Shapes;
 using BlackTournament.Net.Data;
 using BlackTournament.Particles;
-using BlackCoat.Collision.Shapes;
-using BlackCoat.Properties;
+using BlackTournament.InputMaps;
 
 namespace BlackTournament.Scenes
 {
@@ -26,9 +26,10 @@ namespace BlackTournament.Scenes
     {
         // Rendering
         private View _View;
-        private ParticleEmitterHost _ParticleEmitterHost;
+        private UIInputMap _UiInput;
         private TmxMapper _MapData;
         private Lightmap _Lightmap;
+        private ParticleEmitterHost _ParticleEmitterHost;
 
         // Sound
         private SfxManager _Sfx;
@@ -64,9 +65,10 @@ namespace BlackTournament.Scenes
         public HUD HUD { get; private set; }
 
 
-        public MapScene(Core core, TmxMapper map) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
+        public MapScene(Core core, TmxMapper map, UIInputMap uiInput) : base(core, map.Name, Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
+            _UiInput = uiInput;
             _Sfx = new SfxManager(SfxLoader);
             _EnitityLookup = new Dictionary<int, IEntity>();
         }
@@ -196,7 +198,7 @@ namespace BlackTournament.Scenes
             Layer_Overlay.Add(_ParticleEmitterHost);
 
             // HUD
-            Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader, Input));
+            Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader, _UiInput));
 
             return true;
         }

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 using SFML.Window;
 using SFML.Graphics;
 
 using BlackCoat;
+using BlackCoat.UI;
 
-using BlackTournament.Input;
-using BlackTournament.Properties;
-using BlackTournament.Controller;
+using BlackTournament.InputMaps;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
-using BlackTournament.Scenes;
+using BlackTournament.Properties;
+using BlackTournament.Controller;
 
 namespace BlackTournament
 {
@@ -37,7 +38,6 @@ namespace BlackTournament
 
 
         public Core Core { get; private set; }
-        public InputMap InputMapper { get; private set; }
         public TestController TestController { get; private set; }
         public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
@@ -77,11 +77,6 @@ namespace BlackTournament
                     Core.InitializeFontHack(DefaultFont);
                     StyleFont = _GlobalFonts.Load(STYLE_FONT);
                     Core.InitializeFontHack(StyleFont);
-                    // Todo: test text blur issue (might need round)
-
-                    // Init Input
-                    var input = new BlackCoat.Input(Core);
-                    InputMapper = new InputMap(input);
 
                     // Init Game
                     TestController = new TestController(this);

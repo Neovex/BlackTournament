@@ -2,18 +2,18 @@
 using SFML.Window;
 using BlackCoat.InputMapping;
 
-namespace BlackTournament.Input
+namespace BlackTournament.InputMaps
 {
     // This class initializes a SimpleInputMap with a default mapping or a mapping from a file or settings (incomplete)
-    public class InputMap : SimpleInputMap<GameAction>
+    public class GameInputMap : SimpleInputMap<GameAction>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InputMap"/> class.
+        /// Initializes a new instance of the <see cref="GameInputMap"/> class.
         /// </summary>
-        public InputMap(BlackCoat.Input input) : base(input, nameof(InputMap))
+        public GameInputMap(BlackCoat.Input input) : base(input, nameof(GameInputMap))
         {
             Log.Debug(Name, "created");
-            CreateDefaultInputMap(); // Fixme: load from file at some point
+            CreateDefaultInputMap(); // Fixme: load from file at some point -> move loading to engine?
         }
 
         private void CreateDefaultInputMap()

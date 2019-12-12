@@ -9,7 +9,7 @@ using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Tmx;
 using BlackTournament.Net.Data;
-using BlackTournament.Input;
+using BlackTournament.InputMaps;
 
 namespace BlackTournament.Controller
 {
@@ -18,6 +18,9 @@ namespace BlackTournament.Controller
         private BlackTournamentClient _Client;
         private MapScene _Scene;
         private bool _InChat;
+
+        private GameInputMap _GameInput;
+        private UIInputMap _UiInput;
 
 
         private ClientPlayer LocalPlayer { get { return _Client.Player; } }
@@ -29,23 +32,29 @@ namespace BlackTournament.Controller
 
         public void Activate(BlackTournamentClient client)
         {
+            // Set Client
             if (_Client != null || _Scene != null) throw new InvalidStateException();
             _Client = client ?? throw new ArgumentNullException(nameof(client));
 
+            // Load Map
             var map = new TmxMapper();
             if (map.Load(_Client.MapName, _Game.Core.CollisionSystem))
             {
-                base.Activate(_Scene = new MapScene(_Game.Core, map));
+                // Init Input
+                _GameInput = new GameInputMap(new Input(_Game.Core));
+                _UiInput = new UIInputMap(new GameInputMap(new Input(_Game.Core, false)));
+                // Activate Scene
+                base.Activate(_Scene = new MapScene(_Game.Core, map, _UiInput));
             }
             else
             {
                 _Client.Disconnect();
-                _Game.MenuController.Activate($"Failed to initialize map {_Client.MapName}");//$
+                _Game.MenuController.Activate($"Failed to initialize map {_Client.MapName}");
             }
         }
 
         protected override void SceneReady()
-        {
+        {// Prepare Map
             foreach (var player in _Client.Players)
             {
                 HandleUserJoined(player);
@@ -88,10 +97,10 @@ namespace BlackTournament.Controller
             {
                 pickup.ActiveStateChanged += HandlePickupStateChanged;
             }
-            // System Events
-            _Game.InputMapper.Input.MouseMoved += Input_MouseMoved;
-            _Game.InputMapper.MappedOperationInvoked += HandleInput;
 
+            // System Events
+            _GameInput.Input.MouseMoved += Input_MouseMoved;
+            _GameInput.MappedOperationInvoked += HandleInput;
         }
 
         private void DetachEvents()
@@ -111,11 +120,20 @@ namespace BlackTournament.Controller
                 pickup.ActiveStateChanged -= HandlePickupStateChanged;
             }
             // System Events
-            _Game.InputMapper.Input.MouseMoved -= Input_MouseMoved;
-            _Game.InputMapper.MappedOperationInvoked -= HandleInput;
+            _GameInput.Input.MouseMoved -= Input_MouseMoved;
+            _GameInput.MappedOperationInvoked -= HandleInput;
+            _GameInput.Dispose();
+            _GameInput = null;
         }
 
-        private void HandleInput(GameAction action, bool activate, bool fromMouse)
+        private void Input_MouseMoved(Vector2f mousePosition)
+        {
+            if (_InChat) return;
+            _Client.PlayerRotation = MathHelper.ValidateAngle((_Game.Core.DeviceSize / 2).AngleTowards(mousePosition) - 2);
+            _Scene.RotatePlayer(_Client.PlayerRotation); // update scene
+        }
+
+        private void HandleInput(GameAction action, bool activate)
         {
             var move = _Scene.ViewMovement;
             switch (action)
@@ -125,7 +143,7 @@ namespace BlackTournament.Controller
                     break;
                 case GameAction.Cancel:
                     // close chat & open menu
-                    if (activate) _Scene.HUD.DisableChat();
+                    if (activate && _InChat) ToggleChat(); // TODO : else menu
                     break;
                 case GameAction.ShowStats:
                     // TODO
@@ -143,12 +161,13 @@ namespace BlackTournament.Controller
                     move.X = activate ?  1 : 0;
                     break;
             }
-            // Move view only when player is dead
-            _Scene.ViewMovement = LocalPlayer.IsAlive ? default(Vector2f) : move;
 
-            // Hand input to the server 4 processing game-logic
             if (!_InChat)
             {
+                // Move view only when player is dead
+                _Scene.ViewMovement = LocalPlayer.IsAlive ? default(Vector2f) : move;
+
+                // Hand input to the server 4 processing game-logic
                 _Client.ProcessGameAction(action, activate);
             }
         }
@@ -174,7 +193,7 @@ namespace BlackTournament.Controller
 
         private void HandleServerMapChange()
         {
-            Log.Debug("TODO: HandleServerMapChange");
+            Log.Debug("TODO: HandleServerMapChange"); // TODO
         }
 
         private void HandleTextMessage(bool isSystemMessage, string msg)
@@ -236,13 +255,6 @@ namespace BlackTournament.Controller
             _Scene.DestroyEntity(shot.Id);
         }
 
-        private void Input_MouseMoved(Vector2f mousePosition)
-        {
-            _Client.PlayerRotation = (_Game.Core.DeviceSize / 2).AngleTowards(mousePosition) - 2;
-            _Client.PlayerRotation = MathHelper.ValidateAngle(_Client.PlayerRotation);
-            _Scene.RotatePlayer(_Client.PlayerRotation); // update scene
-        }
-
         private void ExitToMenue() // TODO attach to proper input - and or view event
         {
             if (_Client.IsAdmin)
@@ -257,14 +269,7 @@ namespace BlackTournament.Controller
 
         private void HandleConnectionLost()
         {
-            DetachEvents();
             _Game.MenuController.Activate("Connection Lost");//$
-        }
-
-        private void HandleConnectionClosed()
-        {
-            DetachEvents();
-            _Game.MenuController.Activate();
         }
     }
 }

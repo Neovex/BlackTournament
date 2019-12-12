@@ -10,7 +10,7 @@ using BlackCoat.ParticleSystem;
 using BlackTournament.Particles;
 using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities;
-using BlackTournament.Input;
+using BlackTournament.InputMaps;
 using BlackCoat.Tools;
 using BlackCoat.UI;
 using SFML.Window;

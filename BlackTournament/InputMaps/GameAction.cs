@@ -1,4 +1,4 @@
-﻿namespace BlackTournament.Input
+﻿namespace BlackTournament.InputMaps
 {
     public enum GameAction
     {

@@ -10,6 +10,7 @@ using BlackCoat.Animation;
 using SFML.Graphics;
 
 using BlackTournament.Net.Data;
+using BlackTournament.InputMaps;
 
 namespace BlackTournament.Entities
 {
@@ -78,7 +79,7 @@ namespace BlackTournament.Entities
         private OffsetContainer _ChatContainer;
         private TextBox _ChatInputTextBox;
 
-        public HUD(Core core, TextureLoader texLoader, BlackCoat.Input input) : base(core, core?.DeviceSize)
+        public HUD(Core core, TextureLoader texLoader, UIInputMap input) : base(core, core?.DeviceSize)
         {
             // Build HUD
             // Score and Time
@@ -197,7 +198,7 @@ namespace BlackTournament.Entities
             };
             _ChatInputTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
             {
-                Input = new UIInput(input, true),
+                Input = input,
                 Name = "InputBox",
                 Padding = new FloatRect(5, 5, 0, 0),
                 BackgroundColor = Color.Black,
