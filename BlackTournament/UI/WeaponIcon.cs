@@ -2,7 +2,7 @@
 using BlackCoat.UI;
 using SFML.Graphics;
 
-namespace BlackTournament.Entities
+namespace BlackTournament.UI
 {
     class WeaponIcon : UIContainer
     {

@@ -21,7 +21,9 @@ HUD!
 #add game & chat messages
 #consider clearing ui inputs on REMOVE not on ADD fixed via input inheritance
 #clean ui input?
-add score window (tab)
+#add score window (tab)
+#fix right aligned text on HUD -> Rank Label
+add ingame menue (esc)
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension

@@ -31,6 +31,7 @@ namespace BlackTournament.InputMaps
             // UI
             AddKeyboardMapping(Keyboard.Key.Return, GameAction.Confirm);
             AddKeyboardMapping(Keyboard.Key.Escape, GameAction.Cancel);
+            AddKeyboardMapping(Keyboard.Key.Tab, GameAction.ShowStats);
 
             // Mouse
             AddMouseMapping(Mouse.Button.Left, GameAction.ShootPrimary);

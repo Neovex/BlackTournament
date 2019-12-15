@@ -12,7 +12,7 @@ using SFML.Graphics;
 using BlackTournament.Net.Data;
 using BlackTournament.InputMaps;
 
-namespace BlackTournament.Entities
+namespace BlackTournament.UI
 {
     class HUD : Canvas
     {
@@ -63,6 +63,7 @@ namespace BlackTournament.Entities
 
         public override View View { get => null; set => base.View = value; } // Disable view inheritance
         public String ChatMessage => _ChatInputTextBox.Text;
+        public ScoreBoard ScoreBoard { get; private set; }
 
 
         private Dictionary<PickupType, WeaponIcon> _WeaponLookup;
@@ -106,7 +107,8 @@ namespace BlackTournament.Entities
                             _RankLabel = new Label(_Core, "1", 40, Game.DefaultFont)
                             {
                                 Name = "Rank",
-                                Position = (0, 16)
+                                Position = (0, 16),
+                                Alignment = TextAlignment.Right
                             },
                             _TotalLabel = new Label(_Core, "-10", 20, Game.DefaultFont)
                             {
@@ -208,6 +210,10 @@ namespace BlackTournament.Entities
                 EditingBackgroundColor = new Color(0, 0, 0, 50)
             };
             Add(chat);
+
+            // Score Overlay
+            ScoreBoard = new ScoreBoard(_Core);
+            Add(ScoreBoard);
 
             // Listen to Size Changes
             _Core.DeviceResized += Resize;

@@ -146,7 +146,7 @@ namespace BlackTournament.Controller
                     if (activate && _InChat) ToggleChat(); // TODO : else menu
                     break;
                 case GameAction.ShowStats:
-                    // TODO
+                    _Scene.HUD.ScoreBoard.Visible = activate;
                     break;
                 case GameAction.MoveUp: // auslagern?
                     move.Y = activate ? -1 : 0;
@@ -231,6 +231,7 @@ namespace BlackTournament.Controller
             _Scene.HUD.Health = LocalPlayer.Health;
             _Scene.HUD.Shield = LocalPlayer.Shield;
             _Scene.HUD.SetPlayerWeapons(LocalPlayer.CurrentWeaponType, LocalPlayer.Weapons.Values.AsEnumerable());
+            _Scene.HUD.ScoreBoard.Update(_Client.Players);
         }
 
         private void HandleUserJoined(ClientPlayer player)

@@ -76,6 +76,7 @@ namespace BlackTournament.Net.Data
         public Boolean IsAlive => Health > 0;
 
         public Dictionary<PickupType, Weapon> Weapons { get; } = new Dictionary<PickupType, Weapon>();
+        public virtual int Ping { get; protected set; }
 
 
         public Player(int id) : base(id)
@@ -99,6 +100,7 @@ namespace BlackTournament.Net.Data
                 m.Write((int)weapon.WeaponType);
                 weapon.Serialize(m);
             }
+            m.Write(Ping);
         }
 
         public override void Deserialize(NetIncomingMessage m)
@@ -119,6 +121,7 @@ namespace BlackTournament.Net.Data
                 if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
                 Weapons[type].Deserialize(m);
             }
+            Ping = m.ReadInt32();
         }
     }
 }

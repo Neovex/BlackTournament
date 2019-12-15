@@ -14,6 +14,7 @@ using BlackCoat.Entities.Lights;
 using BlackCoat.ParticleSystem;
 using BlackCoat.Properties;
 
+using BlackTournament.UI;
 using BlackTournament.Tmx;
 using BlackTournament.Entities;
 using BlackTournament.Net.Data;

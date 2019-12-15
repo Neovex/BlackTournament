@@ -222,6 +222,12 @@ namespace BlackTournament.Scenes
                         MinSize = new Vector2f(150,20),
                         Font = Game.DefaultFont,
                         InitInEditChanged = TextboxEditChanged
+                    },
+
+                    new UIContainer(_Core, new Label(_Core, "TestScene"))
+                    {
+                        Position = (100,50),
+                        BackgroundAlpha = 0.25f
                     }
                 }
             };

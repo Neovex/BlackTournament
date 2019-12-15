@@ -27,6 +27,11 @@ namespace BlackTournament.Net.Data
         public CircleCollisionShape Collision { get; private set; }
         public ServerWeapon CurrentWeapon { get => (ServerWeapon)Weapons[CurrentWeaponType]; set => Weapons[CurrentWeaponType] = value; }
         public Vector2f WeaponSpawn => Position + Create.Vector2fFromAngle(Rotation + 16, 35);
+        public override int Ping
+        {
+            get => User.Latency;
+            protected set => base.Ping = value;
+        }
 
 
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };

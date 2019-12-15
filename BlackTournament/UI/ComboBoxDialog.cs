@@ -37,7 +37,7 @@ namespace BlackTournament.UI
                     InitFocusGained = ButtonFocusGained,
                     InitFocusLost = ButtonFocusLost,
                     Tag = item,
-                    Init = new UIComponent[]
+                    Init = new []
                     {
                         new AlignedContainer(_Core, Alignment.CenterLeft)
                         {
