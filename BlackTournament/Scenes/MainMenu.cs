@@ -428,9 +428,9 @@ namespace BlackTournament.Scenes
             if (button == _BrowseDirectConnectButton) ToggleDirectConnectDialog();
             if (button == _BrowseJoinButton)
             {
-                if (_DirectConnectDialog.Visible)
+                if (_DirectConnectDialog.Visible && !String.IsNullOrWhiteSpace(_DirectConnectServerNameTextBox.Text))
                     DirectConnect.Invoke(_DirectConnectServerNameTextBox.Text, Int32.Parse(_DirectConnectPortTextBox.Text));
-                else
+                else if (_SelectedServer != null)
                     JoinServer.Invoke(_SelectedServer);
             }
             //Misc

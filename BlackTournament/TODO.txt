@@ -28,7 +28,8 @@ HUD!
 consider: update SFML to latest
 consider: removing Init from UI
 #consider: removing int.toVector extension
-fix: inspector shows main menue state when loaded into a 2nd map
+#fix: "ghost" players on server restart
+X (not rep) fix: inspector shows main menue state when loaded into a 2nd map
 fix: connecting to invalid server causing crash instead of proper message
 todo: add player overview
 update playergraphics (animation?)

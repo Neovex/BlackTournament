@@ -18,6 +18,7 @@ namespace BlackTournament.UI
         private TextureLoader _Loader;
         private SfxManager _Sfx;
         private Label _Label;
+        private bool _Wait;
 
 
         public BigButton(Core core, TextureLoader loader, SfxManager sfx, String text) : base(core, null)
@@ -64,15 +65,23 @@ namespace BlackTournament.UI
 
         protected override void InvokePressed()
         {
+            if (_Wait) return;
             Texture = _Loader.Load(Files.Menue_Button_Active, false, true);
             base.InvokePressed();
         }
 
         protected override void InvokeReleased()
         {
+            if (_Wait) return;
+            _Wait = true;
+
             _Sfx.Play(Files.Sfx_Select);
             Texture = _Loader.Load(Files.Menue_Button, false, true);
-            _Core.AnimationManager.Wait(0.3f, base.InvokeReleased);
+            _Core.AnimationManager.Wait(0.3f, ()=>
+            {
+                if(!Disposed) base.InvokeReleased();
+                _Wait = false;
+            });
         }
         protected override void InvokeEnabledChanged()
         {
