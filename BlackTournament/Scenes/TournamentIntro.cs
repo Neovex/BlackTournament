@@ -45,8 +45,8 @@ namespace BlackTournament.Scenes
             // Loading Text
             Layer_Game.Add(_Text = new TextItem(_Core, "loading...", 16, Game.StyleFont)
             {
-                Position = 30.ToVector2f()
-        });
+                Position = new Vector2f(30, 30)
+            });
 
             // Stationary "T" in Logo center
             Layer_Game.Add(_CenterT = new Graphic(_Core, TextureLoader.Load(Files.Menue_Title))
@@ -67,7 +67,8 @@ namespace BlackTournament.Scenes
         private void HandleDeviceResized(Vector2f size)
         {
             // Update Scaling
-            _Title.Scale = _Logo.Scale = _CenterT.Scale = (size.X < _Logo.Texture.Size.X * 2 ? 0.5f : 1).ToVector2f();
+            var s = size.X < _Logo.Texture.Size.X * 2 ? 0.5f : 1;
+            _Title.Scale = _Logo.Scale = _CenterT.Scale = (s, s);
             //Update Positions
             _BG.Position = new Vector2f(size.X / 2 - _BG.Texture.Size.X / 2, size.Y - _BG.Texture.Size.Y * 0.7f);
             _Title.Position = new Vector2f(size.X / 2, size.Y - _Title.GetGlobalBounds().Height - 30);

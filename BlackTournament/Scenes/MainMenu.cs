@@ -106,7 +106,7 @@ namespace BlackTournament.Scenes
                 // BG Lighting
                 _Lighting = new PrerenderedContainer(_Core) { BlendMode = BlendMode.Multiply, ClearColor = Color.Black, RenderEachFrame = true }
             );
-            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = 100.ToVector2f() });
+            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = (100, 100) });
             _Lighting.Add(_AmbientLight = new Rectangle(_Core, Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
 
             // UI
@@ -328,7 +328,7 @@ namespace BlackTournament.Scenes
                                         new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = 10.ToVector2f(),
+                                            Position = (10, 10),
                                             TextColor = new Color(0,100,255)
                                         }
                                     }
@@ -366,7 +366,7 @@ namespace BlackTournament.Scenes
                                         _MessageBoxLabel = new Label(_Core, "Message", font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = 10.ToVector2f(),
+                                            Position = (10, 10),
                                             TextColor = new Color(0,100,255),
                                             Padding = new FloatRect(10,40,10,10)
                                         }
@@ -399,7 +399,7 @@ namespace BlackTournament.Scenes
                 _Logo = new Graphic(_Core, TextureLoader.Load(Files.Menue_Logo))
                 {
                     Origin = new Vector2f(345, 355),
-                    Scale = 0.25.ToVector2f()
+                    Scale = new Vector2f(0.25f, 0.25f)
                 }
             ); ;
 
@@ -495,11 +495,11 @@ namespace BlackTournament.Scenes
 
             var scale = Math.Min(Math.Min(1, size.X / _Title.TextureRect.Width),
                                  Math.Min(1, _MainUI.Position.Y / _Title.TextureRect.Height));
-            _Title.Scale = scale.ToVector2f();
+            _Title.Scale = new Vector2f(scale, scale);
             _Title.Position = new Vector2f(size.X / 2 - _Title.TextureRect.Width * _Title.Scale.X / 2, _MainUI.Position.Y / 2 - _Title.TextureRect.Height * _Title.Scale.Y / 2);
             _Glow.Scale = new Vector2f(1, _MainUI.Position.Y / _Glow.TextureRect.Height * -1.5f);
             _Glow.Position = new Vector2f(size.X / 2 - _Glow.TextureRect.Width / 2, _Glow.TextureRect.Height * -_Glow.Scale.Y);
-            _Logo.Position = size - 150.ToVector2f();
+            _Logo.Position = size - new Vector2f(150, 150);
         }
 
         internal void DisplayPopupMessage(string message)
@@ -547,7 +547,8 @@ namespace BlackTournament.Scenes
             if (Destroyed) return;
             _Shots = _Core.Random.Next(6, 12);
             _EffectLight.Rotation = _Core.Random.NextFloat(0, 360);
-            _EffectLight.Scale = _Core.Random.NextFloat(8.5f, 14.4f).ToVector2f();
+            var scale = _Core.Random.NextFloat(8.5f, 14.4f);
+            _EffectLight.Scale = new Vector2f(scale, scale);
             _EffectLight.Position = new Vector2f(_Core.DeviceSize.X * _Core.Random.Next(2), _Core.DeviceSize.Y * _Core.Random.Next(2));
             PlayShotAnimation();
         }

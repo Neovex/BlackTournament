@@ -17,7 +17,7 @@ namespace BlackTournament.Entities
             Texture = loader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
             BlendMode = BlendMode.Add;
             Origin = Texture.Size.ToVector2f() / 2;
-            Scale = 0.8f.ToVector2f();
+            Scale = (0.8f, 0.8f);
             Color = new Color(200, 200, 255);
         }
 

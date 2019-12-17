@@ -404,7 +404,7 @@ namespace BlackTournament.Scenes
                     {
                         Texture = shockCoreTex,
                         Origin = shockCoreTex.Size.ToVector2f() / 2,
-                        Scale = 0.15.ToVector2f(),
+                        Scale = (0.15f, 0.15f),
                         Color = Color.Cyan
                     };
                     // Add lightning decoration
@@ -443,11 +443,11 @@ namespace BlackTournament.Scenes
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);
-                    _ExplosionInfo.Scale = (size / 120).ToVector2f();
+                    _ExplosionInfo.Scale = (size / 120, size / 120);
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
                     // Impact Light
-                    _LightEmitterInfo.Scale = 0.9.ToVector2f();
+                    _LightEmitterInfo.Scale = (0.9f, 0.9f);
                     _LightEmitter.Position = position;
                     _LightEmitter.Trigger();
                     break;
@@ -459,7 +459,7 @@ namespace BlackTournament.Scenes
                     _ImpactEmitter.Trigger();
                     if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
                     // Impact Light
-                    _LightEmitterInfo.Scale = 0.1.ToVector2f();
+                    _LightEmitterInfo.Scale = (0.1f, 0.1f);
                     _LightEmitter.Position = position;
                     _LightEmitter.Trigger();
                 break;
