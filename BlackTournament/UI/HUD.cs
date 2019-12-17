@@ -90,13 +90,13 @@ namespace BlackTournament.UI
                             _ScoreLabel = new Label(_Core, "0", 40, Game.DefaultFont)
                             {
                                 Name = "Score",
-                                Position = (0, 16),
+                                Margin = (0, 16, 0, 0),
                                 Padding = (0, 0, -10, 0) // Texts are weird
                             },
                             new UIGraphic(_Core, texLoader.Load(Files.HUD_Skull)) { Name = "Skull" }
                         )
                     {
-                        Position = (16, 0)
+                        Position = (10, 0)
                     },
                     new AlignedContainer(_Core, Alignment.CenterTop, _TimeLabel = new Label(_Core, "TIME", 20, Game.DefaultFont)
                     {
