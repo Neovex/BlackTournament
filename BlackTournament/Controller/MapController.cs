@@ -42,7 +42,7 @@ namespace BlackTournament.Controller
             {
                 // Init Input
                 _GameInput = new GameInputMap(new Input(_Game.Core));
-                _UiInput = new UIInputMap(new GameInputMap(new Input(_Game.Core, false)));
+                _UiInput = new UIInputMap(new GameInputMap(new Input(_Game.Core)));
                 // Activate Scene
                 base.Activate(_Scene = new MapScene(_Game.Core, map, _UiInput));
             }
@@ -98,6 +98,9 @@ namespace BlackTournament.Controller
                 pickup.ActiveStateChanged += HandlePickupStateChanged;
             }
 
+            // Scene
+            _Scene.HUD.Menu.Quit += ExitToMenue;
+
             // System Events
             _GameInput.Input.MouseMoved += Input_MouseMoved;
             _GameInput.MappedOperationInvoked += HandleInput;
@@ -119,6 +122,10 @@ namespace BlackTournament.Controller
             {
                 pickup.ActiveStateChanged -= HandlePickupStateChanged;
             }
+
+            // Scene
+            _Scene.HUD.Menu.Quit -= ExitToMenue;
+
             // System Events
             _GameInput.Input.MouseMoved -= Input_MouseMoved;
             _GameInput.MappedOperationInvoked -= HandleInput;
@@ -143,7 +150,12 @@ namespace BlackTournament.Controller
                     break;
                 case GameAction.Cancel:
                     // close chat & open menu
-                    if (activate && _InChat) ToggleChat(); // TODO : else menu
+                    if (activate)
+                    {
+                        if (_InChat) ToggleChat();
+                        else _Scene.HUD.Menu.Visible = !_Scene.HUD.Menu.Visible;
+                    }
+
                     break;
                 case GameAction.ShowStats:
                     _Scene.HUD.ScoreBoard.Visible = activate;
@@ -162,7 +174,7 @@ namespace BlackTournament.Controller
                     break;
             }
 
-            if (!_InChat)
+            if (!_InChat && !_Scene.HUD.Menu.Visible) // Fixme : there must be a better way to manage exclusive input
             {
                 // Move view only when player is dead
                 _Scene.ViewMovement = LocalPlayer.IsAlive ? default(Vector2f) : move;
@@ -256,8 +268,9 @@ namespace BlackTournament.Controller
             _Scene.DestroyEntity(shot.Id);
         }
 
-        private void ExitToMenue() // TODO attach to proper input - and or view event
+        private void ExitToMenue()
         {
+            _Game.MenuController.Activate();
             if (_Client.IsAdmin)
             {
                 _Client.StopServer();
@@ -270,7 +283,7 @@ namespace BlackTournament.Controller
 
         private void HandleConnectionLost()
         {
-            _Game.MenuController.Activate("Connection Lost");//$
+            _Game.MenuController.Activate("Connection Lost");
         }
     }
 }

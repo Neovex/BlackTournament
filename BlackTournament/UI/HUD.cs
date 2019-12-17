@@ -64,7 +64,7 @@ namespace BlackTournament.UI
         public override View View { get => null; set => base.View = value; } // Disable view inheritance
         public String ChatMessage => _ChatInputTextBox.Text;
         public ScoreBoard ScoreBoard { get; private set; }
-
+        public InGameMenu Menu { get; private set; }
 
         private Dictionary<PickupType, WeaponIcon> _WeaponLookup;
         private AlignedContainer _PlayerInfo;
@@ -80,7 +80,7 @@ namespace BlackTournament.UI
         private OffsetContainer _ChatContainer;
         private TextBox _ChatInputTextBox;
 
-        public HUD(Core core, TextureLoader texLoader, UIInputMap input) : base(core, core?.DeviceSize)
+        public HUD(Core core, TextureLoader texLoader, SfxManager sfx, UIInputMap input) : base(core, core?.DeviceSize)
         {
             // Build HUD
             // Score and Time
@@ -215,10 +215,16 @@ namespace BlackTournament.UI
             ScoreBoard = new ScoreBoard(_Core);
             Add(ScoreBoard);
 
+            // Menu
+            Menu = new InGameMenu(_Core, texLoader, sfx)
+            {
+                Input = input
+            };
+            Add(Menu);
+
             // Listen to Size Changes
             _Core.DeviceResized += Resize;
         }
-
 
         internal void SetPlayerWeapons(PickupType currentWeapon, IEnumerable<Weapon> weapons)
         {

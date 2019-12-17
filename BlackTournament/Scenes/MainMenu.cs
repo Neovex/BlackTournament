@@ -12,6 +12,7 @@ using BlackCoat.Entities;
 using BlackCoat.Entities.Shapes;
 
 using BlackTournament.UI;
+using BlackTournament.InputMaps;
 using BlackTournament.Properties;
 using BlackTournament.Net.Data;
 
@@ -109,6 +110,7 @@ namespace BlackTournament.Scenes
             _Lighting.Add(_AmbientLight = new Rectangle(_Core, Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
 
             // UI
+            var input = new UIInputMap(new GameInputMap(Input));
             var tex = TextureLoader.Load(Files.Menue_Panel);
             var buttonTex = TextureLoader.Load(Files.Menue_Button, false, true);
             Layer_Game.Add
@@ -117,7 +119,7 @@ namespace BlackTournament.Scenes
                 _MainUI = new Canvas(_Core, tex.Size.ToVector2f())
                 {
                     Texture = tex,
-                    Input = new UIInput(Input, true),
+                    Input = input,
                     Init = new UIComponent[]
                     {
                         _MainUIContent = new AlignedContainer(_Core, Alignment.Center)
@@ -202,7 +204,7 @@ namespace BlackTournament.Scenes
                 _ServerBrowser = new Canvas(_Core, new Vector2f(700, 540))
                 {
                     Visible = false,
-                    Input = _MainUI.Input,
+                    Input = input,
                     BackgroundAlpha = 1,
                     BackgroundColor = new Color(180, 0, 0),
                     Init = new UIComponent[]
@@ -304,7 +306,7 @@ namespace BlackTournament.Scenes
                 _Credits = new Canvas(_Core, new Vector2f(700, 540))
                 {
                     Visible = false,
-                    Input = _MainUI.Input,
+                    Input = input,
                     BackgroundAlpha = 1,
                     BackgroundColor = new Color(180, 0, 0),
                     Init = new UIComponent[]
@@ -343,7 +345,7 @@ namespace BlackTournament.Scenes
                 _MessageBox = new Canvas(_Core, new Vector2f(550, 200))
                 {
                     Visible = false,
-                    Input = _MainUI.Input,
+                    Input = input,
                     BackgroundAlpha = 1,
                     BackgroundColor = new Color(180, 0, 0),
                     Init = new UIComponent[]
@@ -473,7 +475,7 @@ namespace BlackTournament.Scenes
                 if (!Int32.TryParse(label.Text, out int value)) value = -1;
                 if (value < 1025 || value > 65535) label.Text = Net.Net.DEFAULT_PORT.ToString();
             }
-            else throw new Exception("SNH");
+            else throw new Exception(nameof(PortLimit));
         }
 
         private void PortFilter(Label label)

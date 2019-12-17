@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Threading.Tasks;
+
+using BlackTournament.Properties;
 using BlackTournament.Scenes;
 using BlackTournament.Net;
-using BlackTournament.Net.Data;
-using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {

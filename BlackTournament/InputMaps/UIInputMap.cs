@@ -9,20 +9,20 @@ namespace BlackTournament.InputMaps
 {
     internal class UIInputMap : UIInputMap<GameAction>
     {
-        private static readonly Dictionary<GameAction, (UiOperation, float)> _GameAction_TO_UiOperation = 
-                            new Dictionary<GameAction, (UiOperation, float)>()
+        private static readonly Dictionary<GameAction, (UiOperation, UiOperation, float)> _GameAction_TO_UiOperation = 
+                            new Dictionary<GameAction, (UiOperation, UiOperation, float)>()
                             {
-                                { GameAction.Confirm, (UiOperation.Confirm, 0) },
-                                { GameAction.Cancel, (UiOperation.Cancel, 0) },
-                                { GameAction.MoveUp, (UiOperation.Move, Direction.UP) },
-                                { GameAction.MoveDown, (UiOperation.Move, Direction.DOWN) },
-                                { GameAction.MoveLeft, (UiOperation.Move, Direction.LEFT) },
-                                { GameAction.MoveRight, (UiOperation.Move, Direction.RIGHT) },
-                                { GameAction.ShootPrimary, (UiOperation.Confirm, 0) },
-                                { GameAction.ShootSecundary, (UiOperation.Cancel, 0) },
-                                { GameAction.NextWeapon, (UiOperation.Scroll, Direction.UP) },
-                                { GameAction.PreviousWeapon, (UiOperation.Scroll, Direction.DOWN) },
-                                { GameAction.ShowStats, (UiOperation.None, 0) }
+                                { GameAction.Confirm, (UiOperation.BeforeConfirm, UiOperation.Confirm, 0) },
+                                { GameAction.Cancel, (UiOperation.Cancel, UiOperation.None, 0) },
+                                { GameAction.MoveUp, (UiOperation.Move, UiOperation.None, Direction.UP) },
+                                { GameAction.MoveDown, (UiOperation.Move, UiOperation.None, Direction.DOWN) },
+                                { GameAction.MoveLeft, (UiOperation.Move, UiOperation.None, Direction.LEFT) },
+                                { GameAction.MoveRight, (UiOperation.Move, UiOperation.None, Direction.RIGHT) },
+                                { GameAction.ShootPrimary, (UiOperation.BeforeConfirm, UiOperation.Confirm, 0) },
+                                { GameAction.ShootSecundary, (UiOperation.Cancel, UiOperation.None, 0) },
+                                { GameAction.NextWeapon, (UiOperation.Scroll, UiOperation.None, Direction.UP) },
+                                { GameAction.PreviousWeapon, (UiOperation.Scroll, UiOperation.None, Direction.DOWN) },
+                                { GameAction.ShowStats, (UiOperation.None, UiOperation.None, 0) }
                             };
 
         public UIInputMap(SimpleInputMap<GameAction> inputMap):base(inputMap, _GameAction_TO_UiOperation)

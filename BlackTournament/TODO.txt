@@ -23,7 +23,8 @@ HUD!
 #clean ui input?
 #add score window (tab)
 #fix right aligned text on HUD -> Rank Label
-add ingame menue (esc)
+#add ingame menue (esc)
+fix crash when exiting 2 times
 consider: update SFML to latest
 consider: removing Init from UI
 consider: removing int.toVector extension
