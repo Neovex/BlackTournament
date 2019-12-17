@@ -76,7 +76,7 @@ namespace BlackTournament.Net
             // Process Incoming Net Traffic
             ProcessMessages();
 
-            if (_Logic == null) return;
+            if (!Running) return;
 
             // Update Server Data
             _Logic.Update(deltaT);
@@ -122,7 +122,7 @@ namespace BlackTournament.Net
         // INCOMMING
         protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
         {
-            Info.Serialize(msg); // respond with server info
+            if (Running) Info.Serialize(msg); // respond with server info
         }
         protected override void ProcessIncommingData(NetMessage subType, NetIncomingMessage msg)
         {
@@ -164,10 +164,8 @@ namespace BlackTournament.Net
         {
             if (IsAdmin(id))
             {
-                StopServer("Server stopped by admin");
-                Info = null;
                 _Logic.GameMessage -= HandleGameLogicMessage;
-                _Logic = null;
+                StopServer("Server stopped by admin");
             }
             else
             {
