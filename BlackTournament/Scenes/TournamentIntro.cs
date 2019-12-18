@@ -68,12 +68,12 @@ namespace BlackTournament.Scenes
         {
             // Update Scaling
             var s = size.X < _Logo.Texture.Size.X * 2 ? 0.5f : 1;
-            _Title.Scale = _Logo.Scale = _CenterT.Scale = (s, s);
+            _Title.Scale = _Logo.Scale = _CenterT.Scale = new Vector2f(s, s);
             //Update Positions
             _BG.Position = new Vector2f(size.X / 2 - _BG.Texture.Size.X / 2, size.Y - _BG.Texture.Size.Y * 0.7f);
             _Title.Position = new Vector2f(size.X / 2, size.Y - _Title.GetGlobalBounds().Height - 30);
             _Logo.Position = new Vector2f(size.X / 2, (size.Y + (_Title.Position.Y - size.Y)) / 2);
-            _CenterT.Position = _Logo.Position-new Vector2f(2,0);
+            _CenterT.Position = _Logo.Position - new Vector2f(2, 0);
         }
 
         protected override void Update(float deltaT)

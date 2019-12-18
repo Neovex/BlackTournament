@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using SFML.System;
 using SFML.Graphics;
+
 using BlackCoat;
 using BlackCoat.UI;
 using BlackTournament.Net.Data;
@@ -26,7 +28,7 @@ namespace BlackTournament.UI
 
             _Template = new Label[4];
 
-            Add(new Canvas(_Core, (500, 300),
+            Add(new Canvas(_Core, new Vector2f(500, 300),
                 _Entries = new OffsetContainer(_Core, Orientation.Vertical, 8,
                                 new DistributionContainer(_Core, Orientation.Horizontal, null,
                                     _Template[0] = new Label(_Core, "Rank", 16, Game.DefaultFont) { TextColor = Color.Cyan },
@@ -35,7 +37,7 @@ namespace BlackTournament.UI
                                     _Template[3] = new Label(_Core, "Ping", 16, Game.DefaultFont) { TextColor = Color.Cyan }
                                 )
                                 {
-                                    Margin = (15, 15, 15, 0)
+                                    Margin = new FloatRect(15, 15, 15, 0)
                                 }
                     )
                     {
@@ -60,14 +62,14 @@ namespace BlackTournament.UI
                     var entry = new Canvas(_Core)
                     {
                         DockX = true,
-                        Margin = (15, 0, 0, 0),
+                        Margin = new FloatRect(15, 0, 0, 0),
                         Tag = _TAG
                     };
                     for (int j = 0; j < 4; j++)
                     {
                         entry.Add(new Label(_Core, String.Empty, 16, Game.DefaultFont)
                         {
-                            Position = (_Template[j].Position.X + _Template[j].InnerSize.X, 0),
+                            Position = new Vector2f(_Template[j].Position.X + _Template[j].InnerSize.X, 0),
                             Alignment = TextAlignment.Right
                         });
                     }

@@ -5,6 +5,7 @@
  </tileset>
  <layer id="1" name="Floor" width="30" height="30" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="0"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -42,6 +43,7 @@
  </layer>
  <layer id="2" name="Wall" width="30" height="30" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="1"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -78,6 +80,9 @@
 </data>
  </layer>
  <objectgroup id="3" name="Actor" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="2"/>
+  </properties>
   <object id="114" name="Rotor" type="Rotor" x="1408" y="1536" width="45.3333" height="46.3333">
    <properties>
     <property name="Asset" value="Fan"/>
@@ -217,6 +222,7 @@
  </objectgroup>
  <layer id="4" name="Decor" width="30" height="30" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="3"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -253,6 +259,9 @@
 </data>
  </layer>
  <objectgroup id="5" name="Pickups" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="4"/>
+  </properties>
   <object id="42" name="Big Shield" type="Pickup" x="1854" y="1983" width="130" height="130">
    <properties>
     <property name="Item" value="BigShield"/>

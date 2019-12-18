@@ -1,10 +1,12 @@
-﻿using BlackCoat;
-using BlackCoat.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using SFML.Graphics;
+using SFML.System;
+
+using BlackCoat;
+using BlackCoat.UI;
 
 namespace BlackTournament.UI
 {
@@ -24,12 +26,12 @@ namespace BlackTournament.UI
             Add(new OffsetContainer(_Core, Orientation.Vertical, 5,
                         new BigButton(_Core, texLoader, sfx, "Resume")
                         {
-                            Margin = (10,10,10,10),
+                            Margin = new FloatRect(10,10,10,10),
                             InitReleased = b=> Visible = false
                         },
                         new BigButton(_Core, texLoader, sfx, "Quit")
                         {
-                            Margin = (10,10,10,10),
+                            Margin = new FloatRect(10,10,10,10),
                             InitReleased = b => Quit()
                         }
                     )
@@ -38,7 +40,7 @@ namespace BlackTournament.UI
 
             Texture = texLoader.Load(Files.Menue_Bg2);
             Texture.Repeated = true;
-            TextureRect = new IntRect((0, 0), InnerSize.ToVector2i());
+            TextureRect = new IntRect(new Vector2i(0, 0), InnerSize.ToVector2i());
         }
     }
 }

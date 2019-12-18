@@ -90,31 +90,31 @@ namespace BlackTournament.UI
                             _ScoreLabel = new Label(_Core, "0", 40, Game.DefaultFont)
                             {
                                 Name = "Score",
-                                Margin = (0, 16, 0, 0),
-                                Padding = (0, 0, -10, 0) // Texts are weird
+                                Margin = new FloatRect(0, 16, 0, 0),
+                                Padding = new FloatRect(0, 0, -10, 0) // Texts are weird
                             },
                             new UIGraphic(_Core, texLoader.Load(Files.HUD_Skull)) { Name = "Skull" }
                         )
                     {
-                        Position = (10, 0)
+                        Position = new Vector2f(10, 0)
                     },
                     new AlignedContainer(_Core, Alignment.CenterTop, _TimeLabel = new Label(_Core, "TIME", 20, Game.DefaultFont)
                     {
                         Name = "Time",
-                        Position = (0, 25)
+                        Position = new Vector2f(0, 25)
                     }),
                     new AlignedContainer(_Core, Alignment.TopRight,
                             _RankLabel = new Label(_Core, "1", 40, Game.DefaultFont)
                             {
                                 Name = "Rank",
-                                Position = (0, 16),
+                                Position = new Vector2f(0, 16),
                                 Alignment = TextAlignment.Right
                             },
                             _TotalLabel = new Label(_Core, "-10", 20, Game.DefaultFont)
                             {
                                 Name = "Total",
-                                Position = (6, 32),
-                                Padding = (0, 0, 10, 0)
+                                Position = new Vector2f(6, 32),
+                                Padding = new FloatRect(0, 0, 10, 0)
                             }
                         )
             )
@@ -125,16 +125,16 @@ namespace BlackTournament.UI
 
             // Health and Shield
             _PlayerInfo = new AlignedContainer(_Core, Alignment.CenterBottom,
-                new Canvas(_Core, (200, 36),
+                new Canvas(_Core, new Vector2f(200, 36),
                     new UIGraphic(_Core, texLoader.Load(Files.HUD_Health))
                     {
                         Name = "Health Icon",
-                        Position = (3, 2)
+                        Position = new Vector2f(3, 2)
                     },
                     _HealthLabel = new Label(_Core, "100", 26, Game.DefaultFont)
                     {
                         Name = "Health",
-                        Position = (45, 7)
+                        Position = new Vector2f(45, 7)
                     },
                     new AlignedContainer(_Core, Alignment.TopRight,
                         _ShieldLabel = new Label(_Core, "100", 26, Game.DefaultFont)
@@ -143,12 +143,12 @@ namespace BlackTournament.UI
                         }
                     )
                     {
-                        Margin = (0, 7, 45, 0)
+                        Margin = new FloatRect(0, 7, 45, 0)
                     },
                     _ShieldActive = new UIGraphic(_Core, texLoader.Load(Files.HUD_ShieldActive))
                     {
                         Name = "Shield Active Icon",
-                        Position = (165, 1),
+                        Position = new Vector2f(165, 1),
                         Visible = false
                     },
                     _ShieldInactive = new UIGraphic(_Core, texLoader.Load(Files.HUD_ShieldInactive))
@@ -163,7 +163,7 @@ namespace BlackTournament.UI
                 Name = "Player",
                 BackgroundColor = Color.Black,
                 BackgroundAlpha = 0.35f,
-                Margin = (0, 0, 0, 60)
+                Margin = new FloatRect(0, 0, 0, 60)
             };
             Add(_PlayerInfo);
 
@@ -178,7 +178,7 @@ namespace BlackTournament.UI
             )
             {
                 Name = "Weapons",
-                Margin = (0, 0, 0, 12)
+                Margin = new FloatRect(0, 0, 0, 12)
             };
             Add(_Weapons);
 
@@ -196,7 +196,7 @@ namespace BlackTournament.UI
             )
             {
                 Name = "Chat",
-                Margin = (20, 0, 0, 60)
+                Margin = new FloatRect(20, 0, 0, 60)
             };
             _ChatInputTextBox = new TextBox(_Core, new Vector2f(205, 19), 16, Game.DefaultFont)
             {

@@ -5,6 +5,7 @@
  </tileset>
  <layer id="1" name="Floor" width="20" height="18" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="0"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -30,6 +31,7 @@
  </layer>
  <layer id="2" name="Wall" width="20" height="18" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="1"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -55,6 +57,7 @@
  </layer>
  <layer id="3" name="Decor" width="20" height="18" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="2"/>
    <property name="TilesetName" value="IndustrialTiles"/>
   </properties>
   <data encoding="csv">
@@ -114,6 +117,9 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="Pickups" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="3"/>
+  </properties>
   <object id="32" name="Thumper" type="Pickup" x="1191.33" y="930.333" width="58.3333" height="63">
    <properties>
     <property name="Item" value="Thumper"/>
@@ -217,6 +223,9 @@
   <object id="54" name="Spawn" type="Spawn" x="564.333" y="560.667" width="28" height="28"/>
  </objectgroup>
  <objectgroup id="9" name="Actor" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="4"/>
+  </properties>
   <object id="56" name="Rotating Light" type="Rotor" x="2048" y="1792" width="16" height="16">
    <properties>
     <property name="Asset" value="TorchCone"/>

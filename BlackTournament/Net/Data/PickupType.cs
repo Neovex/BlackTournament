@@ -2,7 +2,7 @@
 {
     public enum PickupType
     {
-        NULL,
+        None,
 
         SmallHealth,
         BigHealth,

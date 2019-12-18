@@ -5,6 +5,7 @@
  </tileset>
  <layer id="1" name="Tiles" width="30" height="28" locked="1">
   <properties>
+   <property name="RenderOrder" type="int" value="0"/>
    <property name="TilesetName" value="AztekTiles"/>
   </properties>
   <data encoding="csv">
@@ -39,6 +40,9 @@
 </data>
  </layer>
  <objectgroup id="2" name="Pickups" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="1"/>
+  </properties>
   <object id="35" name="Hedgeshock" type="Pickup" x="392" y="376" width="86" height="78">
    <properties>
     <property name="Item" value="Hedgeshock"/>
@@ -137,6 +141,9 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="Actor" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="2"/>
+  </properties>
   <object id="61" name="Torch" type="Actor" x="352" y="151" width="25" height="25">
    <properties>
     <property name="Asset" value="Torch"/>

@@ -106,7 +106,7 @@ namespace BlackTournament.Scenes
                 // BG Lighting
                 _Lighting = new PrerenderedContainer(_Core) { BlendMode = BlendMode.Multiply, ClearColor = Color.Black, RenderEachFrame = true }
             );
-            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = (100, 100) });
+            _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = new Vector2f(100, 100) });
             _Lighting.Add(_AmbientLight = new Rectangle(_Core, Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
 
             // UI
@@ -328,7 +328,7 @@ namespace BlackTournament.Scenes
                                         new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = (10, 10),
+                                            Position = new Vector2f(10, 10),
                                             TextColor = new Color(0,100,255)
                                         }
                                     }
@@ -366,7 +366,7 @@ namespace BlackTournament.Scenes
                                         _MessageBoxLabel = new Label(_Core, "Message", font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
-                                            Position = (10, 10),
+                                            Position = new Vector2f(10, 10),
                                             TextColor = new Color(0,100,255),
                                             Padding = new FloatRect(10,40,10,10)
                                         }

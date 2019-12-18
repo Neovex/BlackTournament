@@ -83,7 +83,7 @@ namespace BlackTournament.Scenes
             _Rect = new Rectangle(_Core)
             {
                 Position = new Vector2f(450, 100),
-                Size = (200, 200),
+                Size = new Vector2f(200, 200),
                 Color = Color.Yellow,
                 Alpha = 0.3f
             };
@@ -136,9 +136,9 @@ namespace BlackTournament.Scenes
             var tex = TextureLoader.Load("AztekTiles");
             Log.Fatal("Shader Available: ", Shader.IsAvailable); // fixme - isnt this done already?
 
-            _Shader = new Shader(null, @"C:\Users\Fox\Desktop\blur.frag"); // Wrap into effect class?
-            _Shader.SetParameter("texture", tex);
-            _Shader.SetParameter("blur_radius", _Blurryness);
+            _Shader = new Shader(null, null, @"path"); // Wrap into effect class?
+            _Shader.SetUniform("texture", tex);
+            _Shader.SetUniform("blur_radius", _Blurryness);
 
             _BlurTest = new Graphic(_Core);
             _BlurTest.Position = new Vector2f(100, 100);
@@ -160,7 +160,7 @@ namespace BlackTournament.Scenes
                     _Blurryness -= 0.001f;
                     Log.Debug(_Blurryness);
                 }
-                _Shader.SetParameter("blur_radius", _Blurryness);
+                _Shader.SetUniform("blur_radius", _Blurryness);
             };
         }
 
@@ -226,7 +226,7 @@ namespace BlackTournament.Scenes
 
                     new UIContainer(_Core, new Label(_Core, "TestScene"))
                     {
-                        Position = (100,50),
+                        Position = new Vector2f(100,50),
                         BackgroundAlpha = 0.25f
                     }
                 }
@@ -400,7 +400,7 @@ namespace BlackTournament.Scenes
             var host = new ParticleEmitterHost(_Core);
             host.AddEmitter(emitter);
             rContainer.Add(host);
-            rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = (100, 100) });
+            rContainer.Add(new Graphic(_Core, TextureLoader.Load("checker")) { Position = new Vector2f(100, 100) });
             //Layer_Game.Add(host);
 
             Input.MouseButtonPressed += b =>

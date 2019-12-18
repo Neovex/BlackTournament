@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BlackTournament</RootNamespace>
     <AssemblyName>BlackTournament</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -44,6 +44,18 @@
       <HintPath>..\packages\Lidgren.Network.1.0.2\lib\net451\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SFML.Audio, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFML.Audio.2.5.0\lib\netstandard2.0\SFML.Audio.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Graphics, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFML.Graphics.2.5.0\lib\netstandard2.0\SFML.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.System, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFML.System.2.5.0\lib\netstandard2.0\SFML.System.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Window, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFML.Window.2.5.0\lib\netstandard2.0\SFML.Window.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,6 +67,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TiledSharp, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TiledSharp.1.0.1\lib\netstandard2.0\TiledSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\Librarys\Failsafe.cs">
@@ -360,32 +375,41 @@
     <Content Include="Assets\Textures\TorchCone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <ContentWithTargetPath Include="Doc\Credits.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Credits.txt</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Audio.dll">
+      <Link>lib\csfml-Audio.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-Audio.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Graphics.dll">
+      <Link>lib\csfml-Graphics.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-Graphics.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-System.dll">
+      <Link>lib\csfml-System.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-System.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Window.dll">
+      <Link>lib\csfml-Window.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-Window.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\openal32.dll">
+      <Link>lib\openal32.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>openal32.dll</TargetPath>
+    </ContentWithTargetPath>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj">
       <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
       <Name>BlackCoat</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\SFML.Net\src\Audio\sfml-audio.csproj">
-      <Project>{0B202C4D-A457-47FE-84A3-031DD878C6BE}</Project>
-      <Name>sfml-audio</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\SFML.Net\src\Graphics\sfml-graphics.csproj">
-      <Project>{46786269-57B9-48E7-AA4F-8F4D84609FE6}</Project>
-      <Name>sfml-graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\SFML.Net\src\System\sfml-system.csproj">
-      <Project>{31D24303-F6A9-4D53-BB03-A73EDCB3186D}</Project>
-      <Name>sfml-system</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\SFML.Net\src\Window\sfml-window.csproj">
-      <Project>{D17DE83D-A592-461F-8AF2-53F9E22E1D0F}</Project>
-      <Name>sfml-window</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\TiledSharp\TiledSharp\TiledSharp.csproj">
-      <Project>{38b179f0-2fc8-463e-aeeb-ad9f09fdd252}</Project>
-      <Name>TiledSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -398,7 +422,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)Doc\Credits.txt" "$(TargetDir)\Assets"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

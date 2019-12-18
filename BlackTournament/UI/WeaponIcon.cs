@@ -1,6 +1,8 @@
-﻿using BlackCoat;
-using BlackCoat.UI;
+﻿using SFML.System;
 using SFML.Graphics;
+
+using BlackCoat;
+using BlackCoat.UI;
 
 namespace BlackTournament.UI
 {
@@ -21,18 +23,18 @@ namespace BlackTournament.UI
             Add(
                 new UIGraphic(core, outline)
                 {
-                    Position = (4, 5),
-                    Margin = (0, 0, 0, 3)
+                    Position = new Vector2f(4, 5),
+                    Margin = new FloatRect(0, 0, 0, 3)
                 },
                 _Icon = new UIGraphic(core, icon)
                 {
-                    Position = (3, 4),
+                    Position = new Vector2f(3, 4),
                     Visible = false
                 },
                 _Label = new Label(core, "0-0", 24, Game.DefaultFont)
                 {
-                    Position = (80, 7),
-                    Margin = (0,0,6,0)
+                    Position = new Vector2f(80, 7),
+                    Margin = new FloatRect(0,0,6,0)
                 }
             );
 

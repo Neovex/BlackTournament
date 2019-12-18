@@ -50,7 +50,7 @@ namespace BlackTournament.Tmx
             if (!Enum.TryParse<PickupType>(pickupString, true, out PickupType type))
             {
                 Log.Warning("Invalid Pickup entry skipped", pickupString);
-                type = PickupType.NULL;
+                type = PickupType.None;
             }
             Item = type;
             Amount = Int32.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Amount), 0), _Culture);

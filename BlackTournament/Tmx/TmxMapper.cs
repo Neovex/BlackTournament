@@ -35,7 +35,7 @@ namespace BlackTournament.Tmx
         public Vector2i Size { get; internal set; }
         public Vector2i TileSize { get; internal set; }
 
-        public IEnumerable<Layer> Layers => _Layers;
+        public IEnumerable<Layer> Layers => _Layers.OrderBy(l => l.RenderOrder);
         public IEnumerable<PickupInfo> Pickups => _Pickups;
         public IEnumerable<Vector2f> SpawnPoints => _SpawnPoints;
         public IEnumerable<CollisionShape> WallCollider => _WallCollider;
@@ -68,72 +68,69 @@ namespace BlackTournament.Tmx
                 _Killzones = new List<Killzone>();
 
                 // Load all Layers
-                foreach (var itmxLayer in _MapData.Layers) // LAYER
+                foreach (var layer in _MapData.Layers) // LAYER
                 {
-                    switch (itmxLayer)
+                    // Parse Tile Layers
+                    var textureName = layer.Properties["TilesetName"];
+                    var columns = _TextureColumnLookup[textureName];
+
+                    TileLayer l = new TileLayer();
+                    l.RenderOrder = int.Parse(ReadTmxObjectProperty(layer.Properties, nameof(l.RenderOrder), int.MaxValue));
+                    l.Asset = textureName;
+                    l.Offset = new Vector2f((float)(layer.OffsetX ?? 0), (float)(layer.OffsetY ?? 0));
+                    l.Tiles = layer.Tiles.Select(t => new Tile(new Vector2f(t.X * TileSize.X, t.Y * TileSize.Y),
+                                                                new Vector2i(((t.Gid - 1) % columns) * TileSize.X, ((t.Gid - 1) / columns) * TileSize.Y)
+                                                    )).ToArray();
+                    _Layers.Add(l);
+                }
+
+                foreach (var group in _MapData.ObjectGroups)
+                {
+                    // Parse Object Layers
+                    var objects = new List<ActorInfo>();
+                    // Parse Objects / Actors
+                    foreach (var obj in group.Objects)
                     {
-                        // Parse Tile Layers
-                        case TmxLayer layer:
-                            var textureName = layer.Properties["TilesetName"];
-                            var columns = _TextureColumnLookup[textureName];
+                        switch (obj.Type)
+                        {
+                            case "Pickup":
+                                _Pickups.Add(new PickupInfo(obj));
+                                break;
 
-                            TileLayer l = new TileLayer();
-                            l.Asset = textureName;
-                            l.Offset = new Vector2f((float)(layer.OffsetX ?? 0), (float)(layer.OffsetY ?? 0));
-                            l.Tiles = layer.Tiles.Select(t => new Tile(new Vector2f(t.X * TileSize.X, t.Y * TileSize.Y),
-                                                                       new Vector2i(((t.Gid - 1) % columns) * TileSize.X, ((t.Gid - 1) / columns) * TileSize.Y)
-                                                         )).ToArray();
-                            _Layers.Add(l);
-                        break;
+                            case "Spawn":
+                                _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2);
+                                break;
 
+                            case "Collision":
+                                _WallCollider.Add(ParseCollisionShape(cSys, obj));
+                                break;
 
-                        // Parse Object Layers
-                        case TmxObjectGroup group:
-                            var objects = new List<ActorInfo>();
-                            // Parse Objects / Actors
-                            foreach (var obj in group.Objects)
-                            {
-                                switch (obj.Type)
-                                {
-                                    case "Pickup":
-                                        _Pickups.Add(new PickupInfo(obj));
-                                        break;
+                            case "Killzone":
+                                _Killzones.Add(new Killzone(obj, ParseCollisionShape(cSys, obj)));
+                                break;
 
-                                    case "Spawn":
-                                        _SpawnPoints.Add(new Vector2f((float)obj.X, (float)obj.Y) + new Vector2f((float)obj.Width, (float)obj.Height) / 2);
-                                        break;
+                            case "Actor":
+                                objects.Add(new AssetActorInfo(obj));
+                                break;
 
-                                    case "Collision":
-                                        _WallCollider.Add(ParseCollisionShape(cSys, obj));
-                                        break;
+                            case "Rotor":
+                                objects.Add(new RotorInfo(obj));
+                                break;
 
-                                    case "Killzone":
-                                        _Killzones.Add(new Killzone(obj, ParseCollisionShape(cSys, obj)));
-                                        break;
+                            default:
+                                Log.Warning("Unknown map object type", obj.Type);
+                                break;
+                        }
+                    }
 
-                                    case "Actor":
-                                        objects.Add(new AssetActorInfo(obj));
-                                        break;
-
-                                    case "Rotor":
-                                        objects.Add(new RotorInfo(obj));
-                                        break;
-
-                                    default:
-                                        Log.Warning("Unknown map object type", obj.Type);
-                                        break;
-                                }
-                            }
-
-                            if (objects.Count != 0)
-                            {
-                                _Layers.Add(new ObjectLayer()
-                                {
-                                    Offset = new Vector2f((float)group.OffsetX, (float)group.OffsetY),
-                                    Objects = objects.ToArray()
-                                });
-                            }
-                        break;
+                    if (objects.Count != 0)
+                    {
+                        _Layers.Add(new ObjectLayer()
+                        {
+                            Offset = new Vector2f((float)group.OffsetX, (float)group.OffsetY),
+                            RenderOrder = int.Parse(ReadTmxObjectProperty(group.Properties, "RenderOrder", int.MaxValue)),
+                        Objects = objects.ToArray()
+                        });
                     }
                 }
                 return true;

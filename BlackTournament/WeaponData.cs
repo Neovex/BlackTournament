@@ -58,7 +58,7 @@ namespace BlackTournament
                 case 2: return PickupType.Thumper;
                 case 3: return PickupType.Titandrill;
             }
-            return PickupType.NULL;
+            return PickupType.None;
         }
 
         // Weapon Stats

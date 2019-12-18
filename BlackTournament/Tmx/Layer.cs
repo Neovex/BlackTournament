@@ -3,9 +3,10 @@ using SFML.System;
 
 namespace BlackTournament.Tmx
 {
-    class Layer
+    abstract class Layer
     {
         public Vector2f Offset { get; internal set; }
+        public int RenderOrder { get; internal set; } = int.MaxValue;
     }
 
     class TileLayer : Layer

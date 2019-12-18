@@ -11,9 +11,9 @@
     <Position X="3.5" Y="1.5" Width="2" />
     <AssociationLine Name="Pickups" Type="BlackTournament.Tmx.PickupInfo" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="4.438" Y="5.814" />
-        <Point X="4.438" Y="8.477" />
-        <Point X="13.562" Y="8.477" />
+        <Point X="4.5" Y="6.007" />
+        <Point X="4.5" Y="8.45" />
+        <Point X="13.562" Y="8.45" />
         <Point X="13.562" Y="5.627" />
       </Path>
     </AssociationLine>
@@ -25,11 +25,10 @@
       <Field Name="_MapData" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
+      <Property Name="Layers" />
+      <Property Name="Pickups" />
       <Property Name="WallCollider" />
       <Property Name="Killzones" />
-      <Property Name="Pickups" />
-      <Property Name="SpawnPoints" />
-      <Property Name="Layers" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BlackCoat.Collision.Shapes.CollisionShape" Collapsed="true">
@@ -62,7 +61,7 @@
       <Property Name="Tiles" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="BlackTournament.Tmx.ObjectLayer">
+  <Class Name="BlackTournament.Tmx.ObjectLayer" Collapsed="true">
     <Position X="8.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
@@ -113,11 +112,6 @@
       <FileName>Tmx\Tile.cs</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="SFML.System.Vector2f" Collapsed="true">
-    <Position X="7.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
-    <Lollipop Position="0.2" />
-  </Struct>
   <Interface Name="BlackCoat.Collision.ICollisionShape" Collapsed="true">
     <Position X="0.5" Y="1.5" Width="1.5" />
     <TypeIdentifier />
@@ -132,7 +126,7 @@
   <Enum Name="BlackTournament.Net.Data.PickupType">
     <Position X="15" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAIAQABAAAAAIAIA=</HashCode>
+      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAAAQABAAAAEIAIA=</HashCode>
       <FileName>Net\Data\PickupType.cs</FileName>
     </TypeIdentifier>
   </Enum>

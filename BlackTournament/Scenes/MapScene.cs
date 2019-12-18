@@ -404,7 +404,7 @@ namespace BlackTournament.Scenes
                     {
                         Texture = shockCoreTex,
                         Origin = shockCoreTex.Size.ToVector2f() / 2,
-                        Scale = (0.15f, 0.15f),
+                        Scale = new Vector2f(0.15f, 0.15f),
                         Color = Color.Cyan
                     };
                     // Add lightning decoration
@@ -443,11 +443,11 @@ namespace BlackTournament.Scenes
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);
-                    _ExplosionInfo.Scale = (size / 120, size / 120);
+                    _ExplosionInfo.Scale = new Vector2f(size, size) / 120;
                     _ExplosionEmitter.Position = position;
                     _ExplosionEmitter.Trigger();
                     // Impact Light
-                    _LightEmitterInfo.Scale = (0.9f, 0.9f);
+                    _LightEmitterInfo.Scale = new Vector2f(0.9f, 0.9f);
                     _LightEmitter.Position = position;
                     _LightEmitter.Trigger();
                     break;
@@ -459,7 +459,7 @@ namespace BlackTournament.Scenes
                     _ImpactEmitter.Trigger();
                     if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
                     // Impact Light
-                    _LightEmitterInfo.Scale = (0.1f, 0.1f);
+                    _LightEmitterInfo.Scale = new Vector2f(0.1f, 0.1f);
                     _LightEmitter.Position = position;
                     _LightEmitter.Trigger();
                 break;
@@ -473,7 +473,7 @@ namespace BlackTournament.Scenes
                     _SparkInfo.Direction = rotation;
                     _SparkInfo.Offset = new Vector2f(-10, 10);
                     _SparkEmitter.Trigger();
-                    _SparkInfo.Offset = default(Vector2f);
+                    _SparkInfo.Offset = new Vector2f();
                     _SparkInfo.Direction = null;
                 break;
 

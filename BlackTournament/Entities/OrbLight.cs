@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.System;
+using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.Entities;
 using BlackCoat.Properties;
@@ -17,7 +18,7 @@ namespace BlackTournament.Entities
             Texture = loader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
             BlendMode = BlendMode.Add;
             Origin = Texture.Size.ToVector2f() / 2;
-            Scale = (0.8f, 0.8f);
+            Scale = new Vector2f(0.8f, 0.8f);
             Color = new Color(200, 200, 255);
         }
 

@@ -29,7 +29,7 @@ namespace BlackTournament.InputMaps
             AddKeyboardMapping(Keyboard.Key.Right, GameAction.MoveRight);
 
             // UI
-            AddKeyboardMapping(Keyboard.Key.Return, GameAction.Confirm);
+            AddKeyboardMapping(Keyboard.Key.Enter, GameAction.Confirm);
             AddKeyboardMapping(Keyboard.Key.Escape, GameAction.Cancel);
             AddKeyboardMapping(Keyboard.Key.Tab, GameAction.ShowStats);
 
