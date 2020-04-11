@@ -52,7 +52,7 @@ add death sounds (and effects)
 #fix balancing based on latest playtest
 #fix healitem values
 #force respawn
-fix drake light on turbine
+#fix drake light on turbine
 add emitters to pickups
 (add damage indicator)
 (complete map temple)

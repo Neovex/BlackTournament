@@ -377,7 +377,9 @@ namespace BlackTournament.Scenes
             Layer_Game.Add(entity);
 
             var emitter = new PixelEmitter(_Core, new PixelParticleInitializationInfo()
-            {replace with texture emitter and share info in own class as Singleton
+            {
+                // TODO : replace with texture emitter and share info in own class as Singleton
+                
                 Loop = true,
                 ParticlesPerSpawn = 1,
                 SpawnRate = 0.5f,

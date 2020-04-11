@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Failsafe.cs">
+    <Compile Include="..\..\..\Librarys\Failsafe.cs">
       <Link>Failsafe.cs</Link>
     </Compile>
     <Compile Include="Controller\ConnectController.cs" />
@@ -411,7 +411,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BlackCoat4SFML2.X\BlackCoat.csproj">
+    <ProjectReference Include="..\..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj">
       <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
       <Name>BlackCoat</Name>
     </ProjectReference>

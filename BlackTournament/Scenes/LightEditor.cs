@@ -93,9 +93,8 @@ namespace BlackTournament.Scenes
             _Inspector = OpenInspector();
             _Inspector.InspectionItemChanged += Inspector_InspectionItemChanged;
 
-            Layer_Overlay.Add(_Selection = new Rectangle(_Core, new Vector2f(), Color.Transparent)
+            Layer_Overlay.Add(_Selection = new Rectangle(_Core, new Vector2f(), outlineColor: Color.Magenta)
             {
-                OutlineColor = Color.Magenta,
                 OutlineThickness = 2
             });
             return true;
