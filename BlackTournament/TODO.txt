@@ -10,7 +10,7 @@ complete map powerplant
 #replace main menue->host->map textbox with dynamically filled combo-box
 #remove map temple from compile
 #rename states to scenes
-HUD!
+#HUD!
 -# create template
 -# create weapon icons
 -# create HUD specific assets
@@ -31,8 +31,19 @@ HUD!
 #fix: "ghost" players on server restart
 #X (not rep) fix: inspector shows main menue state when loaded into a 2nd map
 #fix: connecting to invalid server causing crash instead of proper message
-update playergraphics (animation?)
-add damage sounds (and effects) -> radiation
+#update playergraphics
+#add colorizer
+#finalize launcher
+Xfix alpha inheritance - not possible - workaround is functional
+#fix redundant code in all entities
+
+-> test polygon
+comitt!
+
+fix random overload
+add launcher banner image
+fix power plant radiation zone damage values
+add damage sounds (and effects)
 add death sounds (and effects)
 add pickup sounds
 fix pickup respawn times!
@@ -41,6 +52,8 @@ fix pickup respawn times!
 (consider UI Markup)
 (consider Particle Markup)
 (consider replacing TMX Lib)
+(multiple characters)
+(consider character customization (tint))
 
 
 

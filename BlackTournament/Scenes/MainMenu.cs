@@ -107,7 +107,7 @@ namespace BlackTournament.Scenes
                 _Lighting = new PrerenderedContainer(_Core) { BlendMode = BlendMode.Multiply, ClearColor = Color.Black, RenderEachFrame = true }
             );
             _Lighting.Add(_EffectLight = new Graphic(_Core, TextureLoader.Load(Files.Emitter_Smoke_White)) { Visible = false, Origin = new Vector2f(100, 100) });
-            _Lighting.Add(_AmbientLight = new Rectangle(_Core, Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
+            _Lighting.Add(_AmbientLight = new Rectangle(_Core, new Vector2f(10,10), Color.White) { BlendMode = BlendMode.Add, Alpha = 0.05f });
 
             // UI
             var input = new UIInputMap(new GameInputMap(Input));

@@ -341,9 +341,12 @@ namespace BlackTournament.Scenes
         {
             var player = new Graphic(_Core)
             {
-                Texture = TextureLoader.Load("CharacterBase"), // TODO : replace with proper char graphic
-                Color = Color.Red, // this is a test
-                Scale = new Vector2f(0.5f, 0.5f) // FIXME !!!
+                Texture = TextureLoader.Load("CharacterBase"),
+                Color = !isLocalPlayer ? Color.Red :
+                        new Color(Properties.Settings.Default.PlayerColor.R,
+                                  Properties.Settings.Default.PlayerColor.G,
+                                  Properties.Settings.Default.PlayerColor.B), // todo add color to sync?
+                Scale = new Vector2f(0.5f, 0.5f) // FIXME ?
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
             Layer_Game.Add(player);
@@ -379,11 +382,9 @@ namespace BlackTournament.Scenes
                     // create grenade
                     var grenate = new Container(_Core);
                     var size = new Vector2f(8, 4);
-                    var grenateGfx = new Rectangle(_Core)
+                    var grenateGfx = new Rectangle(_Core, size, Color.Black)
                     {
-                        Size = size,
-                        Origin = size / 2,
-                        Color = Color.Black
+                        Origin = size / 2
                     };
                     if (primary)
                     {

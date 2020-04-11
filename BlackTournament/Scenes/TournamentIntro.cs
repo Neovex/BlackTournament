@@ -71,7 +71,7 @@ namespace BlackTournament.Scenes
             _Title.Scale = _Logo.Scale = _CenterT.Scale = new Vector2f(s, s);
             //Update Positions
             _BG.Position = new Vector2f(size.X / 2 - _BG.Texture.Size.X / 2, size.Y - _BG.Texture.Size.Y * 0.7f);
-            _Title.Position = new Vector2f(size.X / 2, size.Y - _Title.GetGlobalBounds().Height - 30);
+            _Title.Position = new Vector2f(size.X / 2, size.Y - _Title.GlobalBounds.Height - 30);
             _Logo.Position = new Vector2f(size.X / 2, (size.Y + (_Title.Position.Y - size.Y)) / 2);
             _CenterT.Position = _Logo.Position - new Vector2f(2, 0);
         }
@@ -85,10 +85,10 @@ namespace BlackTournament.Scenes
             {
                 _Counter = 0;
                 // Not pretty but gets the job done
-                if (_Text.DisplayedString == "loading") _Text.DisplayedString = "loading.";
-                else if (_Text.DisplayedString == "loading.") _Text.DisplayedString = "loading..";
-                else if (_Text.DisplayedString == "loading..") _Text.DisplayedString = "loading...";
-                else if (_Text.DisplayedString == "loading...") _Text.DisplayedString = "loading";
+                if (_Text.Text == "loading") _Text.Text = "loading.";
+                else if (_Text.Text == "loading.") _Text.Text = "loading..";
+                else if (_Text.Text == "loading..") _Text.Text = "loading...";
+                else if (_Text.Text == "loading...") _Text.Text = "loading";
             }
         }
 

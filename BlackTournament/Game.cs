@@ -1,15 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
+using System.Windows.Forms;
 
 using SFML.Window;
 using SFML.Graphics;
 
 using BlackCoat;
-using BlackCoat.UI;
 
-using BlackTournament.InputMaps;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
 using BlackTournament.Properties;
@@ -22,7 +20,7 @@ namespace BlackTournament
         public static Font DefaultFont { get; private set; }
         public static Font StyleFont { get; private set; }
 
-        public const String ID = "BlackTournament";
+        public const String ID = nameof(BlackTournament);
         public const String TEXTURE_ROOT = "Assets\\Textures";
         public const String MUSIC_ROOT = "Assets\\Music";
         public const String FONT_ROOT = "Assets\\Fonts";
@@ -56,17 +54,20 @@ namespace BlackTournament
 
         public void Run(String arguments)
         {
-            //var device = Device.Create("Black Tournament"); // TODO: Add launcher data to settings
-
-            // Init Black Coat Engine
-            var device = Device.Create(new VideoMode(1024, 768), "Black Tournament", Styles.Default, 0, false);
-            //var device = Device.Fullscreen;
-            device.SetTitle("Black Tournament");
+#if !DEBUG
+            // Show Launcher
+            var device = Device.Create(new Launcher(new GraphicSettings(), new SettingsTab()), ID);
+            if (device == null) return;
+#endif
+#if DEBUG
+            var device = Device.Create(new VideoMode(1024, 768), ID, Styles.Default, 0, false);
+#endif  
+            // Init Core
             using (Core = new Core(device))
             {
-                // Init Core
-                //Core.Debug = true;
-                //Core.PauseUpdateOnFocusLoss = false;
+#if DEBUG
+                Core.Debug = true;
+#endif
                 Core.OnUpdate += Update;
                 Core.ConsoleCommand += ExecuteCommand;
 
@@ -110,6 +111,10 @@ namespace BlackTournament
                     _Server = null;
                 }
             }
+
+#if !DEBUG
+            Settings.Default.Save();
+#endif
         }
 
         private void Update(float deltaT)

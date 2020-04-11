@@ -69,10 +69,9 @@ namespace BlackTournament.Scenes
             _Ray = new Line(_Core, new Vector2f(300, 300), new Vector2f(), Color.Green);
             Layer_Game.Add(_Ray);
 
-            _Circle = new Circle(_Core)
+            _Circle = new Circle(_Core, 50)
             {
                 Position = _Ray.Start.Position + new Vector2f(150, 80),
-                Radius = 50,
                 Color = Color.Transparent,
                 OutlineColor = Color.Cyan,
                 OutlineThickness = 0.5f
@@ -80,11 +79,9 @@ namespace BlackTournament.Scenes
             Layer_Game.Add(_Circle);
 
 
-            _Rect = new Rectangle(_Core)
+            _Rect = new Rectangle(_Core, new Vector2f(200, 200), Color.Yellow)
             {
                 Position = new Vector2f(450, 100),
-                Size = new Vector2f(200, 200),
-                Color = Color.Yellow,
                 Alpha = 0.3f
             };
             Layer_Game.Add(_Rect);
@@ -108,12 +105,10 @@ namespace BlackTournament.Scenes
                 {
                     Log.Info("Intersection Angle:", angle);
 
-                    var r = new Rectangle(_Core)
+                    var r = new Rectangle(_Core, new Vector2f(10, 10), Color.Red)
                     {
-                        Size = new Vector2f(10, 10),
                         Origin = new Vector2f(5, 5),
                         Position = position,
-                        Color = Color.Red,
                         Alpha = 0.75f
                     };
                     Layer_Game.Add(r);
@@ -356,10 +351,7 @@ namespace BlackTournament.Scenes
                 Position = new Vector2f(450, 100)
             });
 
-            Layer_Overlay.Add( _Test = new Circle(_Core)
-            {
-                Radius = 50
-            });
+            Layer_Overlay.Add(_Test = new Circle(_Core, 50));
 
             Input.MouseButtonPressed += DEFAULT_MouseButtonPressed;
         }

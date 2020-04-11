@@ -65,10 +65,10 @@ namespace BlackTournament.UI
             Checked.Invoke(LastInfo);
         }
 
-        protected override void Destroy(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (LastInfo == this) LastInfo = null;
-            base.Destroy(disposing);
+            base.Dispose(disposing);
         }
     }
 }

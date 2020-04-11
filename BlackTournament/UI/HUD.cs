@@ -289,10 +289,10 @@ namespace BlackTournament.UI
             }
         }
 
-        protected override void Destroy(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             _Core.DeviceResized -= Resize;
-            base.Destroy(disposing);
+            base.Dispose(disposing);
         }
     }
 }

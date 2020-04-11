@@ -10,7 +10,7 @@ using BlackCoat;
 
 namespace BlackTournament.Entities
 {
-    class MapRenderer : EntityBase
+    class MapRenderer : EntityBase<RectangleShape>
     {
         private Vertex[] _Vertices;
         private Texture _Texture;
@@ -20,7 +20,7 @@ namespace BlackTournament.Entities
         public override Color Color { get; set; }
 
 
-        public MapRenderer(Core core, Vector2i mapSize, Texture texture, Vector2i tileSize) : base(core)
+        public MapRenderer(Core core, Vector2i mapSize, Texture texture, Vector2i tileSize) : base(core, new RectangleShape())
         {
             if (texture == null || mapSize.X < 1 || mapSize.Y < 1 || tileSize.X < 1 || tileSize.Y < 1) throw new ArgumentException();
 
@@ -66,16 +66,6 @@ namespace BlackTournament.Entities
             v.TexCoords.Y = tex.Y + _TileSize.Y;
             v.Color = c;
             _Vertices[index + 3] = v;
-        }
-
-        public override void Update(float deltaT)
-        {
-            // nothing to do here
-        }
-
-        public override void Draw()
-        {
-            _Core.Draw(this);
         }
 
         public override void Draw(RenderTarget target, RenderStates states)
