@@ -111,7 +111,7 @@
  <objectgroup id="5" name="Killzones" locked="1">
   <object id="30" name="Radiation Zone" type="Killzone" x="1097" y="70" width="486" height="393">
    <properties>
-    <property name="Damage" type="float" value="1"/>
+    <property name="Damage" type="float" value="10"/>
     <property name="Effect" value="Environment"/>
    </properties>
   </object>
@@ -123,21 +123,25 @@
   <object id="32" name="Thumper" type="Pickup" x="1191.33" y="930.333" width="58.3333" height="63">
    <properties>
     <property name="Item" value="Thumper"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="33" name="Titandrill" type="Pickup" x="2214.5" y="1953.42" width="59" height="64">
    <properties>
     <property name="Item" value="Titandrill"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="34" name="Hedgeshock" type="Pickup" x="2343.33" y="417.5" width="58.6667" height="64">
    <properties>
     <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="35" name="Big Shield" type="Pickup" x="1291.5" y="136.333" width="106" height="100">
    <properties>
     <property name="Item" value="BigShield"/>
+    <property name="RespawnTime" type="float" value="35"/>
    </properties>
   </object>
   <object id="36" name="Health" type="Pickup" x="830" y="2100" width="28" height="28">
@@ -153,6 +157,7 @@
   <object id="38" name="Hedgeshock" type="Pickup" x="166.667" y="546" width="58.6667" height="64">
    <properties>
     <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="39" name="Shield" type="Pickup" x="178" y="1392" width="28" height="28">

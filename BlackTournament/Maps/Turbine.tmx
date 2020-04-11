@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="148">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="149">
  <tileset firstgid="1" name="IndustrialTiles" tilewidth="128" tileheight="128" tilecount="119" columns="7">
   <image source="../Assets/Textures/IndustrialTiles.png" width="896" height="2176"/>
  </tileset>
@@ -265,6 +265,7 @@
   <object id="42" name="Big Shield" type="Pickup" x="1854" y="1983" width="130" height="130">
    <properties>
     <property name="Item" value="BigShield"/>
+    <property name="RespawnTime" type="float" value="35"/>
    </properties>
   </object>
   <object id="43" name="Health" type="Pickup" x="1519" y="2417" width="28" height="28">
@@ -290,16 +291,19 @@
   <object id="47" name="Hedgeshock" type="Pickup" x="2850" y="3482" width="64" height="64">
    <properties>
     <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="48" name="Titandrill" type="Pickup" x="164" y="3617" width="64" height="64">
    <properties>
     <property name="Item" value="Titandrill"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="49" name="Thumper" type="Pickup" x="1246" y="428" width="64" height="64">
    <properties>
     <property name="Item" value="Thumper"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="50" name="Shield" type="Pickup" x="2859" y="2462" width="28" height="28">
@@ -377,6 +381,12 @@
     <property name="Item" value="SmallHealth"/>
    </properties>
   </object>
+  <object id="148" name="Drake" type="Pickup" x="2205" y="800" width="64" height="64">
+   <properties>
+    <property name="Item" value="Drake"/>
+    <property name="RespawnTime" type="float" value="20"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="Spawns" locked="1">
   <object id="36" name="Spawn" type="Spawn" x="3639" y="1269" width="28" height="28"/>
@@ -439,13 +449,13 @@
   <object id="19" name="Pit" type="Killzone" x="264" y="3337" width="240" height="240">
    <properties>
     <property name="Damage" type="float" value="999999999"/>
-    <property name="Effect" value="Drop"/>
+    <property name="Effect" value="PlayerDrop"/>
    </properties>
   </object>
   <object id="20" name="Pit" type="Killzone" x="2190" y="121" width="248" height="250">
    <properties>
     <property name="Damage" type="float" value="99999999"/>
-    <property name="Effect" value="Drop"/>
+    <property name="Effect" value="PlayerDrop"/>
    </properties>
   </object>
   <object id="23" name="Fan" type="Killzone" x="1397.04" y="1416.86">
@@ -485,21 +495,21 @@
   </object>
   <object id="137" name="Fan" type="Killzone" x="1554" y="1784">
    <properties>
-    <property name="Damage" value="9999999"/>
+    <property name="Damage" value="200"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 9,-38 30,-71 68,-95 101,-104 102,-1"/>
   </object>
   <object id="138" name="Fan" type="Killzone" x="1671" y="1903">
    <properties>
-    <property name="Damage" value="9999999"/>
+    <property name="Damage" value="200"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 -1,-106 105,-106 96,-63 68,-30 39,-11"/>
   </object>
   <object id="139" name="Fan" type="Killzone" x="2185" y="1785">
    <properties>
-    <property name="Damage" value="9999999"/>
+    <property name="Damage" value="200"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 1,-105 39,-95 73,-67 100,-26 103,-2"/>
@@ -513,7 +523,7 @@
   </object>
   <object id="141" name="Fan" type="Killzone" x="1399" y="2567">
    <properties>
-    <property name="Damage" value="9999999"/>
+    <property name="Damage" value="200"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 2,106 -47,87 -83,54 -104,-1"/>
@@ -534,7 +544,7 @@
   </object>
   <object id="144" name="Fan" type="Killzone" x="2066" y="2552">
    <properties>
-    <property name="Damage" value="9999999"/>
+    <property name="Damage" value="200"/>
     <property name="Effect" value="Gore"/>
    </properties>
    <polygon points="0,0 9,-38 30,-71 68,-95 101,-104 102,-1"/>

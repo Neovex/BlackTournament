@@ -126,7 +126,6 @@ namespace BlackTournament.Net.Data
                     break;
                 case GameAction.ShootPrimary:
                     if (player.IsAlive) player.ShootPrimary(activate);
-                    else if (MatchCicle == MatchCicle.Game && player.RespawnTimeout <= 0) Spawn(player);
                     break;
                 case GameAction.ShootSecundary:
                     player.ShootSecundary(activate);
@@ -201,13 +200,13 @@ namespace BlackTournament.Net.Data
                 else if (shot.IsExplosive) CheckExplosion(shot);
             }
 
-            // Handle Player movement
+            // Handle Players
             foreach (var player in _Players)
             {
                 player.Update(deltaT);
 
-                // Handle Collisions
-                if (player.IsAlive)
+
+                if (player.IsAlive) // Handle Collisions
                 {
                     foreach (var wall in _Map.WallCollider) // Walls
                     {
@@ -216,7 +215,7 @@ namespace BlackTournament.Net.Data
                             var movement = player.Collision.Position.ToLocal(player.Position);
                             var angle = movement.Angle();
                             var length = (float)movement.Length();
-                            for (int i = -50; i < 50; i+=2)
+                            for (int i = -50; i < 50; i += 2)
                             {
                                 player.Collision.Position = player.Position + Create.Vector2fFromAngleLookup(MathHelper.ValidateAngle(angle + i), length);
                                 if (player.Collision.CollidesWith(wall))
@@ -241,6 +240,7 @@ namespace BlackTournament.Net.Data
                         {
                             pickup.Active = false;
                             player.GivePickup(pickup.Type, pickup.Amount);
+                            _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Pickup, pickup.Position, 0, pickup.Type, false));
                         }
                     }
                     foreach (var killzone in _Map.Killzones) // Killzones
@@ -253,7 +253,7 @@ namespace BlackTournament.Net.Data
                                 _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
                                 switch (killzone.Effect)
                                 {
-                                    case EffectType.Drop:
+                                    case EffectType.PlayerDrop:
                                         GameMessage.Invoke($"{player.User.Alias} went into the abyss.");
                                         break;
                                     case EffectType.Gore:
@@ -266,6 +266,10 @@ namespace BlackTournament.Net.Data
                             }
                         }
                     }
+                }
+                else if (MatchCicle == MatchCicle.Game && player.RespawnTimeout <= 0)
+                {
+                    Spawn(player);
                 }
                 player.Move(player.Collision.Position);
             }

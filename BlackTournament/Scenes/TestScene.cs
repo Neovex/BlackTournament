@@ -34,6 +34,7 @@ namespace BlackTournament.Scenes
         private float _LineAngle = 320;
         private Rectangle _Rect;
         private IEntity _Test;
+        private Polygon _Poly;
 
         public TestScene(Game game) : base(game.Core, "TEST", Game.TEXTURE_ROOT, Game.MUSIC_ROOT, Game.FONT_ROOT, Game.SFX_ROOT)
         {
@@ -44,18 +45,18 @@ namespace BlackTournament.Scenes
         {
             //IntersectionTest();
             //ShaderTest();
-            UiTests();
+            //UiTests();
             //TextureTests();
             //CollisionTest();
             //Particles();
             //PreRenderVSParticles();
+            //PolyTest();
             Log.Info("Nobody here but us chickens");
             return true;
         }
 
         protected override void Update(float deltaT)
         {
-
         }
 
         protected override void Destroy()
@@ -405,6 +406,20 @@ namespace BlackTournament.Scenes
                     Layer_Game.View = view;
                 }
             };
+        }
+
+        private void PolyTest()
+        {
+            IEnumerable<Vector2f> CreatePoints(Vector2f start, int ammount)
+            {
+                for (int i = 0; i < ammount; i++)
+                {
+                    yield return Create.Vector2fFromAngleLookup(360 / ammount * i, 100);
+                }
+            }
+            _Poly = new Polygon(_Core, CreatePoints(new Vector2f(200, 200), 6), Color.Green);
+            _Poly.Position = _Core.DeviceSize / 2;
+            Layer_Game.Add(_Poly);
         }
     }
     class PixelInfo : PixelParticleInitializationInfo

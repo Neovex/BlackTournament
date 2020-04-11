@@ -46,26 +46,31 @@
   <object id="35" name="Hedgeshock" type="Pickup" x="392" y="376" width="86" height="78">
    <properties>
     <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="36" name="Thumper" type="Pickup" x="1293" y="632" width="76" height="80">
    <properties>
     <property name="Item" value="Thumper"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="37" name="Big Shield" type="Pickup" x="1788" y="1660" width="130" height="136">
    <properties>
     <property name="Item" value="BigShield"/>
+    <property name="RespawnTime" type="float" value="35"/>
    </properties>
   </object>
   <object id="38" name="Hedgeshock" type="Pickup" x="3326" y="3052" width="102" height="108">
    <properties>
     <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="39" name="Titandrill" type="Pickup" x="2308" y="2932" width="94" height="90">
    <properties>
     <property name="Item" value="Titandrill"/>
+    <property name="RespawnTime" type="float" value="20"/>
    </properties>
   </object>
   <object id="40" name="Shield" type="Pickup" x="3456" y="2176" width="28" height="28">

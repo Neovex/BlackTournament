@@ -33,8 +33,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -53,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Librarys\Failsafe.cs">
+    <Compile Include="..\..\Failsafe.cs">
       <Link>Failsafe.cs</Link>
     </Compile>
     <Compile Include="Controller\ConnectController.cs" />
@@ -62,6 +63,13 @@
     <Compile Include="Controller\ControllerBase.cs" />
     <Compile Include="Controller\MenuController.cs" />
     <Compile Include="Controller\TestController.cs" />
+    <Compile Include="GraphicSettings.cs" />
+    <Compile Include="SettingsTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsTab.Designer.cs">
+      <DependentUpon>SettingsTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\HUD.cs" />
     <Compile Include="Entities\OrbLight.cs" />
     <Compile Include="Entities\PlayerLight.cs" />
@@ -212,6 +220,12 @@
     <Content Include="Assets\Sfx\pew.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Sfx\pickup3.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sfx\pickup4.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sfx\spark.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -278,6 +292,7 @@
     <Content Include="Assets\Textures\IndustrialTiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Assets\Textures\launcher_banner.png" />
     <Content Include="Assets\Textures\Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -341,9 +356,6 @@
     <Content Include="Assets\Sfx\pickup2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sfx\pickup3 long.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\Sfx\Select.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -385,13 +397,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>openal32.dll</TargetPath>
     </ContentWithTargetPath>
+    <None Include="Resources\banner.png" />
     <Content Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj">
-      <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
-      <Name>BlackCoat</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -399,8 +406,16 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsTab.resx">
+      <DependentUpon>SettingsTab.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlackCoat4SFML2.X\BlackCoat.csproj">
+      <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
+      <Name>BlackCoat</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

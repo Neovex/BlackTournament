@@ -54,13 +54,21 @@ namespace BlackTournament
 
         public void Run(String arguments)
         {
+            Device device;
 #if !DEBUG
             // Show Launcher
-            var device = Device.Create(new Launcher(new GraphicSettings(), new SettingsTab()), ID);
-            if (device == null) return;
+            device = Device.Create(new Launcher(new GraphicSettings(), new SettingsTab())
+            {
+                BannerImage = Resources.banner
+            }, ID);
+            if (device == null)
+            {
+                Log.Fatal("Failed to create Renderdevice");
+                return;
+            }
 #endif
 #if DEBUG
-            var device = Device.Create(new VideoMode(1024, 768), ID, Styles.Default, 0, false);
+            device = Device.Create(new VideoMode(1024, 768), ID, Styles.Default, 0, false);
 #endif  
             // Init Core
             using (Core = new Core(device))

@@ -23,6 +23,7 @@ namespace BlackTournament.Tmx
     {
         protected readonly CultureInfo _Culture = CultureInfo.CurrentUICulture;
 
+        public String Name { get; }
         public Vector2f Position { get; set; }
         public float Rotation { get; set; }
         public Parent Parent { get; set; }
@@ -31,6 +32,7 @@ namespace BlackTournament.Tmx
         public ActorInfo() { }
         public ActorInfo(TmxObject obj)
         {
+            Name = obj.Name;
             Position = new Vector2f((float)obj.X, (float)obj.Y);
             Rotation = (float)obj.Rotation;
             Parent = (Parent)Enum.Parse(typeof(Parent), TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Parent), Parent.Layer_BG.ToString()), true);
@@ -54,7 +56,7 @@ namespace BlackTournament.Tmx
             }
             Item = type;
             Amount = Int32.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(Amount), 0), _Culture);
-            RespawnTime = Single.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(RespawnTime), 1), _Culture);
+            RespawnTime = Single.Parse(TmxMapper.ReadTmxObjectProperty(obj.Properties, nameof(RespawnTime), 10), _Culture);
             Position += new Vector2f((float)obj.Width, (float)obj.Height) / 2;
         }
     }

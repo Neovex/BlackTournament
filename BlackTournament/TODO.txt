@@ -37,23 +37,32 @@ complete map powerplant
 Xfix alpha inheritance - not possible - workaround is functional
 #fix redundant code in all entities
 
--> test polygon
 comitt!
+# test polygon
 
-fix random overload
-add launcher banner image
-fix power plant radiation zone damage values
+#fix random overload
+#fix UI textbox vs console collision
+#create & add launcher banner image
+#fix power plant radiation zone damage values
 add damage sounds (and effects)
 add death sounds (and effects)
-add pickup sounds
-fix pickup respawn times!
+#finish pickup sounds (sounds already picked and added - implement, test & make sure volumes are ok)
+#fix general pickup respawn times!
+#fix special pickup times -> weapons 20sek big shield 35 sek
+#fix balancing based on latest playtest
+#fix healitem values
+#force respawn
+fix drake light on turbine
+add emitters to pickups
+(add damage indicator)
 (complete map temple)
 (env sounds?)
+(consider replacing some sounds with unfa sounds)
 (consider UI Markup)
 (consider Particle Markup)
 (consider replacing TMX Lib)
-(multiple characters)
-(consider character customization (tint))
+(multiple characters?)
+#(consider character customization (tint))
 
 
 

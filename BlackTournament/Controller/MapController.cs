@@ -54,7 +54,8 @@ namespace BlackTournament.Controller
         }
 
         protected override void SceneReady()
-        {// Prepare Map
+        {
+            // Prepare Map
             foreach (var player in _Client.Players)
             {
                 HandleUserJoined(player);

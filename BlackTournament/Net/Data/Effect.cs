@@ -15,8 +15,9 @@ namespace BlackTournament.Net.Data
         PlayerImpact,
         Gunfire,
         Explosion,
-        Drop,
+        PlayerDrop,
         Gore,
+        Pickup,
         None
     }
 

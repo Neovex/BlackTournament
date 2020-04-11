@@ -15,7 +15,8 @@ namespace BlackTournament
         public const String Sfx_LaserBlastBig = "laserblastbig";
         public const String Sfx_Pickup1 = "pickup1";
         public const String Sfx_Pickup2 = "pickup2";
-        public const String Sfx_Pickup3 = "pickup3 long";
+        public const String Sfx_Pickup3 = "pickup3";
+        public const String Sfx_Pickup4 = "pickup4";
         public const String Sfx_Simpleshot = "simple shot";
         public const String Sfx_Highlight = "Highlight";
         public const String Sfx_Select = "Select";

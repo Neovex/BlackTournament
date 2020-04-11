@@ -1,9 +1,9 @@
-﻿using static BlackCoat.Launcher;
-using BlackTournament.Properties;
+﻿using BlackTournament.Properties;
+using BlackCoat;
 
 namespace BlackTournament
 {
-    class GraphicSettings : ISettings
+    class GraphicSettings : Launcher.ISettings
     {
         public (uint X, uint Y) Resolution
         {

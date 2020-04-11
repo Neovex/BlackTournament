@@ -125,6 +125,7 @@ namespace BlackTournament.Scenes
                                 case RotorInfo rotor:
                                     entity = new RotatingGraphic(_Core, TextureLoader.Load(rotor.Asset), rotor.Speed)
                                     {
+                                        Name = obj.Name,
                                         Position = rotor.Position,
                                         Rotation = rotor.Rotation,
                                         Origin = rotor.Origin,
@@ -136,6 +137,7 @@ namespace BlackTournament.Scenes
                                     var texture = TextureLoader.Load(actor.Asset);
                                     entity = new Graphic(_Core, texture)
                                     {
+                                        Name = obj.Name,
                                         Position = actor.Position,
                                         Rotation = actor.Rotation,
                                         Origin = texture.Size.ToVector2f() / 2,
@@ -341,6 +343,7 @@ namespace BlackTournament.Scenes
         {
             var player = new Graphic(_Core)
             {
+                Name = "Player",
                 Texture = TextureLoader.Load("CharacterBase"),
                 Color = !isLocalPlayer ? Color.Red :
                         new Color(Properties.Settings.Default.PlayerColor.R,
@@ -363,6 +366,7 @@ namespace BlackTournament.Scenes
             var tex = TextureLoader.Load(type.ToString());
             var entity = new Graphic(_Core)
             {
+                Name = type.ToString(),
                 Texture = tex,
                 Scale = new Vector2f(0.4f, 0.4f), // FIXME!
                 Position = position,
@@ -371,6 +375,20 @@ namespace BlackTournament.Scenes
             };
             _EnitityLookup.Add(id, entity);
             Layer_Game.Add(entity);
+
+            var emitter = new PixelEmitter(_Core, new PixelParticleInitializationInfo()
+            {replace with texture emitter and share info in own class as Singleton
+                Loop = true,
+                ParticlesPerSpawn = 1,
+                SpawnRate = 0.5f,
+                Alpha = 0.5f,
+                Color = Color.White,
+                Velocity = new Vector2f(0,-10),
+                TTL = 3
+            });
+            _ParticleEmitterHost.AddEmitter(emitter);
+            emitter.Position = position;
+            emitter.Trigger();
         }
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
@@ -428,12 +446,13 @@ namespace BlackTournament.Scenes
             switch (effect)
             {
                 case EffectType.Environment:
+                    // TODO UNHACK
                     var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 30), primary ? Color.Cyan : Color.Red);
                     Layer_Game.Add(line);
                     _Core.AnimationManager.Wait(3, () => Layer_Game.Remove(line));
                 break;
 
-                case EffectType.Drop: // TODO UNHACK
+                case EffectType.PlayerDrop: // TODO UNHACK
                     _Sfx.Play(Files.Sfx_Highlight, position); // FIXME wrong sound
                     CreateEffect(EffectType.PlayerImpact, position, rotation, source, primary, size);
                     break;
@@ -477,6 +496,28 @@ namespace BlackTournament.Scenes
                     _SparkInfo.Offset = new Vector2f();
                     _SparkInfo.Direction = null;
                 break;
+
+                case EffectType.Pickup:
+                    switch (source)
+                    {
+                        case PickupType.SmallHealth:
+                        case PickupType.SmallShield:
+                            _Sfx.Play(Files.Sfx_Pickup3, position);
+                            break;
+                        case PickupType.BigHealth:
+                        case PickupType.BigShield:
+                            _Sfx.Play(Files.Sfx_Pickup4, position);
+                            break;
+                        case PickupType.Drake:
+                        case PickupType.Hedgeshock:
+                            _Sfx.Play(Files.Sfx_Pickup1, position);
+                            break;
+                        case PickupType.Thumper:
+                        case PickupType.Titandrill:
+                            _Sfx.Play(Files.Sfx_Pickup2, position);
+                            break;
+                    }
+                    break;
 
                 case EffectType.Gunfire:
                     if (primary)

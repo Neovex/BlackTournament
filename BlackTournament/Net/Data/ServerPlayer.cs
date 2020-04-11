@@ -157,16 +157,16 @@ namespace BlackTournament.Net.Data
             switch (pickup)
             {
                 case PickupType.SmallHealth:
-                    Health += amount != 0 ? amount : 2;
+                    Health += amount != 0 ? amount : 5;
                     break;
                 case PickupType.SmallShield:
-                    Shield += amount != 0 ? amount : 2;
+                    Shield += amount != 0 ? amount : 5;
                     break;
                 case PickupType.BigHealth:
-                    Health += amount != 0 ? amount : 50;
+                    Health += amount != 0 ? amount : 100;
                     break;
                 case PickupType.BigShield:
-                    Shield += amount != 0 ? amount : 50;
+                    Shield += amount != 0 ? amount : 100;
                     break;
                 case PickupType.Drake:
                 case PickupType.Hedgeshock:
