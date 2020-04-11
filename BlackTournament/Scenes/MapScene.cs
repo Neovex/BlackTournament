@@ -189,7 +189,7 @@ namespace BlackTournament.Scenes
             }
 
             // Set camera to a nice spot of the map
-            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Item == PickupType.BigShield)?.Position ?? _View.Center; // TODO: add camera start pos to mapdata
+            _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Item == PickupType.BigShield)?.Position ?? _View.Center; // maybe add camera start pos to mapdata?
 
             // Load Sounds
             _Sfx.LoadFromDirectory();
@@ -368,7 +368,7 @@ namespace BlackTournament.Scenes
             {
                 Name = type.ToString(),
                 Texture = tex,
-                Scale = new Vector2f(0.4f, 0.4f), // FIXME!
+                Scale = new Vector2f(0.48f, 0.48f),
                 Position = position,
                 Origin = tex.Size.ToVector2f() / 2,
                 Visible = visible
@@ -376,18 +376,8 @@ namespace BlackTournament.Scenes
             _EnitityLookup.Add(id, entity);
             Layer_Game.Add(entity);
 
-            var emitter = new PixelEmitter(_Core, new PixelParticleInitializationInfo()
-            {
-                // TODO : replace with texture emitter and share info in own class as Singleton
-                
-                Loop = true,
-                ParticlesPerSpawn = 1,
-                SpawnRate = 0.5f,
-                Alpha = 0.5f,
-                Color = Color.White,
-                Velocity = new Vector2f(0,-10),
-                TTL = 3
-            });
+            var emTex = TextureLoader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
+            var emitter = new TextureEmitter(_Core, new SpawnInfo(_Core, emTex, type));
             _ParticleEmitterHost.AddEmitter(emitter);
             emitter.Position = position;
             emitter.Trigger();
@@ -448,10 +438,7 @@ namespace BlackTournament.Scenes
             switch (effect)
             {
                 case EffectType.Environment:
-                    // TODO UNHACK
-                    var line = new Line(_Core, position, position + Create.Vector2fFromAngle(rotation, 30), primary ? Color.Cyan : Color.Red);
-                    Layer_Game.Add(line);
-                    _Core.AnimationManager.Wait(3, () => Layer_Game.Remove(line));
+                    // Not needed (yet)
                 break;
 
                 case EffectType.PlayerDrop: // TODO UNHACK

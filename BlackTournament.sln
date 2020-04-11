@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackTournament", "BlackTournament\BlackTournament.csproj", "{B95A7CEB-1743-46F6-A30D-5A95A1197C13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackCoat", "..\BlackCoat4SFML2.X\BlackCoat.csproj", "{EF8353F5-78DE-4BC5-A100-2D6318C91AF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackCoat", "..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj", "{EF8353F5-78DE-4BC5-A100-2D6318C91AF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
