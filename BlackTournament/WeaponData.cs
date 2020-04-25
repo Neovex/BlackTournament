@@ -13,7 +13,7 @@ namespace BlackTournament
         private const int _INF = 100000;
 
         public static readonly WeaponData DrakePrimary = new WeaponData(7, 0, 100, 0.075f, _INF, 0, 0, Geometry.Line, 4);
-        public static readonly WeaponData DrakeSecundary = new WeaponData(35, 80, 2, 0.7f, 0, 700, 1.5f, Geometry.Point);
+        public static readonly WeaponData DrakeSecundary = new WeaponData(35, 225, 2, 0.7f, 0, 700, 1.5f, Geometry.Point);
 
         public static readonly WeaponData HedgeshockPrimary = new WeaponData(18, 0, 180, 0.05f, 400, 0, 0, Geometry.Line, 15);
         public static readonly WeaponData HedgeshockSecundary = new WeaponData(30, 0, 4, 0.75f, 40, 600, 2.5f, Geometry.Circle); // check penetration damage

@@ -21,6 +21,7 @@ namespace BlackTournament
         public static Font StyleFont { get; private set; }
 
         public const String ID = nameof(BlackTournament);
+        public const String MAP_ROOT = "Maps\\";
         public const String TEXTURE_ROOT = "Assets\\Textures";
         public const String MUSIC_ROOT = "Assets\\Music";
         public const String FONT_ROOT = "Assets\\Fonts";

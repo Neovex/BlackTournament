@@ -49,7 +49,7 @@ namespace BlackTournament.Net.Data
 
         public void AddPlayer(ServerUser<NetConnection> user)
         {
-            var player = new ServerPlayer(user, _Core.CollisionSystem);
+            var player = new ServerPlayer(user, new CircleCollisionShape(_Core.CollisionSystem, new Vector2f(), 0));
             player.ShotFired += HandlePlayerShoot;
             _PlayerLookup.Add(user.Id, player);
             _Players.Add(player);
@@ -443,7 +443,7 @@ namespace BlackTournament.Net.Data
                     if (shot.IsPenetrating)
                     {
                         // damage player
-                        player.DamagePlayer(shot.Damage * deltaT); // TODO : check damage
+                        player.DamagePlayer(shot.Damage * deltaT);
                     }
                     else
                     {
@@ -479,7 +479,7 @@ namespace BlackTournament.Net.Data
                     var distance = (float)player.Position.DistanceBetween(shot.Position);
                     if (distance <= shot.BlastRadius)
                     {
-                        player.DamagePlayer(Math.Max(shot.Damage / 3, shot.Damage * (1 - (distance / shot.BlastRadius)))); // Todo : check damage falloff
+                        player.DamagePlayer(Math.Max(shot.Damage / 4, shot.Damage * (1 - (distance / shot.BlastRadius))));
                         // Add impact
                         _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Position.AngleTowards(player.Position), shot.SourceWeapon, shot.Primary));
 

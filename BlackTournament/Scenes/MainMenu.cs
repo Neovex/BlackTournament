@@ -91,8 +91,10 @@ namespace BlackTournament.Scenes
             // Music
             _BgMusic = MusicLoader.Load(Files.MENUE_MUSIC.Skip(_Core.Random.Next(Files.MENUE_MUSIC.Count)).First());
             _BgMusic.Volume = Settings.Default.MusikVolume;
-            _BgMusic.Loop = true; // TODO : consider music manager 4 looping play-lists etc
-            //_BgMusic.Play(); // FIXME
+            _BgMusic.Loop = true; // consider music manager 4 looping play-lists etc
+#if !DEBUG
+            _BgMusic.Play();
+#endif
 
             // Sfx
             _Sfx = new SfxManager(SfxLoader);
@@ -564,7 +566,9 @@ namespace BlackTournament.Scenes
             else if (_Shots != 0)
             {
                 _Shots--;
+#if !DEBUG
                 _Sfx.Play(Files.Sfx_Simpleshot);
+#endif
                 _EffectLight.Visible = true;
                 _Core.AnimationManager.Wait(WeaponData.DrakePrimary.FireRate / 2, PlayShotAnimation);
             }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 using SFML.System;
 using SFML.Graphics;
@@ -19,8 +18,6 @@ namespace BlackTournament.Tmx
 {
     class TmxMapper
     {
-        private const String _MAP_ROOT = "Maps";
-
         private TmxMap _MapData;
         private Dictionary<String, int> _TextureColumnLookup;
         private List<Layer> _Layers;
@@ -52,7 +49,7 @@ namespace BlackTournament.Tmx
             try
             {
                 // Load map data
-                _MapData = new TmxMap(Path.Combine(_MAP_ROOT, name + ".tmx"));
+                _MapData = new TmxMap($"{Game.MAP_ROOT}{name}.tmx");
                 Name = name;
                 ClearColor = new Color((byte)_MapData.BackgroundColor.R, (byte)_MapData.BackgroundColor.G, (byte)_MapData.BackgroundColor.B);
                 _TextureColumnLookup = _MapData.Tilesets.ToDictionary(ts => ts.Name, ts => ts.Columns.Value);

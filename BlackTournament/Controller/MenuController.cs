@@ -50,14 +50,15 @@ namespace BlackTournament.Controller
         private void HandleLanServersUpdated()
         {
             var l = _NetworkManagementClient.LanServers.ToArray();
-            Log.Debug("Refreshing server list with", l.Length, "Servers");
+            Log.Debug("Refreshing server list with", l.Length, "Local Servers");
             _Scene.UpdateServerList(l);
         }
 
         private void HandleWanServersUpdated()
         {
-            // TODO : Implement this when management server is functional
-            throw new NotImplementedException();
+            var l = _NetworkManagementClient.WanServers.ToArray();
+            Log.Debug("Refreshing server list with", l.Length, "Public Servers");
+            _Scene.UpdateServerList(l);
         }
 
         private void HandleSceneServerBrowserOpen()
@@ -66,7 +67,6 @@ namespace BlackTournament.Controller
             _NetworkManagementClient.LanServersUpdated += HandleLanServersUpdated;
             _NetworkManagementClient.WanServersUpdated += HandleWanServersUpdated;
             _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT);
-            HandleLanServersUpdated(); // HACK
 
             _Game.Core.OnUpdate += HandleCoreUpdate;
 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using BlackTournament.Scenes;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
@@ -80,15 +79,14 @@ namespace BlackTournament.Controller
             {
                 var mapName = _Client.MapName;
                 Log.Debug("Map", mapName, "not available on client side - aborting connection");
-                _Client.Disconnect(); // TODO : test this block! might have a race between disconnect event activation below
+                _Client.Disconnect();
                 _Game.MenuController.Activate($"Error: you do not have the map {mapName}. Connection aborted.");//$
             }
         }
 
         private bool MapIsAvailable(string mapName)
         {
-            Log.Fatal("Skipped map validity check for", mapName); // TODO : implement and maybe move to game or another map collection handler that checks all maps at game load
-            return true;
+            return Directory.EnumerateFiles(Game.MAP_ROOT).Any(f => Path.GetFileNameWithoutExtension(f) == mapName);
         }
 
         private void ConnectionFailed()

@@ -206,7 +206,7 @@ namespace BlackTournament.Controller
 
         private void HandleServerMapChange()
         {
-            Log.Debug("TODO: HandleServerMapChange"); // TODO
+            Log.Debug("TODO: HandleServerMapChange"); // TODO : handle server message: map change
         }
 
         private void HandleTextMessage(bool isSystemMessage, string msg)
@@ -223,7 +223,7 @@ namespace BlackTournament.Controller
 
             if (LocalPlayer.IsAlive) _Scene.FocusPlayer(); // move camera to player
             // Update Player
-            _Scene.RotatePlayer(_Client.PlayerRotation); // reset state player rotation to prevent lag flickering
+            _Scene.RotatePlayer(_Client.PlayerRotation); // (re)set player rotation to local value to prevent lag flickering
 
             foreach (var shot in _Client.Shots)
             {

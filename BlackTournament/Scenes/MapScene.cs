@@ -33,6 +33,7 @@ namespace BlackTournament.Scenes
         private ParticleEmitterHost _ParticleEmitterHost;
 
         // Sound
+        private Music _Music;
         private SfxManager _Sfx;
 
         // Emitters
@@ -61,7 +62,6 @@ namespace BlackTournament.Scenes
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
 
-
         public Vector2f ViewMovement { get; set; }
         public HUD HUD { get; private set; }
 
@@ -77,6 +77,14 @@ namespace BlackTournament.Scenes
 
         protected override bool Load()
         {
+            // Music
+            _Music = MusicLoader.Load(Files.GAME_MUSIC.Skip(_Core.Random.Next(Files.GAME_MUSIC.Count)).First());
+            _Music.Volume = Properties.Settings.Default.MusikVolume;
+            _Music.Loop = true;
+#if !DEBUG
+            _Music.Play();
+#endif
+
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize));
             Layer_BG.View = _View;
@@ -84,14 +92,13 @@ namespace BlackTournament.Scenes
             Layer_Overlay.View = _View;
             _Core.DeviceResized += UpdateViewOnDeviceResize;
 
-
             // Setup Particle Host
             _ParticleEmitterHost = new ParticleEmitterHost(_Core);
 
             // Setup Lighting
-            var lightFile = $"Maps\\{_MapData.Name}.bcl";
             _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));
             _Lightmap.RenderEachFrame = true;
+            var lightFile = $"{Game.MAP_ROOT}{_MapData.Name}.bcl";
             if (File.Exists(lightFile)) _Lightmap.Load(TextureLoader, lightFile);
             else _Lightmap.Ambient = Color.White;
             Layer_Overlay.Add(_Lightmap);

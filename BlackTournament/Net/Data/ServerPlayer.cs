@@ -37,11 +37,13 @@ namespace BlackTournament.Net.Data
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
 
 
-        public ServerPlayer(ServerUser<NetConnection> user, CollisionSystem collisionSystem) : base(user.Id) // TODO : replace collision system with actual collision shape
+        public ServerPlayer(ServerUser<NetConnection> user, CircleCollisionShape collision) : base(user.Id)
         {
             User = user;
             Input = new HashSet<GameAction>();
-            Collision = new CircleCollisionShape(collisionSystem, Position, _COLLISION_RADIUS);
+            Collision = collision;
+            Collision.Position = Position;
+            Collision.Radius = _COLLISION_RADIUS;
             GivePickup(PickupType.Drake); // Initial Weapon
         }
 
@@ -152,7 +154,7 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        public void GivePickup(PickupType pickup, int amount = 0) // TODO : move this into pickup, grant write access via method or prop & fix amount stuff
+        public void GivePickup(PickupType pickup, int amount = 0) // TODO : move this into pickup, grant write access via method or prop
         {
             switch (pickup)
             {
