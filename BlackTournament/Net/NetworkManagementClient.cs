@@ -78,17 +78,19 @@ namespace BlackTournament.Net
         // INCOMMING
         protected override void DiscoveryResponseReceived(NetIncomingMessage msg)
         {
+            var latency = (int)(msg.SenderConnection?.AverageRoundtripTime * 1000);
+            if(latency == 0) latency = (int)_DiscoveryTimer.ElapsedMilliseconds;
+
             var endPoint = msg.SenderEndPoint;
             if (_LanServers.ContainsKey(endPoint))
             {
                 var server = _LanServers[endPoint];
                 server.Deserialize(msg);
-                server.Ping = (int)_DiscoveryTimer.ElapsedMilliseconds;
+                server.Ping = latency;
             }
             else
             {
-                var server = new ServerInfo(endPoint, msg);
-                server.Ping = (int)_DiscoveryTimer.ElapsedMilliseconds;
+                var server = new ServerInfo(endPoint, msg) { Ping = latency };
                 _LanServers[endPoint] = server;
             }
             LanServersUpdated.Invoke();
