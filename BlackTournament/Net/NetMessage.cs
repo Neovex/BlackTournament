@@ -12,8 +12,8 @@
         ChangeLevel,
 
         // Client Only
-        Init,
         Update,
+        UpdatePlayer,
 
         // Server Only
         ProcessGameAction,

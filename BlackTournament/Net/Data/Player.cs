@@ -15,7 +15,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _Position = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
 
@@ -26,7 +26,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _Rotation = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
 
@@ -37,7 +37,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _Health = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
 
@@ -48,7 +48,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _Shield = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
 
@@ -59,7 +59,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _Score = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
 
@@ -70,7 +70,7 @@ namespace BlackTournament.Net.Data
             protected set
             {
                 _CurrentWeaponType = value;
-                IsDirty = true;
+                _Dirty = true;
             }
         }
         public Boolean IsAlive => Health > 0;
@@ -83,43 +83,49 @@ namespace BlackTournament.Net.Data
         {
         }
 
-        protected override void SerializeInternal(NetOutgoingMessage m)
+        protected override void SerializeInternal(NetOutgoingMessage m, bool fullSync)
         {
             m.Write(Position.X);
             m.Write(Position.Y);
             m.Write(Rotation);
             m.Write(Score);
 
-            m.Write(Health);
-            m.Write(Shield);
-            m.Write((int)CurrentWeaponType);
-
-            m.Write(Weapons.Count);
-            foreach (var weapon in Weapons.Values)
+            if (fullSync)
             {
-                m.Write((int)weapon.WeaponType);
-                weapon.Serialize(m);
+                m.Write(Health);
+                m.Write(Shield);
+                m.Write((int)CurrentWeaponType);
+
+                m.Write(Weapons.Count);
+                foreach (var weapon in Weapons.Values)
+                {
+                    m.Write((int)weapon.WeaponType);
+                    weapon.Serialize(m);
+                }
             }
             m.Write(Ping);
         }
 
-        public override void Deserialize(NetIncomingMessage m)
+        protected override void DeserializeInternal(NetIncomingMessage m, bool fullSync)
         {
             Position = new Vector2f(m.ReadSingle(), m.ReadSingle());
             Rotation = m.ReadSingle();
             Score = m.ReadInt32();
 
-            Health = m.ReadSingle();
-            Shield = m.ReadSingle();
-            CurrentWeaponType = (PickupType)m.ReadInt32();
-
-            var ownedWeapons = m.ReadInt32();
-            if (ownedWeapons < Weapons.Count) Weapons.Clear();
-            for (int i = 0; i < ownedWeapons; i++)
+            if (fullSync)
             {
-                var type = (PickupType)m.ReadInt32();
-                if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
-                Weapons[type].Deserialize(m);
+                Health = m.ReadSingle();
+                Shield = m.ReadSingle();
+                CurrentWeaponType = (PickupType)m.ReadInt32();
+
+                var ownedWeapons = m.ReadInt32();
+                if (ownedWeapons < Weapons.Count) Weapons.Clear();
+                for (int i = 0; i < ownedWeapons; i++)
+                {
+                    var type = (PickupType)m.ReadInt32();
+                    if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
+                    Weapons[type].Deserialize(m);
+                }
             }
             Ping = m.ReadInt32();
         }

@@ -9,12 +9,17 @@ namespace BlackTournament.Net.Data
     public abstract class NetEntityBase
     {
         public int Id { get; private set; }
-        public Boolean IsDirty { get; protected set; }
+        public bool NeedsUpdate => _Dirty || _NeverSynced;
+
+        protected bool _Dirty;
+        private bool _NeverSynced;
 
 
         public NetEntityBase(int id)
         {
             Id = id;
+            _Dirty = true;
+            _NeverSynced = true;
         }
         public NetEntityBase(int id, NetIncomingMessage m) : this(id)
         {
@@ -22,14 +27,25 @@ namespace BlackTournament.Net.Data
         }
 
 
-        public void Serialize(NetOutgoingMessage m)
+        public void Serialize(NetOutgoingMessage m, bool fullSync)
         {
-            m.Write(Id);
-            SerializeInternal(m);
-            IsDirty = false;
+            var needsFullSync = fullSync || _NeverSynced;
+            if (_Dirty || needsFullSync)
+            {
+                m.Write(Id);
+                m.Write(needsFullSync);
+                SerializeInternal(m, needsFullSync);
+                _Dirty = false;
+                _NeverSynced = false;
+            }
         }
 
-        protected abstract void SerializeInternal(NetOutgoingMessage m);
-        public abstract void Deserialize(NetIncomingMessage m);
+        public void Deserialize(NetIncomingMessage m)
+        {
+            DeserializeInternal(m, m.ReadBoolean());
+        }
+
+        protected abstract void SerializeInternal(NetOutgoingMessage m, bool fullSync);
+        protected abstract void DeserializeInternal(NetIncomingMessage m, bool fullSync);
     }
 }

@@ -41,7 +41,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>QKQGAAAABiQIgAAAAAAgAIAAggAACEAAQAQAIAIBQAI=</HashCode>
+      <HashCode>QKQCAAAABmQIgAAAAAAgAIAAggAACEAAQAQAIAIBQAI=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -100,7 +100,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AQQAAAEQ0AAAIAAAADUCEAAISRAsDEEAACCAAwgABAA=</HashCode>
+      <HashCode>AQQAAAEAwAAAIAAAADUKEAAISRAsDEEAACCAAwgABAA=</HashCode>
       <FileName>Net\BlackTournamentClient.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -121,11 +121,7 @@
         <Point X="13.5" Y="8.875" />
       </Path>
     </InheritanceLine>
-    <AssociationLine Name="_Logic" Type="BlackTournament.Net.Data.GameLogic" FixedFromPoint="true">
-      <Path>
-        <Point X="12.25" Y="8.5" />
-        <Point X="12.25" Y="7.562" />
-      </Path>
+    <AssociationLine Name="_Logic" Type="BlackTournament.Net.Data.GameLogic">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.735" Y="0.104" />
       </MemberNameLabel>
@@ -139,7 +135,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAEAUSAAAgAAAAACEAAASQIAAAAAAAIIAFAAAAA=</HashCode>
+      <HashCode>AAQAAAEAQSAAAgAAAAACkAAASQIAAgAAAAIAAFAAAAA=</HashCode>
       <FileName>Net\BlackTournamentServer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -149,7 +145,7 @@
   </Class>
   <Class Name="BlackTournament.Controller.MapController" Collapsed="true">
     <Position X="0.5" Y="10" Width="1.5" />
-    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="0.906" Y="10" />
         <Point X="0.906" Y="8.938" />
@@ -157,7 +153,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAUACAAAAgAABAAAgEAAAAwFCIAlAgEAAggAAEAQA=</HashCode>
+      <HashCode>AAAAUACAAAEgAABAAAgEgAAAwECJAlAgEAAgggAEAQA=</HashCode>
       <FileName>Controller\MapController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -167,11 +163,11 @@
   </Class>
   <Class Name="BlackTournament.Controller.ConnectController" Collapsed="true">
     <Position X="2.75" Y="10" Width="1.5" />
-    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="_Client" Type="BlackTournament.Net.BlackTournamentClient" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="3.5" Y="10" />
-        <Point X="3.5" Y="9.625" />
-        <Point X="5.625" Y="9.625" />
+        <Point X="3.5" Y="9.62" />
+        <Point X="5.625" Y="9.62" />
         <Point X="5.625" Y="9.191" />
       </Path>
     </AssociationLine>
@@ -254,7 +250,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQEAAAAAIIAAAAAADEAAAAAQHAAAAAAACoEgAAEABA=</HashCode>
+      <HashCode>AAQEAAAAAIIAAgQAADEAAAAAQHAAAAQCBCgEgAAEABA=</HashCode>
       <FileName>Net\Data\GameLogic.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -281,7 +277,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAgIAgAAAAAADAAABAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAgIAgAAAAAADAEAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>Net\Data\Effect.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -304,7 +300,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQBAAAQkIAABABAAAAAgAAAFAAgBAAgIABAAwAAEAA=</HashCode>
+      <HashCode>AAQBAAAQkIAABABAAEAAgAAAFAAgBAAgIABAAwAAEAA=</HashCode>
       <FileName>Net\Data\ServerPlayer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -314,7 +310,7 @@
   <Class Name="BlackTournament.Net.Data.Shot" Collapsed="true">
     <Position X="9.75" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAUAQACABIAABAAgACAMIBBBAABAAIQAAAAAAAiAAAQ=</HashCode>
+      <HashCode>AAUAQACABIAAAAAgACAMIBBBEABAAIQAAAAAAAiAAAQ=</HashCode>
       <FileName>Net\Data\Shot.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -330,7 +326,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ADQAAAAIAMAAAAAgAAAQAADAAABAAAAgAQAAAAAAAAA=</HashCode>
+      <HashCode>ADQAAAAIAMAAAAAgAAAQAADAEAAAAAAgAQAAAAAAAAA=</HashCode>
       <FileName>Net\Data\Pickup.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -346,10 +342,20 @@
   </Class>
   <Class Name="BlackTournament.Net.Data.Player" Collapsed="true">
     <Position X="2.75" Y="5.25" Width="1.5" />
+    <AssociationLine Name="CurrentWeaponType" Type="BlackTournament.Net.Data.PickupType" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.125" Y="5.25" />
+        <Point X="3.125" Y="4.375" />
+        <Point X="3.75" Y="4.375" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AQAACAAAAQEQAIggAAAAgABAAAFAAgQAAAAAAAAEABA=</HashCode>
+      <HashCode>AQAACAAAAQEQAIggAEAAgABAEAEAAgQAAAAAAAAEABA=</HashCode>
       <FileName>Net\Data\Player.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentWeaponType" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Weapons" />
     </ShowAsCollectionAssociation>
@@ -357,7 +363,7 @@
   <Class Name="BlackTournament.Net.Data.NetEntityBase" Collapsed="true">
     <Position X="7" Y="4" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAABAACBAAAAAAAABAAAAAAA=</HashCode>
+      <HashCode>AAACCAAAQAAAAAAAAAAAAADAECBAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Data\NetEntityBase.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -371,7 +377,7 @@
   <Class Name="BlackTournament.Tmx.TmxMapper" Collapsed="true">
     <Position X="7.5" Y="11.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABoAAAAABAgAGAAAAAAEQCMAIAAEgEAgAAEAAEAAI=</HashCode>
+      <HashCode>AAABgAAAAABAgAGAAAAAAEQCMAIAAEgEAgAAEAAEAAI=</HashCode>
       <FileName>Tmx\TmxMapper.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -490,7 +496,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EASHkAmAggEAAIGEAGKAAAECgCBACEQSAAAAKAAAICA=</HashCode>
+      <HashCode>EASHkAGAggEAAIGEAGKAAAECgCBACEQSAAAEKAAAICA=</HashCode>
       <FileName>Scenes\MapScene.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -500,7 +506,7 @@
   <Class Name="BlackTournament.Net.Data.ServerInfo" Collapsed="true">
     <Position X="14" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAQAAAAEAAAARAAEBAAAAAAAAAAAAACAA=</HashCode>
+      <HashCode>AAAAAAAAABAAQAAAAEAAAARAEEAAAAAAAAAAAAAACAA=</HashCode>
       <FileName>Net\Data\ServerInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -524,21 +530,21 @@
   <Enum Name="BlackTournament.Net.Data.PickupType" Collapsed="true">
     <Position X="3.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAIAQABAAAAAIAIA=</HashCode>
+      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAAAQABAAAAEIAIA=</HashCode>
       <FileName>Net\Data\PickupType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BlackTournament.Net.NetMessage" Collapsed="true">
     <Position X="8.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAQAAAABAAAAACAAAAUQAAAAAAAAACAQAAAAA=</HashCode>
+      <HashCode>AAQAAAAAQAAAABAAAAACAAAAUQAAAAAAAAAAAQEAAAA=</HashCode>
       <FileName>Net\NetMessage.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BlackTournament.Net.Data.EffectType" Collapsed="true">
     <Position X="11.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAGBAAQAAAAAAAAAAAEAEAAAAAAAAAAAAEAAAI=</HashCode>
+      <HashCode>AEAAAAAGBAAAAAAAAAAAACAEAEAAAAAAAAAAAAEAAAI=</HashCode>
       <FileName>Net\Data\Effect.cs</FileName>
     </TypeIdentifier>
   </Enum>

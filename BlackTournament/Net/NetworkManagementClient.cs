@@ -71,7 +71,7 @@ namespace BlackTournament.Net
 
         public void MakePublic(ServerInfo info)
         {
-            Send(ManagementMessage.AnnounceServer, m => info.Serialize(m));
+            Send(ManagementMessage.AnnounceServer, m => info.Serialize(m, true));
         }
 
 
@@ -90,6 +90,7 @@ namespace BlackTournament.Net
             }
             else
             {
+                msg.ReadInt32(); // Skip serverInfo.id
                 var server = new ServerInfo(endPoint, msg) { Ping = latency };
                 _LanServers[endPoint] = server;
             }
@@ -117,6 +118,7 @@ namespace BlackTournament.Net
             for (int i = 0; i < servers; i++)
             {
                 var endpoint = new IPEndPoint(new IPAddress(msg.ReadInt64()), msg.ReadInt32());
+                msg.ReadInt32(); // Skip serverInfo.id
                 _WanServers.Add(new ServerInfo(endpoint, msg));
             }
             WanServersUpdated.Invoke();

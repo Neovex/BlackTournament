@@ -87,17 +87,16 @@ namespace BlackTournament.Net
             {
                 _UpdateImpulse = 0;
                 Broadcast(NetMessage.Update, m => _Logic.Serialize(m, false), NetDeliveryMethod.UnreliableSequenced);
-                /* Check: to save traffic we could not send weapon info to all players
+                // To save traffic we send the full player info to each player separately
                 foreach (var user in ConnectedUsers)
                 {
                    Send(user.Connection, NetMessage.UpdatePlayer, m => _Logic.SerializePlayer(m, user.Id), NetDeliveryMethod.UnreliableSequenced); 
                 }
-                */
             }
 
             if (_Logic.MatchCicle == MatchCicle.Complete)
             {
-                StopServer("Match Complete");
+                StopServer("Match Complete"); // not good - need to implement some sort of map-rotation
             }
         }
         private void HandleGameLogicMessage(string msg)
@@ -110,7 +109,7 @@ namespace BlackTournament.Net
             Info.CurrentPlayers++;
             _Logic.AddPlayer(user);
             Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
-            Send(user.Connection, NetMessage.Init, m => _Logic.Serialize(m, true));
+            Send(user.Connection, NetMessage.Update, m => _Logic.Serialize(m, true));
         }
 
         protected override void UserDisconnected(ServerUser<NetConnection> user)
@@ -122,7 +121,7 @@ namespace BlackTournament.Net
         // INCOMMING
         protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
         {
-            if (Running) Info.Serialize(msg); // respond with server info
+            if (Running) Info.Serialize(msg, true); // respond with server info
         }
         protected override void ProcessIncommingData(NetMessage subType, NetIncomingMessage msg)
         {

@@ -77,6 +77,7 @@ namespace BlackTournament.Net.Data
             TTL -= deltaT;
             Position += _MovementVector * Speed * deltaT;
             _UpdatePosition?.Invoke(Position); // To update collision shape position.
+            _Dirty = true;
         }
 
         public void Destroy()
@@ -84,23 +85,29 @@ namespace BlackTournament.Net.Data
             TTL = 0;
         }
 
-        public override void Deserialize(NetIncomingMessage m)
-        {
-            Position = new Vector2f(m.ReadFloat(), m.ReadFloat());
-            Direction = m.ReadFloat();
-            SourceWeapon = (PickupType)m.ReadInt32();
-            Primary = m.ReadBoolean();
-            TTL = m.ReadFloat();
-        }
-
-        protected override void SerializeInternal(NetOutgoingMessage m)
+        protected override void SerializeInternal(NetOutgoingMessage m, bool fullSync)
         {
             m.Write(Position.X);
             m.Write(Position.Y);
             m.Write(Direction);
-            m.Write((int)SourceWeapon);
-            m.Write(Primary);
+            if (fullSync)
+            {
+                m.Write((int)SourceWeapon);
+                m.Write(Primary);
+            }
             m.Write(TTL);
+        }
+
+        protected override void DeserializeInternal(NetIncomingMessage m, bool fullSync)
+        {
+            Position = new Vector2f(m.ReadFloat(), m.ReadFloat());
+            Direction = m.ReadFloat();
+            if (fullSync)
+            {
+                SourceWeapon = (PickupType)m.ReadInt32();
+                Primary = m.ReadBoolean();
+            }
+            TTL = m.ReadFloat();
         }
     }
 }

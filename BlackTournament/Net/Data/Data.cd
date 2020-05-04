@@ -1,73 +1,144 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BlackTournament.Net.Data.Player" Collapsed="true">
-    <Position X="1.5" Y="3.75" Width="1.5" />
-    <AssociationLine Name="OwnedWeapons" Type="BlackTournament.Net.Data.PickupType">
+    <Position X="1.5" Y="2" Width="1.5" />
+    <AssociationLine Name="CurrentWeaponType" Type="BlackTournament.Net.Data.PickupType" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="2.25" />
+        <Point X="4.621" Y="2.25" />
+        <Point X="4.621" Y="4.625" />
+        <Point X="7.25" Y="4.625" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Weapons" Type="BlackTournament.Net.Data.Weapon" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="2.5" />
+        <Point X="4.281" Y="2.5" />
+        <Point X="4.281" Y="4.938" />
+        <Point X="3" Y="4.938" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQAACAAAAQEQAIggAEAAgABAEAEAAgQAAAAAAAAEABA=</HashCode>
+      <FileName>Net\Data\Player.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentWeaponType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Weapons" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Pickup" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <AssociationLine Name="Type" Type="BlackTournament.Net.Data.PickupType" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="2.691" />
+        <Point X="5.75" Y="4.188" />
+        <Point X="7.25" Y="4.188" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ADQAAAAIAMAAAAAgAAAQAADAEAAAAAAgAQAAAAAAAAA=</HashCode>
+      <FileName>Net\Data\Pickup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.NetEntityBase" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACCAAAQAAAAAAAAAAAAADAECBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Data\NetEntityBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.ServerPlayer" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <AssociationLine Name="CurrentWeapon" Type="BlackTournament.Net.Data.ServerWeapon">
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.378" Y="0.068" />
+        <Position X="0.094" Y="-0.269" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BAAACAAAgAEAAAgAAAAAAABAQABAAAAAAAAAAAAAYQA=</HashCode>
-      <FileName>Net\Data\Player.cs</FileName>
+      <HashCode>AAQBAAAQkIAABABAAEAAgAAAFAAgBAAgIABAAwAAEAA=</HashCode>
+      <FileName>Net\Data\ServerPlayer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="CurrentWeapon" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="OwnedWeapons" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="BlackTournament.Net.Data.Pickup" Collapsed="true">
-    <Position X="3.75" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAQABAAAAgAAAAAAAAAAA=</HashCode>
-      <FileName>Net\Data\Pickup.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BlackTournament.Net.Data.NetEntityBase">
-    <Position X="3.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACQAAAAAAAAAAAAAAAAABAQCBAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Net\Data\NetEntityBase.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="EntityType" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="BlackTournament.Net.Data.GameInfo" Collapsed="true">
-    <Position X="6" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAFAQABAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Net\Data\GameInfo.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BlackTournament.Net.Data.ServerPlayer" Collapsed="true">
-    <Position X="0.5" Y="5.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAQAAAAAABAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Net\Data\ServerPlayer.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="BlackTournament.Net.Data.ClientPlayer" Collapsed="true">
-    <Position X="2.75" Y="5.25" Width="1.5" />
+    <Position X="2.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Data\ClientPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="BlackTournament.Net.Data.EntityType">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+  <Class Name="BlackTournament.Net.Data.ServerInfo" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAgAAAAAAAAAAQAAAAA=</HashCode>
-      <FileName>Net\Data\EntityType.cs</FileName>
+      <HashCode>AAAAAAAAABAAQAAAAEAAAARAEEAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Net\Data\ServerInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Effect" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAgIAgAAAAAADAEAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Net\Data\Effect.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EffectType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.ServerWeapon" Collapsed="true">
+    <Position X="1.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAQAAAAAAAAAAAEAAABEBAAAAAAAAhAAAAA=</HashCode>
+      <FileName>Net\Data\ServerWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Shot" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAQACABIAAAAAgACAMIBBBEABAAIQAAAAAAAiAAAQ=</HashCode>
+      <FileName>Net\Data\Shot.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SourceWeapon" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.Weapon" Collapsed="true">
+    <Position X="1.5" Y="4.75" Width="1.5" />
+    <AssociationLine Name="WeaponType" Type="BlackTournament.Net.Data.PickupType" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="5.125" />
+        <Point X="5.469" Y="5.125" />
+        <Point X="5.469" Y="5.125" />
+        <Point X="7.25" Y="5.125" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EgAAAAAAAAAAAAAAAgIAAAAAACBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Data\Weapon.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="WeaponType" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="BlackTournament.Net.Data.PickupType">
+    <Position X="7.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAAAQABAAAAEIAIA=</HashCode>
+      <FileName>Net\Data\PickupType.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="BlackTournament.Net.Data.PickupType">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+  <Enum Name="BlackTournament.Net.Data.EffectType">
+    <Position X="9.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAACCAAAACAAAAQABAAAAAIAIA=</HashCode>
-      <FileName>Net\Data\PickupType.cs</FileName>
+      <HashCode>AEAAAAAGBAAAAAAAAAAAACAEAEAAAAAAAAAAAAEAAAI=</HashCode>
+      <FileName>Net\Data\Effect.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

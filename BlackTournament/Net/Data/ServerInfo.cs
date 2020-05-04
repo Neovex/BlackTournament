@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Lidgren.Network;
 
 namespace BlackTournament.Net.Data
@@ -31,7 +27,7 @@ namespace BlackTournament.Net.Data
             EndPoint = endPoint;
         }
 
-        protected override void SerializeInternal(NetOutgoingMessage m)
+        protected override void SerializeInternal(NetOutgoingMessage m, bool fullSync)
         {
             m.Write(Name);
             m.Write(Map);
@@ -41,9 +37,8 @@ namespace BlackTournament.Net.Data
             //m.Write(HasPassword);
         }
 
-        public override void Deserialize(NetIncomingMessage m)
+        protected override void DeserializeInternal(NetIncomingMessage m, bool fullSync)
         {
-            m.ReadInt32(); // skip id
 
             Name = m.ReadString();
             Map = m.ReadString();

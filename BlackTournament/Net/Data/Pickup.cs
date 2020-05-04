@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lidgren.Network;
 using SFML.System;
 using BlackCoat.Collision.Shapes;
@@ -22,7 +18,7 @@ namespace BlackTournament.Net.Data
             set
             {
                 _Active = value;
-                IsDirty = true;
+                _Dirty = true;
                 ActiveStateChanged.Invoke(this);
             }
         }
@@ -60,19 +56,25 @@ namespace BlackTournament.Net.Data
             _RespawnTime = RespawnTime;
         }
 
-        protected override void SerializeInternal(NetOutgoingMessage m)
+        protected override void SerializeInternal(NetOutgoingMessage m, bool fullSync)
         {
             m.Write(Active);
-            m.Write(Position.X);
-            m.Write(Position.Y);
-            m.Write((int)Type);
+            if (fullSync)
+            {
+                m.Write(Position.X);
+                m.Write(Position.Y);
+                m.Write((int)Type);
+            }
         }
 
-        public override void Deserialize(NetIncomingMessage m)
+        protected override void DeserializeInternal(NetIncomingMessage m, bool fullSync)
         {
             Active = m.ReadBoolean();
-            Position = new Vector2f(m.ReadSingle(), m.ReadSingle());
-            Type = (PickupType)m.ReadInt32();
+            if (fullSync)
+            {
+                Position = new Vector2f(m.ReadSingle(), m.ReadSingle());
+                Type = (PickupType)m.ReadInt32();
+            }
         }
 
         private void CreateCollision(CollisionSystem collisionSystem)

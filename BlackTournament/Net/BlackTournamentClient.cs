@@ -126,12 +126,12 @@ namespace BlackTournament.Net
                     ChangeLevel(msg);
                 break;
 
-                case NetMessage.Init:
-                    ServerInit(msg);
-                break;
-
                 case NetMessage.Update:
                     ServerUpdate(msg);
+                break;
+
+                case NetMessage.UpdatePlayer:
+                    _PlayerLookup[msg.ReadInt32()].Deserialize(msg);
                 break;
             }
         }
@@ -149,42 +149,6 @@ namespace BlackTournament.Net
         {
             MapName = msg.ReadString();
             ChangeLevelReceived();
-        }
-
-        private void ServerInit(NetIncomingMessage msg)
-        {
-            // Time
-            GameTime = msg.ReadSingle();
-
-            // Add Players
-            var entityCount = msg.ReadInt32();
-            for (int i = 0; i < entityCount; i++)
-            {
-                _PlayerLookup[msg.ReadInt32()].Deserialize(msg);
-            }
-
-            // Pickups
-            entityCount = msg.ReadInt32();
-            for (int i = 0; i < entityCount; i++)
-            {
-                var pickup = new Pickup(msg.ReadInt32(), msg);
-                _PickupLookup.Add(pickup.Id, pickup);
-            }
-
-            // Shots
-            entityCount = msg.ReadInt32();
-            for (int i = 0; i < entityCount; i++)
-            {
-                var shot = new Shot(msg.ReadInt32(), msg);
-                _ShotLookup.Add(shot.Id, shot);
-            }
-
-            // Effects
-            entityCount = msg.ReadInt32();
-            for (int i = 0; i < entityCount; i++)
-            {
-                _Effects.Add(new Effect(msg.ReadInt32(), msg));
-            }
         }
 
         private void ServerUpdate(NetIncomingMessage msg)
@@ -206,7 +170,16 @@ namespace BlackTournament.Net
             entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                _PickupLookup[msg.ReadInt32()].Deserialize(msg);
+                var id = msg.ReadInt32();
+                if (_PickupLookup.TryGetValue(id, out Pickup pickup))
+                {
+                    pickup.Deserialize(msg);
+                }
+                else
+                {
+                    pickup = new Pickup(id, msg);
+                    _PickupLookup.Add(pickup.Id, pickup);
+                }
             }
 
             // Shots

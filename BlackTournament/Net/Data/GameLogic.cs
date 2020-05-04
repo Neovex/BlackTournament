@@ -18,13 +18,13 @@ namespace BlackTournament.Net.Data
 {
     class GameLogic : BlackCoatBase
     {
-        private float _GameTime;
+        private float _MatchTime;
         private TmxMapper _Map;
         private Dictionary<int, ServerPlayer> _PlayerLookup;
         private List<ServerPlayer> _Players;
         private List<Shot> _Shots;
         private List<Effect> _Effects;
-        private IEnumerable<Pickup> _Pickups;
+        private Pickup[] _Pickups;
 
 
         public MatchCicle MatchCicle { get; private set; }
@@ -144,42 +144,36 @@ namespace BlackTournament.Net.Data
             _PlayerLookup[id].Rotate(rotation);
         }
 
-        public void Serialize(NetOutgoingMessage msg, bool forceFullUpdate)
+        public void Serialize(NetOutgoingMessage msg, bool fullSync)
         {
             // Time
-            msg.Write(_GameTime + 1);
+            msg.Write(_MatchTime);
 
             // Players
-            var dirtyPlayers = _Players.Where(p => p.IsDirty || forceFullUpdate).ToArray();
-            msg.Write(dirtyPlayers.Length);
-            foreach (var player in dirtyPlayers)
-            {
-                player.Serialize(msg);
-            }
+            msg.Write(_Players.Count(p => p.NeedsUpdate || fullSync));
+            foreach (var player in _Players) player.Serialize(msg, fullSync);
 
             // Pickups
-            var dirtyPickups = _Pickups.Where(p => p.IsDirty || forceFullUpdate).ToArray();
-            msg.Write(dirtyPickups.Length);
-            foreach (var pickup in dirtyPickups)
-            {
-                pickup.Serialize(msg);
-            }
+            msg.Write(_Pickups.Count(p => p.NeedsUpdate || fullSync));
+            foreach (var pickup in _Pickups) pickup.Serialize(msg, fullSync);
 
             // Shots
-            msg.Write(_Shots.Count);
-            foreach (var shot in _Shots)
-            {
-                shot.Serialize(msg);
-            }
+            msg.Write(_Shots.Count(s => s.NeedsUpdate || fullSync));
+            foreach (var shot in _Shots) shot.Serialize(msg, fullSync);
             _Shots.RemoveAll(s => !s.Alive);
 
             // Effects
             msg.Write(_Effects.Count);
-            foreach (var effect in _Effects)
-            {
-                effect.Serialize(msg);
-            }
+            foreach (var effect in _Effects) effect.Serialize(msg, fullSync);
             _Effects.Clear();
+        }
+
+        public void SerializePlayer(NetOutgoingMessage msg, int playerId)
+        {
+            if (_PlayerLookup.TryGetValue(playerId, out ServerPlayer player))
+            {
+                player.Serialize(msg, true);
+            }
         }
 
         public void Update(float deltaT)
@@ -277,8 +271,8 @@ namespace BlackTournament.Net.Data
 
         private void UpdateTimer(float deltaT)
         {
-            _GameTime -= deltaT;
-            if (_GameTime <= 0)
+            _MatchTime -= deltaT;
+            if (_MatchTime <= 0)
             {
                 switch (MatchCicle)
                 {
@@ -300,7 +294,7 @@ namespace BlackTournament.Net.Data
                         MatchCicle = MatchCicle.Complete;
                         break;
                 }
-                _GameTime = (float)MatchCicle;
+                _MatchTime = (float)MatchCicle;
             }
         }
 
