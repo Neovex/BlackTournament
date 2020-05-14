@@ -219,6 +219,7 @@ namespace BlackTournament.Controller
             foreach (var player in _Client.Players)
             {
                 _Scene.UpdateEntity(player.Id, player.Position, player.Rotation, player.IsAlive);
+                _Scene.UpdateColor(player.Id, player.Color);
             }
 
             if (LocalPlayer.IsAlive) _Scene.FocusPlayer(); // move camera to player

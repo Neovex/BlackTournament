@@ -352,10 +352,6 @@ namespace BlackTournament.Scenes
             {
                 Name = "Player",
                 Texture = TextureLoader.Load("CharacterBase"),
-                Color = !isLocalPlayer ? Color.Red :
-                        new Color(Properties.Settings.Default.PlayerColor.R,
-                                  Properties.Settings.Default.PlayerColor.G,
-                                  Properties.Settings.Default.PlayerColor.B), // todo add color to sync?
                 Scale = new Vector2f(0.5f, 0.5f) // FIXME ?
             };
             player.Origin = player.Texture.Size.ToVector2f() / 2;
@@ -593,6 +589,11 @@ namespace BlackTournament.Scenes
             entity.Position = pos;
             entity.Rotation = rotation;
             entity.Visible = visible;
+        }
+
+        public void UpdateColor(int id, uint color)
+        {
+            _EnitityLookup[id].Color = new Color(color);
         }
 
         public void FocusPlayer()

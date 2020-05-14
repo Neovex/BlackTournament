@@ -12,7 +12,6 @@ using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 
 using TiledSharp;
-using BlackTournament.Net.Data;
 
 namespace BlackTournament.Tmx
 {
@@ -49,7 +48,7 @@ namespace BlackTournament.Tmx
             try
             {
                 // Load map data
-                _MapData = new TmxMap($"{Game.MAP_ROOT}{name}.tmx");
+                _MapData = new TmxMap(GetMapFile(name));
                 Name = name;
                 ClearColor = new Color((byte)_MapData.BackgroundColor.R, (byte)_MapData.BackgroundColor.G, (byte)_MapData.BackgroundColor.B);
                 _TextureColumnLookup = _MapData.Tilesets.ToDictionary(ts => ts.Name, ts => ts.Columns.Value);
@@ -126,7 +125,7 @@ namespace BlackTournament.Tmx
                         {
                             Offset = new Vector2f((float)group.OffsetX, (float)group.OffsetY),
                             RenderOrder = int.Parse(ReadTmxObjectProperty(group.Properties, "RenderOrder", int.MaxValue)),
-                        Objects = objects.ToArray()
+                            Objects = objects.ToArray()
                         });
                     }
                 }
@@ -157,9 +156,20 @@ namespace BlackTournament.Tmx
             return null;
         }
 
+        private static string GetMapFile(string name)
+        {
+            return $"{Game.MAP_ROOT}{name}.tmx";
+        }
+
         internal static string ReadTmxObjectProperty(PropertyDict properties, string propertyName, object defaultValue = null)
         {
             return properties.TryGetValue(propertyName, out string value) ? value : defaultValue?.ToString();
         }
+
+        public static bool MapIsAvailable(string mapName)
+        {
+            return System.IO.File.Exists(GetMapFile(mapName));
+        }
+
     }
 }

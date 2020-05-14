@@ -73,6 +73,19 @@ namespace BlackTournament.Net.Data
                 _Dirty = true;
             }
         }
+
+        private uint _Color;
+        public uint Color
+        {
+            get { return _Color; }
+            set
+            {
+                _Color = value; 
+                _Dirty = true;
+            }
+        }
+
+
         public Boolean IsAlive => Health > 0;
 
         public Dictionary<PickupType, Weapon> Weapons { get; } = new Dictionary<PickupType, Weapon>();
@@ -102,6 +115,8 @@ namespace BlackTournament.Net.Data
                     m.Write((int)weapon.WeaponType);
                     weapon.Serialize(m);
                 }
+
+                m.Write(Color);
             }
             m.Write(Ping);
         }
@@ -126,6 +141,8 @@ namespace BlackTournament.Net.Data
                     if (!Weapons.ContainsKey(type)) Weapons[type] = new Weapon(type);
                     Weapons[type].Deserialize(m);
                 }
+
+                Color = m.ReadUInt32();
             }
             Ping = m.ReadInt32();
         }

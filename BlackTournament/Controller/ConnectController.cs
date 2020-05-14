@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+
 using BlackTournament.Scenes;
+using BlackTournament.Tmx;
 using BlackTournament.Net;
 using BlackTournament.Net.Data;
-using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {
@@ -71,7 +69,7 @@ namespace BlackTournament.Controller
         private void LevelReady()
         {
             Log.Debug("Client Ready");
-            if (MapIsAvailable(_Client.MapName))
+            if (TmxMapper.MapIsAvailable(_Client.MapName))
             {
                 _Game.MapController.Activate(_Client);
             }
@@ -82,11 +80,6 @@ namespace BlackTournament.Controller
                 _Client.Disconnect();
                 _Game.MenuController.Activate($"Error: you do not have the map {mapName}. Connection aborted.");//$
             }
-        }
-
-        private bool MapIsAvailable(string mapName)
-        {
-            return Directory.EnumerateFiles(Game.MAP_ROOT).Any(f => Path.GetFileNameWithoutExtension(f) == mapName);
         }
 
         private void ConnectionFailed()

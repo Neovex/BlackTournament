@@ -40,7 +40,7 @@ namespace BlackTournament.Net
         // CONTROL
         public void Connect()
         {
-            Connect(Settings.Default.ManagementServerAdress, Net.DEFAULT_PORT, String.Empty);
+            Connect(Settings.Default.ManagementServerAdress, Net.DEFAULT_PORT);
         }
 
         protected override void Connected()

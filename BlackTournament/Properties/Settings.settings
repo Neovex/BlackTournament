@@ -15,7 +15,7 @@
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="PlayerColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
+      <Value Profile="(Default)">Yellow</Value>
     </Setting>
     <Setting Name="ResolutionX" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">1024</Value>

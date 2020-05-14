@@ -132,11 +132,10 @@ namespace BlackTournament
             _Client.Update(deltaT);
         }
 
-        public bool Host(int port, ServerInfo info) => _Server.HostGame(port, info);
         public bool Host(int port, String map, String serverName)
         {
             if (string.IsNullOrWhiteSpace(map)) throw new ArgumentNullException(nameof(map));
-            return Host(port, new ServerInfo(serverName, map));
+            return _Server.HostGame(port, new ServerInfo(serverName, map));
         }
 
         public void Connect(String host, int port)

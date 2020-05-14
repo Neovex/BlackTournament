@@ -12,7 +12,8 @@ namespace BlackTournament.Net
 {
     class BlackTournamentServer : ManagedServer<NetMessage>
     {
-        private Core _Core;
+        private readonly Core _Core;
+        private readonly Dictionary<int, uint> _ColorLookup;
         private GameLogic _Logic;
         private Single _UpdateImpulse;
 
@@ -23,6 +24,7 @@ namespace BlackTournament.Net
         public BlackTournamentServer(Core core) : base(Game.ID, Net.COMMANDS)
         {
             _Core = core ?? throw new ArgumentNullException(nameof(core));
+            _ColorLookup = new Dictionary<int, uint>();
         }
 
 
@@ -66,7 +68,7 @@ namespace BlackTournament.Net
             _Logic.GameMessage += HandleGameLogicMessage;
 
             // Add users
-            foreach (var user in ConnectedUsers) _Logic.AddPlayer(user);
+            foreach (var user in ConnectedUsers) _Logic.AddPlayer(user, _ColorLookup[user.Id]);
             Broadcast(NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
         }
 
@@ -104,10 +106,11 @@ namespace BlackTournament.Net
             BroadcastTextMessage(ServerId, msg);
         }
 
-        protected override void UserConnected(ServerUser<NetConnection> user)
+        protected override void UserConnected(ServerUser<NetConnection> user, NetIncomingMessage message)
         {
             Info.CurrentPlayers++;
-            _Logic.AddPlayer(user);
+            _ColorLookup[user.Id] = message.ReadUInt32();
+            _Logic.AddPlayer(user, _ColorLookup[user.Id]);
             Send(user.Connection, NetMessage.ChangeLevel, m => m.Write(_Logic.MapName));
             Send(user.Connection, NetMessage.Update, m => _Logic.Serialize(m, true));
         }
@@ -115,13 +118,15 @@ namespace BlackTournament.Net
         protected override void UserDisconnected(ServerUser<NetConnection> user)
         {
             Info.CurrentPlayers--;
+            _ColorLookup.Remove(user.Id);
             _Logic.RemovePlayer(user);
         }
 
         // INCOMMING
-        protected override void HandleDiscoveryRequest(NetOutgoingMessage msg)
+        protected override bool HandleDiscoveryRequest(NetOutgoingMessage msg)
         {
             if (Running) Info.Serialize(msg, true); // respond with server info
+            return Running;
         }
         protected override void ProcessIncommingData(NetMessage subType, NetIncomingMessage msg)
         {
@@ -139,7 +144,7 @@ namespace BlackTournament.Net
                     _Logic.ProcessGameAction(msg.ReadInt32(), (GameAction)msg.ReadInt32(), msg.ReadBoolean());
                     break;
 
-                case NetMessage.Rotate:
+                case NetMessage.RotatePlayer:
                     _Logic.RotatePlayer(msg.ReadInt32(), msg.ReadSingle());
                     break;
 

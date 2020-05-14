@@ -47,10 +47,11 @@ namespace BlackTournament.Net.Data
         }
 
 
-        public void AddPlayer(ServerUser<NetConnection> user)
+        public void AddPlayer(ServerUser<NetConnection> user, uint color)
         {
             var player = new ServerPlayer(user, new CircleCollisionShape(_Core.CollisionSystem, new Vector2f(), 0));
             player.ShotFired += HandlePlayerShoot;
+            player.Color = color;
             _PlayerLookup.Add(user.Id, player);
             _Players.Add(player);
         }

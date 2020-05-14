@@ -17,7 +17,7 @@
 
         // Server Only
         ProcessGameAction,
-        StopServer,
-        Rotate
+        RotatePlayer,
+        StopServer
     }
 }

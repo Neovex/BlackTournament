@@ -5,6 +5,8 @@ using Lidgren.Network;
 using BlackCoat.Network;
 using BlackTournament.InputMaps;
 using BlackTournament.Net.Data;
+using BlackTournament.Properties;
+using System.Net;
 
 namespace BlackTournament.Net
 {
@@ -57,6 +59,25 @@ namespace BlackTournament.Net
 
 
         // CONTROL
+
+        public bool Connect(String host, Int32 port)
+        {
+            return base.Connect(host, port, SerializePlayerColor);
+        }
+        public bool Connect(IPEndPoint host)
+        {
+            return base.Connect(host, SerializePlayerColor);
+        }
+
+        private void SerializePlayerColor(NetOutgoingMessage message)
+        {
+            var color = Settings.Default.PlayerColor;
+            message.Write(byte.MaxValue);
+            message.Write(color.B);
+            message.Write(color.G);
+            message.Write(color.R);
+        }
+
         internal void Update(float deltaT)
         {
             // Process incoming data
@@ -79,11 +100,6 @@ namespace BlackTournament.Net
             Disconnect(String.Empty);
         }
 
-        internal String GetAlias(int id)
-        {
-            return _ConnectedClients.First(u => u.Id == id).Alias;
-        }
-
 
         // OUTGOING
         public void ProcessGameAction(GameAction action, Boolean activate)
@@ -99,7 +115,7 @@ namespace BlackTournament.Net
 
         private void UpdatePlayerRotation(NetDeliveryMethod method)
         {
-            Send(NetMessage.Rotate, m => { m.Write(Id); m.Write(PlayerRotation); }, method);
+            Send(NetMessage.RotatePlayer, m => { m.Write(Id); m.Write(PlayerRotation); }, method);
         }
 
         public void SendMessage(String txt)
