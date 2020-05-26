@@ -56,8 +56,8 @@ add death sounds (and effects)
 #add emitters to pickups
 #character customization - tint
 #- fix missing tint sync
-(consider replacing some sounds with unfa sounds)
-fix sfx volumes
+#(consider replacing some sounds with unfa sounds)
+#fix sfx volumes
 fix missing implementations 4 volume settings - add to save adapter
 fix caret color not following text color
 fix initial weapon cooldown

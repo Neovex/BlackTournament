@@ -1,4 +1,5 @@
-Programming & Production:
+Black Coat Engine & Black Tournament
+created by:
 
 Alexander Schwahl
 
@@ -7,7 +8,7 @@ Alexander Schwahl
 Fonts:
 
 HighlandGothicLightFLF.ttf
-Casady & Greene
+by Casady & Greene
 http://moorstation.org/typoasis/designers/casady_greene
 
 VTCBelialsBlade.ttf
@@ -18,15 +19,19 @@ http://www.facebook.com/wolfbainx
 
 Additional Graphics:
 
-Tile Texture Pack & Sinistar Graphics
+Aztek tiles & Sinistar graphics
 by Daniel Cook
 http://www.lostgarden.com/
 
-Gun, Player & Pickup Graphics
+Player design
+by Tatermand
+http://opengameart.org/users/tatermand
+
+Weapons & Item design
 by Maximilian Stempel
 http://zaphiron.artstation.com/
 
-Some Menue Graphics
+Some menu graphics
 by MillionthVector
 http://millionthvector.blogspot.com
 
@@ -49,12 +54,28 @@ http://teknoaxe.com
 
 --------------------------------------------------
 
-Special Thanks to:
+Sound Effects
+
+Laser & Item sounds
+by Unfa
+https://freesound.org/people/unfa/sounds/187119/
+
+Menu sounds
+SFXR by Tomas Pettersson
+http://drpetter.se/project_sfxr.html
+
+--------------------------------------------------
+
+Special Thanks:
 
 The Developers of SFML. Without you this would have never gotten so far.
 
-Epicgames for Inspiration and not sueing my ass.
+Epicgames for inspiration and not sueing my ass.
 
 Youtube for hours and hours of coding music.
 
 Microsoft for an amazing, free IDE & Framework.
+
+--------------------------------------------------
+
+Thank you for playing!
