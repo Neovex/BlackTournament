@@ -3,7 +3,7 @@ using BlackCoat;
 
 namespace BlackTournament
 {
-    class GraphicSettings : Launcher.ISettings
+    class SettingsAdapter : Launcher.ISettingsAdapter
     {
         public (uint X, uint Y) Resolution
         {
@@ -15,5 +15,7 @@ namespace BlackTournament
         public bool Windowed { get => Settings.Default.Windowed; set => Settings.Default.Windowed = value; }
         public bool Borderless { get => Settings.Default.Borderless; set => Settings.Default.Borderless = value; }
         public bool VSync { get => Settings.Default.VSync; set => Settings.Default.VSync = value; }
+        public int MusicVolume { get => Settings.Default.MusikVolume; set => Settings.Default.MusikVolume = value; }
+        public int EffectVolume { get => Settings.Default.SfxVolume; set => Settings.Default.SfxVolume = value; }
     }
 }

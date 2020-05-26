@@ -6,10 +6,10 @@
       <Value Profile="(Default)">Player</Value>
     </Setting>
     <Setting Name="MusikVolume" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">50</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="SfxVolume" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">80</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="ManagementServerAdress" Type="System.String" Scope="User">
       <Value Profile="(Default)">localhost</Value>

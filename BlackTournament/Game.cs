@@ -58,7 +58,7 @@ namespace BlackTournament
             Device device;
 #if !DEBUG
             // Show Launcher
-            device = Device.Create(new Launcher(new GraphicSettings(), new SettingsTab())
+            device = Device.Create(new Launcher(new SettingsAdapter(), new SettingsTab())
             {
                 BannerImage = Resources.banner
             }, ID);

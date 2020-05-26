@@ -17,7 +17,7 @@ namespace BlackTournament
 
         public SettingsTab()
         {
-            Text = "Settings";
+            Text = "Game";
             InitializeComponent();
             _PlayerNameTextBox.Text = Settings.Default.PlayerName;
             _ColorPanel.BackColor = Settings.Default.PlayerColor;
