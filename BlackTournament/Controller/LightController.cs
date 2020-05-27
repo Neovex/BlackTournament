@@ -20,12 +20,11 @@ namespace BlackTournament.Controller
 
         protected override void SceneLoadingFailed()
         {
-            Log.Error("");
+            Log.Error(nameof(SceneLoadingFailed));
         }
 
         protected override void SceneReady()
         {
-            Log.Debug("");
         }
 
         protected override void SceneReleased()

@@ -205,7 +205,6 @@ namespace BlackTournament.UI
                 Padding = new FloatRect(5, 5, 0, 0),
                 BackgroundColor = Color.Black,
                 BackgroundAlpha = 0.5f,
-                CaretColor = Color.White,
                 EditingTextColor = Color.White,
                 EditingBackgroundColor = new Color(0, 0, 0, 50)
             };

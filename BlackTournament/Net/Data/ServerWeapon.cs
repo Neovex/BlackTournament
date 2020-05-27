@@ -20,13 +20,8 @@ namespace BlackTournament.Net.Data
 
         public ServerWeapon(PickupType weaponType) : base(weaponType)
         {
-            var primary = WeaponData.Get(WeaponType, true);
-            var secundary = WeaponData.Get(WeaponType, false);
-
-            _PrimaryFireRate = primary.FireRate;
-            _SecundaryFireRate = secundary.FireRate;
-            PrimaryAmmo = primary.Ammunition;
-            SecundaryAmmo = secundary.Ammunition;
+            PrimaryAmmo = WeaponData.Get(WeaponType, true).Ammunition;
+            SecundaryAmmo = WeaponData.Get(WeaponType, false).Ammunition;
         }
 
         public void Fire(bool primary)
@@ -50,7 +45,7 @@ namespace BlackTournament.Net.Data
             {
                 if (_Primary)
                 {
-                    if (_PrimaryFireRate <= 0 && PrimaryAmmo > 0)
+                    if (_PrimaryFireRate <= 0 && _SecundaryFireRate <= 0 && PrimaryAmmo > 0)
                     {
                         _PrimaryFireRate = WeaponData.Get(WeaponType, true).FireRate;
                         PrimaryAmmo--;
@@ -59,7 +54,7 @@ namespace BlackTournament.Net.Data
                 }
                 else
                 {
-                    if (_SecundaryFireRate <= 0 && SecundaryAmmo > 0)
+                    if (_PrimaryFireRate <= 0 && _SecundaryFireRate <= 0 && SecundaryAmmo > 0)
                     {
                         _SecundaryFireRate = WeaponData.Get(WeaponType, false).FireRate;
                         SecundaryAmmo--;

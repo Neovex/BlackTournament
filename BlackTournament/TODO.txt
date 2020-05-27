@@ -59,8 +59,8 @@ add death sounds (and effects)
 #(consider replacing some sounds with unfa sounds)
 #fix sfx volumes
 #fix missing implementations 4 volume settings # add to save adapter
-fix caret color not following text color
-fix initial weapon cooldown
+#fix caret color not following text color
+#fix initial weapon cooldown
 (add damage indicator - with sounds?)
 (complete map temple)
 (env sounds?)

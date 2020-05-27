@@ -78,7 +78,7 @@ namespace BlackTournament.Controller
                 var mapName = _Client.MapName;
                 Log.Debug("Map", mapName, "not available on client side - aborting connection");
                 _Client.Disconnect();
-                _Game.MenuController.Activate($"Error: you do not have the map {mapName}. Connection aborted.");//$
+                _Game.MenuController.Activate($"Error: you do not have the map '{mapName}'. Connection aborted.");//$
             }
         }
 
