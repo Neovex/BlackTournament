@@ -327,7 +327,7 @@ namespace BlackTournament.Scenes
                                     DockX = true, DockY = true,
                                     Init = new UIComponent[]
                                     {
-                                        new Label(_Core, System.IO.File.ReadAllText("Assets\\Credits.txt").Replace("\r",""), font:Game.DefaultFont)
+                                        new Label(_Core, System.IO.File.ReadAllText("Credits.txt").Replace("\r",""), font:Game.DefaultFont)
                                         {
                                             CharacterSize = 12,
                                             Position = new Vector2f(10, 10),
