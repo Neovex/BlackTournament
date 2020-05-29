@@ -12,6 +12,7 @@ using BlackTournament.Net;
 using BlackTournament.Net.Data;
 using BlackTournament.Properties;
 using BlackTournament.Controller;
+using BlackTournament.Scenes;
 
 namespace BlackTournament
 {
@@ -99,9 +100,12 @@ namespace BlackTournament
                     // Start Game
                     if (String.IsNullOrWhiteSpace(arguments))
                     {
-                        //TestController.Activate();
+#if DEBUG
                         MenuController.Activate();
-                        //Core.SceneManager.ChangeScene(new BlackCoatIntro(Core, new TournamentIntro(Core, MenuController))); // TODO : create global music controller?
+#endif
+#if !DEBUG
+                        Core.SceneManager.ChangeScene(new BlackCoatIntro(Core, new TournamentIntro(Core, MenuController))); // TODO : create global music controller?
+#endif
                     }
                     else
                     {

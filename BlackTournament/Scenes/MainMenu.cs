@@ -99,7 +99,7 @@ namespace BlackTournament.Scenes
 
             // Sfx
             _Sfx = new SfxManager(SfxLoader, () => Properties.Settings.Default.SfxVolume);
-            _Sfx.AddToLibrary(Files.Sfx_Simpleshot, 3);
+            _Sfx.AddToLibrary(Files.Sfx_Simpleshot, 10);
 
             // BG
             Layer_BG.Add

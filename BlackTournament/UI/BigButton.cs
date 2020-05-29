@@ -24,7 +24,7 @@ namespace BlackTournament.UI
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             Resize(Texture.Size.ToVector2f());
-            _Sfx.AddToLibrary(Files.Sfx_Highlight, 2);
+            _Sfx.AddToLibrary(Files.Sfx_Highlight, 5);
             _Sfx.AddToLibrary(Files.Sfx_Select, 2);
 
             Init = new UIComponent[]
