@@ -10,6 +10,7 @@ using BlackCoat;
 using BlackCoat.UI;
 using BlackCoat.Entities;
 using BlackCoat.Entities.Shapes;
+using BlackCoat.AssetHandling;
 
 using BlackTournament.UI;
 using BlackTournament.InputMaps;
@@ -97,8 +98,8 @@ namespace BlackTournament.Scenes
 #endif
 
             // Sfx
-            _Sfx = new SfxManager(SfxLoader);
-            _Sfx.AddToLibrary(Files.Sfx_Simpleshot, Settings.Default.SfxVolume / 2);
+            _Sfx = new SfxManager(SfxLoader, () => Properties.Settings.Default.SfxVolume);
+            _Sfx.AddToLibrary(Files.Sfx_Simpleshot, 3);
 
             // BG
             Layer_BG.Add

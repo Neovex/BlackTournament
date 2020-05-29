@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.System;
 using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.UI;
+using BlackCoat.AssetHandling;
 using BlackTournament.Properties;
 
 namespace BlackTournament.UI
@@ -27,8 +24,8 @@ namespace BlackTournament.UI
             _Sfx = sfx ?? throw new ArgumentNullException(nameof(sfx));
             Texture = _Loader.Load(Files.Menue_Button, false, true);
             Resize(Texture.Size.ToVector2f());
-            _Sfx.AddToLibrary(Files.Sfx_Highlight, Settings.Default.SfxVolume);
-            _Sfx.AddToLibrary(Files.Sfx_Select, Settings.Default.SfxVolume);
+            _Sfx.AddToLibrary(Files.Sfx_Highlight, 2);
+            _Sfx.AddToLibrary(Files.Sfx_Select, 2);
 
             Init = new UIComponent[]
             {

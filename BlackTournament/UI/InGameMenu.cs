@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using SFML.Graphics;
 using SFML.System;
 
 using BlackCoat;
 using BlackCoat.UI;
+using BlackCoat.AssetHandling;
 
 namespace BlackTournament.UI
 {

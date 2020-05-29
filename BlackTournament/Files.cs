@@ -5,6 +5,9 @@ namespace BlackTournament
 {
     public static class Files
     {
+        // TEXTURES
+        public const String Tex_CharacterBase = "CharacterBase";
+
         // SFX
         public static readonly IReadOnlyCollection<String> MENUE_SFX = new[] { Sfx_Highlight, Sfx_Select };
         public static readonly IReadOnlyCollection<String> GAME_SFX = new[] { Sfx_Explosion, Sfx_Grenatelauncher, Sfx_LaserBlastSmall, Sfx_LaserBlastBig, Sfx_Pickup1, Sfx_Pickup2, Sfx_Pickup3, Sfx_Simpleshot, Sfx_Spark, Sfx_Pew };
@@ -22,6 +25,8 @@ namespace BlackTournament
         public const String Sfx_Select = "Select";
         public const String Sfx_Spark = "spark";
         public const String Sfx_Pew = "pew";
+        public const String Sfx_Hit = "hit";
+        public const String Sfx_Drop = "drop";
 
         // MUSIC
         public static readonly IReadOnlyCollection<String> MENUE_MUSIC = new[] { Music_Invading_a_Submarine, Music_Ten_Seconds_to_Rush, Music_Third_Level_Encryption };

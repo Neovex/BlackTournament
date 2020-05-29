@@ -243,9 +243,13 @@ namespace BlackTournament.Net.Data
                         if (killzone.CollisionShape.CollidesWith(player.Position))
                         {
                             player.DamagePlayer(killzone.Damage * deltaT);
-                            if (!player.IsAlive)
+                            if (player.IsAlive)
                             {
-                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position));
+                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, _Core.Random.Next(0, 360), PickupType.None, false, killzone.Damage));
+                            }
+                            else
+                            {
+                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position, player.Rotation, PickupType.None, false, killzone.Damage));
                                 switch (killzone.Effect)
                                 {
                                     case EffectType.PlayerDrop:

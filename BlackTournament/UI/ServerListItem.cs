@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.System;
 using SFML.Graphics;
 using BlackCoat;
 using BlackCoat.UI;
+using BlackCoat.AssetHandling;
 using BlackTournament.Net.Data;
 
 namespace BlackTournament.UI

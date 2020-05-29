@@ -12,6 +12,7 @@ using BlackCoat.Entities;
 using BlackCoat.Entities.Shapes;
 using BlackCoat.Entities.Lights;
 using BlackCoat.ParticleSystem;
+using BlackCoat.AssetHandling;
 using BlackCoat.Properties;
 
 using BlackTournament.UI;
@@ -61,6 +62,11 @@ namespace BlackTournament.Scenes
         // Entities
         private Dictionary<int, IEntity> _EnitityLookup;
         private IEntity _LocalPlayer;
+        private Graphic _DamageIndicator;
+
+        // Misc
+        private readonly Vector2f _PlayerScale = new Vector2f(0.5f, 0.5f);
+
 
         public Vector2f ViewMovement { get; set; }
         public HUD HUD { get; private set; }
@@ -70,7 +76,7 @@ namespace BlackTournament.Scenes
         {
             _MapData = map ?? throw new ArgumentNullException(nameof(map));
             _UiInput = uiInput;
-            _Sfx = new SfxManager(SfxLoader);
+            _Sfx = new SfxManager(SfxLoader, () => Properties.Settings.Default.SfxVolume);
             _EnitityLookup = new Dictionary<int, IEntity>();
         }
 
@@ -198,14 +204,26 @@ namespace BlackTournament.Scenes
             // Set camera to a nice spot of the map
             _View.Center = _MapData.Pickups.FirstOrDefault(p => p.Item == PickupType.BigShield)?.Position ?? _View.Center; // maybe add camera start pos to mapdata?
 
-            // Load Sounds
-            _Sfx.LoadFromDirectory();
-            // Setup Sounds
-            foreach (var sfx in Files.GAME_SFX) _Sfx.AddToLibrary(sfx, 100, true); // doublecheck
+            // Load all Sounds
+            _Sfx.LoadFromDirectory(parallelSounds: 5);
+            // Manually setup some specific sounds due to sound stacking
+            _Sfx.AddToLibrary(Files.Sfx_Hit, 1);
+            _Sfx.AddToLibrary(Files.Sfx_Simpleshot, 20);
+            _Sfx.AddToLibrary(Files.Sfx_Pew, 20);
+            _Sfx.AddToLibrary(Files.Sfx_Spark, 20);
 
             // Setup Special Effects
             SetupEmitters();
             Layer_Overlay.Add(_ParticleEmitterHost);
+            var indicatorTexture = TextureLoader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
+            _DamageIndicator = new Graphic(_Core, indicatorTexture)
+            {
+                Name = "DamageIndicator",
+                Origin = indicatorTexture.Size.ToVector2f() / 2,
+                Color = Color.Red,
+                Alpha = 0
+            };
+            Layer_Overlay.Add(_DamageIndicator);
 
             // HUD
             Layer_Overlay.Add(HUD = new HUD(_Core, TextureLoader, _Sfx, _UiInput));
@@ -338,7 +356,10 @@ namespace BlackTournament.Scenes
             // spectator movement
             _View.Center += ViewMovement * 2000 * deltaT;
             // Update listener position for spatial sounds
-            Listener.Position = _View.Center.ToVector3f();
+            _Sfx.ListenerPosition = _View.Center;
+            // Update damage indicator
+            _DamageIndicator.Position = _View.Center;
+            _DamageIndicator.Alpha -= 5 * deltaT;
         }
 
         protected override void Destroy()
@@ -348,17 +369,17 @@ namespace BlackTournament.Scenes
 
         public void CreatePlayer(int id, bool isLocalPlayer = false)
         {
-            var player = new Graphic(_Core)
+            var playerTexture = TextureLoader.Load(Files.Tex_CharacterBase);
+            var player = new Graphic(_Core, playerTexture)
             {
-                Name = "Player",
-                Texture = TextureLoader.Load("CharacterBase"),
-                Scale = new Vector2f(0.5f, 0.5f) // FIXME ?
+                Name = (isLocalPlayer ? "Local " : "") + "Player",
+                Origin = playerTexture.Size.ToVector2f() / 2,
+                Scale = _PlayerScale
             };
-            player.Origin = player.Texture.Size.ToVector2f() / 2;
             Layer_Game.Add(player);
             _EnitityLookup.Add(id, player);
 
-            // add player lights
+            // add player light
             _Lightmap.AddCustomLight(new PlayerLight(_Core, player, TextureLoader));
 
             if (isLocalPlayer) _LocalPlayer = player;
@@ -444,14 +465,32 @@ namespace BlackTournament.Scenes
                     // Not needed (yet)
                 break;
 
-                case EffectType.PlayerDrop: // TODO UNHACK
-                    _Sfx.Play(Files.Sfx_Highlight, position); // FIXME wrong sound
+                case EffectType.PlayerDrop:
+                    _Sfx.Play(Files.Sfx_Drop, position);
+                    // drop animation
+                    var tex = TextureLoader.Load(Files.Tex_CharacterBase);
+                    var dropper = new Graphic(_Core, tex)
+                    {
+                        Position = position,
+                        Origin = tex.Size.ToVector2f() / 2,
+                        Rotation = rotation,
+                        Scale = _PlayerScale,
+                    };
+                    Layer_Game.Add(dropper);
+
+                    _Core.AnimationManager.Run(1, 0, 0.5f,
+                    v =>
+                    {
+                        dropper.Alpha = v;
+                        dropper.Scale = _PlayerScale * v;
+                    },
+                    () => dropper.Dispose());
+                break;
+
+                case EffectType.Gore:
+                    _Sfx.Play(Files.Sfx_Hit, position);
                     CreateEffect(EffectType.PlayerImpact, position, rotation, source, primary, size);
-                    break;
-                case EffectType.Gore: // TODO UNHACK
-                    _Sfx.Play(Files.Sfx_Select, position); // FIXME wrong sound
-                    CreateEffect(EffectType.PlayerImpact, position, rotation, source, primary, size);
-                    break;
+                break;
 
                 case EffectType.Explosion:
                     _Sfx.Play(Files.Sfx_Explosion, position);
@@ -462,7 +501,7 @@ namespace BlackTournament.Scenes
                     _LightEmitterInfo.Scale = new Vector2f(0.9f, 0.9f);
                     _LightEmitter.Position = position;
                     _LightEmitter.Trigger();
-                    break;
+                break;
 
                 case EffectType.WallImpact:
                     _SparkInfo.Update(source);
@@ -487,6 +526,12 @@ namespace BlackTournament.Scenes
                     _SparkEmitter.Trigger();
                     _SparkInfo.Offset = new Vector2f();
                     _SparkInfo.Direction = null;
+                    // even more hacky :(
+                    if (_LocalPlayer.Position.DistanceBetweenSquared(position) < 250)
+                    {
+                        _DamageIndicator.Alpha = 0.75f;
+                        _Sfx.Play(Files.Sfx_Hit, position);
+                    }
                 break;
 
                 case EffectType.Pickup:
@@ -495,19 +540,19 @@ namespace BlackTournament.Scenes
                         case PickupType.SmallHealth:
                         case PickupType.SmallShield:
                             _Sfx.Play(Files.Sfx_Pickup3, position);
-                            break;
+                        break;
                         case PickupType.BigHealth:
                         case PickupType.BigShield:
                             _Sfx.Play(Files.Sfx_Pickup4, position);
-                            break;
+                        break;
                         case PickupType.Drake:
                         case PickupType.Hedgeshock:
                             _Sfx.Play(Files.Sfx_Pickup1, position);
-                            break;
+                        break;
                         case PickupType.Thumper:
                         case PickupType.Titandrill:
                             _Sfx.Play(Files.Sfx_Pickup2, position);
-                            break;
+                        break;
                     }
                     break;
 
