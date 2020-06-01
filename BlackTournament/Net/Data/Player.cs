@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using SFML.System;
+using BlackNet;
 
 namespace BlackTournament.Net.Data
 {
@@ -92,9 +93,10 @@ namespace BlackTournament.Net.Data
         public virtual int Ping { get; protected set; }
 
 
-        public Player(int id) : base(id)
+        public Player()
         {
         }
+
 
         protected override void SerializeInternal(NetOutgoingMessage m, bool fullSync)
         {

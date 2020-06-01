@@ -1,8 +1,8 @@
 ﻿#finalize projectile (weapon) lighting
-complete map powerplant
+#complete map powerplant
 -# collision, pickup, spawns
 -# lights
--- check radiation zone damage (postponed until HUD ready)
+-# check radiation zone damage (postponed until HUD ready)
 #fix net message crash when switching maps (somethings not properly disposed!)
 #fix UI focusloss mouse VS gamepad
 #fix UI broken keyboard/UI input
@@ -36,10 +36,7 @@ complete map powerplant
 #finalize launcher
 Xfix alpha inheritance - not possible - workaround is functional
 #fix redundant code in all entities
-
-comitt!
 # test polygon
-
 #fix random overload
 #fix UI textbox vs console collision
 #create & add launcher banner image
@@ -94,11 +91,11 @@ X idee: controller durch rollen ersetzen die am jeweiligen state hängen
 #add id-d shots & 
 #pickups to serialization chain
 
-UC create game data from parsed map data?
+# create game data from parsed map data?
 
 # create basic UI elements
 
-add MD5 comparison against map tampering / versioning
+? add MD5 comparison against map tampering / versioning
 
 Notes on Lighting:
     Pointlight

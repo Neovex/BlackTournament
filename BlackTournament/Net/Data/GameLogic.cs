@@ -5,14 +5,15 @@ using System.Linq;
 using SFML.System;
 using Lidgren.Network;
 
+using BlackNet;
+using BlackNet.Server;
+
 using BlackCoat;
-using BlackCoat.Network;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 
 using BlackTournament.InputMaps;
 using BlackTournament.Tmx;
-
 
 namespace BlackTournament.Net.Data
 {
@@ -43,7 +44,7 @@ namespace BlackTournament.Net.Data
             _Players = new List<ServerPlayer>();
             _Shots = new List<Shot>();
             _Effects = new List<Effect>();
-            _Pickups = _Map.Pickups.Select(p => new Pickup(NetIdProvider.NEXT_ID, p.Position, p.Item, p.Amount, p.RespawnTime, _Core.CollisionSystem)).ToArray();
+            _Pickups = _Map.Pickups.Select(p => new Pickup(p.Position, p.Item, p.Amount, p.RespawnTime, _Core.CollisionSystem)).ToArray();
         }
 
 
@@ -74,16 +75,15 @@ namespace BlackTournament.Net.Data
 
         private void HandlePlayerShoot(ServerPlayer player, bool primaryFire)
         {
-            var effect = new Effect(NetIdProvider.NEXT_ID, EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
+            var effect = new Effect(EffectType.Gunfire, player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire);
 
             var weaponData = WeaponData.Get(player.CurrentWeaponType, primaryFire);
             switch (weaponData.ProjectileGeometry)
             {
                 case Geometry.Point:
                     // Spawn Shot
-                    var s = new Shot(NetIdProvider.NEXT_ID, 
-                                    player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
-                                    weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL);
+                    var s = new Shot(player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
+                                     weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL);
                     // Check Collisions via Update Cycle
                     _Shots.Add(s);
                     break;
@@ -96,8 +96,7 @@ namespace BlackTournament.Net.Data
                 case Geometry.Circle:
                     // Spawn Shot
                     var circ = new CircleCollisionShape(_Core.CollisionSystem, player.WeaponSpawn, weaponData.Length);
-                    s = new Shot(NetIdProvider.NEXT_ID,
-                                 player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
+                    s = new Shot(player.WeaponSpawn, player.Rotation, player.CurrentWeaponType, primaryFire, player.Id,
                                  weaponData.Speed, weaponData.Damage, weaponData.BlastRadius, weaponData.TTL,
                                  p => circ.Position = p, circ);
                     // Check Collisions via Update Cycle
@@ -235,7 +234,7 @@ namespace BlackTournament.Net.Data
                         {
                             pickup.Active = false;
                             player.GivePickup(pickup.Type, pickup.Amount);
-                            _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Pickup, pickup.Position, 0, pickup.Type, false));
+                            _Effects.Add(new Effect(EffectType.Pickup, pickup.Position, 0, pickup.Type, false));
                         }
                     }
                     foreach (var killzone in _Map.Killzones) // Killzones
@@ -245,11 +244,11 @@ namespace BlackTournament.Net.Data
                             player.DamagePlayer(killzone.Damage * deltaT);
                             if (player.IsAlive)
                             {
-                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, _Core.Random.Next(0, 360), PickupType.None, false, killzone.Damage));
+                                _Effects.Add(new Effect(EffectType.PlayerImpact, player.Position, _Core.Random.Next(0, 360), PickupType.None, false, killzone.Damage));
                             }
                             else
                             {
-                                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, killzone.Effect, player.Position, player.Rotation, PickupType.None, false, killzone.Damage));
+                                _Effects.Add(new Effect(killzone.Effect, player.Position, player.Rotation, PickupType.None, false, killzone.Damage));
                                 switch (killzone.Effect)
                                 {
                                     case EffectType.PlayerDrop:
@@ -328,7 +327,7 @@ namespace BlackTournament.Net.Data
                     foreach (var wallIntersection in wallIintersectionPoints)
                     {
                         // add impact
-                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIntersection, rotation, player.CurrentWeaponType, primary));
+                        _Effects.Add(new Effect(EffectType.WallImpact, wallIntersection, rotation, player.CurrentWeaponType, primary));
                     }
                 }
                 else
@@ -339,7 +338,7 @@ namespace BlackTournament.Net.Data
                         // walls occlude ray weapons hence update the length for player intersections
                         length = impactlength;
                         // add impact
-                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
+                        _Effects.Add(new Effect(EffectType.WallImpact, wallIintersectionPoints[0], rotation, player.CurrentWeaponType, primary));
                     }
                 }
             }
@@ -358,7 +357,7 @@ namespace BlackTournament.Net.Data
             foreach (var pi in affectedPlayers)
             {
                 // add impacts
-                _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
+                _Effects.Add(new Effect(EffectType.PlayerImpact, pi.Intersections[0], rotation, player.CurrentWeaponType, primary));
                 // damage player
                 pi.Player.DamagePlayer(weaponData.Damage);
                 if (!pi.Player.IsAlive)
@@ -402,9 +401,8 @@ namespace BlackTournament.Net.Data
                         if (shot.Collision.CollisionGeometry == Geometry.Circle) intersects[0].Angle = MathHelper.ValidateAngle(shot.Position.AngleTowards(intersects[0].Position) + 90);
                     }
                     var (position, angle) = intersects[0];
-                    //_Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Environment, position, angle, shot.SourceWeapon, shot.Primary));
                     shot.Direction = MathHelper.CalculateReflectionAngle(shot.Direction, angle);
-                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                    _Effects.Add(new Effect(EffectType.WallImpact, position, shot.Direction, shot.SourceWeapon, shot.Primary));
                 }
                 else
                 {
@@ -419,7 +417,7 @@ namespace BlackTournament.Net.Data
                     else
                     {
                         // add impact
-                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.WallImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                        _Effects.Add(new Effect(EffectType.WallImpact, shot.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                     }
                     return;
                 }
@@ -438,7 +436,7 @@ namespace BlackTournament.Net.Data
                 else
                 {
                     // add impact
-                    _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
+                    _Effects.Add(new Effect(EffectType.PlayerImpact, player.Position, shot.Direction, shot.SourceWeapon, shot.Primary));
                     if (shot.IsPenetrating)
                     {
                         // damage player
@@ -468,7 +466,7 @@ namespace BlackTournament.Net.Data
             shot.Exploded = true;
 
             // Visualize
-            _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.Explosion, shot.Position, 0, shot.SourceWeapon, shot.Primary, shot.BlastRadius));
+            _Effects.Add(new Effect(EffectType.Explosion, shot.Position, 0, shot.SourceWeapon, shot.Primary, shot.BlastRadius));
 
             // Distribute Damage
             foreach (var player in _Players)
@@ -480,7 +478,7 @@ namespace BlackTournament.Net.Data
                     {
                         player.DamagePlayer(Math.Max(shot.Damage / 4, shot.Damage * (1 - (distance / shot.BlastRadius))));
                         // Add impact
-                        _Effects.Add(new Effect(NetIdProvider.NEXT_ID, EffectType.PlayerImpact, player.Position, shot.Position.AngleTowards(player.Position), shot.SourceWeapon, shot.Primary));
+                        _Effects.Add(new Effect(EffectType.PlayerImpact, player.Position, shot.Position.AngleTowards(player.Position), shot.SourceWeapon, shot.Primary));
 
                         if (!player.IsAlive)
                         {

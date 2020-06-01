@@ -1,9 +1,9 @@
 ﻿using System;
 using SFML.Graphics;
+using BlackNet.Server;
 using BlackCoat;
 using BlackCoat.UI;
 using BlackCoat.AssetHandling;
-using BlackTournament.Net.Data;
 
 namespace BlackTournament.UI
 {

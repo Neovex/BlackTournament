@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using SFML.System;
+using BlackNet;
 
 namespace BlackTournament.Net.Data
 {
@@ -26,17 +27,17 @@ namespace BlackTournament.Net.Data
         public float Size { get; set; }
 
 
-        public Effect(int id, NetIncomingMessage m) : base(id, m)
-        {
-        }
-
-        public Effect(int id, EffectType type, Vector2f position) : base(id)
+        public Effect(EffectType type, Vector2f position)
         {
             EffectType = type;
             Position = position;
         }
+        public Effect(int id, NetIncomingMessage m) : base(id, m)
+        {
+        }
 
-        public Effect(int id, EffectType type, Vector2f position, float rotation, PickupType source, bool primary, float size = 0) : this(id, type, position)
+
+        public Effect(EffectType type, Vector2f position, float rotation, PickupType source, bool primary, float size = 0) : this(type, position)
         {
             Rotation = rotation;
             Source = source;

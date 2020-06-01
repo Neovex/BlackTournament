@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
-using BlackCoat.Network;
+using BlackNet;
+using BlackNet.Client;
 using BlackTournament.InputMaps;
 using BlackTournament.Net.Data;
 using BlackTournament.Properties;
-using System.Net;
 
 namespace BlackTournament.Net
 {
@@ -179,7 +180,8 @@ namespace BlackTournament.Net
             var entityCount = msg.ReadInt32();
             for (int i = 0; i < entityCount; i++)
             {
-                _PlayerLookup[msg.ReadInt32()].Deserialize(msg);
+                var id = msg.ReadInt32();
+                _PlayerLookup[id].Deserialize(msg);
             }
 
             // Pickups

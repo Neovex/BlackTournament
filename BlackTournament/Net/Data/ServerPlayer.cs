@@ -5,9 +5,9 @@ using System.Linq;
 using SFML.System;
 using Lidgren.Network;
 
+using BlackNet.Server;
+
 using BlackCoat;
-using BlackCoat.Network;
-using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 
 using BlackTournament.InputMaps;
@@ -37,9 +37,10 @@ namespace BlackTournament.Net.Data
         public event Action<ServerPlayer, Boolean> ShotFired = (pl, pr) => { };
 
 
-        public ServerPlayer(ServerUser<NetConnection> user, CircleCollisionShape collision) : base(user.Id)
+        public ServerPlayer(ServerUser<NetConnection> user, CircleCollisionShape collision)
         {
             User = user;
+            Id = user.Id;
             Input = new HashSet<GameAction>();
             Collision = collision;
             Collision.Position = Position;
@@ -154,7 +155,7 @@ namespace BlackTournament.Net.Data
             }
         }
 
-        public void GivePickup(PickupType pickup, int amount = 0) // TODO : move this into pickup, grant write access via method or prop
+        public void GivePickup(PickupType pickup, int amount = 0)
         {
             switch (pickup)
             {

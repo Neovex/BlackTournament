@@ -6,6 +6,8 @@ using SFML.System;
 using SFML.Audio;
 using SFML.Graphics;
 
+using BlackNet.Server;
+
 using BlackCoat;
 using BlackCoat.UI;
 using BlackCoat.Entities;
@@ -15,7 +17,7 @@ using BlackCoat.AssetHandling;
 using BlackTournament.UI;
 using BlackTournament.InputMaps;
 using BlackTournament.Properties;
-using BlackTournament.Net.Data;
+
 
 namespace BlackTournament.Scenes
 {

@@ -42,21 +42,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Librarys\Failsafe.cs">
-      <Link>Failsafe.cs</Link>
-    </Compile>
     <Compile Include="Controller\ConnectController.cs" />
     <Compile Include="Controller\LightController.cs" />
     <Compile Include="Controller\MapController.cs" />
@@ -83,8 +76,6 @@
     <Compile Include="Net\Data\ServerWeapon.cs" />
     <Compile Include="Scenes\LightEditor.cs" />
     <Compile Include="Net\NetMessage.cs" />
-    <Compile Include="Net\NetworkManagementClient.cs" />
-    <Compile Include="Net\Data\ServerInfo.cs" />
     <Compile Include="Particles\FireInfo.cs" />
     <Compile Include="Particles\ImpactInfo.cs" />
     <Compile Include="Particles\LightningEmitter.cs" />
@@ -106,7 +97,6 @@
     <Compile Include="Scenes\TournamentIntro.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Scenes\ConnectScene.cs" />
-    <Compile Include="Net\Data\NetEntityBase.cs" />
     <Compile Include="Net\BlackTournamentClient.cs" />
     <Compile Include="Net\BlackTournamentServer.cs" />
     <Compile Include="Net\Data\Pickup.cs" />
@@ -114,7 +104,6 @@
     <Compile Include="Net\Data\ServerPlayer.cs" />
     <Compile Include="Net\Data\Shot.cs" />
     <Compile Include="Net\Data\Weapon.cs" />
-    <Compile Include="Net\ManagementMessage.cs" />
     <Compile Include="Net\Net.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -421,6 +410,14 @@
     <ProjectReference Include="..\..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj">
       <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
       <Name>BlackCoat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Librarys\BlackNet\BlackNet.csproj">
+      <Project>{1c1b6d54-0079-48c7-99c1-56cfdbbe1d35}</Project>
+      <Name>BlackNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Librarys\TinyTools\TinyTools.csproj">
+      <Project>{0e401db7-d512-4181-8f4a-ad074a2d994a}</Project>
+      <Name>TinyTools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

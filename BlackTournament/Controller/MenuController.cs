@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-using BlackTournament.Properties;
+using BlackNet.Client;
 using BlackTournament.Scenes;
-using BlackTournament.Net;
+using BlackTournament.Properties;
 
 namespace BlackTournament.Controller
 {
@@ -63,7 +63,7 @@ namespace BlackTournament.Controller
 
         private void HandleSceneServerBrowserOpen()
         {
-            _NetworkManagementClient = new NetworkManagementClient();
+            _NetworkManagementClient = new NetworkManagementClient(Game.ID);
             _NetworkManagementClient.LanServersUpdated += HandleLanServersUpdated;
             _NetworkManagementClient.WanServersUpdated += HandleWanServersUpdated;
             _NetworkManagementClient.DiscoverLanServers(Net.Net.DEFAULT_PORT);

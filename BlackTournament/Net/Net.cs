@@ -1,5 +1,5 @@
 ﻿using System;
-using BlackCoat.Network;
+using BlackNet;
 
 namespace BlackTournament.Net
 {

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lidgren.Network;
 using SFML.System;
+using BlackNet;
 using BlackCoat;
 using BlackCoat.Collision;
 
@@ -47,10 +44,9 @@ namespace BlackTournament.Net.Data
         public bool Exploded { get; set; }
 
 
-        public Shot(int id,
-                    Vector2f weaponSpawn, float orientation, PickupType weapon, bool primary, int owner,
+        public Shot(Vector2f weaponSpawn, float orientation, PickupType weapon, bool primary, int owner,
                     float speed, float damage, float blastRadius, float ttl, 
-                    Action<Vector2f> updatePosition = null, ICollisionShape collision = null) : base(id)
+                    Action<Vector2f> updatePosition = null, ICollisionShape collision = null)
         {
             Position = weaponSpawn;
             Direction = orientation;
@@ -67,10 +63,10 @@ namespace BlackTournament.Net.Data
             _UpdatePosition = updatePosition;
             Collision = collision;
         }
-
         public Shot(int id, NetIncomingMessage m) : base(id, m)
         {
         }
+
 
         public void Update(float deltaT)
         {

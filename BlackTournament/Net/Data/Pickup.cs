@@ -1,8 +1,9 @@
 ﻿using System;
 using Lidgren.Network;
 using SFML.System;
-using BlackCoat.Collision.Shapes;
+using BlackNet;
 using BlackCoat.Collision;
+using BlackCoat.Collision.Shapes;
 
 namespace BlackTournament.Net.Data
 {
@@ -33,7 +34,7 @@ namespace BlackTournament.Net.Data
         public event Action<Pickup> ActiveStateChanged = p => { };
 
 
-        public Pickup(int id, Vector2f position, PickupType type, int amount, float respawnTime, CollisionSystem collisionSystem) : base(id)
+        public Pickup(Vector2f position, PickupType type, int amount, float respawnTime, CollisionSystem collisionSystem)
         {
             Active = true;
             Position = position;
@@ -42,10 +43,10 @@ namespace BlackTournament.Net.Data
             RespawnTime = _RespawnTime = respawnTime;
             CreateCollision(collisionSystem);
         }
-
         public Pickup(int id, NetIncomingMessage m) : base(id, m)
         {
         }
+
 
         public void Update(float deltaT)
         {

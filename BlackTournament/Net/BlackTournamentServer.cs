@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
+using BlackNet.Server;
 using BlackCoat;
-using BlackCoat.Network;
 using BlackTournament.Tmx;
 using BlackTournament.InputMaps;
 using BlackTournament.Net.Data;

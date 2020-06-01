@@ -73,7 +73,16 @@ namespace BlackTournament.Scenes
                         break;
                 }
             }
-            //TODO: add marker 4 pickup locations
+            //marker 4 pickup locations
+            foreach (var pickup in _MapData.Pickups)
+            {
+                var marker = new Rectangle(_Core, new Vector2f(4, 4), Color.Magenta, Color.White)
+                {
+                    Origin = new Vector2f(2, 2),
+                    Position = pickup.Position
+                };
+                Layer_Game.Add(marker);
+            }
 
             // Setup Lighting
             _Lightmap = new Lightmap(_Core, new Vector2f(_MapData.TileSize.X * _MapData.Size.X, _MapData.TileSize.Y * _MapData.Size.Y));

@@ -12,8 +12,9 @@ namespace BlackTournament.Net.Data
     {
         public String Alias { get; }
 
-        public ClientPlayer(int id, string alias) : base(id)
+        public ClientPlayer(int id, string alias)
         {
+            Id = id;
             Alias = alias;
         }
     }

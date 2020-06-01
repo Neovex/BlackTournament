@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Linq;
-
 using SFML.System;
-
 using BlackCoat;
 using BlackCoat.Entities;
-using BlackTournament.Entities;
 
 namespace BlackTournament.Scenes
 {
@@ -31,12 +27,12 @@ namespace BlackTournament.Scenes
 
         protected override void Update(float deltaT)
         {
-            // todo: add some fancy waiting animation here
         }
 
         protected override void Destroy()
         {
             Layer_Game.Remove(_Text);
+            _Text = null;
         }
     }
 }
