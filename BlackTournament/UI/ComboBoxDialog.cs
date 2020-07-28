@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlackTournament.UI
 {
-    class ComboBoxDialog : OffsetContainer
+    class ComboBoxDialog : OffsetContainer // TODO : move to engine
     {
         public event Action<String> ItemSelected = s => { };
 

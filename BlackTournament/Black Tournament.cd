@@ -1,0 +1,461 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="                                BLACK TOURNAMENT">
+    <Position X="0.68" Y="0.5" Height="0.291" Width="3.675" />
+  </Comment>
+  <Comment CommentText="Support Classes">
+    <Position X="1.81" Y="2.735" Height="0.291" Width="1.105" />
+  </Comment>
+  <Comment CommentText="Main Menue">
+    <Position X="1.676" Y="6.173" Height="0.291" Width="0.904" />
+  </Comment>
+  <Comment CommentText="UI Additions">
+    <Position X="1.676" Y="7.853" Height="0.291" Width="0.874" />
+  </Comment>
+  <Comment CommentText="Loading Screen">
+    <Position X="7.146" Y="8.856" Height="0.291" Width="1.078" />
+  </Comment>
+  <Comment CommentText="Input Management">
+    <Position X="10.672" Y="1.603" Height="0.291" Width="1.281" />
+  </Comment>
+  <Comment CommentText="Network">
+    <Position X="10.908" Y="4.743" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="    HUD">
+    <Position X="12.572" Y="7.103" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="Core Game">
+    <Position X="6.603" Y="1.612" Height="0.291" Width="0.81" />
+  </Comment>
+  <Comment CommentText="Particle Effect Definitions">
+    <Position X="21.092" Y="1.426" Height="0.291" Width="1.612" />
+  </Comment>
+  <Comment CommentText="Gameplay Arena">
+    <Position X="15.642" Y="1.599" Height="0.291" Width="1.11" />
+  </Comment>
+  <Class Name="BlackTournament.Files" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBBBA6WChCBAmAgAAAACIgAAhQHDEDMEkEQIIKAKgCY=</HashCode>
+      <FileName>Files.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Game">
+    <Position X="6.25" Y="2" Width="1.5" />
+    <AssociationLine Name="MenuController" Type="BlackTournament.Controller.MenuController" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="4.638" />
+        <Point X="1.25" Y="4.638" />
+        <Point X="1.25" Y="5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.928" Y="0.434" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QKQCAAAAAmQIgAAAAAAgAIAAggAACEAAQAQAIAIBQAI=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+      <Property Name="Core" />
+      <Property Name="MenuController" />
+      <Property Name="ConnectController" />
+      <Property Name="MapController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.SettingsAdapter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAABABAAAAAAAQAAAAAAAQgAAEAIAAAAAAAAAA=</HashCode>
+      <FileName>SettingsAdapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.SettingsTab" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIBAAAAGAAAhAAAACAAAACAAAAAgAAAAAAAAQAAAA=</HashCode>
+      <FileName>SettingsTab.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.WeaponData" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAACBBAABEAJCAAEEAADFAAQQAAAAAQAEAAABAAQ=</HashCode>
+      <FileName>WeaponData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Programm" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAABAAAAAA=</HashCode>
+      <FileName>Programm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_BlackTournament" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Controller.MapController" Collapsed="true">
+    <Position X="10.5" Y="3.5" Width="1.5" />
+    <AssociationLine Name="_UiInput" Type="BlackTournament.InputMaps.UIInputMap">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.928" Y="0.095" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="LocalPlayer" Type="BlackTournament.Net.Data.ClientPlayer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.016" Y="0.139" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAUACAAAEgAABAAAgEgAAAwECJAlAgEAAgggAEAQA=</HashCode>
+      <FileName>Controller\MapController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+      <Field Name="_Scene" />
+      <Field Name="_GameInput" />
+      <Field Name="_UiInput" />
+      <Property Name="LocalPlayer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Controller.MenuController" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <AssociationLine Name="_NetworkManagementClient" Type="BlackNet.Client.NetworkManagementClient" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2" Y="5.25" />
+        <Point X="4.312" Y="5.25" />
+        <Point X="4.312" Y="5.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.574" Y="0.331" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAIEAAAAAAAAABAAAAEBAABghAAIAAAEACCAAAAAAA=</HashCode>
+      <FileName>Controller\MenuController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Scene" />
+      <Field Name="_NetworkManagementClient" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Controller.ConnectController" Collapsed="true">
+    <Position X="6.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAABAAAAEAAAAgAAAAEAIUIAAAAAAIAA=</HashCode>
+      <FileName>Controller\ConnectController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Client" />
+      <Field Name="_Scene" />
+      <Field Name="_ServerInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackCoat.Core" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
+    <Position X="8.75" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQQAQAEAwAAAIAAAADUKEIAISRAsDEEAACCAAwAABAA=</HashCode>
+      <FileName>Net\BlackTournamentClient.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Player" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Scenes.MainMenu" Collapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQBgCdBGgwFAMGREgJEBQEpEohAARQAYCoAkAEiBgA=</HashCode>
+      <FileName>Scenes\MainMenu.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_SelectedServer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackNet.Client.NetworkManagementClient" Collapsed="true">
+    <Position X="3.25" Y="5.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackTournament.UI.BigButton" Collapsed="true">
+    <Position X="1.25" Y="8.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABCAQQAAAAAABAEAAACAAAAAAAAgAAAAAAQAAACAAgA=</HashCode>
+      <FileName>UI\BigButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.UI.ComboBoxDialog" Collapsed="true">
+    <Position X="0.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAQAACAAAACAAAAAAAAAAAAAAAAAAAAAAAQgA=</HashCode>
+      <FileName>UI\ComboBoxDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.UI.HUD" Collapsed="true">
+    <Position X="14" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQBBCAgAACEAgBgAAAEAYEAAwACLAZyAAAEAAAAAAQA=</HashCode>
+      <FileName>UI\HUD.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ScoreBoard" />
+      <Property Name="Menu" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_WeaponLookup" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BlackTournament.UI.InGameMenu" Collapsed="true">
+    <Position X="11.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>UI\InGameMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.UI.ScoreBoard" Collapsed="true">
+    <Position X="14" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQBAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI\ScoreBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.UI.ServerListItem" Collapsed="true">
+    <Position X="2.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACCIBAGACACAAAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>UI\ServerListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.UI.WeaponIcon" Collapsed="true">
+    <Position X="14" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>UI\WeaponIcon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackNet.Server.ServerInfo" Collapsed="true">
+    <Position X="3.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackTournament.Scenes.ConnectScene" Collapsed="true">
+    <Position X="6.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAiAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scenes\ConnectScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.InputMaps.GameInputMap" Collapsed="true">
+    <Position X="9.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputMaps\GameInputMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.InputMaps.UIInputMap" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputMaps\UIInputMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Scenes.MapScene">
+    <Position X="16.5" Y="2.25" Width="1.5" />
+    <AssociationLine Name="_ParticleEmitterHost" Type="BlackCoat.ParticleSystem.ParticleEmitterHost" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.25" Y="2.25" />
+        <Point X="17.25" Y="0.765" />
+        <Point X="20.5" Y="0.765" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_TracerLinesInfo" Type="BlackTournament.Particles.LineInfo" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.375" Y="8.617" />
+        <Point X="17.375" Y="9.346" />
+        <Point X="20.25" Y="9.346" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_TracerLinesEmitter" Type="BlackTournament.Particles.LineEmitter">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.007" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_LigtningInfo" Type="BlackTournament.Particles.LightningInfo" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.062" Y="8.617" />
+        <Point X="17.062" Y="10.066" />
+        <Point X="23.5" Y="10.066" />
+        <Point X="23.5" Y="9.691" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_LigtningEmitter" Type="BlackTournament.Particles.LightningEmitter" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18" Y="7.627" />
+        <Point X="23.438" Y="7.627" />
+        <Point X="23.438" Y="8" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_ImpactInfo" Type="BlackTournament.Particles.ImpactInfo" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.562" Y="2.25" />
+        <Point X="17.562" Y="1.875" />
+        <Point X="23.5" Y="1.875" />
+        <Point X="23.5" Y="2.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_ImpactEmitter" Type="BlackCoat.ParticleSystem.EmitterComposition">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.119" Y="-0.23" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_ExplosionInfo" Type="BlackTournament.Particles.SmokeInfo" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18" Y="6.221" />
+        <Point X="23.5" Y="6.221" />
+        <Point X="23.5" Y="3.941" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_WaveInfo" Type="BlackCoat.ParticleSystem.TextureParticleInitializationInfo">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="-0.221" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_ExplosionEmitter" Type="BlackCoat.ParticleSystem.EmitterComposition">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.092" Y="0.065" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_LightEmitterInfo" Type="BlackCoat.ParticleSystem.TextureParticleInitializationInfo">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.084" Y="0.056" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_LightEmitter" Type="BlackCoat.ParticleSystem.TextureEmitter" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18" Y="7.5" />
+        <Point X="23.531" Y="7.5" />
+        <Point X="23.531" Y="7.191" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EASHkgGAggEAAIGEAGKAAAECgCBACMQSAAAEKAAAICA=</HashCode>
+      <FileName>Scenes\MapScene.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_UiInput" />
+      <Field Name="_MapData" />
+      <Field Name="_ParticleEmitterHost" />
+      <Field Name="_TracerLinesInfo" />
+      <Field Name="_TracerLinesEmitter" />
+      <Field Name="_LigtningInfo" />
+      <Field Name="_LigtningEmitter" />
+      <Field Name="_SparkEmitter" />
+      <Field Name="_SparkInfo" />
+      <Field Name="_ImpactInfo" />
+      <Field Name="_ImpactEmitter" />
+      <Field Name="_ExplosionInfo" />
+      <Field Name="_WaveInfo" />
+      <Field Name="_ExplosionEmitter" />
+      <Field Name="_SmokeTrailEmitter" />
+      <Field Name="_LightEmitterInfo" />
+      <Field Name="_LightEmitter" />
+      <Property Name="HUD" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BlackTournament.Net.Data.ClientPlayer" Collapsed="true">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Data\ClientPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.EmitterComposition" Collapsed="true">
+    <Position X="19.75" Y="2.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlackTournament.Particles.SmokeInfo" Collapsed="true">
+    <Position X="22.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAIAABAIAAAAAAAAAAAAAAAIAAAAEgAA=</HashCode>
+      <FileName>Particles\SmokeInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Particles.ImpactInfo" Collapsed="true">
+    <Position X="22.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAIAAAAAgAA=</HashCode>
+      <FileName>Particles\ImpactInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.TextureEmitter" Collapsed="true">
+    <Position X="22.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.TextureParticleInitializationInfo" Collapsed="true">
+    <Position X="19.75" Y="3.25" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackTournament.Particles.LightningEmitter" Collapsed="true">
+    <Position X="22.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Particles\LightningEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Particles.LightningInfo" Collapsed="true">
+    <Position X="22.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAABAAAQAABAEAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Particles\LightningInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Tmx.TmxMapper" Collapsed="true">
+    <Position X="14" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgAAAAABAgAGAAAAAAEQCMgIAAEgEAgAAEAAEAAI=</HashCode>
+      <FileName>Tmx\TmxMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.ParticleEmitterHost" Collapsed="true">
+    <Position X="20.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackTournament.Particles.SmokeTrailEmitter" Collapsed="true">
+    <Position X="20" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Particles\SmokeTrailEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.PixelEmitter" Collapsed="true">
+    <Position X="20.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BlackTournament.Particles.SparkInfo" Collapsed="true">
+    <Position X="20.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAAAAAAAABCAAAAAAIAAAAAAAAAIAAAAEgAQ=</HashCode>
+      <FileName>Particles\SparkInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Particles.LineEmitter" Collapsed="true">
+    <Position X="20.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Particles\LineEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlackTournament.Particles.LineInfo" Collapsed="true">
+    <Position X="20.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Particles\LineInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

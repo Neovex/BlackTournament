@@ -5,15 +5,17 @@ namespace BlackTournament
 {
     public static class Programm
     {
+        private static Game _BlackTournament;
+
         [STAThread] // Required for the Light-Editors Save/Load dialog
         public static void Main(string[] args)
         {
-            var blackTournament = new Game();
+            _BlackTournament = new Game();
 #if !DEBUG
             Failsafe.Enable(e => Log.Fatal(e));
 #endif
-            blackTournament.Run(String.Join(" ", args ?? Enumerable.Empty<String>()));
-            blackTournament = null;
+            _BlackTournament.Run(String.Join(" ", args ?? Enumerable.Empty<String>()));
+            _BlackTournament = null;
         }
     }
 }

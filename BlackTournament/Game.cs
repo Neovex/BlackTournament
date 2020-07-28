@@ -12,7 +12,7 @@ using BlackCoat;
 using BlackTournament.Net;
 using BlackTournament.Properties;
 using BlackTournament.Controller;
-
+using BlackTournament.Scenes;
 
 namespace BlackTournament
 {
@@ -38,7 +38,6 @@ namespace BlackTournament
 
 
         public Core Core { get; private set; }
-        public TestController TestController { get; private set; }
         public MenuController MenuController { get; private set; }
         public ConnectController ConnectController { get; private set; }
         public MapController MapController { get; private set; }
@@ -90,7 +89,6 @@ namespace BlackTournament
                     Core.InitializeFontHack(StyleFont);
 
                     // Init Game
-                    TestController = new TestController(this);
                     MenuController = new MenuController(this);
                     ConnectController = new ConnectController(this);
                     MapController = new MapController(this);
@@ -170,10 +168,6 @@ namespace BlackTournament
             {
                 switch (commandData[0].ToLower())
                 {
-                    case "test":
-                        TestController.Activate();
-                        return true;
-
                     case "state":
                         Log.Info("Current State:", Core.SceneManager.CurrentSceneName);
                         return true;
