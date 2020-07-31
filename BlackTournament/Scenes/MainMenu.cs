@@ -63,7 +63,7 @@ namespace BlackTournament.Scenes
         private Canvas _ServerBrowser;
         private OffsetContainer _ServerList;
         private BigButton _BrowseRefreshButton;
-        private BigButton _BrowseBackButton;
+        private BigButton _BrowseCancelButton;
         private BigButton _BrowseDirectConnectButton;
         private BigButton _BrowseJoinButton;
         private AlignedContainer _DirectConnectDialog;
@@ -233,14 +233,14 @@ namespace BlackTournament.Scenes
                                         {
                                             Init = new UIComponent[]
                                             {
-                                                _BrowseBackButton = new BigButton(_Core, TextureLoader, _Sfx, "Back")
-                                                {
-                                                    InitReleased = ButtonClicked
-                                                },
                                                 _BrowseRefreshButton = new BigButton(_Core, TextureLoader, _Sfx, "Refresh")
                                                 {
                                                     InitReleased = ButtonClicked
                                                 },
+                                                _BrowseDirectConnectButton = new BigButton(_Core, TextureLoader, _Sfx, "Direct Connect")
+                                                {
+                                                    InitReleased = ButtonClicked
+                                                }
                                             }
                                         },
                                         new Canvas(_Core, new Vector2f(100, 100))
@@ -261,7 +261,7 @@ namespace BlackTournament.Scenes
                                         {
                                             Init = new UIComponent[]
                                             {
-                                                _BrowseDirectConnectButton = new BigButton(_Core, TextureLoader, _Sfx, "Direct Connect")
+                                                _BrowseCancelButton = new BigButton(_Core, TextureLoader, _Sfx, "Cancel")
                                                 {
                                                     InitReleased = ButtonClicked
                                                 },
@@ -428,7 +428,7 @@ namespace BlackTournament.Scenes
             if (button == _CreditsBackButton) OpenCredits(false);
             if (button == _ExitButton) _Core.Exit(nameof(MainMenu));
             // Server Browser
-            if (button == _BrowseBackButton) OpenServerBrowser(false);
+            if (button == _BrowseCancelButton) OpenServerBrowser(false);
             if (button == _BrowseRefreshButton) ServerBrowserRefresh.Invoke();
             if (button == _BrowseDirectConnectButton) ToggleDirectConnectDialog();
             if (button == _BrowseJoinButton)

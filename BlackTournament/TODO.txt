@@ -41,8 +41,8 @@ Xfix alpha inheritance - not possible - workaround is functional
 #fix UI textbox vs console collision
 #create & add launcher banner image
 #fix power plant radiation zone damage values
-add damage sounds (and effects)
-add death sounds (and effects)
+#add damage sounds (and effects)
+#add death sounds (and effects)
 #finish pickup sounds (sounds already picked and added - implement, test & make sure volumes are ok)
 #fix general pickup respawn times!
 #fix special pickup times -> weapons 20sek big shield 35 sek
@@ -59,8 +59,8 @@ add death sounds (and effects)
 #fix caret color not following text color
 #fix initial weapon cooldown
 #(add damage indicator - with sounds)
-(complete map temple)
-(env sounds?)
+#(complete map temple)
+X(env sounds?)
 
 (consider UI Markup)
 (consider Particle Markup)

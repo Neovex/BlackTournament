@@ -1,30 +1,238 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="1">
- <tileset firstgid="1" name="Aztek" tilewidth="128" tileheight="128" tilecount="380" columns="10">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="93">
+ <tileset firstgid="1" name="AztekTiles" tilewidth="128" tileheight="128" tilecount="380" columns="10">
   <image source="../Assets/Textures/AztekTiles.png" width="1280" height="4864"/>
  </tileset>
- <layer name="Tile Layer 1" width="20" height="20">
+ <layer id="3" name="Tiles" width="30" height="30" locked="1">
+  <properties>
+   <property name="RenderOrder" type="int" value="0"/>
+   <property name="TilesetName" value="AztekTiles"/>
+  </properties>
   <data encoding="csv">
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,
-185,185,187,183,51,53,43,54,5,6,220,16,242,242,242,243,185,185,185,185,
-185,185,187,183,62,63,63,64,14,16,17,62,63,63,64,253,217,218,185,185,
-185,185,187,183,62,89,90,64,14,16,17,62,89,90,64,253,227,228,185,185,
-185,185,187,183,62,99,100,64,14,21,11,62,99,100,64,253,237,238,185,185,
-252,185,16,183,62,63,63,64,14,16,17,62,63,63,64,253,247,248,185,185,
-262,185,26,183,62,63,63,64,14,16,17,62,63,63,64,14,365,185,185,185,
-225,183,185,194,71,57,73,80,25,26,27,72,185,185,185,185,185,185,185,185,
-235,0,142,187,185,185,185,185,185,185,225,309,310,209,210,214,216,225,225,185,
-302,0,362,362,363,365,333,335,185,185,225,319,320,219,220,234,236,225,225,225,
-295,0,115,187,187,187,174,175,185,185,225,289,290,229,230,211,213,225,225,225,
-305,0,92,187,63,89,243,185,185,185,225,299,300,239,240,231,233,225,225,225,
-305,0,102,187,73,74,263,185,185,185,225,252,253,185,186,222,224,225,225,225,
-245,0,16,185,185,185,185,185,185,185,225,225,225,225,225,225,225,225,225,225
+171,195,195,195,195,173,156,134,113,104,83,87,36,37,81,83,34,35,21,81,106,111,136,153,171,195,173,357,357,357,
+186,255,241,265,243,184,161,146,134,113,104,83,46,47,96,93,44,45,81,106,111,136,144,163,186,255,184,357,357,357,
+186,255,251,284,253,194,210,161,146,134,113,104,105,105,106,104,105,105,106,111,136,144,163,171,196,255,184,357,357,357,
+186,255,261,262,263,174,193,13,161,146,134,135,135,135,135,135,135,135,135,136,144,163,171,196,255,255,184,357,357,357,
+186,255,255,255,174,193,171,195,210,161,145,145,145,145,145,145,145,145,145,145,163,171,196,241,265,243,184,357,357,357,
+186,255,174,192,193,171,196,255,194,210,52,53,77,54,5,7,52,53,77,54,171,196,255,251,285,253,194,173,357,357,
+186,255,194,51,55,196,255,255,255,184,68,63,63,64,15,17,68,63,63,64,186,255,255,261,262,263,255,184,357,357,
+186,255,255,202,203,255,255,255,255,184,61,63,63,65,15,17,61,63,63,65,186,255,255,255,255,255,255,184,357,357,
+186,255,255,207,188,255,255,255,255,184,61,63,63,65,15,17,61,63,63,65,186,255,255,255,255,255,255,194,173,357,
+186,255,255,207,182,255,255,255,255,194,68,63,63,64,25,27,68,63,63,64,196,255,255,174,175,176,255,255,184,357,
+186,255,201,204,206,255,255,255,255,255,198,197,202,206,203,255,202,206,203,206,255,255,255,184,157,186,255,255,184,357,
+186,255,207,255,182,255,255,255,255,255,187,198,182,198,255,255,201,187,207,255,188,255,255,194,195,196,255,255,184,357,
+186,255,205,255,182,255,174,175,175,176,205,182,198,205,188,204,197,201,174,175,176,255,255,255,255,255,255,255,184,357,
+186,255,255,203,205,255,184,209,210,186,255,188,208,208,203,206,207,174,193,167,186,255,255,255,255,255,255,255,184,357,
+186,255,207,202,206,255,184,219,220,186,198,205,255,255,198,255,203,184,177,171,196,255,255,255,255,255,255,255,194,173,
+186,255,182,201,255,255,194,173,185,191,176,207,201,198,201,255,198,194,195,196,255,211,212,212,212,212,212,213,255,184,
+196,201,198,187,255,255,255,184,185,185,186,208,255,182,188,255,202,255,255,255,255,221,222,222,222,222,222,223,255,184,
+174,62,63,64,176,255,255,184,185,158,186,201,202,188,187,197,255,255,255,255,255,231,232,232,232,232,232,233,255,184,
+184,61,63,65,186,255,255,194,195,195,196,201,204,204,188,202,255,255,255,255,255,255,255,255,255,255,255,255,174,193,
+184,61,63,65,186,255,255,255,255,255,255,187,204,198,187,201,255,255,174,175,175,175,176,255,255,255,255,255,184,357,
+184,62,63,64,191,176,255,255,255,255,208,202,204,201,255,255,255,255,184,178,178,178,186,255,255,255,255,255,184,357,
+184,71,73,75,185,191,175,176,255,255,203,198,202,255,255,255,255,255,194,195,195,195,196,255,255,255,255,174,193,357,
+184,185,185,185,185,185,185,191,176,174,62,63,64,176,255,255,255,255,255,255,255,255,255,255,255,255,255,184,357,357,
+193,185,168,185,185,185,185,185,186,184,61,63,65,186,255,211,212,213,255,255,255,255,255,255,255,255,174,193,357,357,
+5,1,1,7,185,185,185,185,186,184,61,63,65,186,255,221,222,223,255,174,175,176,255,255,255,255,184,357,357,357,
+15,217,218,17,185,185,185,185,186,184,62,63,64,186,255,231,232,233,255,184,158,186,255,255,255,174,193,357,357,357,
+15,227,228,11,185,185,185,185,191,193,71,73,75,191,176,255,255,255,255,194,195,196,255,255,255,184,357,357,357,357,
+15,237,238,17,185,158,185,185,185,185,185,185,185,185,191,176,255,255,255,255,255,255,255,255,255,184,357,357,357,357,
+15,247,248,11,185,185,185,185,185,185,185,178,185,185,185,191,176,255,255,255,255,255,255,255,174,193,357,357,357,357,
+25,26,26,27,171,195,195,195,195,195,195,195,195,195,195,173,191,175,175,175,175,175,175,175,193,357,357,357,357,357
 </data>
  </layer>
+ <objectgroup id="5" name="Collision" locked="1">
+  <object id="1" type="Collision" x="-15.1515" y="-15.1515" width="91.03" height="2207.57"/>
+  <object id="2" type="Collision" x="57.5758" y="3142.18" width="390.667" height="656.121"/>
+  <object id="3" type="Collision" x="305.333" y="3761.33" width="2916" height="84"/>
+  <object id="4" type="Collision" x="1052" y="2926" width="52" height="500"/>
+  <object id="8" type="Collision" x="629.333" y="864">
+   <polygon points="-6.66667,3.33333 -6,-54.6667 260,-315.333 261.333,-272"/>
+  </object>
+  <object id="9" type="Collision" x="829.333" y="441.333">
+   <polygon points="14.6667,-39.3333 -308.667,279.334 -308,242.667 14.6667,-78.6667"/>
+  </object>
+  <object id="12" type="Collision" x="50.485" y="2176.55" width="91.03" height="965.567"/>
+  <object id="13" type="Collision" x="389.818" y="683.883" width="131.697" height="36.9"/>
+  <object id="14" type="Collision" x="390" y="684.667">
+   <polygon points="0.666667,0.666667 0.666667,173.333 -86,85.3333"/>
+  </object>
+  <object id="15" type="Collision" x="64.8183" y="-10.1167" width="3414.12" height="79.9"/>
+  <object id="17" type="Collision" x="3382.49" y="57.8833" width="91.03" height="580.233"/>
+  <object id="18" type="Collision" x="3453.15" y="615.217" width="91.03" height="81.5667"/>
+  <object id="19" type="Collision" x="3509.15" y="663.217" width="91.03" height="354.9"/>
+  <object id="20" type="Collision" x="3641.15" y="1000.55" width="91.03" height="781.567"/>
+  <object id="21" type="Collision" x="3578.49" y="973.883" width="91.03" height="101.567"/>
+  <object id="22" type="Collision" x="3763.82" y="1784.55" width="91.03" height="662.9"/>
+  <object id="23" type="Collision" x="3709.15" y="1745.88" width="91.03" height="98.9"/>
+  <object id="24" type="Collision" x="3645.15" y="2436.55" width="91.03" height="340.233"/>
+  <object id="25" type="Collision" x="3706.48" y="2383.22" width="91.03" height="94.9"/>
+  <object id="26" type="Collision" x="3522.49" y="2821.88" width="91.03" height="213.567"/>
+  <object id="27" type="Collision" x="3575.82" y="2751.22" width="91.03" height="86.9"/>
+  <object id="28" type="Collision" x="3394.49" y="3049.88" width="91.03" height="222.9"/>
+  <object id="29" type="Collision" x="3462.48" y="2991.22" width="91.03" height="81.5667"/>
+  <object id="30" type="Collision" x="3267.82" y="3335.22" width="91.03" height="310.9"/>
+  <object id="31" type="Collision" x="3325.15" y="3255.22" width="91.03" height="142.9"/>
+  <object id="32" type="Collision" x="3205.15" y="3627.22" width="91.03" height="78.9"/>
+  <object id="33" type="Collision" x="3147.82" y="3701.88" width="91.03" height="85.5667"/>
+  <object id="37" type="Collision" x="2433" y="1592">
+   <polygon points="0,0 133,0 203,80 205,199 -8,400 -131,397 -201,327 -200,203"/>
+  </object>
+  <object id="42" type="Collision" x="954" y="2060">
+   <polygon points="0,0 -135,-143 282,-139 400,-6"/>
+  </object>
+  <object id="43" type="Collision" x="821" y="1919">
+   <polygon points="0,0 -1,-254 92,-329 329,-325 410,-253 407,1"/>
+  </object>
+  <object id="44" type="Collision" x="953" y="2057">
+   <polygon points="0,0 400,-4 400,245 316,324 73,318 -1,238"/>
+  </object>
+  <object id="45" type="Collision" x="2442" y="2493">
+   <polygon points="0,0 358,1 448,75 447,190 374,267 -12,263 -84,191 -84,64"/>
+  </object>
+  <object id="46" type="Collision" x="2569" y="3138">
+   <polygon points="0,0 110,0 185,75 189,180 111,253 -7,253 -80,183 -75,63"/>
+  </object>
+  <object id="48" type="Collision" x="3082" y="1215.33">
+   <polygon points="0,0 110,0 185,75 189,180 111,253 -7,253 -80,183 -75,63"/>
+  </object>
+  <object id="49" type="Collision" x="511" y="2209">
+   <polygon points="0,0 71,109 72,366 163,445 -10,442"/>
+  </object>
+  <object id="50" type="Collision" x="1666" y="2850">
+   <polygon points="0,0 67,107 69,501 -16,506"/>
+  </object>
+  <object id="52" type="Collision" x="727.818" y="2739.22" width="176.363" height="46.9"/>
+  <object id="55" type="Collision" x="663.333" y="2644.67">
+   <polygon points="0,0 111.333,103.333 64,138 -74,-12.6667"/>
+  </object>
+  <object id="56" type="Collision" x="900.667" y="2740.67">
+   <polygon points="0,0 184,189.333 153.333,194 -3.33333,38"/>
+  </object>
+  <object id="57" type="Collision" x="1732" y="3344.67">
+   <polygon points="0,0 444.667,425.333 394.667,422 -39.3333,-4"/>
+  </object>
+  <object id="59" type="Collision" x="671.985" y="65.05" width="54.53" height="199.9"/>
+  <object id="60" type="Collision" x="724" y="255.5">
+   <polygon points="0,0 119,106 101,132.5 -52.5,7"/>
+  </object>
+  <object id="61" type="Collision" x="888.152" y="548.883" width="167.697" height="43.9"/>
+  <object id="62" type="Collision" x="1054.33" y="549.667">
+   <polygon points="0,0 185,201 147,203 -40.3333,30.3333"/>
+  </object>
+  <object id="63" type="Collision" x="1200" y="748.667">
+   <polygon points="0,0 94,2.66667 93.3333,518 4.66667,397.333"/>
+  </object>
+  <object id="64" type="Collision" x="2554" y="1254">
+   <polygon points="0,0 -2,-513.333 76,-510.667 77.3333,-116"/>
+  </object>
+  <object id="66" type="Collision" x="2012" y="681">
+   <polygon points="0,0 1,479 -86,557 -185,560 -180,86 -92,0"/>
+  </object>
+  <object id="68" type="Collision" x="2603" y="744">
+   <polygon points="0,0 520,-510 548,-500 16,31"/>
+  </object>
+  <object id="69" type="Collision" x="3118.49" y="67.55" width="32.03" height="176.9"/>
+  <object id="70" type="Collision" x="1290.67" y="60">
+   <polygon points="0,0 560,4 552,188 502.667,233.333 238.667,230.667"/>
+  </object>
+  <object id="71" type="Collision" x="2532" y="64">
+   <polygon points="0,0 -226.667,225.333 -486.667,228 -540,168 -554.667,-9.33333"/>
+  </object>
+  <object id="72" type="Collision" x="1196.49" y="2926.55" width="95.03" height="424.9"/>
+  <object id="73" type="Collision" x="1103.49" y="3350.55" width="141.03" height="74.9"/>
+ </objectgroup>
+ <objectgroup id="6" name="Spawns">
+  <object id="10" name="Spawn" type="Spawn" x="3209" y="133" width="113.667" height="83.3333"/>
+  <object id="90" name="Spawn" type="Spawn" x="2907.17" y="3562.33" width="113.667" height="83.3333"/>
+  <object id="91" name="Spawn" type="Spawn" x="1287.17" y="1814.33" width="113.667" height="83.3333"/>
+  <object id="92" name="Spawn" type="Spawn" x="243.166" y="2942.33" width="113.667" height="83.3333"/>
+ </objectgroup>
+ <objectgroup id="7" name="Pickups">
+  <object id="74" name="Hedgeshock" type="Pickup" x="404" y="282" width="86" height="78">
+   <properties>
+    <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
+   </properties>
+  </object>
+  <object id="75" name="Thumper" type="Pickup" x="3100.76" y="665.636" width="76" height="80">
+   <properties>
+    <property name="Item" value="Thumper"/>
+    <property name="RespawnTime" type="float" value="20"/>
+   </properties>
+  </object>
+  <object id="76" name="Big Shield" type="Pickup" x="1874" y="118.667" width="94" height="90.6667">
+   <properties>
+    <property name="Item" value="BigShield"/>
+    <property name="RespawnTime" type="float" value="35"/>
+   </properties>
+  </object>
+  <object id="77" name="Hedgeshock" type="Pickup" x="2064.73" y="3080.79" width="102" height="108">
+   <properties>
+    <property name="Item" value="Hedgeshock"/>
+    <property name="RespawnTime" type="float" value="20"/>
+   </properties>
+  </object>
+  <object id="78" name="Titandrill" type="Pickup" x="651.333" y="3480" width="94" height="90">
+   <properties>
+    <property name="Item" value="Titandrill"/>
+    <property name="RespawnTime" type="float" value="20"/>
+   </properties>
+  </object>
+  <object id="79" name="Shield" type="Pickup" x="2993.33" y="2096" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="80" name="Shield" type="Pickup" x="2863.33" y="2096" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="81" name="Shield" type="Pickup" x="3123.33" y="2096" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="82" name="Health" type="Pickup" x="1079.82" y="777.818" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="83" name="Health" type="Pickup" x="761.394" y="821.333" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="84" name="Health" type="Pickup" x="950.364" y="662.182" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="85" name="Shield" type="Pickup" x="3253.33" y="2096" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="86" name="Shield" type="Pickup" x="3383.33" y="2096" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallShield"/>
+   </properties>
+  </object>
+  <object id="87" name="Health" type="Pickup" x="725.394" y="2161.76" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="88" name="Health" type="Pickup" x="804.182" y="2434.48" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+  <object id="89" name="Health" type="Pickup" x="1028.42" y="2586" width="28" height="28">
+   <properties>
+    <property name="Item" value="SmallHealth"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

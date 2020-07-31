@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 using SFML.System;
 using Lidgren.Network;
 
-using BlackNet;
 using BlackNet.Server;
 
 using BlackCoat;
 using BlackCoat.Collision;
 using BlackCoat.Collision.Shapes;
 
-using BlackTournament.InputMaps;
 using BlackTournament.Tmx;
+using BlackTournament.InputMaps;
 
 namespace BlackTournament.Net.Data
 {

@@ -164,7 +164,9 @@
     <None Include="Maps\Powerplant.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Maps\Temple.tmx" />
+    <None Include="Maps\Temple.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Maps\ThePit.bcl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
