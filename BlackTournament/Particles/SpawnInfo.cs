@@ -6,7 +6,7 @@ using SFML.System;
 
 namespace BlackTournament.Particles
 {
-    class SpawnInfo : TextureParticleInitializationInfo
+    class SpawnInfo : TexturedSpawnInfo
     {
         private readonly Core _Core;
 

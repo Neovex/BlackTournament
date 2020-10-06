@@ -3,7 +3,7 @@ using BlackCoat.ParticleSystem;
 
 namespace BlackTournament.Particles
 {
-    class LineInfo : PixelParticleInitializationInfo
+    class LineInfo : ParticleSpawnInfo
     {
         public virtual Vector2f TargetOffset { get; set; }
     }

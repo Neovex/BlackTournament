@@ -6,7 +6,7 @@ using SFML.Graphics;
 
 namespace BlackTournament.Particles
 {
-    class ImpactInfo:PixelParticleInitializationInfo
+    class ImpactInfo:ParticleSpawnInfo
     {
         private Core _Core;
         private float _Spread;

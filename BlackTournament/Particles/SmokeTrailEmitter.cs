@@ -9,9 +9,9 @@ using SFML.Graphics;
 
 namespace BlackTournament.Particles
 {
-    class SmokeTrailEmitter : Emitter<TextureParticle, TextureParticleInitializationInfo>
+    class SmokeTrailEmitter : Emitter<TextureParticle, TexturedSpawnInfo>
     {
-        public SmokeTrailEmitter(Core core, TextureParticleInitializationInfo info, int depth = 0) 
+        public SmokeTrailEmitter(Core core, TexturedSpawnInfo info, int depth = 0) 
             : base(core, info,  PrimitiveType.Quads, BlendMode.Alpha, info.Texture, depth)
         {
         }

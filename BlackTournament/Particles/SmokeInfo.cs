@@ -6,7 +6,7 @@ using SFML.System;
 
 namespace BlackTournament.Particles
 {
-    class SmokeInfo:TextureParticleInitializationInfo
+    class SmokeInfo:TexturedSpawnInfo
     {
         private readonly Core _Core;
         private readonly float _Speed;

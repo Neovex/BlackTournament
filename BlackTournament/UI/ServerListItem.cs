@@ -25,14 +25,12 @@ namespace BlackTournament.UI
             CanFocus = true;
             Margin = new FloatRect(5, 5, 5, 0);
 
-            Init = new UIComponent[]
-            {
-                new Label(_Core, serverInfo.Name, 16, Game.DefaultFont),
+            Add(new Label(_Core, serverInfo.Name, 16, Game.DefaultFont),
                 new Label(_Core, serverInfo.Map, 16, Game.DefaultFont),
                 new Label(_Core, $"{serverInfo.CurrentPlayers} / {serverInfo.MaxPlayers}", 16, Game.DefaultFont),
                 new Label(_Core, $"{serverInfo.Ping} ms", 16, Game.DefaultFont),
                 new Label(_Core, serverInfo.EndPoint.ToString(), 16, Game.DefaultFont)
-            };
+            );
             ResizeToFitContent();
         }
 

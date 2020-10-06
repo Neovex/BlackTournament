@@ -51,12 +51,12 @@ namespace BlackTournament.Scenes
         private EmitterComposition _ImpactEmitter;
 
         private SmokeInfo _ExplosionInfo;
-        private TextureParticleInitializationInfo _WaveInfo;
+        private TexturedSpawnInfo _WaveInfo;
         private EmitterComposition _ExplosionEmitter;
 
         private SmokeTrailEmitter _SmokeTrailEmitter;
 
-        private TextureParticleInitializationInfo _LightEmitterInfo;
+        private TexturedSpawnInfo _LightEmitterInfo;
         private TextureEmitter _LightEmitter;
 
         // Entities
@@ -301,7 +301,7 @@ namespace BlackTournament.Scenes
 
             // Explosion shock wave
             var shockTex = TextureLoader.Load(Files.Emitter_Shockwave);
-            _WaveInfo = new TextureParticleInitializationInfo(shockTex)
+            _WaveInfo = new TexturedSpawnInfo(shockTex)
             {
                 TTL = 25,
                 Alpha = 0.75f,
@@ -337,7 +337,7 @@ namespace BlackTournament.Scenes
 
             // LIGHTING
             var lightTex = TextureLoader.Load(nameof(Resources.Pointlight), Resources.Pointlight);
-            _LightEmitterInfo = new TextureParticleInitializationInfo(lightTex)
+            _LightEmitterInfo = new TexturedSpawnInfo(lightTex)
             {
                 TTL = 25,
                 Origin = lightTex.Size.ToVector2f() / 2,

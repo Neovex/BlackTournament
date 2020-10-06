@@ -27,21 +27,14 @@ namespace BlackTournament.UI
             _Sfx.AddToLibrary(Files.Sfx_Highlight, 5);
             _Sfx.AddToLibrary(Files.Sfx_Select, 2);
 
-            Init = new UIComponent[]
-            {
-                new AlignedContainer(_Core, Alignment.Center)
+            Add(new AlignedContainer(_Core, Alignment.Center,
+                _Label = new Label(_Core, text, font:Game.DefaultFont)
                 {
-                    Init = new UIComponent[]
-                    {
-                        _Label = new Label(_Core, text, font:Game.DefaultFont)
-                        {
-                            CharacterSize = 18,
-                            TextColor = NormalColor,
-                            Margin = new FloatRect(0,0,0,5)
-                        }
-                    }
-                }
-            };
+                    CharacterSize = 18,
+                    TextColor = NormalColor,
+                    Margin = new FloatRect(0,0,0,5)
+                })
+            );
         }
 
         protected override void InvokeFocusGained()

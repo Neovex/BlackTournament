@@ -10,9 +10,9 @@ namespace BlackTournament.InputMaps
         /// <summary>
         /// Initializes a new instance of the <see cref="GameInputMap"/> class.
         /// </summary>
-        public GameInputMap(BlackCoat.Input input) : base(input, nameof(GameInputMap))
+        public GameInputMap(BlackCoat.Input input) : base(input)
         {
-            Log.Debug(Name, "created");
+            Log.Debug(nameof(GameInputMap), "created");
             CreateDefaultInputMap(); // Fixme: load from file at some point -> move loading to engine?
         }
 
