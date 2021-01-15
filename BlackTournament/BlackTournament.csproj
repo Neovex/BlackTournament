@@ -408,9 +408,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Librarys\BlackCoat4SFML2.X\BlackCoat.csproj">
+    <ProjectReference Include="..\..\..\Librarys\BlackCoat\src\BlackCoatNet.csproj">
       <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
-      <Name>BlackCoat</Name>
+      <Name>BlackCoatNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Librarys\BlackNet\BlackNet.csproj">
       <Project>{1c1b6d54-0079-48c7-99c1-56cfdbbe1d35}</Project>

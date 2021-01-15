@@ -104,7 +104,7 @@ namespace BlackTournament.Scenes
             _Sfx.AddToLibrary(Files.Sfx_Simpleshot, 10);
 
             // BG
-            Layer_BG.Add
+            Layer_Background.Add
             (
                 _Background = new Graphic(_Core, TextureLoader.Load(Files.Menue_Bg, true)),
                 _MenueGore = new Graphic(_Core, TextureLoader.Load(Files.Menue_Gore)) { BlendMode = BlendMode.Multiply },

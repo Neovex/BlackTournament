@@ -15,7 +15,6 @@ namespace BlackTournament.Tmx
         Layer_BG,
         Layer_Game,
         Layer_Overlay,
-        Layer_Debug,
         Light
     }
 

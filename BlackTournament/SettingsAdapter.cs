@@ -5,10 +5,10 @@ namespace BlackTournament
 {
     class SettingsAdapter : Launcher.ISettingsAdapter
     {
-        public (uint X, uint Y) Resolution
+        public (uint Width, uint Height) Resolution
         {
             get => (Settings.Default.ResolutionX, Settings.Default.ResolutionY);
-            set { Settings.Default.ResolutionX = value.X; Settings.Default.ResolutionY = value.Y; }
+            set { Settings.Default.ResolutionX = value.Width; Settings.Default.ResolutionY = value.Height; }
         }
         public uint AntiAliasing { get => Settings.Default.AntiAliasing; set => Settings.Default.AntiAliasing = value; }
         public uint FpsLimit { get => Settings.Default.FpsLimit; set => Settings.Default.FpsLimit = value; }

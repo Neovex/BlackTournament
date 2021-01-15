@@ -73,7 +73,7 @@ namespace BlackTournament.Entities
                 for (int i = -1; i < AdditionalTriggers; i++)
                 {
                     AboutToBeTriggered(_Emitter);
-                    _Emitter.Trigger();
+                    _Emitter.Triggered = true;
                 }
             }
         }

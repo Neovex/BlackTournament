@@ -93,7 +93,7 @@ namespace BlackTournament.Scenes
 
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize));
-            Layer_BG.View = _View;
+            Layer_Background.View = _View;
             Layer_Game.View = _View;
             Layer_Overlay.View = _View;
             _Core.DeviceResized += UpdateViewOnDeviceResize;
@@ -126,7 +126,7 @@ namespace BlackTournament.Scenes
                         {
                             mapLayer.AddTile(i * 4, tileLayer.Tiles[i].Position, tileLayer.Tiles[i].TexCoords); // mayhaps find a better solution
                         }
-                        Layer_BG.Add(mapLayer);
+                        Layer_Background.Add(mapLayer);
                         break;
 
                     case ObjectLayer objectLayer: // MAP ENTITIES
@@ -161,16 +161,13 @@ namespace BlackTournament.Scenes
                             switch (obj.Parent)
                             {
                                 case Parent.Layer_BG:
-                                    Layer_BG.Add(entity);
+                                    Layer_Background.Add(entity);
                                     break;
                                 case Parent.Layer_Game:
                                     Layer_Game.Add(entity);
                                     break;
                                 case Parent.Layer_Overlay:
                                     Layer_Overlay.Add(entity);
-                                    break;
-                                case Parent.Layer_Debug:
-                                    Layer_Debug.Add(entity);
                                     break;
                                 case Parent.Light:
                                     entity.BlendMode = BlendMode.Add;
@@ -187,7 +184,7 @@ namespace BlackTournament.Scenes
                                         case "TorchEmitter":
                                             var emitter = new TextureEmitter(_Core, new FireInfo(_Core, TextureLoader.Load(Files.Emitter_Smoke_Grey), 25), BlendMode.Add);
                                             emitter.Position = entity.Position;
-                                            emitter.Trigger();
+                                            emitter.Triggered = true;
                                             _ParticleEmitterHost.AddEmitter(emitter);
                                             break;
                                         case "Tint":
@@ -404,7 +401,7 @@ namespace BlackTournament.Scenes
             var emitter = new TextureEmitter(_Core, new SpawnInfo(_Core, emTex, type));
             _ParticleEmitterHost.AddEmitter(emitter);
             emitter.Position = position;
-            emitter.Trigger();
+            emitter.Triggered = true;
         }
 
         public void CreateProjectile(int id, PickupType type, Vector2f position, float rotation, bool primary)
@@ -496,23 +493,23 @@ namespace BlackTournament.Scenes
                     _Sfx.Play(Files.Sfx_Explosion, position);
                     _ExplosionInfo.Scale = new Vector2f(size, size) / 120;
                     _ExplosionEmitter.Position = position;
-                    _ExplosionEmitter.Trigger();
+                    _ExplosionEmitter.Triggered = true;
                     // Impact Light
                     _LightEmitterInfo.Scale = new Vector2f(0.9f, 0.9f);
                     _LightEmitter.Position = position;
-                    _LightEmitter.Trigger();
+                    _LightEmitter.Triggered = true;
                 break;
 
                 case EffectType.WallImpact:
                     _SparkInfo.Update(source);
                     _ImpactInfo.Update(source);
                     _ImpactEmitter.Position = position;
-                    _ImpactEmitter.Trigger();
+                    _ImpactEmitter.Triggered = true;
                     if (source == PickupType.Hedgeshock && !primary) _Sfx.Play(Files.Sfx_Pew, position);
                     // Impact Light
                     _LightEmitterInfo.Scale = new Vector2f(0.1f, 0.1f);
                     _LightEmitter.Position = position;
-                    _LightEmitter.Trigger();
+                    _LightEmitter.Triggered = true;
                 break;
 
                 case EffectType.PlayerImpact:
@@ -523,7 +520,7 @@ namespace BlackTournament.Scenes
                     _SparkInfo.ParticlesPerSpawn = (!primary && source == PickupType.Hedgeshock) ? 2u : 15u;
                     _SparkInfo.Direction = rotation;
                     _SparkInfo.Offset = new Vector2f(-10, 10);
-                    _SparkEmitter.Trigger();
+                    _SparkEmitter.Triggered = true;
                     _SparkInfo.Offset = new Vector2f();
                     _SparkInfo.Direction = null;
                     // even more hacky :(
@@ -568,14 +565,14 @@ namespace BlackTournament.Scenes
                                 _TracerLinesInfo.Alpha = 0.5f;
                                 _TracerLinesInfo.AlphaFade = -3;
                                 _TracerLinesEmitter.Position = position;
-                                _TracerLinesEmitter.Trigger();
+                                _TracerLinesEmitter.Triggered = true;
                             break;
 
                             case PickupType.Hedgeshock:
                                 _Sfx.Play(Files.Sfx_Spark, position);
                                 _LigtningInfo.LigtningTarget = position + Create.Vector2fFromAngleLookup(rotation, size);
                                 _LigtningEmitter.Position = position;
-                                _LigtningEmitter.Trigger();
+                                _LigtningEmitter.Triggered = true;
                             break;
 
                             case PickupType.Thumper:
@@ -589,7 +586,7 @@ namespace BlackTournament.Scenes
                                 _TracerLinesInfo.Alpha = 0.8f;
                                 _TracerLinesInfo.AlphaFade = -2;
                                 _TracerLinesEmitter.Position = position;
-                                _TracerLinesEmitter.Trigger();
+                                _TracerLinesEmitter.Triggered = true;
                             break;
                         }
                     }
@@ -612,7 +609,7 @@ namespace BlackTournament.Scenes
                                 _TracerLinesInfo.Alpha = 1f;
                                 _TracerLinesInfo.AlphaFade = -2;
                                 _TracerLinesEmitter.Position = position;
-                                _TracerLinesEmitter.Trigger();
+                                _TracerLinesEmitter.Triggered = true;
                             break;
                         }
                     }

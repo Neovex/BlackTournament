@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using BlackCoat;
-using BlackCoat.Collision;
-using BlackCoat.Collision.Shapes;
-using BlackCoat.Entities;
-using BlackCoat.Entities.Lights;
-using BlackCoat.Entities.Shapes;
-using BlackTournament.Entities;
-using BlackTournament.Net.Data;
-using BlackTournament.Tmx;
+
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+
+using BlackCoat;
+using BlackCoat.Tools;
+using BlackCoat.Entities;
+using BlackCoat.Entities.Lights;
+using BlackCoat.Entities.Shapes;
+using BlackCoat.Collision.Shapes;
+
+using BlackTournament.Entities;
+using BlackTournament.Tmx;
 
 namespace BlackTournament.Scenes
 {
@@ -40,7 +41,7 @@ namespace BlackTournament.Scenes
         {
             // Setup View
             _View = new View(new FloatRect(new Vector2f(), _Core.DeviceSize));
-            Layer_BG.View = _View;
+            Layer_Background.View = _View;
             Layer_Game.View = _View;
             Layer_Overlay.View = _View;
 
@@ -66,7 +67,7 @@ namespace BlackTournament.Scenes
                         {
                             mapLayer.AddTile(i * 4, tileLayer.Tiles[i].Position, tileLayer.Tiles[i].TexCoords);
                         }
-                        Layer_BG.Add(mapLayer);
+                        Layer_Background.Add(mapLayer);
                         break;
 
                     case ObjectLayer objectLayer: // skipped

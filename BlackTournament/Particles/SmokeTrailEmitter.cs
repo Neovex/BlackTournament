@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BlackCoat;
+﻿using BlackCoat;
 using BlackCoat.ParticleSystem;
 using SFML.Graphics;
 
@@ -16,7 +11,8 @@ namespace BlackTournament.Particles
         {
         }
 
-        public override void Trigger()
+
+        protected override void SpawnParticles()
         {
             var amount = ParticleInfo.ParticlesPerSpawn;
             for (int i = 0; i < amount; i++)
