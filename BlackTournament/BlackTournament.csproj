@@ -1,447 +1,74 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B95A7CEB-1743-46F6-A30D-5A95A1197C13}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BlackTournament</RootNamespace>
-    <AssemblyName>BlackTournament</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Authors>Alexander Schwahl</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company />
+    <Copyright>Copyright © Alexander Schwahl 2021</Copyright>
+    <Description>A 2D tournament shooter based on the Black Coat Game Engine and the SFML graphics framework</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
+    <None Remove="Assets\Fonts\VTCBelialsBladeItalic.ttf" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Controller\ConnectController.cs" />
-    <Compile Include="Controller\LightController.cs" />
-    <Compile Include="Controller\MapController.cs" />
-    <Compile Include="Controller\ControllerBase.cs" />
-    <Compile Include="Controller\MenuController.cs" />
-    <Compile Include="SettingsAdapter.cs" />
-    <Compile Include="Particles\SpawnInfo.cs" />
-    <Compile Include="SettingsTab.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SettingsTab.Designer.cs">
-      <DependentUpon>SettingsTab.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\HUD.cs" />
-    <Compile Include="Entities\OrbLight.cs" />
-    <Compile Include="Entities\PlayerLight.cs" />
-    <Compile Include="Entities\Remote.cs" />
-    <Compile Include="Entities\RotatingGraphic.cs" />
-    <Compile Include="UI\InGameMenu.cs" />
-    <Compile Include="UI\ScoreBoard.cs" />
-    <Compile Include="UI\WeaponIcon.cs" />
-    <Compile Include="InputMaps\UIInputMap.cs" />
-    <Compile Include="Net\Data\ServerWeapon.cs" />
-    <Compile Include="Scenes\LightEditor.cs" />
-    <Compile Include="Net\NetMessage.cs" />
-    <Compile Include="Particles\FireInfo.cs" />
-    <Compile Include="Particles\ImpactInfo.cs" />
-    <Compile Include="Particles\LightningEmitter.cs" />
-    <Compile Include="Particles\LineEmitter.cs" />
-    <Compile Include="Particles\LightningInfo.cs" />
-    <Compile Include="Particles\LineInfo.cs" />
-    <Compile Include="Particles\LineParticle.cs" />
-    <Compile Include="Particles\SmokeInfo.cs" />
-    <Compile Include="Particles\SmokeTrailEmitter.cs" />
-    <Compile Include="Particles\SparkInfo.cs" />
-    <Compile Include="Files.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="Entities\MapRenderer.cs" />
-    <Compile Include="Net\Data\ClientPlayer.cs" />
-    <Compile Include="Net\Data\GameLogic.cs" />
-    <Compile Include="Net\Data\Effect.cs" />
-    <Compile Include="Net\Data\PickupType.cs" />
-    <Compile Include="Scenes\TournamentIntro.cs" />
-    <Compile Include="Scenes\MainMenu.cs" />
-    <Compile Include="Scenes\ConnectScene.cs" />
-    <Compile Include="Net\BlackTournamentClient.cs" />
-    <Compile Include="Net\BlackTournamentServer.cs" />
-    <Compile Include="Net\Data\Pickup.cs" />
-    <Compile Include="Net\Data\Player.cs" />
-    <Compile Include="Net\Data\ServerPlayer.cs" />
-    <Compile Include="Net\Data\Shot.cs" />
-    <Compile Include="Net\Data\Weapon.cs" />
-    <Compile Include="Net\Net.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Programm.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenes\MapScene.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="InputMaps\GameAction.cs" />
-    <Compile Include="InputMaps\GameInputMap.cs" />
-    <Compile Include="Tmx\ActorInfo.cs" />
-    <Compile Include="Tmx\Killzone.cs" />
-    <Compile Include="Tmx\Layer.cs" />
-    <Compile Include="Tmx\Tile.cs" />
-    <Compile Include="Tmx\TmxMapper.cs" />
-    <Compile Include="UI\BigButton.cs" />
-    <Compile Include="UI\ComboBoxDialog.cs" />
-    <Compile Include="UI\ServerListItem.cs" />
-    <Compile Include="WeaponData.cs" />
+    <PackageReference Include="Lidgren.Network" Version="1.0.2" />
+    <PackageReference Include="SFML.Net" Version="2.5.0" />
+    <PackageReference Include="TiledSharp" Version="1.0.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Assets\Fonts\HighlandGothicLightFLF.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Fonts\VTCBelialsBladeItalic.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Industrial_Rage.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Invading_a_Submarine.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Its_Totally_and_Completely_Barbaric.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Teks_Abomination.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Third_Level_Encryption.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Venting_Your_Spleen_on_Low_B.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Music\Wall_of_Anger.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Black Tournament.cd" />
-    <None Include="Maps\Powerplant.bcl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Powerplant.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Temple.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\ThePit.bcl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Turbine.bcl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Turbine.tmx">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Network+TMX.cd" />
-    <None Include="Net\Full Network Map.cd" />
-    <None Include="Tmx\Tmx.cd" />
-    <None Include="Net\Data\Data.cd" />
-    <None Include="Maps\ThePit.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Assets\Music\Ten_Seconds_to_Rush.ogg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="Assets\Textures\Space.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Reference Include="BlackCoat">
+      <HintPath>..\lib\BlackCoat.dll</HintPath>
+    </Reference>
+    <Reference Include="BlackNet">
+      <HintPath>..\lib\BlackNet.dll</HintPath>
+    </Reference>
+    <Reference Include="TinyTools">
+      <HintPath>..\lib\TinyTools.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Sfx\drop.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\explosion.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\hit.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\laserblastbig.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\laserblastsmall.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\pew.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\pickup3.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\pickup4.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\spark.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\AztekTiles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\BigHealth.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\BigShield.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\CharacterBase.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Drake.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Fan.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Hedgeshock.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDDrake_Outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDDrake_White.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDHealth.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDHedgeshock_Outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDHedgeshock_White.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDShieldActive.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDShieldInactive.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDSkull.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDThumper_Outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDThumper_White.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDTitandrill_Outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDTitandrill_White.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\HUDTopBg.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\IndustrialTiles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Assets\Textures\launcher_banner.png" />
-    <Content Include="Assets\Textures\Logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_bg.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_bg2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_button.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_button_active.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_glow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_gore.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_panel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\menue_title.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Shockwave.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\SmallHealth.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\SmallShield.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Smoke_Black.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Smoke_Grey.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Smoke_White.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Thumper.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Titandrill.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\grenatelauncher.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\Highlight.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\pickup1.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\pickup2.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\Select.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sfx\simple shot.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\Torch.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\TorchCone.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <ContentWithTargetPath Include="Doc\Credits.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Credits.txt</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Audio.dll">
-      <Link>lib\csfml-Audio.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>csfml-Audio.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Graphics.dll">
-      <Link>lib\csfml-Graphics.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>csfml-Graphics.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-System.dll">
-      <Link>lib\csfml-System.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>csfml-System.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\csfml-Window.dll">
-      <Link>lib\csfml-Window.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>csfml-Window.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="C:\Users\User\.nuget\packages\csfml\2.5.0\runtimes\win-x64\native\openal32.dll">
-      <Link>lib\openal32.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>openal32.dll</TargetPath>
-    </ContentWithTargetPath>
-    <None Include="Resources\banner.png" />
-    <Content Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsTab.resx">
-      <DependentUpon>SettingsTab.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Librarys\BlackCoat\src\BlackCoatNet.csproj">
-      <Project>{ef8353f5-78de-4bc5-a100-2d6318c91af9}</Project>
-      <Name>BlackCoatNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\BlackNet\BlackNet.csproj">
-      <Project>{1c1b6d54-0079-48c7-99c1-56cfdbbe1d35}</Project>
-      <Name>BlackNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Librarys\TinyTools\TinyTools.csproj">
-      <Project>{0e401db7-d512-4181-8f4a-ad074a2d994a}</Project>
-      <Name>TinyTools</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Lidgren.Network">
-      <Version>1.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="SFML.Net">
-      <Version>2.5.0</Version>
-    </PackageReference>
-    <PackageReference Include="TiledSharp">
-      <Version>1.0.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
+<ItemGroup>
+    <None Include="$(SolutionDir)Assets\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(SolutionDir)Maps\**" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
+  
+<ItemGroup>
+  <Compile Update="Properties\Settings.Designer.cs">
+    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    <AutoGen>True</AutoGen>
+    <DependentUpon>Settings.settings</DependentUpon>
+  </Compile>
+</ItemGroup>
+  
+<ItemGroup>
+  <None Update="Credits.txt">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+  <None Update="Properties\Settings.settings">
+    <Generator>SettingsSingleFileGenerator</Generator>
+    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+  </None>
+</ItemGroup>
+
 </Project>
