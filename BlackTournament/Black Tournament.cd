@@ -156,7 +156,6 @@
   <Class Name="BlackCoat.Core" Collapsed="true">
     <Position X="7.25" Y="0.5" Width="1.5" />
     <TypeIdentifier />
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="BlackTournament.Net.BlackTournamentClient" Collapsed="true">
     <Position X="8.75" Y="5" Width="2" />
@@ -171,7 +170,7 @@
   <Class Name="BlackTournament.Scenes.MainMenu" Collapsed="true">
     <Position X="0.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAQBgCdBGgwFAMGREgJEBQEpEohAARQAYCoAkAEiBgA=</HashCode>
+      <HashCode>BAQBgCdBGgwFAMGRUgJEBQEoEohAARQAYCoAkAEiBgA=</HashCode>
       <FileName>Scenes\MainMenu.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -272,25 +271,10 @@
         <Point X="20.5" Y="0.765" />
       </Path>
     </AssociationLine>
-    <AssociationLine Name="_TracerLinesInfo" Type="BlackTournament.Particles.LineInfo" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="17.375" Y="8.617" />
-        <Point X="17.375" Y="9.346" />
-        <Point X="20.25" Y="9.346" />
-      </Path>
-    </AssociationLine>
     <AssociationLine Name="_TracerLinesEmitter" Type="BlackTournament.Particles.LineEmitter">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.007" Y="0.06" />
       </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="_LigtningInfo" Type="BlackTournament.Particles.LightningInfo" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="17.062" Y="8.617" />
-        <Point X="17.062" Y="10.066" />
-        <Point X="23.5" Y="10.066" />
-        <Point X="23.5" Y="9.691" />
-      </Path>
     </AssociationLine>
     <AssociationLine Name="_LigtningEmitter" Type="BlackTournament.Particles.LightningEmitter" FixedFromPoint="true" FixedToPoint="true">
       <Path>
@@ -319,19 +303,9 @@
         <Point X="23.5" Y="3.941" />
       </Path>
     </AssociationLine>
-    <AssociationLine Name="_WaveInfo" Type="BlackCoat.ParticleSystem.TextureParticleInitializationInfo">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.11" Y="-0.221" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="_ExplosionEmitter" Type="BlackCoat.ParticleSystem.EmitterComposition">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.092" Y="0.065" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="_LightEmitterInfo" Type="BlackCoat.ParticleSystem.TextureParticleInitializationInfo">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.084" Y="0.056" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="_LightEmitter" Type="BlackCoat.ParticleSystem.TextureEmitter" FixedFromPoint="true" FixedToPoint="true">
@@ -358,10 +332,8 @@
       <Field Name="_ImpactInfo" />
       <Field Name="_ImpactEmitter" />
       <Field Name="_ExplosionInfo" />
-      <Field Name="_WaveInfo" />
       <Field Name="_ExplosionEmitter" />
       <Field Name="_SmokeTrailEmitter" />
-      <Field Name="_LightEmitterInfo" />
       <Field Name="_LightEmitter" />
       <Property Name="HUD" />
     </ShowAsAssociation>
@@ -396,14 +368,10 @@
     <Position X="22.75" Y="6.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="BlackCoat.ParticleSystem.TextureParticleInitializationInfo" Collapsed="true">
-    <Position X="19.75" Y="3.25" Width="2.5" />
-    <TypeIdentifier />
-  </Class>
   <Class Name="BlackTournament.Particles.LightningEmitter" Collapsed="true">
     <Position X="22.75" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>Particles\LightningEmitter.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -428,7 +396,7 @@
   <Class Name="BlackTournament.Particles.SmokeTrailEmitter" Collapsed="true">
     <Position X="20" Y="6.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>Particles\SmokeTrailEmitter.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -456,6 +424,10 @@
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Particles\LineInfo.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="BlackCoat.ParticleSystem.TexturedSpawnInfo" Collapsed="true">
+    <Position X="19.75" Y="3.25" Width="2.5" />
+    <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
