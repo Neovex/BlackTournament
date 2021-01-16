@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="Actor" color="#aa00ff">
+  <property name="Asset" type="string"/>
+  <property name="Parent" type="string"/>
+  <property name="Tag" type="string"/>
+ </objecttype>
+ <objecttype name="Collision" color="#ffaa7f"/>
+ <objecttype name="Killzone" color="#ff0000">
+  <property name="Damage" type="float" default="0"/>
+  <property name="Effect" type="string"/>
+ </objecttype>
+ <objecttype name="Mover" color="#55ffff">
+  <property name="Asset" type="string"/>
+  <property name="Parent" type="string"/>
+  <property name="Speed" type="float" default="0"/>
+  <property name="Tag" type="string"/>
+  <property name="TargetX" type="float" default="0"/>
+  <property name="TargetY" type="float" default="0"/>
+  <property name="WaitEnd" type="float" default="0"/>
+  <property name="WaitStart" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="Pickup" color="#aaff00">
+  <property name="Amount" type="int" default="0"/>
+  <property name="Item" type="string"/>
+  <property name="RespawnTime" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="Rotor" color="#ff2c80">
+  <property name="Asset" type="string"/>
+  <property name="OriginX" type="float" default="0"/>
+  <property name="OriginY" type="float" default="0"/>
+  <property name="Parent" type="string"/>
+  <property name="Speed" type="float" default="0"/>
+  <property name="Tag" type="string"/>
+ </objecttype>
+ <objecttype name="Spawn" color="#0000ff"/>
+</objecttypes>
