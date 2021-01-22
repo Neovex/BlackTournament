@@ -450,7 +450,9 @@ namespace BlackTournament.Scenes
 
         private void OpenMapCombobox(TextBox sender)
         {
-            if(sender.InEdit) sender.ShowDialog(Layer_Overlay, new ComboBoxDialog(_Core, sender, _AvailableMaps));
+            if(sender.InEdit) sender.ShowDialog(Layer_Overlay, 
+                new ComboBoxDialog(_Core, sender, _AvailableMaps)
+                    { HighlightColor = Color.Red });
         }
 
         private void OpenCredits(bool open)
