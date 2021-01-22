@@ -1,7 +1,7 @@
 ![Black Tournament Banner](/src/Assets/Textures/launcher_banner.png)
 
 ## What is it?
-Black Tournament is a fully functional arena PvP shooter in 2D. Based on the original concept of Epic Games Unreal Tournament.
+Black Tournament is a action packed arena PvP shooter in 2D. Based on the original concept of Epic Games Unreal Tournament.
 
 ## Features
 - Full network multiplayer support for up to 8 players
